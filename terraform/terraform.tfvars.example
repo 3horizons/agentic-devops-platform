@@ -1,0 +1,153 @@
+# =============================================================================
+# THREE HORIZONS PLATFORM - EXAMPLE CONFIGURATION
+# =============================================================================
+#
+# Copy this file to terraform.tfvars and customize for your deployment
+#
+# Usage:
+#   cp terraform.tfvars.example terraform.tfvars
+#   # Edit terraform.tfvars with your values
+#   terraform init
+#   terraform plan
+#   terraform apply
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# REQUIRED - Must be customized
+# -----------------------------------------------------------------------------
+
+project_name = "threehorizons"
+environment  = "prod"  # dev, staging, prod
+location     = "brazilsouth"
+
+# GitHub Organization
+github_org  = "your-github-org"
+github_repo = "platform-gitops"
+
+# Microsoft Entra ID (Azure AD) - for authentication
+entra_tenant_id      = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+entra_admin_group_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# -----------------------------------------------------------------------------
+# SIZING - Choose based on workload
+# -----------------------------------------------------------------------------
+
+# Options: small, medium, large, xlarge
+# See config/sizing-profiles.yaml for details
+sizing_profile = "medium"
+
+# -----------------------------------------------------------------------------
+# PLATFORM SELECTION
+# -----------------------------------------------------------------------------
+
+# Kubernetes platform: aks or aro
+kubernetes_platform = "aks"
+kubernetes_version  = "1.28"
+
+# -----------------------------------------------------------------------------
+# FEATURE FLAGS
+# -----------------------------------------------------------------------------
+
+# Core platform
+enable_argocd        = true
+enable_rhdh          = true
+enable_observability = true
+
+# GitHub integration
+enable_github_runners = true
+
+# Security & Compliance
+enable_defender = true
+enable_purview  = false  # Enable for data governance
+
+# AI/ML
+enable_ai_foundry = false  # Enable for AI workloads
+
+# Networking
+enable_private_endpoints = true
+
+# AKS specific
+enable_workload_identity = true
+
+# -----------------------------------------------------------------------------
+# NETWORKING
+# -----------------------------------------------------------------------------
+
+vnet_address_space = ["10.0.0.0/16"]
+
+# Subnet CIDRs (must be within vnet_address_space)
+# aks_subnet_cidr      = "10.0.0.0/22"
+# services_subnet_cidr = "10.0.4.0/24"
+# database_subnet_cidr = "10.0.5.0/24"
+
+# -----------------------------------------------------------------------------
+# DATABASE
+# -----------------------------------------------------------------------------
+
+database_type = "postgresql"  # postgresql, mysql, cosmosdb
+database_sku  = "GP_Standard_D2s_v3"
+
+# -----------------------------------------------------------------------------
+# DEFENDER PLANS
+# -----------------------------------------------------------------------------
+
+defender_plans = [
+  "VirtualMachines",
+  "AppServices",
+  "SqlServers",
+  "StorageAccounts",
+  "Containers",
+  "KeyVaults",
+  "Arm",
+  "Dns"
+]
+
+# -----------------------------------------------------------------------------
+# TAGS
+# -----------------------------------------------------------------------------
+
+tags = {
+  Project     = "Three Horizons"
+  Environment = "Production"
+  ManagedBy   = "Terraform"
+  Team        = "Platform Engineering"
+  CostCenter  = "IT-Platform"
+}
+
+# =============================================================================
+# ADVANCED CONFIGURATION (Optional)
+# =============================================================================
+
+# AKS Node Pools - Override defaults from sizing profile
+# aks_system_node_count = 3
+# aks_system_node_size  = "Standard_D4s_v3"
+# aks_user_node_count   = 5
+# aks_user_node_size    = "Standard_D8s_v3"
+
+# ACR Configuration
+# acr_sku               = "Premium"
+# acr_admin_enabled     = false
+# acr_zone_redundancy   = true
+
+# Key Vault Configuration
+# keyvault_sku          = "premium"
+# keyvault_soft_delete  = true
+# keyvault_purge_protection = true
+
+# PostgreSQL Configuration
+# postgresql_version    = "16"
+# postgresql_storage_mb = 32768
+# postgresql_backup_retention_days = 7
+
+# Observability Configuration
+# prometheus_retention_days = 15
+# grafana_admin_password = ""  # Leave empty to auto-generate
+
+# ArgoCD Configuration
+# argocd_version        = "v2.9.3"
+# argocd_ha_enabled     = true
+
+# RHDH Configuration
+# rhdh_replicas         = 2
+# rhdh_postgres_external = true

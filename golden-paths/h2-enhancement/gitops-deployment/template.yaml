@@ -1,0 +1,769 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H2 GITOPS DEPLOYMENT GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating GitOps deployment configurations.
+# Generates ArgoCD applications with Kustomize/Helm and multi-environment support.
+#
+# Horizon: H2 - Enhancement
+# Use Case: Standardize GitOps deployments across teams
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h2-gitops-deployment
+  title: "H2: Create GitOps Deployment Configuration"
+  description: |
+    Create GitOps deployment configurations for existing applications.
+    Generates ArgoCD Application manifests, Kustomize overlays, and 
+    multi-environment deployment pipelines.
+  tags:
+    - h2-enhancement
+    - gitops
+    - argocd
+    - kubernetes
+    - deployment
+    - recommended
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: ArgoCD Documentation
+      url: https://argo-cd.readthedocs.io/
+    - title: Kustomize Guide
+      url: https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/
+
+spec:
+  owner: platform-engineering
+  type: gitops-config
+
+  # ===========================================================================
+  # PARAMETERS
+  # ===========================================================================
+  
+  parameters:
+    # -------------------------------------------------------------------------
+    # Application Information
+    # -------------------------------------------------------------------------
+    - title: Application Information
+      required:
+        - appName
+        - team
+        - sourceRepo
+      properties:
+        appName:
+          title: Application Name
+          description: Name of the application to deploy
+          type: string
+          pattern: '^[a-z0-9-]+$'
+          maxLength: 40
+
+        team:
+          title: Team Name
+          description: Team that owns this application
+          type: string
+          pattern: '^[a-z0-9-]+$'
+
+        sourceRepo:
+          title: Source Repository
+          description: Repository containing the application code
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+        description:
+          title: Description
+          description: Brief description of the application
+          type: string
+          maxLength: 200
+
+    # -------------------------------------------------------------------------
+    # Deployment Strategy
+    # -------------------------------------------------------------------------
+    - title: Deployment Strategy
+      required:
+        - deploymentType
+        - manifestType
+      properties:
+        deploymentType:
+          title: Deployment Type
+          description: Type of Kubernetes deployment
+          type: string
+          default: deployment
+          enum:
+            - deployment
+            - statefulset
+            - daemonset
+            - cronjob
+          enumNames:
+            - Deployment (Stateless)
+            - StatefulSet (Stateful)
+            - DaemonSet (Node-level)
+            - CronJob (Scheduled)
+
+        manifestType:
+          title: Manifest Type
+          description: How to manage Kubernetes manifests
+          type: string
+          default: kustomize
+          enum:
+            - kustomize
+            - helm
+            - plain
+          enumNames:
+            - Kustomize (Overlays)
+            - Helm Chart
+            - Plain YAML
+
+        helmChartRepo:
+          title: Helm Chart Repository
+          description: Helm chart repository URL (if using Helm)
+          type: string
+          ui:widget: hidden
+          ui:options:
+            visible:
+              $eq:
+                - ${{ parameters.manifestType }}
+                - helm
+
+        helmChartName:
+          title: Helm Chart Name
+          description: Name of the Helm chart
+          type: string
+          ui:widget: hidden
+          ui:options:
+            visible:
+              $eq:
+                - ${{ parameters.manifestType }}
+                - helm
+
+        helmChartVersion:
+          title: Helm Chart Version
+          description: Version of the Helm chart
+          type: string
+          ui:widget: hidden
+          ui:options:
+            visible:
+              $eq:
+                - ${{ parameters.manifestType }}
+                - helm
+
+    # -------------------------------------------------------------------------
+    # Environment Configuration
+    # -------------------------------------------------------------------------
+    - title: Environment Configuration
+      properties:
+        environments:
+          title: Environments
+          description: Environments to deploy to
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - namespace
+            properties:
+              name:
+                title: Environment Name
+                type: string
+                enum:
+                  - dev
+                  - staging
+                  - prod
+              namespace:
+                title: Kubernetes Namespace
+                type: string
+              cluster:
+                title: Target Cluster
+                type: string
+                default: in-cluster
+              replicas:
+                title: Replicas
+                type: integer
+                default: 1
+                minimum: 1
+                maximum: 20
+              autoSync:
+                title: Auto Sync
+                type: boolean
+                default: true
+              requireApproval:
+                title: Require Approval
+                type: boolean
+                default: false
+          default:
+            - name: dev
+              namespace: dev
+              cluster: in-cluster
+              replicas: 1
+              autoSync: true
+              requireApproval: false
+            - name: staging
+              namespace: staging
+              cluster: in-cluster
+              replicas: 2
+              autoSync: true
+              requireApproval: false
+            - name: prod
+              namespace: prod
+              cluster: in-cluster
+              replicas: 3
+              autoSync: false
+              requireApproval: true
+
+        createNamespaces:
+          title: Create Namespaces
+          description: Create namespaces if they don't exist
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Container Configuration
+    # -------------------------------------------------------------------------
+    - title: Container Configuration
+      required:
+        - containerRegistry
+        - imageName
+      properties:
+        containerRegistry:
+          title: Container Registry
+          description: Container registry URL
+          type: string
+          default: acrthreehorizons.azurecr.io
+
+        imageName:
+          title: Image Name
+          description: Container image name (without registry)
+          type: string
+
+        imageTagStrategy:
+          title: Image Tag Strategy
+          description: How to tag container images
+          type: string
+          default: git-sha
+          enum:
+            - git-sha
+            - semantic
+            - branch
+            - latest
+          enumNames:
+            - Git SHA (Immutable)
+            - Semantic Version
+            - Branch Name
+            - Latest (Not recommended)
+
+        containerPort:
+          title: Container Port
+          description: Port the container listens on
+          type: integer
+          default: 8080
+
+    # -------------------------------------------------------------------------
+    # Resource Configuration
+    # -------------------------------------------------------------------------
+    - title: Resource Configuration
+      properties:
+        resources:
+          title: Resource Settings
+          type: object
+          properties:
+            cpuRequest:
+              title: CPU Request
+              type: string
+              default: "100m"
+            cpuLimit:
+              title: CPU Limit
+              type: string
+              default: "500m"
+            memoryRequest:
+              title: Memory Request
+              type: string
+              default: "128Mi"
+            memoryLimit:
+              title: Memory Limit
+              type: string
+              default: "512Mi"
+
+        enableHPA:
+          title: Enable Horizontal Pod Autoscaler
+          type: boolean
+          default: true
+
+        hpaConfig:
+          title: HPA Configuration
+          type: object
+          properties:
+            minReplicas:
+              title: Min Replicas
+              type: integer
+              default: 2
+            maxReplicas:
+              title: Max Replicas
+              type: integer
+              default: 10
+            targetCPU:
+              title: Target CPU %
+              type: integer
+              default: 70
+
+        enablePDB:
+          title: Enable Pod Disruption Budget
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Networking
+    # -------------------------------------------------------------------------
+    - title: Networking
+      properties:
+        enableIngress:
+          title: Enable Ingress
+          type: boolean
+          default: true
+
+        ingressHost:
+          title: Ingress Host Pattern
+          description: "Use {env} as placeholder (e.g., {env}-api.example.com)"
+          type: string
+          default: "{env}-${{ parameters.appName }}.example.com"
+
+        ingressClass:
+          title: Ingress Class
+          type: string
+          default: nginx
+
+        enableTLS:
+          title: Enable TLS
+          type: boolean
+          default: true
+
+        tlsClusterIssuer:
+          title: TLS Cluster Issuer
+          type: string
+          default: letsencrypt-prod
+
+        serviceType:
+          title: Service Type
+          type: string
+          default: ClusterIP
+          enum:
+            - ClusterIP
+            - NodePort
+            - LoadBalancer
+
+    # -------------------------------------------------------------------------
+    # Advanced Options
+    # -------------------------------------------------------------------------
+    - title: Advanced Options
+      properties:
+        enableServiceAccount:
+          title: Create Service Account
+          type: boolean
+          default: true
+
+        enableWorkloadIdentity:
+          title: Enable Workload Identity
+          description: Enable Azure Workload Identity for pod identity
+          type: boolean
+          default: false
+
+        workloadIdentityClientId:
+          title: Workload Identity Client ID
+          type: string
+          ui:widget: hidden
+
+        configMaps:
+          title: ConfigMaps
+          description: ConfigMaps to create
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                title: Name
+                type: string
+              data:
+                title: Data (key=value pairs)
+                type: string
+          default: []
+
+        secrets:
+          title: External Secrets
+          description: Secrets to fetch from Azure Key Vault
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                title: Secret Name
+                type: string
+              keyVaultSecret:
+                title: Key Vault Secret Name
+                type: string
+          default: []
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    # -------------------------------------------------------------------------
+    # Generate Base Manifests
+    # -------------------------------------------------------------------------
+    - id: generate-base
+      name: Generate Base Kubernetes Manifests
+      action: fetch:template
+      input:
+        url: ./skeleton/base
+        targetPath: ./output/kubernetes/base
+        values:
+          appName: ${{ parameters.appName }}
+          team: ${{ parameters.team }}
+          deploymentType: ${{ parameters.deploymentType }}
+          containerRegistry: ${{ parameters.containerRegistry }}
+          imageName: ${{ parameters.imageName }}
+          containerPort: ${{ parameters.containerPort }}
+          resources: ${{ parameters.resources }}
+          enableServiceAccount: ${{ parameters.enableServiceAccount }}
+          enableWorkloadIdentity: ${{ parameters.enableWorkloadIdentity }}
+          workloadIdentityClientId: ${{ parameters.workloadIdentityClientId }}
+
+    # -------------------------------------------------------------------------
+    # Generate Environment Overlays
+    # -------------------------------------------------------------------------
+    - id: generate-overlays
+      name: Generate Environment Overlays
+      action: fetch:template
+      input:
+        url: ./skeleton/overlays
+        targetPath: ./output/kubernetes/overlays
+        values:
+          appName: ${{ parameters.appName }}
+          environments: ${{ parameters.environments }}
+          enableIngress: ${{ parameters.enableIngress }}
+          ingressHost: ${{ parameters.ingressHost }}
+          ingressClass: ${{ parameters.ingressClass }}
+          enableTLS: ${{ parameters.enableTLS }}
+          tlsClusterIssuer: ${{ parameters.tlsClusterIssuer }}
+          serviceType: ${{ parameters.serviceType }}
+          enableHPA: ${{ parameters.enableHPA }}
+          hpaConfig: ${{ parameters.hpaConfig }}
+          enablePDB: ${{ parameters.enablePDB }}
+
+    # -------------------------------------------------------------------------
+    # Generate ArgoCD Applications
+    # -------------------------------------------------------------------------
+    - id: generate-argocd
+      name: Generate ArgoCD Application Manifests
+      action: fetch:template
+      input:
+        url: ./skeleton/argocd
+        targetPath: ./output/argocd
+        values:
+          appName: ${{ parameters.appName }}
+          team: ${{ parameters.team }}
+          sourceRepo: ${{ parameters.sourceRepo }}
+          environments: ${{ parameters.environments }}
+          manifestType: ${{ parameters.manifestType }}
+          helmChartRepo: ${{ parameters.helmChartRepo }}
+          helmChartName: ${{ parameters.helmChartName }}
+          helmChartVersion: ${{ parameters.helmChartVersion }}
+
+    # -------------------------------------------------------------------------
+    # Generate External Secrets
+    # -------------------------------------------------------------------------
+    - id: generate-secrets
+      name: Generate External Secrets
+      if: ${{ parameters.secrets.length > 0 }}
+      action: fetch:template
+      input:
+        url: ./skeleton/external-secrets
+        targetPath: ./output/kubernetes/base
+        values:
+          appName: ${{ parameters.appName }}
+          secrets: ${{ parameters.secrets }}
+
+    # -------------------------------------------------------------------------
+    # Create GitOps Repository
+    # -------------------------------------------------------------------------
+    - id: create-repo
+      name: Create GitOps Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: github.com?owner=${{ parameters.sourceRepo | parseRepoUrl | pick('owner') }}&repo=${{ parameters.appName }}-gitops
+        description: "GitOps configuration for ${{ parameters.appName }}"
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./output
+
+    # -------------------------------------------------------------------------
+    # Register in ArgoCD
+    # -------------------------------------------------------------------------
+    - id: register-argocd
+      name: Register Applications in ArgoCD
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.appName }}
+        argoInstance: main
+        projectName: ${{ parameters.team }}
+        path: ./output/argocd
+        repoUrl: ${{ steps['create-repo'].output.remoteUrl }}
+
+    # -------------------------------------------------------------------------
+    # Register in Catalog
+    # -------------------------------------------------------------------------
+    - id: register-catalog
+      name: Register in Software Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  # ===========================================================================
+  # OUTPUT
+  # ===========================================================================
+  
+  output:
+    links:
+      - title: GitOps Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: ArgoCD Dashboard
+        url: https://argocd.example.com/applications/${{ parameters.appName }}-dev
+      - title: Source Repository
+        url: https://github.com/${{ parameters.sourceRepo | parseRepoUrl | pick('owner') }}/${{ parameters.sourceRepo | parseRepoUrl | pick('repo') }}
+    text:
+      - title: GitOps Configuration Created
+        content: |
+          ## ✅ GitOps Configuration Created!
+          
+          **Repositories:**
+          - GitOps Repo: ${{ steps['create-repo'].output.remoteUrl }}
+          - Source Repo: ${{ parameters.sourceRepo }}
+          
+          **Environments Configured:**
+          {%- for env in parameters.environments %}
+          - ${{ env.name }}: Namespace `${{ env.namespace }}`, Replicas: ${{ env.replicas }}
+          {%- endfor %}
+          
+          **Next Steps:**
+          1. Update image references in source repo CI
+          2. Configure secrets in Azure Key Vault
+          3. Verify ArgoCD applications are syncing
+          4. Test deployment pipeline end-to-end
+
+---
+# =============================================================================
+# SKELETON FILES
+# =============================================================================
+
+# skeleton/base/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: ${{ values.appName }}
+  annotations:
+    app.kubernetes.io/managed-by: rhdh-scaffolder
+
+commonLabels:
+  app.kubernetes.io/name: ${{ values.appName }}
+  app.kubernetes.io/component: backend
+  app.kubernetes.io/part-of: ${{ values.team }}
+  app.kubernetes.io/managed-by: argocd
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  {%- if values.enableServiceAccount %}
+  - serviceaccount.yaml
+  {%- endif %}
+
+configMapGenerator: []
+
+---
+# skeleton/base/deployment.yaml
+apiVersion: apps/v1
+kind: ${{ values.deploymentType | capitalize }}
+metadata:
+  name: ${{ values.appName }}
+  labels:
+    app.kubernetes.io/name: ${{ values.appName }}
+spec:
+  {%- if values.deploymentType != 'daemonset' %}
+  replicas: 1
+  {%- endif %}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${{ values.appName }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${{ values.appName }}
+        {%- if values.enableWorkloadIdentity %}
+        azure.workload.identity/use: "true"
+        {%- endif %}
+    spec:
+      {%- if values.enableServiceAccount %}
+      serviceAccountName: ${{ values.appName }}
+      {%- endif %}
+      containers:
+        - name: ${{ values.appName }}
+          image: ${{ values.containerRegistry }}/${{ values.imageName }}:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: ${{ values.containerPort }}
+              protocol: TCP
+          resources:
+            requests:
+              cpu: ${{ values.resources.cpuRequest }}
+              memory: ${{ values.resources.memoryRequest }}
+            limits:
+              cpu: ${{ values.resources.cpuLimit }}
+              memory: ${{ values.resources.memoryLimit }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+---
+# skeleton/base/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ values.appName }}
+  labels:
+    app.kubernetes.io/name: ${{ values.appName }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: ${{ values.appName }}
+
+---
+# skeleton/base/serviceaccount.yaml
+{%- if values.enableServiceAccount %}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${{ values.appName }}
+  labels:
+    app.kubernetes.io/name: ${{ values.appName }}
+  {%- if values.enableWorkloadIdentity %}
+  annotations:
+    azure.workload.identity/client-id: ${{ values.workloadIdentityClientId }}
+  {%- endif %}
+{%- endif %}
+
+---
+# skeleton/argocd/application.yaml
+{%- for env in values.environments %}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ${{ values.appName }}-${{ env.name }}
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: ${{ values.appName }}
+    app.kubernetes.io/instance: ${{ env.name }}
+    app.kubernetes.io/part-of: ${{ values.team }}
+    three-horizons/environment: ${{ env.name }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: ${{ values.team }}
+  
+  source:
+    repoURL: https://github.com/${{ values.sourceRepo | parseRepoUrl | pick('owner') }}/${{ values.appName }}-gitops
+    targetRevision: HEAD
+    path: kubernetes/overlays/${{ env.name }}
+  
+  destination:
+    server: ${{ env.cluster == 'in-cluster' ? 'https://kubernetes.default.svc' : env.cluster }}
+    namespace: ${{ env.namespace }}
+  
+  syncPolicy:
+    {%- if env.autoSync %}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {%- endif %}
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+{%- endfor %}
+
+---
+# skeleton/overlays/dev/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dev
+
+resources:
+  - ../../base
+  {%- if values.enableIngress %}
+  - ingress.yaml
+  {%- endif %}
+  {%- if values.enableHPA %}
+  - hpa.yaml
+  {%- endif %}
+
+replicas:
+  - name: ${{ values.appName }}
+    count: 1
+
+images:
+  - name: ${{ values.containerRegistry }}/${{ values.imageName }}
+    newTag: dev
+
+patches:
+  - target:
+      kind: Deployment
+      name: ${{ values.appName }}
+    patch: |
+      - op: add
+        path: /spec/template/metadata/labels/environment
+        value: dev

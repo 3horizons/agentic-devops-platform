@@ -1,0 +1,172 @@
+name: "🔴 ARO Platform Deployment"
+description: "Deploy Azure Red Hat OpenShift cluster with full platform stack"
+title: "[ARO] "
+labels: ["aro", "openshift", "infrastructure", "h1-foundation"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔴 Azure Red Hat OpenShift (ARO) Deployment
+        Deploy a complete ARO cluster with RHDH, GitOps, and enterprise integrations.
+        
+        **Prerequisites:**
+        - Red Hat pull secret from cloud.redhat.com
+        - Azure subscription with ARO quota
+        - VNet configuration
+
+  - type: dropdown
+    id: deployment_type
+    attributes:
+      label: "Deployment Type"
+      description: "What do you need to deploy?"
+      options:
+        - "New ARO Cluster + Full Stack"
+        - "New ARO Cluster Only"
+        - "Configure Existing ARO Cluster"
+        - "Install RHDH on Existing ARO"
+        - "Install GitOps on Existing ARO"
+    validations:
+      required: true
+
+  - type: input
+    id: cluster_name
+    attributes:
+      label: "Cluster Name"
+      description: "Name for the ARO cluster"
+      placeholder: "aro-threehorizons-prod"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: azure_region
+    attributes:
+      label: "Azure Region"
+      description: "Deployment region"
+      options:
+        - "brazilsouth"
+        - "eastus"
+        - "eastus2"
+        - "southcentralus"
+        - "westus2"
+        - "westeurope"
+    validations:
+      required: true
+
+  - type: input
+    id: resource_group
+    attributes:
+      label: "Resource Group"
+      description: "Azure Resource Group for ARO"
+      placeholder: "rg-aro-threehorizons-prod"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sizing_profile
+    attributes:
+      label: "Sizing Profile"
+      description: "Select cluster sizing"
+      options:
+        - "small (3 workers, D4s_v3)"
+        - "medium (5 workers, D8s_v3)"
+        - "large (10 workers, D16s_v3)"
+        - "xlarge (20 workers, D32s_v3)"
+    validations:
+      required: true
+
+  - type: input
+    id: vnet_name
+    attributes:
+      label: "VNet Name"
+      description: "Virtual Network for ARO"
+      placeholder: "vnet-aro-prod"
+    validations:
+      required: true
+
+  - type: input
+    id: vnet_cidr
+    attributes:
+      label: "VNet CIDR"
+      description: "VNet address space"
+      placeholder: "10.0.0.0/16"
+    validations:
+      required: true
+
+  - type: input
+    id: domain
+    attributes:
+      label: "Cluster Domain"
+      description: "Domain suffix for the cluster"
+      placeholder: "aro-prod"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: platform_components
+    attributes:
+      label: "Platform Components"
+      description: "Select components to deploy"
+      options:
+        - label: "OpenShift GitOps (ArgoCD)"
+          required: true
+        - label: "Red Hat Developer Hub (RHDH)"
+          required: true
+        - label: "OpenShift Pipelines (Tekton)"
+        - label: "OpenShift Service Mesh (Istio)"
+        - label: "OpenShift Logging (EFK)"
+        - label: "OpenShift Monitoring"
+        - label: "Advanced Cluster Security (ACS)"
+        - label: "Quay Registry"
+
+  - type: dropdown
+    id: oauth_provider
+    attributes:
+      label: "OAuth Provider"
+      description: "Identity provider for cluster authentication"
+      options:
+        - "Microsoft Entra ID (Azure AD)"
+        - "GitHub"
+        - "LDAP"
+        - "HTPasswd (testing only)"
+    validations:
+      required: true
+
+  - type: input
+    id: entra_tenant_id
+    attributes:
+      label: "Entra ID Tenant ID (if using Entra)"
+      description: "Azure AD tenant for OAuth"
+      placeholder: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+  - type: checkboxes
+    id: integrations
+    attributes:
+      label: "External Integrations"
+      description: "Configure integrations with external services"
+      options:
+        - label: "Azure Container Registry (ACR)"
+        - label: "Azure Key Vault"
+        - label: "Azure PostgreSQL"
+        - label: "Azure Blob Storage"
+        - label: "GitHub (repos, webhooks)"
+        - label: "Azure Defender for Cloud"
+        - label: "Microsoft Purview"
+
+  - type: textarea
+    id: pull_secret
+    attributes:
+      label: "Red Hat Pull Secret Location"
+      description: "How will you provide the pull secret?"
+      placeholder: |
+        Option 1: Azure Key Vault secret name
+        Option 2: File path on deployment machine
+        
+        Note: Never paste the actual secret here!
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: "Additional Requirements"
+      description: "Any other requirements or context"

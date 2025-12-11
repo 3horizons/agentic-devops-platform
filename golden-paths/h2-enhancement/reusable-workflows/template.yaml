@@ -1,0 +1,933 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H2 REUSABLE WORKFLOWS GOLDEN PATH
+# =============================================================================
+#
+# RHDH Software Template for creating reusable GitHub Actions workflows.
+# Enables standardization of CI/CD patterns across the organization.
+#
+# Horizon: H2 - Enhancement
+# Use Case: Shared workflows, composite actions, organization-wide standards
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h2-reusable-workflows
+  title: "H2: Create Reusable Workflows Library"
+  description: |
+    Create a repository of reusable GitHub Actions workflows and composite actions.
+    Standardize CI/CD patterns across your organization.
+  tags:
+    - h2-enhancement
+    - github-actions
+    - ci-cd
+    - reusable-workflows
+    - devops
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+
+spec:
+  owner: platform-engineering
+  type: workflow-library
+
+  parameters:
+    # -------------------------------------------------------------------------
+    # Library Information
+    # -------------------------------------------------------------------------
+    - title: Library Information
+      required:
+        - libraryName
+        - team
+      properties:
+        libraryName:
+          title: Library Name
+          description: Name for this workflow library
+          type: string
+          pattern: '^[a-z][a-z0-9-]*-workflows$'
+          maxLength: 40
+          default: platform-workflows
+
+        team:
+          title: Team
+          description: Team that maintains this library
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        description:
+          title: Description
+          type: string
+          default: Reusable GitHub Actions workflows and composite actions
+
+        scope:
+          title: Library Scope
+          type: string
+          default: organization
+          enum:
+            - organization
+            - team
+            - project
+          enumNames:
+            - Organization-wide
+            - Team-specific
+            - Project-specific
+
+    # -------------------------------------------------------------------------
+    # Workflow Templates
+    # -------------------------------------------------------------------------
+    - title: Workflow Templates to Include
+      properties:
+        includeWorkflows:
+          title: Reusable Workflows
+          type: array
+          items:
+            type: string
+            enum:
+              - build-container
+              - deploy-aks
+              - deploy-container-apps
+              - security-scan
+              - code-quality
+              - test-dotnet
+              - test-node
+              - test-python
+              - release-semantic
+              - notify-teams
+              - terraform-plan-apply
+              - gitops-sync
+          uniqueItems: true
+          default:
+            - build-container
+            - deploy-aks
+            - security-scan
+            - code-quality
+
+        includeCompositeActions:
+          title: Composite Actions
+          type: array
+          items:
+            type: string
+            enum:
+              - setup-dotnet
+              - setup-node
+              - setup-python
+              - setup-go
+              - azure-login
+              - docker-build-push
+              - helm-deploy
+              - slack-notify
+              - teams-notify
+              - create-release
+              - cache-dependencies
+              - run-tests-with-coverage
+          uniqueItems: true
+          default:
+            - azure-login
+            - docker-build-push
+            - helm-deploy
+
+    # -------------------------------------------------------------------------
+    # Build Workflow Configuration
+    # -------------------------------------------------------------------------
+    - title: Build Workflow Configuration
+      properties:
+        containerRegistry:
+          title: Default Container Registry
+          type: string
+          default: acr
+          enum:
+            - acr
+            - ghcr
+            - dockerhub
+          enumNames:
+            - Azure Container Registry
+            - GitHub Container Registry
+            - Docker Hub
+
+        enableMultiArch:
+          title: Enable Multi-Architecture Builds
+          type: boolean
+          default: true
+
+        architectures:
+          title: Target Architectures
+          type: array
+          items:
+            type: string
+            enum:
+              - linux/amd64
+              - linux/arm64
+          default:
+            - linux/amd64
+            - linux/arm64
+
+        enableSBOM:
+          title: Generate SBOM (Software Bill of Materials)
+          type: boolean
+          default: true
+
+        enableSignatures:
+          title: Enable Container Signing
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Security Configuration
+    # -------------------------------------------------------------------------
+    - title: Security Configuration
+      properties:
+        enableGHAS:
+          title: Enable GitHub Advanced Security
+          type: boolean
+          default: true
+
+        securityTools:
+          title: Security Scanning Tools
+          type: array
+          items:
+            type: string
+            enum:
+              - codeql
+              - dependabot
+              - trivy
+              - snyk
+              - checkov
+              - gitleaks
+          default:
+            - codeql
+            - trivy
+            - gitleaks
+
+        failOnHighVulns:
+          title: Fail on High/Critical Vulnerabilities
+          type: boolean
+          default: true
+
+        enableSecretScanning:
+          title: Enable Secret Scanning
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Deployment Configuration
+    # -------------------------------------------------------------------------
+    - title: Deployment Configuration
+      properties:
+        deploymentTargets:
+          title: Supported Deployment Targets
+          type: array
+          items:
+            type: string
+            enum:
+              - aks
+              - container-apps
+              - app-service
+              - static-web-apps
+              - functions
+          default:
+            - aks
+            - container-apps
+
+        enableGitOps:
+          title: Enable GitOps Workflows
+          type: boolean
+          default: true
+
+        gitOpsRepo:
+          title: GitOps Repository Pattern
+          type: string
+          default: "{app-name}-gitops"
+
+        environments:
+          title: Standard Environments
+          type: array
+          items:
+            type: string
+          default:
+            - dev
+            - staging
+            - prod
+
+    # -------------------------------------------------------------------------
+    # Notifications
+    # -------------------------------------------------------------------------
+    - title: Notification Configuration
+      properties:
+        enableNotifications:
+          title: Enable Notifications
+          type: boolean
+          default: true
+
+        notificationChannels:
+          title: Default Notification Channels
+          type: array
+          items:
+            type: string
+            enum:
+              - teams
+              - slack
+              - email
+          default:
+            - teams
+
+        notifyOnSuccess:
+          title: Notify on Success
+          type: boolean
+          default: false
+
+        notifyOnFailure:
+          title: Notify on Failure
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Repository
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    - id: fetch-template
+      name: Fetch Workflow Library Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./repo
+        values:
+          libraryName: ${{ parameters.libraryName }}
+          team: ${{ parameters.team }}
+          description: ${{ parameters.description }}
+          scope: ${{ parameters.scope }}
+
+    - id: generate-workflows
+      name: Generate Reusable Workflows
+      action: fetch:template
+      input:
+        url: ./skeleton/workflows
+        targetPath: ./repo/.github/workflows
+        values:
+          includeWorkflows: ${{ parameters.includeWorkflows }}
+          containerRegistry: ${{ parameters.containerRegistry }}
+          enableMultiArch: ${{ parameters.enableMultiArch }}
+          enableGHAS: ${{ parameters.enableGHAS }}
+          securityTools: ${{ parameters.securityTools }}
+
+    - id: generate-actions
+      name: Generate Composite Actions
+      action: fetch:template
+      input:
+        url: ./skeleton/actions
+        targetPath: ./repo/actions
+        values:
+          includeCompositeActions: ${{ parameters.includeCompositeActions }}
+
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: ${{ parameters.description }}
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./repo
+
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}
+
+---
+# =============================================================================
+# SKELETON FILES - REUSABLE WORKFLOWS
+# =============================================================================
+
+# skeleton/.github/workflows/build-container.yml
+name: Build Container Image
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: 'Name for the container image'
+        required: true
+        type: string
+      dockerfile:
+        description: 'Path to Dockerfile'
+        required: false
+        type: string
+        default: 'Dockerfile'
+      context:
+        description: 'Build context path'
+        required: false
+        type: string
+        default: '.'
+      build_args:
+        description: 'Build arguments (JSON format)'
+        required: false
+        type: string
+        default: '{}'
+      push:
+        description: 'Push image to registry'
+        required: false
+        type: boolean
+        default: true
+      {%- if values.containerRegistry == 'acr' %}
+      registry:
+        description: 'ACR registry name'
+        required: true
+        type: string
+      {%- endif %}
+    outputs:
+      image_tag:
+        description: 'Full image tag'
+        value: ${{ "{{" }} jobs.build.outputs.image_tag {{ "}}" }}
+      digest:
+        description: 'Image digest'
+        value: ${{ "{{" }} jobs.build.outputs.digest {{ "}}" }}
+    secrets:
+      {%- if values.containerRegistry == 'acr' %}
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      {%- elif values.containerRegistry == 'ghcr' %}
+      GHCR_TOKEN:
+        required: true
+      {%- endif %}
+
+jobs:
+  build:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ "{{" }} steps.meta.outputs.tags {{ "}}" }}
+      digest: ${{ "{{" }} steps.build.outputs.digest {{ "}}" }}
+    
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      {%- if values.containerRegistry == 'acr' %}
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ "{{" }} secrets.AZURE_CLIENT_ID {{ "}}" }}
+          tenant-id: ${{ "{{" }} secrets.AZURE_TENANT_ID {{ "}}" }}
+          subscription-id: ${{ "{{" }} secrets.AZURE_SUBSCRIPTION_ID {{ "}}" }}
+      
+      - name: Login to ACR
+        run: |
+          az acr login --name ${{ "{{" }} inputs.registry {{ "}}" }}
+      {%- elif values.containerRegistry == 'ghcr' %}
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ "{{" }} github.actor {{ "}}" }}
+          password: ${{ "{{" }} secrets.GHCR_TOKEN {{ "}}" }}
+      {%- endif %}
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      {%- if values.enableMultiArch %}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      {%- endif %}
+      
+      - name: Docker Meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          {%- if values.containerRegistry == 'acr' %}
+          images: ${{ "{{" }} inputs.registry {{ "}}" }}.azurecr.io/${{ "{{" }} inputs.image_name {{ "}}" }}
+          {%- elif values.containerRegistry == 'ghcr' %}
+          images: ghcr.io/${{ "{{" }} github.repository_owner {{ "}}" }}/${{ "{{" }} inputs.image_name {{ "}}" }}
+          {%- endif %}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix=
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      
+      - name: Build and Push
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ "{{" }} inputs.context {{ "}}" }}
+          file: ${{ "{{" }} inputs.dockerfile {{ "}}" }}
+          push: ${{ "{{" }} inputs.push {{ "}}" }}
+          tags: ${{ "{{" }} steps.meta.outputs.tags {{ "}}" }}
+          labels: ${{ "{{" }} steps.meta.outputs.labels {{ "}}" }}
+          {%- if values.enableMultiArch %}
+          platforms: ${{ values.architectures | join(',') }}
+          {%- endif %}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          {%- if values.enableSBOM %}
+          sbom: true
+          {%- endif %}
+          {%- if values.enableSignatures %}
+          provenance: true
+          {%- endif %}
+      
+      {%- if 'trivy' in values.securityTools %}
+      - name: Trivy Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ "{{" }} steps.meta.outputs.tags {{ "}}" }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          {%- if values.failOnHighVulns %}
+          exit-code: '1'
+          {%- endif %}
+      
+      - name: Upload Trivy Results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+      {%- endif %}
+
+---
+# skeleton/.github/workflows/deploy-aks.yml
+name: Deploy to AKS
+
+on:
+  workflow_call:
+    inputs:
+      cluster_name:
+        description: 'AKS cluster name'
+        required: true
+        type: string
+      resource_group:
+        description: 'Azure resource group'
+        required: true
+        type: string
+      namespace:
+        description: 'Kubernetes namespace'
+        required: true
+        type: string
+      image_tag:
+        description: 'Container image tag'
+        required: true
+        type: string
+      helm_chart:
+        description: 'Helm chart path'
+        required: false
+        type: string
+        default: 'helm/app'
+      values_file:
+        description: 'Values file path'
+        required: false
+        type: string
+        default: ''
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy to ${{ "{{" }} inputs.environment {{ "}}" }}
+    runs-on: ubuntu-latest
+    environment: ${{ "{{" }} inputs.environment {{ "}}" }}
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ "{{" }} secrets.AZURE_CLIENT_ID {{ "}}" }}
+          tenant-id: ${{ "{{" }} secrets.AZURE_TENANT_ID {{ "}}" }}
+          subscription-id: ${{ "{{" }} secrets.AZURE_SUBSCRIPTION_ID {{ "}}" }}
+      
+      - name: Get AKS Credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ "{{" }} inputs.resource_group {{ "}}" }} \
+            --name ${{ "{{" }} inputs.cluster_name {{ "}}" }} \
+            --overwrite-existing
+      
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+      
+      - name: Helm Deploy
+        run: |
+          helm upgrade --install \
+            ${{ "{{" }} inputs.namespace {{ "}}" }} \
+            ${{ "{{" }} inputs.helm_chart {{ "}}" }} \
+            --namespace ${{ "{{" }} inputs.namespace {{ "}}" }} \
+            --create-namespace \
+            --set image.tag=${{ "{{" }} inputs.image_tag {{ "}}" }} \
+            --set environment=${{ "{{" }} inputs.environment {{ "}}" }} \
+            ${{ "{{" }} inputs.values_file && format('--values {0}', inputs.values_file) || '' {{ "}}" }} \
+            --wait \
+            --timeout 10m
+      
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment \
+            -n ${{ "{{" }} inputs.namespace {{ "}}" }} \
+            --timeout=5m
+
+---
+# skeleton/.github/workflows/security-scan.yml
+name: Security Scan
+
+on:
+  workflow_call:
+    inputs:
+      languages:
+        description: 'Languages to scan (JSON array)'
+        required: false
+        type: string
+        default: '["javascript", "python"]'
+      fail_on_findings:
+        description: 'Fail workflow on security findings'
+        required: false
+        type: boolean
+        default: ${{ values.failOnHighVulns }}
+
+jobs:
+  {%- if 'codeql' in values.securityTools %}
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    strategy:
+      matrix:
+        language: ${{ "{{" }} fromJson(inputs.languages) {{ "}}" }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ "{{" }} matrix.language {{ "}}" }}
+      
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+      
+      - name: Perform Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ "{{" }} matrix.language {{ "}}" }}"
+  {%- endif %}
+  
+  {%- if 'gitleaks' in values.securityTools %}
+  secrets:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Gitleaks Scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN {{ "}}" }}
+  {%- endif %}
+  
+  {%- if 'checkov' in values.securityTools %}
+  iac:
+    name: IaC Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Checkov Scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          framework: terraform,kubernetes,dockerfile
+          output_format: sarif
+          output_file_path: checkov.sarif
+          {%- if values.failOnHighVulns %}
+          soft_fail: false
+          {%- else %}
+          soft_fail: true
+          {%- endif %}
+      
+      - name: Upload Results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: checkov.sarif
+  {%- endif %}
+
+---
+# skeleton/actions/azure-login/action.yml
+name: 'Azure Login'
+description: 'Login to Azure using OIDC'
+
+inputs:
+  client_id:
+    description: 'Azure AD application client ID'
+    required: true
+  tenant_id:
+    description: 'Azure AD tenant ID'
+    required: true
+  subscription_id:
+    description: 'Azure subscription ID'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ "{{" }} inputs.client_id {{ "}}" }}
+        tenant-id: ${{ "{{" }} inputs.tenant_id {{ "}}" }}
+        subscription-id: ${{ "{{" }} inputs.subscription_id {{ "}}" }}
+    
+    - name: Verify Login
+      shell: bash
+      run: |
+        az account show --output table
+        echo "Successfully logged in to Azure"
+
+---
+# skeleton/actions/docker-build-push/action.yml
+name: 'Docker Build and Push'
+description: 'Build and push Docker image with caching'
+
+inputs:
+  image_name:
+    description: 'Image name'
+    required: true
+  registry:
+    description: 'Container registry'
+    required: true
+  dockerfile:
+    description: 'Dockerfile path'
+    required: false
+    default: 'Dockerfile'
+  context:
+    description: 'Build context'
+    required: false
+    default: '.'
+  push:
+    description: 'Push to registry'
+    required: false
+    default: 'true'
+
+outputs:
+  image_tag:
+    description: 'Full image tag'
+    value: ${{ "{{" }} steps.meta.outputs.tags {{ "}}" }}
+  digest:
+    description: 'Image digest'
+    value: ${{ "{{" }} steps.build.outputs.digest {{ "}}" }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Docker Meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ "{{" }} inputs.registry {{ "}}" }}/${{ "{{" }} inputs.image_name {{ "}}" }}
+        tags: |
+          type=sha,prefix=
+          type=ref,event=branch
+          type=semver,pattern={{version}}
+    
+    - name: Build and Push
+      id: build
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ "{{" }} inputs.context {{ "}}" }}
+        file: ${{ "{{" }} inputs.dockerfile {{ "}}" }}
+        push: ${{ "{{" }} inputs.push {{ "}}" }}
+        tags: ${{ "{{" }} steps.meta.outputs.tags {{ "}}" }}
+        labels: ${{ "{{" }} steps.meta.outputs.labels {{ "}}" }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+---
+# skeleton/actions/helm-deploy/action.yml
+name: 'Helm Deploy'
+description: 'Deploy application using Helm'
+
+inputs:
+  release_name:
+    description: 'Helm release name'
+    required: true
+  chart:
+    description: 'Helm chart path or name'
+    required: true
+  namespace:
+    description: 'Kubernetes namespace'
+    required: true
+  values:
+    description: 'Values file path'
+    required: false
+  set_values:
+    description: 'Additional --set values'
+    required: false
+  timeout:
+    description: 'Deployment timeout'
+    required: false
+    default: '10m'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Helm
+      uses: azure/setup-helm@v4
+    
+    - name: Deploy
+      shell: bash
+      run: |
+        helm upgrade --install \
+          ${{ "{{" }} inputs.release_name {{ "}}" }} \
+          ${{ "{{" }} inputs.chart {{ "}}" }} \
+          --namespace ${{ "{{" }} inputs.namespace {{ "}}" }} \
+          --create-namespace \
+          ${{ "{{" }} inputs.values && format('--values {0}', inputs.values) || '' {{ "}}" }} \
+          ${{ "{{" }} inputs.set_values && format('--set {0}', inputs.set_values) || '' {{ "}}" }} \
+          --wait \
+          --timeout ${{ "{{" }} inputs.timeout {{ "}}" }}
+
+---
+# skeleton/catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.libraryName }}
+  title: ${{ values.libraryName | replace('-workflows', '') | title }} Workflows
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: example/${{ values.libraryName }}
+  tags:
+    - workflow-library
+    - github-actions
+    - ci-cd
+spec:
+  type: library
+  lifecycle: production
+  owner: ${{ values.team }}
+
+---
+# skeleton/README.md
+# ${{ values.libraryName }}
+
+${{ values.description }}
+
+## Reusable Workflows
+
+| Workflow | Description | Usage |
+|----------|-------------|-------|
+{%- for workflow in values.includeWorkflows %}
+| `{{ workflow }}` | {{ workflow | replace('-', ' ') | title }} | `.github/workflows/{{ workflow }}.yml` |
+{%- endfor %}
+
+## Composite Actions
+
+| Action | Description | Usage |
+|--------|-------------|-------|
+{%- for action in values.includeCompositeActions %}
+| `{{ action }}` | {{ action | replace('-', ' ') | title }} | `actions/{{ action }}/action.yml` |
+{%- endfor %}
+
+## Usage Example
+
+```yaml
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    uses: ${{ values.team }}/${{ values.libraryName }}/.github/workflows/build-container.yml@main
+    with:
+      image_name: my-app
+      {%- if values.containerRegistry == 'acr' %}
+      registry: myacr
+      {%- endif %}
+    secrets: inherit
+
+  deploy:
+    needs: build
+    uses: ${{ values.team }}/${{ values.libraryName }}/.github/workflows/deploy-aks.yml@main
+    with:
+      cluster_name: my-cluster
+      resource_group: my-rg
+      namespace: my-app
+      image_tag: ${{ "{{" }} needs.build.outputs.image_tag {{ "}}" }}
+      environment: prod
+    secrets: inherit
+```
+
+## Security
+
+- All workflows include security scanning by default
+- OIDC authentication for Azure (no long-lived secrets)
+- Container image signing enabled
+- SBOM generation for compliance

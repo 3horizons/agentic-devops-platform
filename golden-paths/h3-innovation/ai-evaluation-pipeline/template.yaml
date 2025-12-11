@@ -1,0 +1,421 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: ai-evaluation-pipeline
+  title: AI Model Evaluation Pipeline
+  description: |
+    Creates a comprehensive AI model evaluation pipeline with:
+    - Automated model testing and benchmarking
+    - Quality metrics (accuracy, latency, cost)
+    - A/B testing infrastructure
+    - Responsible AI evaluations
+    - Integration with Azure AI Foundry
+  tags:
+    - ai
+    - mlops
+    - evaluation
+    - azure
+    - h3-innovation
+spec:
+  owner: platform-team
+  type: service
+  
+  parameters:
+    - title: Pipeline Configuration
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Pipeline Name
+          type: string
+          description: Name for your evaluation pipeline
+          pattern: '^[a-z0-9-]+$'
+          ui:autofocus: true
+        owner:
+          title: Owner Team
+          type: string
+          description: Team responsible for this pipeline
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+        description:
+          title: Description
+          type: string
+          description: Brief description of the pipeline purpose
+          
+    - title: Model Configuration
+      required:
+        - model_type
+      properties:
+        model_type:
+          title: Model Type
+          type: string
+          enum:
+            - llm
+            - vision
+            - multimodal
+            - custom
+          enumNames:
+            - Large Language Model
+            - Computer Vision
+            - Multimodal
+            - Custom Model
+        model_endpoints:
+          title: Model Endpoints
+          type: array
+          description: Azure OpenAI or custom model endpoints to evaluate
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              endpoint:
+                type: string
+              model:
+                type: string
+              
+    - title: Evaluation Metrics
+      properties:
+        enable_quality_metrics:
+          title: Enable Quality Metrics
+          type: boolean
+          default: true
+          description: Accuracy, F1, BLEU, ROUGE scores
+        enable_performance_metrics:
+          title: Enable Performance Metrics
+          type: boolean
+          default: true
+          description: Latency, throughput, cost per request
+        enable_safety_metrics:
+          title: Enable Safety Metrics
+          type: boolean
+          default: true
+          description: Toxicity, bias, hallucination detection
+        enable_groundedness:
+          title: Enable Groundedness Check
+          type: boolean
+          default: true
+          description: Check if responses are grounded in context
+        custom_metrics:
+          title: Custom Metrics
+          type: array
+          description: Additional custom evaluation metrics
+          items:
+            type: string
+            
+    - title: Test Data Configuration
+      properties:
+        test_dataset_source:
+          title: Test Dataset Source
+          type: string
+          enum:
+            - azure_blob
+            - huggingface
+            - github
+            - inline
+          default: azure_blob
+        golden_dataset_path:
+          title: Golden Dataset Path
+          type: string
+          description: Path to golden test dataset
+        synthetic_data_generation:
+          title: Enable Synthetic Data Generation
+          type: boolean
+          default: false
+          description: Generate synthetic test cases using AI
+          
+    - title: Infrastructure
+      required:
+        - environment
+      properties:
+        environment:
+          title: Environment
+          type: string
+          enum:
+            - dev
+            - staging
+            - prod
+        azure_region:
+          title: Azure Region
+          type: string
+          enum:
+            - brazilsouth
+            - eastus
+            - westeurope
+          default: brazilsouth
+        schedule:
+          title: Evaluation Schedule
+          type: string
+          enum:
+            - manual
+            - daily
+            - weekly
+            - on_deployment
+          default: on_deployment
+          
+  steps:
+    - id: fetch-template
+      name: Fetch AI Evaluation Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+          description: ${{ parameters.description }}
+          model_type: ${{ parameters.model_type }}
+          environment: ${{ parameters.environment }}
+          azure_region: ${{ parameters.azure_region }}
+          
+    - id: create-evaluation-config
+      name: Create Evaluation Configuration
+      action: roadiehq:utils:fs:write
+      input:
+        path: evaluation-config.yaml
+        content: |
+          # AI Evaluation Pipeline Configuration
+          pipeline:
+            name: ${{ parameters.name }}
+            model_type: ${{ parameters.model_type }}
+            schedule: ${{ parameters.schedule }}
+            
+          metrics:
+            quality:
+              enabled: ${{ parameters.enable_quality_metrics }}
+              metrics:
+                - accuracy
+                - f1_score
+                - bleu
+                - rouge
+            performance:
+              enabled: ${{ parameters.enable_performance_metrics }}
+              metrics:
+                - latency_p50
+                - latency_p99
+                - throughput
+                - cost_per_1k_tokens
+            safety:
+              enabled: ${{ parameters.enable_safety_metrics }}
+              metrics:
+                - toxicity
+                - bias_detection
+                - hallucination_rate
+            groundedness:
+              enabled: ${{ parameters.enable_groundedness }}
+              
+          data:
+            source: ${{ parameters.test_dataset_source }}
+            golden_dataset: ${{ parameters.golden_dataset_path }}
+            synthetic_generation: ${{ parameters.synthetic_data_generation }}
+            
+          infrastructure:
+            environment: ${{ parameters.environment }}
+            region: ${{ parameters.azure_region }}
+            
+    - id: create-github-actions
+      name: Create GitHub Actions Workflow
+      action: roadiehq:utils:fs:write
+      input:
+        path: .github/workflows/ai-evaluation.yml
+        content: |
+          name: AI Model Evaluation
+          
+          on:
+            workflow_dispatch:
+            schedule:
+              - cron: '0 6 * * *'  # Daily at 6 AM
+            push:
+              paths:
+                - 'evaluation-config.yaml'
+                - 'tests/**'
+                
+          env:
+            AZURE_AI_FOUNDRY_PROJECT: ${{ parameters.name }}-eval
+            
+          jobs:
+            evaluate:
+              runs-on: ubuntu-latest
+              environment: ${{ parameters.environment }}
+              
+              steps:
+                - uses: actions/checkout@v4
+                
+                - name: Azure Login
+                  uses: azure/login@v2
+                  with:
+                    client-id: $${{ secrets.AZURE_CLIENT_ID }}
+                    tenant-id: $${{ secrets.AZURE_TENANT_ID }}
+                    subscription-id: $${{ secrets.AZURE_SUBSCRIPTION_ID }}
+                    
+                - name: Setup Python
+                  uses: actions/setup-python@v5
+                  with:
+                    python-version: '3.11'
+                    
+                - name: Install Dependencies
+                  run: |
+                    pip install azure-ai-evaluation promptflow-evals
+                    pip install -r requirements.txt
+                    
+                - name: Run Evaluations
+                  run: |
+                    python -m evaluation.run \
+                      --config evaluation-config.yaml \
+                      --output results/
+                      
+                - name: Upload Results
+                  uses: actions/upload-artifact@v4
+                  with:
+                    name: evaluation-results
+                    path: results/
+                    
+                - name: Publish to AI Foundry
+                  run: |
+                    az ml evaluation create \
+                      --name ${{ parameters.name }}-$${{ github.run_number }} \
+                      --data results/metrics.json
+                      
+    - id: create-evaluation-script
+      name: Create Evaluation Script
+      action: roadiehq:utils:fs:write
+      input:
+        path: evaluation/run.py
+        content: |
+          """
+          AI Model Evaluation Pipeline
+          
+          Uses Azure AI Evaluation SDK for comprehensive model testing.
+          """
+          import os
+          import json
+          import yaml
+          from datetime import datetime
+          from azure.ai.evaluation import (
+              evaluate,
+              RelevanceEvaluator,
+              GroundednessEvaluator,
+              FluencyEvaluator,
+              CoherenceEvaluator,
+              SimilarityEvaluator,
+          )
+          from azure.ai.evaluation.metrics import (
+              PromptMetric,
+              CustomMetric,
+          )
+          
+          def load_config(config_path: str) -> dict:
+              with open(config_path) as f:
+                  return yaml.safe_load(f)
+                  
+          def load_test_data(config: dict) -> list:
+              """Load golden test dataset."""
+              source = config['data']['source']
+              if source == 'azure_blob':
+                  # Load from Azure Blob Storage
+                  pass
+              elif source == 'huggingface':
+                  # Load from HuggingFace datasets
+                  pass
+              return []
+              
+          def get_evaluators(config: dict) -> list:
+              """Configure evaluators based on config."""
+              evaluators = []
+              
+              if config['metrics']['quality']['enabled']:
+                  evaluators.extend([
+                      RelevanceEvaluator(),
+                      FluencyEvaluator(),
+                      CoherenceEvaluator(),
+                  ])
+                  
+              if config['metrics']['groundedness']['enabled']:
+                  evaluators.append(GroundednessEvaluator())
+                  
+              return evaluators
+              
+          def run_evaluation(config_path: str, output_dir: str):
+              """Run the full evaluation pipeline."""
+              config = load_config(config_path)
+              test_data = load_test_data(config)
+              evaluators = get_evaluators(config)
+              
+              # Run evaluation
+              results = evaluate(
+                  data=test_data,
+                  evaluators=evaluators,
+                  azure_ai_project={
+                      "subscription_id": os.environ["AZURE_SUBSCRIPTION_ID"],
+                      "resource_group_name": os.environ["AZURE_RESOURCE_GROUP"],
+                      "project_name": os.environ["AZURE_AI_FOUNDRY_PROJECT"],
+                  },
+              )
+              
+              # Save results
+              os.makedirs(output_dir, exist_ok=True)
+              with open(f"{output_dir}/metrics.json", "w") as f:
+                  json.dump(results.metrics, f, indent=2)
+                  
+              print(f"Evaluation complete. Results saved to {output_dir}")
+              return results
+              
+          if __name__ == "__main__":
+              import argparse
+              parser = argparse.ArgumentParser()
+              parser.add_argument("--config", required=True)
+              parser.add_argument("--output", default="results")
+              args = parser.parse_args()
+              
+              run_evaluation(args.config, args.output)
+              
+    - id: create-catalog-info
+      name: Create Catalog Info
+      action: roadiehq:utils:fs:write
+      input:
+        path: catalog-info.yaml
+        content: |
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            name: ${{ parameters.name }}
+            description: ${{ parameters.description }}
+            tags:
+              - ai-evaluation
+              - mlops
+              - ${{ parameters.model_type }}
+            annotations:
+              github.com/project-slug: ${{ parameters.owner }}/${{ parameters.name }}
+              backstage.io/techdocs-ref: dir:.
+          spec:
+            type: service
+            lifecycle: production
+            owner: ${{ parameters.owner }}
+            system: ai-platform
+            
+    - id: publish-github
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}
+        description: AI Model Evaluation Pipeline - ${{ parameters.description }}
+        defaultBranch: main
+        repoVisibility: private
+        
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish-github'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+        
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish-github'].output.remoteUrl }}
+      - title: Pipeline Dashboard
+        url: https://portal.azure.com/#view/Microsoft_Azure_MachineLearning/EvaluationBlade
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}

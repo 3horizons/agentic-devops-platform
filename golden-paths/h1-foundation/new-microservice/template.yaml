@@ -1,0 +1,924 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H3 FOUNDRY AGENT GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating Azure AI Foundry agents.
+# Generates autonomous AI agents with tools, RAG, and orchestration.
+#
+# Horizon: H3 - Innovation
+# Use Case: Build autonomous AI agents for business workflows
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h3-foundry-agent
+  title: "H3: Create AI Foundry Agent"
+  description: |
+    Create an autonomous AI agent powered by Azure AI Foundry.
+    Includes tool definitions, RAG integration, safety controls,
+    and deployment to Azure AI Agent Service.
+  tags:
+    - h3-innovation
+    - ai-agent
+    - foundry
+    - autonomous
+    - llm
+    - agentic
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: Azure AI Foundry Documentation
+      url: https://docs.microsoft.com/en-us/azure/ai-services/
+    - title: Agent Service Guide
+      url: https://learn.microsoft.com/en-us/azure/ai-services/agents/
+
+spec:
+  owner: platform-engineering
+  type: ai-agent
+
+  # ===========================================================================
+  # PARAMETERS
+  # ===========================================================================
+  
+  parameters:
+    # -------------------------------------------------------------------------
+    # Agent Information
+    # -------------------------------------------------------------------------
+    - title: Agent Information
+      required:
+        - agentName
+        - team
+        - agentPurpose
+      properties:
+        agentName:
+          title: Agent Name
+          description: Name of the AI agent
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 40
+          ui:autofocus: true
+
+        team:
+          title: Team
+          description: Team that owns this agent
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        agentPurpose:
+          title: Agent Purpose
+          description: Primary purpose of this agent
+          type: string
+          maxLength: 500
+          ui:widget: textarea
+          ui:options:
+            rows: 3
+
+        agentPersona:
+          title: Agent Persona
+          description: Personality and behavior guidelines
+          type: string
+          maxLength: 1000
+          ui:widget: textarea
+          ui:options:
+            rows: 5
+          default: |
+            You are a helpful AI assistant. You are professional, accurate, 
+            and always verify information before providing answers.
+            If you don't know something, you say so clearly.
+
+    # -------------------------------------------------------------------------
+    # Model Configuration
+    # -------------------------------------------------------------------------
+    - title: Model Configuration
+      required:
+        - primaryModel
+      properties:
+        primaryModel:
+          title: Primary Model
+          description: Main LLM for agent reasoning
+          type: string
+          default: gpt-4o
+          enum:
+            - gpt-4o
+            - gpt-4o-mini
+            - gpt-4-turbo
+            - o1
+            - o1-mini
+          enumNames:
+            - GPT-4o (Recommended)
+            - GPT-4o Mini (Cost-effective)
+            - GPT-4 Turbo
+            - o1 (Advanced reasoning)
+            - o1 Mini (Reasoning, smaller)
+
+        temperature:
+          title: Temperature
+          description: Creativity level (0=deterministic, 1=creative)
+          type: number
+          default: 0.7
+          minimum: 0
+          maximum: 1
+          ui:widget: range
+
+        maxTokens:
+          title: Max Output Tokens
+          description: Maximum tokens in response
+          type: integer
+          default: 4096
+          minimum: 256
+          maximum: 16384
+
+        embeddingModel:
+          title: Embedding Model
+          description: Model for RAG embeddings
+          type: string
+          default: text-embedding-3-large
+          enum:
+            - text-embedding-3-large
+            - text-embedding-3-small
+            - text-embedding-ada-002
+
+    # -------------------------------------------------------------------------
+    # Agent Tools
+    # -------------------------------------------------------------------------
+    - title: Agent Tools
+      description: Configure tools the agent can use
+      properties:
+        enableCodeInterpreter:
+          title: Enable Code Interpreter
+          description: Allow agent to write and execute Python code
+          type: boolean
+          default: false
+
+        enableFileSearch:
+          title: Enable File Search (RAG)
+          description: Allow agent to search uploaded files
+          type: boolean
+          default: true
+
+        enableBingSearch:
+          title: Enable Bing Search
+          description: Allow agent to search the web
+          type: boolean
+          default: false
+
+        customTools:
+          title: Custom Tools
+          description: Define custom tools (functions) the agent can call
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                title: Tool Name
+                type: string
+                pattern: '^[a-z_][a-z0-9_]*$'
+              description:
+                title: Description
+                type: string
+              parameters:
+                title: Parameters (JSON Schema)
+                type: string
+                ui:widget: textarea
+              endpoint:
+                title: API Endpoint (optional)
+                type: string
+          default:
+            - name: get_customer_info
+              description: Retrieve customer information by ID
+              parameters: |
+                {
+                  "type": "object",
+                  "properties": {
+                    "customer_id": {"type": "string", "description": "Customer ID"}
+                  },
+                  "required": ["customer_id"]
+                }
+              endpoint: ""
+
+    # -------------------------------------------------------------------------
+    # RAG Configuration
+    # -------------------------------------------------------------------------
+    - title: RAG Configuration
+      description: Configure Retrieval-Augmented Generation
+      properties:
+        enableRAG:
+          title: Enable RAG
+          description: Enable document retrieval for context
+          type: boolean
+          default: true
+
+        ragSource:
+          title: RAG Data Source
+          type: string
+          default: ai-search
+          enum:
+            - ai-search
+            - blob-storage
+            - cosmos-db
+            - sharepoint
+          enumNames:
+            - Azure AI Search
+            - Azure Blob Storage
+            - Azure Cosmos DB
+            - SharePoint Online
+
+        vectorStore:
+          title: Vector Store
+          description: Where to store embeddings
+          type: string
+          default: ai-search
+          enum:
+            - ai-search
+            - cosmos-mongodb
+            - postgres-pgvector
+
+        chunkSize:
+          title: Chunk Size
+          description: Document chunk size for RAG
+          type: integer
+          default: 512
+          minimum: 128
+          maximum: 2048
+
+        chunkOverlap:
+          title: Chunk Overlap
+          description: Overlap between chunks
+          type: integer
+          default: 50
+          minimum: 0
+          maximum: 200
+
+        topK:
+          title: Top K Results
+          description: Number of chunks to retrieve
+          type: integer
+          default: 5
+          minimum: 1
+          maximum: 20
+
+    # -------------------------------------------------------------------------
+    # Safety & Guardrails
+    # -------------------------------------------------------------------------
+    - title: Safety & Guardrails
+      properties:
+        enableContentSafety:
+          title: Enable Content Safety
+          description: Use Azure AI Content Safety for filtering
+          type: boolean
+          default: true
+
+        contentSafetyLevel:
+          title: Content Safety Level
+          type: string
+          default: medium
+          enum:
+            - low
+            - medium
+            - high
+          enumNames:
+            - Low (Allow most content)
+            - Medium (Balanced)
+            - High (Strict filtering)
+
+        enableGroundedness:
+          title: Enable Groundedness Check
+          description: Verify responses are grounded in sources
+          type: boolean
+          default: true
+
+        enableJailbreakProtection:
+          title: Enable Jailbreak Protection
+          description: Detect and block jailbreak attempts
+          type: boolean
+          default: true
+
+        customGuardrails:
+          title: Custom Guardrails
+          description: Additional rules for the agent
+          type: array
+          items:
+            type: string
+          default:
+            - "Never share confidential customer data"
+            - "Always cite sources when providing information"
+            - "Escalate to human when confidence is low"
+
+        maxTurns:
+          title: Max Conversation Turns
+          description: Maximum turns before forcing completion
+          type: integer
+          default: 20
+          minimum: 5
+          maximum: 50
+
+    # -------------------------------------------------------------------------
+    # Integration
+    # -------------------------------------------------------------------------
+    - title: Integration
+      properties:
+        orchestrationFramework:
+          title: Orchestration Framework
+          description: Framework for agent orchestration
+          type: string
+          default: semantic-kernel
+          enum:
+            - semantic-kernel
+            - autogen
+            - langchain
+            - native
+          enumNames:
+            - Semantic Kernel (Microsoft)
+            - AutoGen (Multi-agent)
+            - LangChain
+            - Native Azure SDK
+
+        enableMultiAgent:
+          title: Enable Multi-Agent
+          description: Allow collaboration with other agents
+          type: boolean
+          default: false
+
+        collaboratingAgents:
+          title: Collaborating Agents
+          description: Other agents this agent can call
+          type: array
+          items:
+            type: string
+          default: []
+
+        enableHumanInLoop:
+          title: Enable Human-in-the-Loop
+          description: Allow agent to request human approval
+          type: boolean
+          default: true
+
+        approvalTriggers:
+          title: Approval Triggers
+          description: Actions that require human approval
+          type: array
+          items:
+            type: string
+          default:
+            - "financial_transactions"
+            - "data_deletion"
+            - "external_communications"
+
+    # -------------------------------------------------------------------------
+    # Deployment
+    # -------------------------------------------------------------------------
+    - title: Deployment
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+        deployTarget:
+          title: Deployment Target
+          type: string
+          default: aks
+          enum:
+            - aks
+            - agent-service
+            - container-apps
+          enumNames:
+            - AKS (Kubernetes)
+            - Azure AI Agent Service (Preview)
+            - Azure Container Apps
+
+        environments:
+          title: Environments
+          type: array
+          items:
+            type: string
+            enum:
+              - dev
+              - staging
+              - prod
+          default:
+            - dev
+            - staging
+            - prod
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    # -------------------------------------------------------------------------
+    # Fetch Agent Template
+    # -------------------------------------------------------------------------
+    - id: fetch-template
+      name: Fetch Agent Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./repo
+        values:
+          agentName: ${{ parameters.agentName }}
+          team: ${{ parameters.team }}
+          agentPurpose: ${{ parameters.agentPurpose }}
+          agentPersona: ${{ parameters.agentPersona }}
+          primaryModel: ${{ parameters.primaryModel }}
+          temperature: ${{ parameters.temperature }}
+          maxTokens: ${{ parameters.maxTokens }}
+          embeddingModel: ${{ parameters.embeddingModel }}
+          enableCodeInterpreter: ${{ parameters.enableCodeInterpreter }}
+          enableFileSearch: ${{ parameters.enableFileSearch }}
+          enableBingSearch: ${{ parameters.enableBingSearch }}
+          customTools: ${{ parameters.customTools }}
+          enableRAG: ${{ parameters.enableRAG }}
+          ragSource: ${{ parameters.ragSource }}
+          vectorStore: ${{ parameters.vectorStore }}
+          chunkSize: ${{ parameters.chunkSize }}
+          topK: ${{ parameters.topK }}
+          enableContentSafety: ${{ parameters.enableContentSafety }}
+          contentSafetyLevel: ${{ parameters.contentSafetyLevel }}
+          enableGroundedness: ${{ parameters.enableGroundedness }}
+          customGuardrails: ${{ parameters.customGuardrails }}
+          orchestrationFramework: ${{ parameters.orchestrationFramework }}
+          enableMultiAgent: ${{ parameters.enableMultiAgent }}
+          enableHumanInLoop: ${{ parameters.enableHumanInLoop }}
+          approvalTriggers: ${{ parameters.approvalTriggers }}
+
+    # -------------------------------------------------------------------------
+    # Generate Tool Definitions
+    # -------------------------------------------------------------------------
+    - id: generate-tools
+      name: Generate Tool Definitions
+      action: fetch:template
+      input:
+        url: ./skeleton/tools
+        targetPath: ./repo/src/tools
+        values:
+          customTools: ${{ parameters.customTools }}
+          orchestrationFramework: ${{ parameters.orchestrationFramework }}
+
+    # -------------------------------------------------------------------------
+    # Generate RAG Pipeline
+    # -------------------------------------------------------------------------
+    - id: generate-rag
+      name: Generate RAG Pipeline
+      if: ${{ parameters.enableRAG }}
+      action: fetch:template
+      input:
+        url: ./skeleton/rag
+        targetPath: ./repo/src/rag
+        values:
+          ragSource: ${{ parameters.ragSource }}
+          vectorStore: ${{ parameters.vectorStore }}
+          embeddingModel: ${{ parameters.embeddingModel }}
+          chunkSize: ${{ parameters.chunkSize }}
+          chunkOverlap: ${{ parameters.chunkOverlap }}
+          topK: ${{ parameters.topK }}
+
+    # -------------------------------------------------------------------------
+    # Generate Safety Module
+    # -------------------------------------------------------------------------
+    - id: generate-safety
+      name: Generate Safety Module
+      action: fetch:template
+      input:
+        url: ./skeleton/safety
+        targetPath: ./repo/src/safety
+        values:
+          enableContentSafety: ${{ parameters.enableContentSafety }}
+          contentSafetyLevel: ${{ parameters.contentSafetyLevel }}
+          enableGroundedness: ${{ parameters.enableGroundedness }}
+          enableJailbreakProtection: ${{ parameters.enableJailbreakProtection }}
+          customGuardrails: ${{ parameters.customGuardrails }}
+          maxTurns: ${{ parameters.maxTurns }}
+
+    # -------------------------------------------------------------------------
+    # Generate Kubernetes Manifests
+    # -------------------------------------------------------------------------
+    - id: generate-k8s
+      name: Generate Kubernetes Manifests
+      action: fetch:template
+      input:
+        url: ./skeleton/kubernetes
+        targetPath: ./repo/kubernetes
+        values:
+          agentName: ${{ parameters.agentName }}
+          team: ${{ parameters.team }}
+          deployTarget: ${{ parameters.deployTarget }}
+          environments: ${{ parameters.environments }}
+
+    # -------------------------------------------------------------------------
+    # Generate CI/CD
+    # -------------------------------------------------------------------------
+    - id: generate-cicd
+      name: Generate CI/CD Pipeline
+      action: fetch:template
+      input:
+        url: ./skeleton/cicd
+        targetPath: ./repo/.github/workflows
+        values:
+          agentName: ${{ parameters.agentName }}
+          deployTarget: ${{ parameters.deployTarget }}
+
+    # -------------------------------------------------------------------------
+    # Generate Agent Config
+    # -------------------------------------------------------------------------
+    - id: generate-config
+      name: Generate Agent Configuration
+      action: fetch:template
+      input:
+        url: ./skeleton/config
+        targetPath: ./repo/config
+        values:
+          agentName: ${{ parameters.agentName }}
+          primaryModel: ${{ parameters.primaryModel }}
+          temperature: ${{ parameters.temperature }}
+          maxTokens: ${{ parameters.maxTokens }}
+          agentPersona: ${{ parameters.agentPersona }}
+          customGuardrails: ${{ parameters.customGuardrails }}
+          approvalTriggers: ${{ parameters.approvalTriggers }}
+
+    # -------------------------------------------------------------------------
+    # Create Repository
+    # -------------------------------------------------------------------------
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "AI Agent: ${{ parameters.agentPurpose }}"
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./repo
+        protectDefaultBranch: true
+        requireCodeOwnerReviews: true
+        requiredApprovingReviewCount: 2
+
+    # -------------------------------------------------------------------------
+    # Create ArgoCD Application
+    # -------------------------------------------------------------------------
+    - id: create-argocd
+      name: Create ArgoCD Application
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.agentName }}
+        argoInstance: main
+        projectName: ${{ parameters.team }}
+        path: kubernetes/overlays/dev
+        repoUrl: ${{ steps['create-repo'].output.remoteUrl }}
+
+    # -------------------------------------------------------------------------
+    # Register in Catalog
+    # -------------------------------------------------------------------------
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  # ===========================================================================
+  # OUTPUT
+  # ===========================================================================
+  
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}
+      - title: ArgoCD Application
+        url: https://argocd.example.com/applications/${{ parameters.agentName }}-dev
+      - title: Azure AI Foundry
+        url: https://ai.azure.com
+    text:
+      - title: AI Agent Created
+        content: |
+          ## 🤖 AI Foundry Agent Created!
+          
+          **Agent:** ${{ parameters.agentName }}
+          **Model:** ${{ parameters.primaryModel }}
+          **Framework:** ${{ parameters.orchestrationFramework }}
+          
+          **Capabilities:**
+          - ${{ parameters.enableCodeInterpreter ? '✅' : '⏭️' }} Code Interpreter
+          - ${{ parameters.enableFileSearch ? '✅' : '⏭️' }} File Search (RAG)
+          - ${{ parameters.enableBingSearch ? '✅' : '⏭️' }} Web Search
+          - ${{ parameters.customTools.length }} Custom Tools
+          
+          **Safety:**
+          - ${{ parameters.enableContentSafety ? '✅' : '⏭️' }} Content Safety (${{ parameters.contentSafetyLevel }})
+          - ${{ parameters.enableGroundedness ? '✅' : '⏭️' }} Groundedness Check
+          - ${{ parameters.enableHumanInLoop ? '✅' : '⏭️' }} Human-in-the-Loop
+          
+          **Next Steps:**
+          1. Configure Azure OpenAI deployment in Key Vault
+          2. Set up RAG data source and indexing
+          3. Implement custom tool handlers
+          4. Test agent in development environment
+          5. Configure approval workflows
+          6. Deploy to staging for evaluation
+
+---
+# =============================================================================
+# SKELETON FILES
+# =============================================================================
+
+# skeleton/src/agent.py
+"""
+${{ values.agentName }} - AI Foundry Agent
+${{ values.agentPurpose }}
+"""
+import logging
+from typing import Any, Dict, List, Optional
+
+{%- if values.orchestrationFramework == 'semantic-kernel' %}
+import semantic_kernel as sk
+from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.planning import ActionPlanner
+{%- elif values.orchestrationFramework == 'autogen' %}
+import autogen
+from autogen import AssistantAgent, UserProxyAgent
+{%- elif values.orchestrationFramework == 'langchain' %}
+from langchain.agents import AgentExecutor, create_openai_functions_agent
+from langchain_openai import AzureChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+{%- else %}
+from openai import AzureOpenAI
+{%- endif %}
+
+from .config import settings
+from .tools import get_tools
+from .safety import SafetyFilter
+{%- if values.enableRAG %}
+from .rag import RAGPipeline
+{%- endif %}
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+class ${{ values.agentName | replace('-', '') | title }}Agent:
+    """
+    ${{ values.agentPurpose }}
+    
+    Model: ${{ values.primaryModel }}
+    Temperature: ${{ values.temperature }}
+    Framework: ${{ values.orchestrationFramework }}
+    """
+    
+    SYSTEM_PROMPT = """${{ values.agentPersona }}
+
+GUARDRAILS:
+{%- for guardrail in values.customGuardrails %}
+- ${{ guardrail }}
+{%- endfor %}
+
+{%- if values.enableHumanInLoop %}
+APPROVAL REQUIRED FOR:
+{%- for trigger in values.approvalTriggers %}
+- ${{ trigger }}
+{%- endfor %}
+{%- endif %}
+"""
+
+    def __init__(self):
+        self.safety_filter = SafetyFilter()
+        {%- if values.enableRAG %}
+        self.rag_pipeline = RAGPipeline()
+        {%- endif %}
+        self.tools = get_tools()
+        self._setup_agent()
+    
+    def _setup_agent(self):
+        """Initialize the agent with configured model and tools."""
+        {%- if values.orchestrationFramework == 'semantic-kernel' %}
+        self.kernel = sk.Kernel()
+        self.kernel.add_service(
+            AzureChatCompletion(
+                deployment_name=settings.azure_openai_deployment,
+                endpoint=settings.azure_openai_endpoint,
+                api_key=settings.azure_openai_key,
+            )
+        )
+        # Register tools as plugins
+        for tool in self.tools:
+            self.kernel.import_native_plugin_from_directory(tool)
+        
+        self.planner = ActionPlanner(self.kernel)
+        {%- elif values.orchestrationFramework == 'autogen' %}
+        config_list = [{
+            "model": "${{ values.primaryModel }}",
+            "api_type": "azure",
+            "api_key": settings.azure_openai_key,
+            "base_url": settings.azure_openai_endpoint,
+            "api_version": "2024-02-15-preview",
+        }]
+        
+        self.assistant = AssistantAgent(
+            name="${{ values.agentName }}",
+            system_message=self.SYSTEM_PROMPT,
+            llm_config={"config_list": config_list},
+        )
+        {%- elif values.orchestrationFramework == 'langchain' %}
+        self.llm = AzureChatOpenAI(
+            deployment_name=settings.azure_openai_deployment,
+            temperature=${{ values.temperature }},
+            max_tokens=${{ values.maxTokens }},
+        )
+        
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self.SYSTEM_PROMPT),
+            ("human", "{input}"),
+            ("placeholder", "{agent_scratchpad}"),
+        ])
+        
+        agent = create_openai_functions_agent(self.llm, self.tools, prompt)
+        self.agent_executor = AgentExecutor(agent=agent, tools=self.tools, verbose=True)
+        {%- else %}
+        self.client = AzureOpenAI(
+            azure_endpoint=settings.azure_openai_endpoint,
+            api_key=settings.azure_openai_key,
+            api_version="2024-02-15-preview",
+        )
+        {%- endif %}
+        
+        logger.info(f"Agent initialized with model: ${{ values.primaryModel }}")
+    
+    async def process(
+        self, 
+        message: str, 
+        conversation_history: Optional[List[Dict]] = None,
+        context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Process a user message and generate a response.
+        
+        Args:
+            message: User input message
+            conversation_history: Previous conversation turns
+            context: Additional context (user info, session data, etc.)
+        
+        Returns:
+            Response dictionary with answer and metadata
+        """
+        # Safety check on input
+        safety_result = await self.safety_filter.check_input(message)
+        if not safety_result.is_safe:
+            return {
+                "response": "I'm sorry, I cannot process this request.",
+                "blocked": True,
+                "reason": safety_result.reason,
+            }
+        
+        {%- if values.enableRAG %}
+        # Retrieve relevant context
+        rag_context = await self.rag_pipeline.retrieve(message, top_k=${{ values.topK }})
+        augmented_message = self._augment_with_context(message, rag_context)
+        {%- else %}
+        augmented_message = message
+        {%- endif %}
+        
+        # Generate response
+        {%- if values.orchestrationFramework == 'semantic-kernel' %}
+        plan = await self.planner.create_plan(augmented_message)
+        result = await plan.invoke(self.kernel)
+        response_text = str(result)
+        {%- elif values.orchestrationFramework == 'langchain' %}
+        result = await self.agent_executor.ainvoke({
+            "input": augmented_message,
+            "chat_history": conversation_history or [],
+        })
+        response_text = result["output"]
+        {%- else %}
+        messages = [{"role": "system", "content": self.SYSTEM_PROMPT}]
+        if conversation_history:
+            messages.extend(conversation_history)
+        messages.append({"role": "user", "content": augmented_message})
+        
+        completion = self.client.chat.completions.create(
+            model=settings.azure_openai_deployment,
+            messages=messages,
+            temperature=${{ values.temperature }},
+            max_tokens=${{ values.maxTokens }},
+            tools=self._format_tools_for_api(),
+        )
+        response_text = completion.choices[0].message.content
+        {%- endif %}
+        
+        # Safety check on output
+        output_safety = await self.safety_filter.check_output(response_text)
+        if not output_safety.is_safe:
+            response_text = self._sanitize_response(response_text, output_safety)
+        
+        {%- if values.enableGroundedness %}
+        # Groundedness check
+        groundedness = await self.safety_filter.check_groundedness(
+            response_text, 
+            rag_context if values.enableRAG else []
+        )
+        {%- endif %}
+        
+        return {
+            "response": response_text,
+            "blocked": False,
+            {%- if values.enableRAG %}
+            "sources": [c.metadata for c in rag_context],
+            {%- endif %}
+            {%- if values.enableGroundedness %}
+            "groundedness_score": groundedness.score,
+            {%- endif %}
+            "model": "${{ values.primaryModel }}",
+        }
+    
+    {%- if values.enableRAG %}
+    def _augment_with_context(self, message: str, context: List) -> str:
+        """Augment message with RAG context."""
+        if not context:
+            return message
+        
+        context_text = "\n\n".join([
+            f"Source [{i+1}]: {c.content}"
+            for i, c in enumerate(context)
+        ])
+        
+        return f"""Based on the following context:
+
+{context_text}
+
+User question: {message}
+
+Please provide an accurate answer based on the context above. Cite sources when applicable."""
+    {%- endif %}
+
+
+# Initialize singleton
+agent = ${{ values.agentName | replace('-', '') | title }}Agent()
+
+---
+# skeleton/config/agent-config.yaml
+# Agent Configuration for ${{ values.agentName }}
+# DO NOT commit secrets to this file
+
+agent:
+  name: ${{ values.agentName }}
+  version: "1.0.0"
+  
+model:
+  primary: ${{ values.primaryModel }}
+  temperature: ${{ values.temperature }}
+  max_tokens: ${{ values.maxTokens }}
+  
+{%- if values.enableRAG %}
+rag:
+  enabled: true
+  source: ${{ values.ragSource }}
+  vector_store: ${{ values.vectorStore }}
+  embedding_model: ${{ values.embeddingModel }}
+  chunk_size: ${{ values.chunkSize }}
+  chunk_overlap: ${{ values.chunkOverlap }}
+  top_k: ${{ values.topK }}
+{%- endif %}
+
+safety:
+  content_safety:
+    enabled: ${{ values.enableContentSafety }}
+    level: ${{ values.contentSafetyLevel }}
+  groundedness:
+    enabled: ${{ values.enableGroundedness }}
+  jailbreak_protection: ${{ values.enableJailbreakProtection }}
+  max_turns: ${{ values.maxTurns }}
+  
+guardrails:
+{%- for guardrail in values.customGuardrails %}
+  - "${{ guardrail }}"
+{%- endfor %}
+
+{%- if values.enableHumanInLoop %}
+human_in_loop:
+  enabled: true
+  approval_triggers:
+{%- for trigger in values.approvalTriggers %}
+    - ${{ trigger }}
+{%- endfor %}
+{%- endif %}
+
+tools:
+  code_interpreter: ${{ values.enableCodeInterpreter }}
+  file_search: ${{ values.enableFileSearch }}
+  bing_search: ${{ values.enableBingSearch }}
+  custom:
+{%- for tool in values.customTools %}
+    - name: ${{ tool.name }}
+      description: "${{ tool.description }}"
+{%- endfor %}

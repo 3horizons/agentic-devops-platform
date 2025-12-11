@@ -1,0 +1,58 @@
+name: "🚀 H2: Developer Portal (RHDH)"
+description: "Deploy Red Hat Developer Hub on AKS or ARO"
+title: "[RHDH] Deploy developer portal"
+labels: ["h2-enhancement", "rhdh", "copilot-agent"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Red Hat Developer Hub Deployment
+        This issue triggers the **rhdh-portal-agent** for IDP setup.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: "Target Platform"
+      options:
+        - "AKS - Azure Kubernetes Service"
+        - "ARO - Azure Red Hat OpenShift"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: auth_provider
+    attributes:
+      label: "Authentication Provider"
+      options:
+        - "Entra ID (Microsoft) - for GitHub EMU"
+        - "GitHub OAuth - for GitHub Enterprise Cloud"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sizing_profile
+    attributes:
+      label: "T-Shirt Size"
+      options:
+        - "small - Basic RHDH, 2 replicas"
+        - "medium - RHDH with plugins, 3 replicas"
+        - "large - RHDH HA, all plugins"
+        - "xlarge - RHDH HA, custom plugins, multi-cluster"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: rhdh_plugins
+    attributes:
+      label: "RHDH Plugins to Enable"
+      options:
+        - label: "GitHub Integration"
+          required: true
+        - label: "Kubernetes Plugin"
+        - label: "ArgoCD Plugin"
+        - label: "Azure DevOps Plugin"
+        - label: "Jira Plugin"
+        - label: "TechDocs"
+        - label: "Software Templates"
+        - label: "API Documentation"

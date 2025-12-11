@@ -1,0 +1,386 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - RED HAT DEVELOPER HUB CONFIGURATION
+# =============================================================================
+#
+# Helm values for Red Hat Developer Hub (RHDH) deployment.
+# RHDH provides the Internal Developer Platform (IDP) for the Three Horizons.
+#
+# Features Enabled:
+#   - GitHub Authentication
+#   - GitHub Integration (repos, teams, Copilot)
+#   - ArgoCD Integration
+#   - Kubernetes Plugin
+#   - TechDocs (documentation)
+#   - Golden Path Templates (Scaffolder)
+#   - Prometheus/Grafana Dashboards
+#
+# =============================================================================
+
+# Global configuration
+global:
+  clusterRouterBase: ${DNS_ZONE_NAME}
+  
+# =============================================================================
+# BACKSTAGE CONFIGURATION
+# =============================================================================
+
+upstream:
+  backstage:
+    image:
+      registry: registry.redhat.io
+      repository: rhdh/rhdh-hub-rhel9
+      tag: "1.2"
+      
+    replicas: 2
+    
+    # -------------------------------------------------------------------------
+    # Resources
+    # -------------------------------------------------------------------------
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+        
+    # -------------------------------------------------------------------------
+    # Pod Disruption Budget
+    # -------------------------------------------------------------------------
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+      
+    # -------------------------------------------------------------------------
+    # Service Account
+    # -------------------------------------------------------------------------
+    serviceAccount:
+      create: true
+      name: rhdh
+      annotations:
+        azure.workload.identity/client-id: ${RHDH_MANAGED_IDENTITY_CLIENT_ID}
+        
+    podLabels:
+      azure.workload.identity/use: "true"
+      
+    # -------------------------------------------------------------------------
+    # Ingress
+    # -------------------------------------------------------------------------
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+      host: developer.${DNS_ZONE_NAME}
+      tls:
+        enabled: true
+        secretName: rhdh-tls
+        
+    # -------------------------------------------------------------------------
+    # Extra Environment Variables
+    # -------------------------------------------------------------------------
+    extraEnvVars:
+      - name: NODE_OPTIONS
+        value: "--max-old-space-size=4096"
+      - name: LOG_LEVEL
+        value: "info"
+        
+    # -------------------------------------------------------------------------
+    # Extra Environment Variables from Secrets
+    # -------------------------------------------------------------------------
+    extraEnvVarsSecrets:
+      - rhdh-secrets
+      
+    # -------------------------------------------------------------------------
+    # App Config
+    # -------------------------------------------------------------------------
+    appConfig:
+      app:
+        title: "${CUSTOMER_NAME} Developer Hub"
+        baseUrl: https://developer.${DNS_ZONE_NAME}
+        
+      organization:
+        name: "${CUSTOMER_FULL_NAME}"
+        
+      backend:
+        baseUrl: https://developer.${DNS_ZONE_NAME}
+        listen:
+          port: 7007
+        cors:
+          origin: https://developer.${DNS_ZONE_NAME}
+          methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+          credentials: true
+        database:
+          client: pg
+          connection:
+            host: ${POSTGRESQL_HOST}
+            port: 5432
+            user: ${POSTGRESQL_USER}
+            password: ${POSTGRESQL_PASSWORD}
+            database: rhdh
+            ssl:
+              require: true
+              rejectUnauthorized: true
+              
+      # -----------------------------------------------------------------------
+      # Authentication
+      # -----------------------------------------------------------------------
+      auth:
+        environment: production
+        providers:
+          github:
+            production:
+              clientId: ${GITHUB_APP_CLIENT_ID}
+              clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+              enterpriseInstanceUrl: https://github.com
+              signIn:
+                resolvers:
+                  - resolver: usernameMatchingUserEntityName
+                  
+      # -----------------------------------------------------------------------
+      # GitHub Integration
+      # -----------------------------------------------------------------------
+      integrations:
+        github:
+          - host: github.com
+            apps:
+              - appId: ${GITHUB_APP_ID}
+                clientId: ${GITHUB_APP_CLIENT_ID}
+                clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+                privateKey: ${GITHUB_APP_PRIVATE_KEY}
+                webhookSecret: ${GITHUB_WEBHOOK_SECRET}
+                
+      # -----------------------------------------------------------------------
+      # Proxy Configuration
+      # -----------------------------------------------------------------------
+      proxy:
+        endpoints:
+          '/argocd/api':
+            target: https://argocd.${DNS_ZONE_NAME}/api/v1
+            headers:
+              Cookie:
+                $env: ARGOCD_AUTH_TOKEN
+            changeOrigin: true
+            secure: true
+            
+          '/prometheus/api':
+            target: http://prometheus-kube-prometheus-prometheus.observability:9090
+            changeOrigin: true
+            secure: false
+            
+          '/grafana/api':
+            target: http://prometheus-grafana.observability
+            headers:
+              Authorization:
+                $env: GRAFANA_TOKEN
+            changeOrigin: true
+            secure: false
+            
+      # -----------------------------------------------------------------------
+      # Catalog Configuration
+      # -----------------------------------------------------------------------
+      catalog:
+        rules:
+          - allow: [Component, System, API, Resource, Location, Template, Group, User, Domain]
+          
+        locations:
+          # Golden Path Templates
+          - type: url
+            target: https://github.com/${GITHUB_ORG}/golden-paths/blob/main/catalog-info.yaml
+            rules:
+              - allow: [Template]
+              
+          # Organization structure
+          - type: url
+            target: https://github.com/${GITHUB_ORG}/gitops-config/blob/main/teams/*/catalog-info.yaml
+            rules:
+              - allow: [Group, User]
+              
+          # Team applications (auto-discovered)
+          - type: url
+            target: https://github.com/${GITHUB_ORG}/gitops-config/blob/main/teams/*/apps/*/catalog-info.yaml
+            rules:
+              - allow: [Component, API, Resource]
+              
+        providers:
+          github:
+            providerId:
+              organization: ${GITHUB_ORG}
+              catalogPath: /catalog-info.yaml
+              filters:
+                branch: main
+                repository: '.*'
+              schedule:
+                frequency:
+                  minutes: 30
+                timeout:
+                  minutes: 3
+                  
+          githubOrg:
+            id: production
+            githubUrl: https://github.com
+            orgs:
+              - ${GITHUB_ORG}
+            schedule:
+              frequency:
+                minutes: 60
+              timeout:
+                minutes: 5
+                
+      # -----------------------------------------------------------------------
+      # Scaffolder (Golden Paths) Configuration
+      # -----------------------------------------------------------------------
+      scaffolder:
+        defaultAuthor:
+          name: Three Horizons Platform
+          email: platform@${CUSTOMER_DOMAIN}
+        defaultCommitMessage: "feat: initial scaffold from Golden Path"
+        
+      # -----------------------------------------------------------------------
+      # TechDocs Configuration
+      # -----------------------------------------------------------------------
+      techdocs:
+        builder: external
+        generator:
+          runIn: local
+        publisher:
+          type: azureBlobStorage
+          azureBlobStorage:
+            containerName: techdocs
+            credentials:
+              accountName: ${STORAGE_ACCOUNT_NAME}
+              accountKey: ${STORAGE_ACCOUNT_KEY}
+              
+      # -----------------------------------------------------------------------
+      # Kubernetes Plugin Configuration
+      # -----------------------------------------------------------------------
+      kubernetes:
+        serviceLocatorMethod:
+          type: multiTenant
+        clusterLocatorMethods:
+          - type: config
+            clusters:
+              - url: https://kubernetes.default.svc
+                name: production
+                authProvider: serviceAccount
+                skipTLSVerify: false
+                skipMetricsLookup: false
+                serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
+                dashboardUrl: https://argocd.${DNS_ZONE_NAME}
+                dashboardApp: argocd
+                
+      # -----------------------------------------------------------------------
+      # ArgoCD Plugin Configuration
+      # -----------------------------------------------------------------------
+      argocd:
+        baseUrl: https://argocd.${DNS_ZONE_NAME}
+        username: admin
+        password: ${ARGOCD_ADMIN_PASSWORD}
+        appLocatorMethods:
+          - type: config
+            instances:
+              - name: argocd
+                url: https://argocd.${DNS_ZONE_NAME}
+                token: ${ARGOCD_AUTH_TOKEN}
+                
+# =============================================================================
+# POSTGRESQL (if using internal)
+# =============================================================================
+
+postgresql:
+  enabled: false  # Using external Azure PostgreSQL
+  
+# =============================================================================
+# DYNAMIC PLUGINS
+# =============================================================================
+
+global:
+  dynamic:
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins:
+      # GitHub Plugins
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-github-issues
+        disabled: false
+        
+      # Kubernetes Plugins
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+        disabled: false
+        
+      # ArgoCD Plugins
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd
+        disabled: false
+        
+      # TechDocs
+      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+        disabled: false
+        
+      # Scaffolder Actions
+      - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
+        disabled: false
+        
+      # Security (if GHAS enabled)
+      - package: ./dynamic-plugins/dist/backstage-plugin-security-insights
+        disabled: false
+        
+# =============================================================================
+# ADDITIONAL SECRETS TO CREATE
+# =============================================================================
+# 
+# Create a Kubernetes secret named 'rhdh-secrets' with these keys:
+#
+# kubectl create secret generic rhdh-secrets \
+#   --namespace rhdh \
+#   --from-literal=GITHUB_APP_CLIENT_ID='...' \
+#   --from-literal=GITHUB_APP_CLIENT_SECRET='...' \
+#   --from-literal=GITHUB_APP_ID='...' \
+#   --from-literal=GITHUB_APP_PRIVATE_KEY='...' \
+#   --from-literal=GITHUB_WEBHOOK_SECRET='...' \
+#   --from-literal=POSTGRESQL_HOST='...' \
+#   --from-literal=POSTGRESQL_USER='...' \
+#   --from-literal=POSTGRESQL_PASSWORD='...' \
+#   --from-literal=ARGOCD_AUTH_TOKEN='...' \
+#   --from-literal=ARGOCD_ADMIN_PASSWORD='...' \
+#   --from-literal=GRAFANA_TOKEN='...' \
+#   --from-literal=STORAGE_ACCOUNT_NAME='...' \
+#   --from-literal=STORAGE_ACCOUNT_KEY='...' \
+#   --from-literal=K8S_SERVICE_ACCOUNT_TOKEN='...'
+#
+# Or use Azure Key Vault with CSI driver:
+#
+# apiVersion: secrets-store.csi.x-k8s.io/v1
+# kind: SecretProviderClass
+# metadata:
+#   name: rhdh-secrets
+#   namespace: rhdh
+# spec:
+#   provider: azure
+#   parameters:
+#     keyvaultName: ${KEY_VAULT_NAME}
+#     tenantId: ${AZURE_TENANT_ID}
+#     objects: |
+#       array:
+#         - |
+#           objectName: github-app-client-id
+#           objectType: secret
+#         - |
+#           objectName: github-app-client-secret
+#           objectType: secret
+#         ...
+# =============================================================================

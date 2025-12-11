@@ -1,0 +1,539 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: mlops-pipeline
+  title: MLOps Pipeline
+  description: |
+    Creates a production-grade MLOps pipeline with:
+    - Model training and versioning
+    - Feature store integration
+    - Automated model deployment
+    - A/B testing and canary releases
+    - Model monitoring and drift detection
+    - Integration with Azure ML and AI Foundry
+  tags:
+    - mlops
+    - ai
+    - machine-learning
+    - azure
+    - h3-innovation
+spec:
+  owner: platform-team
+  type: service
+  
+  parameters:
+    - title: Pipeline Configuration
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Pipeline Name
+          type: string
+          description: Name for your MLOps pipeline
+          pattern: '^[a-z0-9-]+$'
+          ui:autofocus: true
+        owner:
+          title: Owner Team
+          type: string
+          ui:field: OwnerPicker
+        description:
+          title: Description
+          type: string
+          description: Brief description of the ML use case
+          
+    - title: Model Configuration
+      required:
+        - model_framework
+        - model_type
+      properties:
+        model_framework:
+          title: ML Framework
+          type: string
+          enum:
+            - pytorch
+            - tensorflow
+            - sklearn
+            - xgboost
+            - huggingface
+            - custom
+          default: pytorch
+        model_type:
+          title: Model Type
+          type: string
+          enum:
+            - classification
+            - regression
+            - nlp
+            - computer_vision
+            - recommendation
+            - time_series
+            - llm_finetuning
+        base_model:
+          title: Base Model (for fine-tuning)
+          type: string
+          description: HuggingFace model ID or Azure model name
+          
+    - title: Data Configuration
+      properties:
+        feature_store:
+          title: Feature Store
+          type: string
+          enum:
+            - azure_ml_feature_store
+            - feast
+            - none
+          default: azure_ml_feature_store
+        data_source:
+          title: Training Data Source
+          type: string
+          enum:
+            - azure_blob
+            - azure_sql
+            - databricks
+            - snowflake
+        enable_data_versioning:
+          title: Enable Data Versioning
+          type: boolean
+          default: true
+        enable_data_drift_detection:
+          title: Enable Data Drift Detection
+          type: boolean
+          default: true
+          
+    - title: Training Configuration
+      properties:
+        compute_type:
+          title: Training Compute
+          type: string
+          enum:
+            - cpu
+            - gpu_single
+            - gpu_cluster
+            - serverless
+          default: gpu_single
+        gpu_sku:
+          title: GPU SKU (if applicable)
+          type: string
+          enum:
+            - Standard_NC6s_v3
+            - Standard_NC12s_v3
+            - Standard_NC24s_v3
+            - Standard_ND40rs_v2
+          default: Standard_NC6s_v3
+        enable_hyperparameter_tuning:
+          title: Enable Hyperparameter Tuning
+          type: boolean
+          default: true
+        enable_distributed_training:
+          title: Enable Distributed Training
+          type: boolean
+          default: false
+          
+    - title: Deployment Configuration
+      properties:
+        deployment_target:
+          title: Deployment Target
+          type: string
+          enum:
+            - azure_ml_endpoint
+            - azure_kubernetes
+            - azure_container_apps
+            - azure_functions
+          default: azure_ml_endpoint
+        enable_ab_testing:
+          title: Enable A/B Testing
+          type: boolean
+          default: true
+        enable_canary_deployment:
+          title: Enable Canary Deployment
+          type: boolean
+          default: true
+        auto_scaling:
+          title: Auto-scaling Configuration
+          type: object
+          properties:
+            min_instances:
+              type: integer
+              default: 1
+            max_instances:
+              type: integer
+              default: 10
+            target_utilization:
+              type: integer
+              default: 70
+              
+    - title: Monitoring
+      properties:
+        enable_model_monitoring:
+          title: Enable Model Monitoring
+          type: boolean
+          default: true
+        enable_drift_detection:
+          title: Enable Model Drift Detection
+          type: boolean
+          default: true
+        alert_threshold:
+          title: Alert Threshold (accuracy drop %)
+          type: number
+          default: 5
+          
+    - title: Infrastructure
+      required:
+        - environment
+      properties:
+        environment:
+          title: Environment
+          type: string
+          enum:
+            - dev
+            - staging
+            - prod
+        azure_region:
+          title: Azure Region
+          type: string
+          enum:
+            - brazilsouth
+            - eastus
+            - westeurope
+          default: brazilsouth
+          
+  steps:
+    - id: fetch-template
+      name: Fetch MLOps Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+          
+    - id: create-pipeline-config
+      name: Create Pipeline Configuration
+      action: roadiehq:utils:fs:write
+      input:
+        path: mlops-config.yaml
+        content: |
+          # MLOps Pipeline Configuration
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          
+          model:
+            framework: ${{ parameters.model_framework }}
+            type: ${{ parameters.model_type }}
+            base_model: ${{ parameters.base_model }}
+            
+          data:
+            feature_store: ${{ parameters.feature_store }}
+            source: ${{ parameters.data_source }}
+            versioning: ${{ parameters.enable_data_versioning }}
+            drift_detection: ${{ parameters.enable_data_drift_detection }}
+            
+          training:
+            compute: ${{ parameters.compute_type }}
+            gpu_sku: ${{ parameters.gpu_sku }}
+            hyperparameter_tuning: ${{ parameters.enable_hyperparameter_tuning }}
+            distributed: ${{ parameters.enable_distributed_training }}
+            
+          deployment:
+            target: ${{ parameters.deployment_target }}
+            ab_testing: ${{ parameters.enable_ab_testing }}
+            canary: ${{ parameters.enable_canary_deployment }}
+            
+          monitoring:
+            enabled: ${{ parameters.enable_model_monitoring }}
+            drift_detection: ${{ parameters.enable_drift_detection }}
+            alert_threshold: ${{ parameters.alert_threshold }}
+            
+    - id: create-training-pipeline
+      name: Create Training Pipeline
+      action: roadiehq:utils:fs:write
+      input:
+        path: pipelines/training.py
+        content: |
+          """
+          MLOps Training Pipeline
+          
+          This pipeline handles model training with:
+          - Data preprocessing
+          - Feature engineering
+          - Model training
+          - Hyperparameter tuning
+          - Model registration
+          """
+          from azure.ai.ml import MLClient, Input, Output
+          from azure.ai.ml.dsl import pipeline
+          from azure.ai.ml.entities import (
+              Model,
+              Environment,
+              BuildContext,
+              AmlCompute,
+          )
+          from azure.identity import DefaultAzureCredential
+          
+          # Initialize ML Client
+          credential = DefaultAzureCredential()
+          ml_client = MLClient(
+              credential=credential,
+              subscription_id="${AZURE_SUBSCRIPTION_ID}",
+              resource_group_name="${AZURE_RESOURCE_GROUP}",
+              workspace_name="${AZURE_ML_WORKSPACE}",
+          )
+          
+          @pipeline(
+              name="${{ parameters.name }}-training",
+              description="Training pipeline for ${{ parameters.name }}",
+          )
+          def training_pipeline(
+              raw_data: Input,
+              model_name: str = "${{ parameters.name }}",
+          ):
+              # Step 1: Data Preprocessing
+              preprocess = preprocess_component(
+                  raw_data=raw_data,
+              )
+              
+              # Step 2: Feature Engineering
+              features = feature_engineering_component(
+                  processed_data=preprocess.outputs.processed_data,
+              )
+              
+              # Step 3: Model Training
+              train = train_component(
+                  features=features.outputs.features,
+                  model_type="${{ parameters.model_type }}",
+                  framework="${{ parameters.model_framework }}",
+              )
+              
+              # Step 4: Model Evaluation
+              evaluate = evaluate_component(
+                  model=train.outputs.model,
+                  test_data=features.outputs.test_data,
+              )
+              
+              # Step 5: Register Model (if passes threshold)
+              register = register_model_component(
+                  model=train.outputs.model,
+                  metrics=evaluate.outputs.metrics,
+                  model_name=model_name,
+              )
+              
+              return {
+                  "model": register.outputs.registered_model,
+                  "metrics": evaluate.outputs.metrics,
+              }
+              
+          if __name__ == "__main__":
+              # Create and submit pipeline
+              pipeline_job = training_pipeline(
+                  raw_data=Input(type="uri_folder", path="azureml://..."),
+              )
+              
+              submitted_job = ml_client.jobs.create_or_update(
+                  pipeline_job,
+                  experiment_name="${{ parameters.name }}-experiment",
+              )
+              
+              print(f"Pipeline submitted: {submitted_job.name}")
+              
+    - id: create-deployment-pipeline
+      name: Create Deployment Pipeline
+      action: roadiehq:utils:fs:write
+      input:
+        path: pipelines/deployment.py
+        content: |
+          """
+          Model Deployment Pipeline
+          
+          Handles:
+          - Blue/Green deployments
+          - Canary releases
+          - A/B testing
+          - Rollback
+          """
+          from azure.ai.ml import MLClient
+          from azure.ai.ml.entities import (
+              ManagedOnlineEndpoint,
+              ManagedOnlineDeployment,
+              Model,
+              Environment,
+              CodeConfiguration,
+          )
+          
+          def deploy_model(
+              model_name: str,
+              model_version: str,
+              endpoint_name: str,
+              deployment_name: str,
+              instance_type: str = "Standard_DS3_v2",
+              instance_count: int = 1,
+              traffic_percentage: int = 0,
+          ):
+              """Deploy model to managed endpoint."""
+              
+              # Get latest model
+              model = ml_client.models.get(
+                  name=model_name,
+                  version=model_version,
+              )
+              
+              # Create or update endpoint
+              endpoint = ManagedOnlineEndpoint(
+                  name=endpoint_name,
+                  description=f"Endpoint for {model_name}",
+                  auth_mode="key",
+              )
+              ml_client.online_endpoints.begin_create_or_update(endpoint).result()
+              
+              # Create deployment
+              deployment = ManagedOnlineDeployment(
+                  name=deployment_name,
+                  endpoint_name=endpoint_name,
+                  model=model,
+                  instance_type=instance_type,
+                  instance_count=instance_count,
+              )
+              ml_client.online_deployments.begin_create_or_update(deployment).result()
+              
+              # Update traffic
+              if traffic_percentage > 0:
+                  endpoint.traffic = {deployment_name: traffic_percentage}
+                  ml_client.online_endpoints.begin_create_or_update(endpoint).result()
+                  
+              return endpoint, deployment
+              
+          def canary_rollout(
+              endpoint_name: str,
+              new_deployment: str,
+              current_deployment: str,
+              steps: list = [10, 25, 50, 100],
+          ):
+              """Gradual traffic shift for canary deployment."""
+              for traffic in steps:
+                  endpoint = ml_client.online_endpoints.get(endpoint_name)
+                  endpoint.traffic = {
+                      new_deployment: traffic,
+                      current_deployment: 100 - traffic,
+                  }
+                  ml_client.online_endpoints.begin_create_or_update(endpoint).result()
+                  
+                  # Wait and monitor metrics
+                  # ... monitoring logic ...
+                  
+    - id: create-github-workflow
+      name: Create GitHub Actions Workflow
+      action: roadiehq:utils:fs:write
+      input:
+        path: .github/workflows/mlops-pipeline.yml
+        content: |
+          name: MLOps Pipeline
+          
+          on:
+            push:
+              paths:
+                - 'src/**'
+                - 'pipelines/**'
+            workflow_dispatch:
+              inputs:
+                action:
+                  type: choice
+                  options:
+                    - train
+                    - deploy
+                    - retrain
+                deployment_traffic:
+                  type: number
+                  default: 10
+                  
+          jobs:
+            train:
+              if: github.event.inputs.action == 'train' || github.event.inputs.action == 'retrain'
+              runs-on: ubuntu-latest
+              environment: ${{ parameters.environment }}
+              
+              steps:
+                - uses: actions/checkout@v4
+                
+                - name: Azure Login
+                  uses: azure/login@v2
+                  with:
+                    client-id: $${{ secrets.AZURE_CLIENT_ID }}
+                    tenant-id: $${{ secrets.AZURE_TENANT_ID }}
+                    subscription-id: $${{ secrets.AZURE_SUBSCRIPTION_ID }}
+                    
+                - name: Setup Python
+                  uses: actions/setup-python@v5
+                  with:
+                    python-version: '3.11'
+                    
+                - name: Install Dependencies
+                  run: |
+                    pip install azure-ai-ml azure-identity
+                    pip install -r requirements.txt
+                    
+                - name: Submit Training Pipeline
+                  run: python pipelines/training.py
+                  
+            deploy:
+              if: github.event.inputs.action == 'deploy'
+              needs: [train]
+              runs-on: ubuntu-latest
+              environment: ${{ parameters.environment }}
+              
+              steps:
+                - uses: actions/checkout@v4
+                
+                - name: Deploy Model
+                  run: |
+                    python pipelines/deployment.py \
+                      --model ${{ parameters.name }} \
+                      --traffic $${{ github.event.inputs.deployment_traffic }}
+                      
+    - id: create-catalog-info
+      name: Create Catalog Info
+      action: roadiehq:utils:fs:write
+      input:
+        path: catalog-info.yaml
+        content: |
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            name: ${{ parameters.name }}
+            description: ${{ parameters.description }}
+            tags:
+              - mlops
+              - machine-learning
+              - ${{ parameters.model_framework }}
+            annotations:
+              github.com/project-slug: ${{ parameters.owner }}/${{ parameters.name }}
+          spec:
+            type: service
+            lifecycle: production
+            owner: ${{ parameters.owner }}
+            system: ai-platform
+            
+    - id: publish-github
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}
+        description: MLOps Pipeline - ${{ parameters.description }}
+        defaultBranch: main
+        repoVisibility: private
+        
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish-github'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+        
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish-github'].output.remoteUrl }}
+      - title: Azure ML Studio
+        url: https://ml.azure.com
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}

@@ -1,0 +1,656 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: sre-agent-integration
+  title: SRE Agent Integration
+  description: |
+    Integrates AI-powered SRE agents for:
+    - Automated incident response
+    - Root cause analysis
+    - Self-healing infrastructure
+    - Runbook automation
+    - Intelligent alerting
+    - Integration with Azure Monitor, PagerDuty, and ServiceNow
+  tags:
+    - sre
+    - ai
+    - automation
+    - incident-response
+    - h3-innovation
+spec:
+  owner: platform-team
+  type: service
+  
+  parameters:
+    - title: Agent Configuration
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: SRE Agent Name
+          type: string
+          description: Name for your SRE agent configuration
+          pattern: '^[a-z0-9-]+$'
+          ui:autofocus: true
+        owner:
+          title: Owner Team
+          type: string
+          ui:field: OwnerPicker
+        description:
+          title: Description
+          type: string
+          description: Scope and purpose of this SRE agent
+          
+    - title: Capabilities
+      properties:
+        enable_incident_response:
+          title: Automated Incident Response
+          type: boolean
+          default: true
+          description: Auto-triage and respond to incidents
+        enable_root_cause_analysis:
+          title: Root Cause Analysis
+          type: boolean
+          default: true
+          description: AI-powered RCA for incidents
+        enable_self_healing:
+          title: Self-Healing Actions
+          type: boolean
+          default: false
+          description: Automated remediation actions
+        enable_runbook_automation:
+          title: Runbook Automation
+          type: boolean
+          default: true
+          description: Execute runbooks automatically
+        enable_predictive_alerts:
+          title: Predictive Alerting
+          type: boolean
+          default: true
+          description: Predict issues before they occur
+          
+    - title: Integrations
+      properties:
+        monitoring_platform:
+          title: Monitoring Platform
+          type: string
+          enum:
+            - azure_monitor
+            - datadog
+            - prometheus
+            - grafana
+          default: azure_monitor
+        incident_platform:
+          title: Incident Management
+          type: string
+          enum:
+            - pagerduty
+            - servicenow
+            - opsgenie
+            - github_issues
+          default: pagerduty
+        communication_platform:
+          title: Communication Platform
+          type: string
+          enum:
+            - slack
+            - teams
+            - discord
+          default: teams
+        ticketing_system:
+          title: Ticketing System
+          type: string
+          enum:
+            - servicenow
+            - jira
+            - github_issues
+            - azure_devops
+          default: github_issues
+          
+    - title: AI Configuration
+      properties:
+        ai_model:
+          title: AI Model
+          type: string
+          enum:
+            - gpt-4o
+            - gpt-4o-mini
+            - claude-3-5-sonnet
+          default: gpt-4o
+        knowledge_sources:
+          title: Knowledge Sources
+          type: array
+          description: Sources for context-aware responses
+          items:
+            type: string
+            enum:
+              - runbooks
+              - architecture_docs
+              - incident_history
+              - monitoring_data
+              - change_logs
+        max_auto_actions:
+          title: Max Auto-Actions per Incident
+          type: integer
+          default: 3
+          description: Limit automated remediation actions
+          
+    - title: Safety & Governance
+      properties:
+        require_approval_for:
+          title: Require Human Approval For
+          type: array
+          items:
+            type: string
+            enum:
+              - production_changes
+              - database_operations
+              - security_changes
+              - cost_impact_high
+        blast_radius_limit:
+          title: Blast Radius Limit
+          type: string
+          enum:
+            - single_service
+            - single_namespace
+            - single_cluster
+            - no_limit
+          default: single_service
+        enable_dry_run:
+          title: Dry Run Mode
+          type: boolean
+          default: true
+          description: Test actions before executing
+          
+    - title: Infrastructure
+      required:
+        - environment
+      properties:
+        environment:
+          title: Environment
+          type: string
+          enum:
+            - dev
+            - staging
+            - prod
+        azure_region:
+          title: Azure Region
+          type: string
+          enum:
+            - brazilsouth
+            - eastus
+            - westeurope
+          default: brazilsouth
+          
+  steps:
+    - id: fetch-template
+      name: Fetch SRE Agent Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+          
+    - id: create-agent-config
+      name: Create Agent Configuration
+      action: roadiehq:utils:fs:write
+      input:
+        path: sre-agent-config.yaml
+        content: |
+          # SRE Agent Configuration
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          
+          capabilities:
+            incident_response: ${{ parameters.enable_incident_response }}
+            root_cause_analysis: ${{ parameters.enable_root_cause_analysis }}
+            self_healing: ${{ parameters.enable_self_healing }}
+            runbook_automation: ${{ parameters.enable_runbook_automation }}
+            predictive_alerts: ${{ parameters.enable_predictive_alerts }}
+            
+          integrations:
+            monitoring: ${{ parameters.monitoring_platform }}
+            incidents: ${{ parameters.incident_platform }}
+            communication: ${{ parameters.communication_platform }}
+            ticketing: ${{ parameters.ticketing_system }}
+            
+          ai:
+            model: ${{ parameters.ai_model }}
+            knowledge_sources:
+              ${{ parameters.knowledge_sources | join('\n              - ') if parameters.knowledge_sources else '- runbooks' }}
+            max_auto_actions: ${{ parameters.max_auto_actions }}
+            
+          safety:
+            require_approval: ${{ parameters.require_approval_for }}
+            blast_radius: ${{ parameters.blast_radius_limit }}
+            dry_run: ${{ parameters.enable_dry_run }}
+            
+    - id: create-agent-handler
+      name: Create Agent Handler
+      action: roadiehq:utils:fs:write
+      input:
+        path: src/sre_agent.py
+        content: |
+          """
+          SRE Agent - AI-Powered Site Reliability Engineering
+          
+          Handles:
+          - Incident detection and triage
+          - Automated diagnostics
+          - Root cause analysis
+          - Remediation suggestions and execution
+          - Post-incident learning
+          """
+          import os
+          import json
+          from datetime import datetime
+          from typing import Optional, List, Dict, Any
+          from dataclasses import dataclass
+          from enum import Enum
+          
+          from azure.identity import DefaultAzureCredential
+          from azure.monitor.query import LogsQueryClient
+          from openai import AzureOpenAI
+          
+          class Severity(Enum):
+              CRITICAL = "critical"
+              HIGH = "high"
+              MEDIUM = "medium"
+              LOW = "low"
+              
+          class ActionType(Enum):
+              DIAGNOSTIC = "diagnostic"
+              REMEDIATION = "remediation"
+              ESCALATION = "escalation"
+              NOTIFICATION = "notification"
+              
+          @dataclass
+          class Incident:
+              id: str
+              title: str
+              severity: Severity
+              service: str
+              description: str
+              alerts: List[Dict]
+              created_at: datetime
+              status: str = "open"
+              
+          @dataclass
+          class Action:
+              type: ActionType
+              description: str
+              command: Optional[str] = None
+              requires_approval: bool = False
+              dry_run: bool = True
+              
+          class SREAgent:
+              """AI-powered SRE Agent for automated incident response."""
+              
+              def __init__(self, config_path: str = "sre-agent-config.yaml"):
+                  self.config = self._load_config(config_path)
+                  self.ai_client = self._init_ai_client()
+                  self.monitor_client = self._init_monitor_client()
+                  self.knowledge_base = self._load_knowledge_base()
+                  
+              def _load_config(self, path: str) -> dict:
+                  import yaml
+                  with open(path) as f:
+                      return yaml.safe_load(f)
+                      
+              def _init_ai_client(self) -> AzureOpenAI:
+                  return AzureOpenAI(
+                      api_key=os.environ["AZURE_OPENAI_API_KEY"],
+                      api_version="2024-02-01",
+                      azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+                  )
+                  
+              def _init_monitor_client(self) -> LogsQueryClient:
+                  credential = DefaultAzureCredential()
+                  return LogsQueryClient(credential)
+                  
+              def _load_knowledge_base(self) -> Dict:
+                  """Load runbooks, architecture docs, and incident history."""
+                  return {
+                      "runbooks": self._load_runbooks(),
+                      "architecture": self._load_architecture(),
+                      "incident_history": self._load_incident_history(),
+                  }
+                  
+              async def handle_incident(self, incident: Incident) -> List[Action]:
+                  """Main entry point for incident handling."""
+                  actions = []
+                  
+                  # Step 1: Triage
+                  triage_result = await self.triage_incident(incident)
+                  
+                  # Step 2: Gather diagnostics
+                  diagnostics = await self.gather_diagnostics(incident)
+                  
+                  # Step 3: Root cause analysis
+                  rca = await self.analyze_root_cause(incident, diagnostics)
+                  
+                  # Step 4: Generate remediation plan
+                  remediation = await self.generate_remediation(incident, rca)
+                  
+                  # Step 5: Execute or request approval
+                  for action in remediation:
+                      if self._requires_approval(action):
+                          actions.append(self._request_approval(action))
+                      elif self.config["safety"]["dry_run"]:
+                          actions.append(self._dry_run(action))
+                      else:
+                          result = await self._execute_action(action)
+                          actions.append(result)
+                          
+                  # Step 6: Notify stakeholders
+                  await self.notify_stakeholders(incident, actions)
+                  
+                  return actions
+                  
+              async def triage_incident(self, incident: Incident) -> Dict:
+                  """AI-powered incident triage."""
+                  prompt = f"""
+                  Analyze this incident and provide triage information:
+                  
+                  Title: {incident.title}
+                  Service: {incident.service}
+                  Severity: {incident.severity.value}
+                  Description: {incident.description}
+                  Alerts: {json.dumps(incident.alerts, indent=2)}
+                  
+                  Based on our runbooks and architecture, provide:
+                  1. Impact assessment
+                  2. Affected components
+                  3. Initial classification
+                  4. Recommended first responder actions
+                  """
+                  
+                  response = self.ai_client.chat.completions.create(
+                      model="${{ parameters.ai_model }}",
+                      messages=[
+                          {"role": "system", "content": self._get_system_prompt()},
+                          {"role": "user", "content": prompt},
+                      ],
+                  )
+                  
+                  return json.loads(response.choices[0].message.content)
+                  
+              async def gather_diagnostics(self, incident: Incident) -> Dict:
+                  """Collect diagnostic information from various sources."""
+                  diagnostics = {
+                      "logs": await self._query_logs(incident),
+                      "metrics": await self._query_metrics(incident),
+                      "traces": await self._query_traces(incident),
+                      "recent_changes": await self._get_recent_changes(incident),
+                  }
+                  return diagnostics
+                  
+              async def analyze_root_cause(
+                  self, incident: Incident, diagnostics: Dict
+              ) -> Dict:
+                  """AI-powered root cause analysis."""
+                  prompt = f"""
+                  Perform root cause analysis for this incident:
+                  
+                  Incident: {incident.title}
+                  Service: {incident.service}
+                  
+                  Diagnostics:
+                  - Logs: {json.dumps(diagnostics['logs'][:10], indent=2)}
+                  - Recent Changes: {json.dumps(diagnostics['recent_changes'], indent=2)}
+                  
+                  Similar past incidents:
+                  {self._get_similar_incidents(incident)}
+                  
+                  Provide:
+                  1. Most likely root cause (with confidence %)
+                  2. Contributing factors
+                  3. Evidence supporting this conclusion
+                  4. Alternative hypotheses
+                  """
+                  
+                  response = self.ai_client.chat.completions.create(
+                      model="${{ parameters.ai_model }}",
+                      messages=[
+                          {"role": "system", "content": self._get_system_prompt()},
+                          {"role": "user", "content": prompt},
+                      ],
+                  )
+                  
+                  return json.loads(response.choices[0].message.content)
+                  
+              async def generate_remediation(
+                  self, incident: Incident, rca: Dict
+              ) -> List[Action]:
+                  """Generate remediation actions based on RCA."""
+                  prompt = f"""
+                  Based on this root cause analysis, generate remediation actions:
+                  
+                  Root Cause: {rca['root_cause']}
+                  Confidence: {rca['confidence']}
+                  
+                  Available runbooks:
+                  {self._get_relevant_runbooks(rca)}
+                  
+                  Safety constraints:
+                  - Blast radius limit: {self.config['safety']['blast_radius']}
+                  - Max auto-actions: {self.config['ai']['max_auto_actions']}
+                  - Requires approval for: {self.config['safety']['require_approval']}
+                  
+                  Generate a list of actions with:
+                  1. Action type (diagnostic/remediation/escalation)
+                  2. Description
+                  3. Command to execute (if applicable)
+                  4. Risk level
+                  5. Expected outcome
+                  """
+                  
+                  response = self.ai_client.chat.completions.create(
+                      model="${{ parameters.ai_model }}",
+                      messages=[
+                          {"role": "system", "content": self._get_system_prompt()},
+                          {"role": "user", "content": prompt},
+                      ],
+                  )
+                  
+                  # Parse and validate actions
+                  actions_data = json.loads(response.choices[0].message.content)
+                  return [self._create_action(a) for a in actions_data["actions"]]
+                  
+              def _get_system_prompt(self) -> str:
+                  return """
+                  You are an expert SRE agent responsible for incident response.
+                  
+                  Your goals:
+                  1. Minimize mean time to resolution (MTTR)
+                  2. Prevent customer impact
+                  3. Learn from incidents to prevent recurrence
+                  
+                  Always:
+                  - Prioritize safety over speed
+                  - Explain your reasoning
+                  - Provide confidence levels
+                  - Suggest human review for high-risk actions
+                  
+                  Never:
+                  - Execute destructive actions without approval
+                  - Make changes outside your blast radius limit
+                  - Ignore safety constraints
+                  """
+                  
+          if __name__ == "__main__":
+              agent = SREAgent()
+              # Agent runs as a service, listening for incidents
+              
+    - id: create-webhook-handler
+      name: Create Webhook Handler
+      action: roadiehq:utils:fs:write
+      input:
+        path: src/webhooks.py
+        content: |
+          """
+          Webhook handlers for integrations.
+          """
+          from fastapi import FastAPI, Request, HTTPException
+          from sre_agent import SREAgent, Incident, Severity
+          
+          app = FastAPI(title="SRE Agent Webhooks")
+          agent = SREAgent()
+          
+          @app.post("/webhooks/pagerduty")
+          async def pagerduty_webhook(request: Request):
+              """Handle PagerDuty incident webhooks."""
+              data = await request.json()
+              
+              incident = Incident(
+                  id=data["incident"]["id"],
+                  title=data["incident"]["title"],
+                  severity=Severity(data["incident"]["urgency"]),
+                  service=data["incident"]["service"]["name"],
+                  description=data["incident"]["description"],
+                  alerts=data["incident"]["alerts"],
+                  created_at=data["incident"]["created_at"],
+              )
+              
+              actions = await agent.handle_incident(incident)
+              return {"status": "processed", "actions": len(actions)}
+              
+          @app.post("/webhooks/azure-monitor")
+          async def azure_monitor_webhook(request: Request):
+              """Handle Azure Monitor alert webhooks."""
+              data = await request.json()
+              # Process Azure Monitor alerts
+              pass
+              
+          @app.post("/webhooks/prometheus")
+          async def prometheus_webhook(request: Request):
+              """Handle Prometheus Alertmanager webhooks."""
+              data = await request.json()
+              # Process Prometheus alerts
+              pass
+              
+    - id: create-terraform
+      name: Create Terraform Configuration
+      action: roadiehq:utils:fs:write
+      input:
+        path: terraform/main.tf
+        content: |
+          # SRE Agent Infrastructure
+          
+          terraform {
+            required_providers {
+              azurerm = {
+                source  = "hashicorp/azurerm"
+                version = "~> 3.85"
+              }
+            }
+          }
+          
+          variable "name" {
+            default = "${{ parameters.name }}"
+          }
+          
+          variable "environment" {
+            default = "${{ parameters.environment }}"
+          }
+          
+          variable "location" {
+            default = "${{ parameters.azure_region }}"
+          }
+          
+          # Resource Group
+          resource "azurerm_resource_group" "main" {
+            name     = "rg-${var.name}-${var.environment}"
+            location = var.location
+          }
+          
+          # Container App Environment
+          resource "azurerm_container_app_environment" "main" {
+            name                = "cae-${var.name}-${var.environment}"
+            location            = azurerm_resource_group.main.location
+            resource_group_name = azurerm_resource_group.main.name
+          }
+          
+          # SRE Agent Container App
+          resource "azurerm_container_app" "agent" {
+            name                         = "ca-${var.name}"
+            container_app_environment_id = azurerm_container_app_environment.main.id
+            resource_group_name          = azurerm_resource_group.main.name
+            revision_mode                = "Single"
+            
+            template {
+              container {
+                name   = "sre-agent"
+                image  = "ghcr.io/${var.name}:latest"
+                cpu    = 1.0
+                memory = "2Gi"
+                
+                env {
+                  name  = "AZURE_OPENAI_ENDPOINT"
+                  value = "..."
+                }
+              }
+            }
+            
+            ingress {
+              external_enabled = true
+              target_port      = 8000
+              
+              traffic_weight {
+                percentage      = 100
+                latest_revision = true
+              }
+            }
+          }
+          
+    - id: create-catalog-info
+      name: Create Catalog Info
+      action: roadiehq:utils:fs:write
+      input:
+        path: catalog-info.yaml
+        content: |
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            name: ${{ parameters.name }}
+            description: ${{ parameters.description }}
+            tags:
+              - sre-agent
+              - ai
+              - automation
+            annotations:
+              github.com/project-slug: ${{ parameters.owner }}/${{ parameters.name }}
+              pagerduty.com/integration-key: placeholder
+          spec:
+            type: service
+            lifecycle: production
+            owner: ${{ parameters.owner }}
+            system: platform
+            
+    - id: publish-github
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}
+        description: SRE Agent - ${{ parameters.description }}
+        defaultBranch: main
+        repoVisibility: private
+        
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish-github'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+        
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish-github'].output.remoteUrl }}
+      - title: Azure Portal
+        url: https://portal.azure.com
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}

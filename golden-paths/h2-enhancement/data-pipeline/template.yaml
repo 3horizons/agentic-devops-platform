@@ -1,0 +1,877 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H2 DATA PIPELINE GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating data pipelines.
+# Supports batch ETL, streaming, and real-time analytics.
+#
+# Horizon: H2 - Enhancement
+# Use Case: Build data ingestion, transformation, and analytics pipelines
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h2-data-pipeline
+  title: "H2: Create Data Pipeline"
+  description: |
+    Create a data pipeline for batch processing, streaming, or real-time
+    analytics. Supports Azure Data Factory, Databricks, Synapse, and
+    custom Spark/Flink deployments on AKS.
+  tags:
+    - h2-enhancement
+    - data-pipeline
+    - etl
+    - streaming
+    - analytics
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: Azure Data Factory
+      url: https://docs.microsoft.com/azure/data-factory/
+    - title: Databricks
+      url: https://docs.databricks.com/
+
+spec:
+  owner: platform-engineering
+  type: data-pipeline
+
+  # ===========================================================================
+  # PARAMETERS
+  # ===========================================================================
+  
+  parameters:
+    # -------------------------------------------------------------------------
+    # Pipeline Information
+    # -------------------------------------------------------------------------
+    - title: Pipeline Information
+      required:
+        - pipelineName
+        - team
+        - pipelineType
+      properties:
+        pipelineName:
+          title: Pipeline Name
+          description: Name of the data pipeline
+          type: string
+          pattern: '^[a-z][a-z0-9-]*-pipeline$'
+          maxLength: 50
+
+        team:
+          title: Team
+          description: Team that owns this pipeline
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        description:
+          title: Description
+          description: What does this pipeline do?
+          type: string
+          maxLength: 500
+
+        pipelineType:
+          title: Pipeline Type
+          type: string
+          enum:
+            - batch-etl
+            - streaming
+            - real-time-analytics
+            - change-data-capture
+            - data-lakehouse
+            - ml-feature-pipeline
+          enumNames:
+            - Batch ETL (Scheduled)
+            - Streaming (Continuous)
+            - Real-Time Analytics
+            - Change Data Capture (CDC)
+            - Data Lakehouse (Delta Lake)
+            - ML Feature Pipeline
+
+    # -------------------------------------------------------------------------
+    # Processing Framework
+    # -------------------------------------------------------------------------
+    - title: Processing Framework
+      required:
+        - framework
+      properties:
+        framework:
+          title: Processing Framework
+          type: string
+          default: databricks
+          enum:
+            - databricks
+            - synapse-spark
+            - data-factory
+            - spark-on-aks
+            - flink-on-aks
+            - fabric
+          enumNames:
+            - Azure Databricks
+            - Synapse Analytics (Spark)
+            - Azure Data Factory
+            - Apache Spark on AKS
+            - Apache Flink on AKS
+            - Microsoft Fabric
+
+        language:
+          title: Primary Language
+          type: string
+          default: python
+          enum:
+            - python
+            - scala
+            - sql
+          enumNames:
+            - Python (PySpark)
+            - Scala
+            - SQL
+
+        orchestrator:
+          title: Orchestration Tool
+          type: string
+          default: databricks-workflows
+          enum:
+            - databricks-workflows
+            - data-factory
+            - airflow
+            - prefect
+            - dagster
+            - github-actions
+          enumNames:
+            - Databricks Workflows
+            - Azure Data Factory
+            - Apache Airflow
+            - Prefect
+            - Dagster
+            - GitHub Actions
+
+    # -------------------------------------------------------------------------
+    # Data Sources
+    # -------------------------------------------------------------------------
+    - title: Data Sources
+      properties:
+        sources:
+          title: Data Sources
+          description: Configure input data sources
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: object
+            required:
+              - name
+              - type
+            properties:
+              name:
+                title: Source Name
+                type: string
+              type:
+                title: Source Type
+                type: string
+                enum:
+                  - adls-gen2
+                  - blob-storage
+                  - sql-database
+                  - cosmos-db
+                  - event-hubs
+                  - kafka
+                  - api
+                  - file-upload
+              format:
+                title: Data Format
+                type: string
+                enum:
+                  - parquet
+                  - delta
+                  - json
+                  - csv
+                  - avro
+                default: parquet
+          default:
+            - name: raw-data
+              type: adls-gen2
+              format: parquet
+
+        enableSchemaEvolution:
+          title: Enable Schema Evolution
+          type: boolean
+          default: true
+
+        enableDataValidation:
+          title: Enable Data Validation
+          type: boolean
+          default: true
+
+        validationTool:
+          title: Validation Tool
+          type: string
+          default: great-expectations
+          enum:
+            - great-expectations
+            - deequ
+            - pandera
+            - custom
+
+    # -------------------------------------------------------------------------
+    # Data Destinations
+    # -------------------------------------------------------------------------
+    - title: Data Destinations
+      properties:
+        destinations:
+          title: Data Destinations
+          description: Configure output destinations
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            type: object
+            required:
+              - name
+              - type
+            properties:
+              name:
+                title: Destination Name
+                type: string
+              type:
+                title: Destination Type
+                type: string
+                enum:
+                  - delta-lake
+                  - synapse-sql
+                  - cosmos-db
+                  - sql-database
+                  - power-bi
+                  - event-hubs
+                  - api
+              tier:
+                title: Storage Tier
+                type: string
+                enum:
+                  - bronze
+                  - silver
+                  - gold
+                default: silver
+          default:
+            - name: processed-data
+              type: delta-lake
+              tier: silver
+
+        enablePartitioning:
+          title: Enable Partitioning
+          type: boolean
+          default: true
+
+        partitionKeys:
+          title: Partition Keys
+          type: array
+          items:
+            type: string
+          default:
+            - year
+            - month
+            - day
+
+    # -------------------------------------------------------------------------
+    # Schedule & Triggers
+    # -------------------------------------------------------------------------
+    - title: Schedule & Triggers
+      properties:
+        triggerType:
+          title: Trigger Type
+          type: string
+          default: scheduled
+          enum:
+            - scheduled
+            - event-driven
+            - continuous
+            - manual
+          enumNames:
+            - Scheduled (Cron)
+            - Event-Driven (New Files)
+            - Continuous (Streaming)
+            - Manual Only
+
+        schedule:
+          title: Schedule (Cron)
+          description: Cron expression for scheduled runs
+          type: string
+          default: "0 2 * * *"
+
+        enableBackfill:
+          title: Enable Backfill Support
+          type: boolean
+          default: true
+
+        maxConcurrentRuns:
+          title: Max Concurrent Runs
+          type: integer
+          default: 1
+          minimum: 1
+          maximum: 10
+
+        retryPolicy:
+          title: Retry Policy
+          type: object
+          properties:
+            maxRetries:
+              title: Max Retries
+              type: integer
+              default: 3
+            retryDelay:
+              title: Retry Delay (seconds)
+              type: integer
+              default: 60
+
+    # -------------------------------------------------------------------------
+    # Data Quality & Governance
+    # -------------------------------------------------------------------------
+    - title: Data Quality & Governance
+      properties:
+        enableDataLineage:
+          title: Enable Data Lineage
+          description: Track data provenance with Purview
+          type: boolean
+          default: true
+
+        enableDataCatalog:
+          title: Register in Data Catalog
+          type: boolean
+          default: true
+
+        catalogService:
+          title: Catalog Service
+          type: string
+          default: purview
+          enum:
+            - purview
+            - unity-catalog
+            - custom
+
+        dataClassification:
+          title: Data Classification
+          type: string
+          default: internal
+          enum:
+            - public
+            - internal
+            - confidential
+            - restricted
+
+        enablePII:
+          title: Contains PII Data
+          type: boolean
+          default: false
+
+        enableEncryption:
+          title: Enable Encryption at Rest
+          type: boolean
+          default: true
+
+        retentionDays:
+          title: Data Retention (days)
+          type: integer
+          default: 365
+          minimum: 30
+          maximum: 3650
+
+    # -------------------------------------------------------------------------
+    # Monitoring & Alerting
+    # -------------------------------------------------------------------------
+    - title: Monitoring & Alerting
+      properties:
+        enableMonitoring:
+          title: Enable Monitoring
+          type: boolean
+          default: true
+
+        metrics:
+          title: Metrics to Track
+          type: array
+          items:
+            type: string
+            enum:
+              - records-processed
+              - processing-time
+              - data-freshness
+              - data-quality-score
+              - error-rate
+              - resource-utilization
+          default:
+            - records-processed
+            - processing-time
+            - error-rate
+
+        alertChannels:
+          title: Alert Channels
+          type: array
+          items:
+            type: string
+            enum:
+              - email
+              - teams
+              - slack
+              - pagerduty
+          default:
+            - teams
+
+        slaMinutes:
+          title: SLA (minutes)
+          description: Max acceptable latency for data freshness
+          type: integer
+          default: 60
+          minimum: 5
+          maximum: 1440
+
+    # -------------------------------------------------------------------------
+    # Repository
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    # -------------------------------------------------------------------------
+    # Fetch Base Template
+    # -------------------------------------------------------------------------
+    - id: fetch-template
+      name: Fetch Data Pipeline Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./repo
+        values:
+          pipelineName: ${{ parameters.pipelineName }}
+          team: ${{ parameters.team }}
+          description: ${{ parameters.description }}
+          pipelineType: ${{ parameters.pipelineType }}
+          framework: ${{ parameters.framework }}
+          language: ${{ parameters.language }}
+          orchestrator: ${{ parameters.orchestrator }}
+          sources: ${{ parameters.sources }}
+          destinations: ${{ parameters.destinations }}
+          triggerType: ${{ parameters.triggerType }}
+          schedule: ${{ parameters.schedule }}
+
+    # -------------------------------------------------------------------------
+    # Generate Pipeline Code
+    # -------------------------------------------------------------------------
+    - id: generate-pipeline
+      name: Generate Pipeline Code
+      action: fetch:template
+      input:
+        url: ./skeleton/pipeline
+        targetPath: ./repo/src
+        values:
+          framework: ${{ parameters.framework }}
+          language: ${{ parameters.language }}
+          pipelineType: ${{ parameters.pipelineType }}
+          sources: ${{ parameters.sources }}
+          destinations: ${{ parameters.destinations }}
+
+    # -------------------------------------------------------------------------
+    # Generate Data Quality
+    # -------------------------------------------------------------------------
+    - id: generate-quality
+      name: Generate Data Quality Checks
+      action: fetch:template
+      input:
+        url: ./skeleton/quality
+        targetPath: ./repo/quality
+        values:
+          validationTool: ${{ parameters.validationTool }}
+          enableSchemaEvolution: ${{ parameters.enableSchemaEvolution }}
+
+    # -------------------------------------------------------------------------
+    # Generate CI/CD
+    # -------------------------------------------------------------------------
+    - id: generate-cicd
+      name: Generate CI/CD Workflows
+      action: fetch:template
+      input:
+        url: ./skeleton/cicd
+        targetPath: ./repo/.github/workflows
+        values:
+          framework: ${{ parameters.framework }}
+          orchestrator: ${{ parameters.orchestrator }}
+
+    # -------------------------------------------------------------------------
+    # Create Repository
+    # -------------------------------------------------------------------------
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "Data Pipeline: ${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./repo
+        protectDefaultBranch: true
+
+    # -------------------------------------------------------------------------
+    # Register in Catalog
+    # -------------------------------------------------------------------------
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  # ===========================================================================
+  # OUTPUT
+  # ===========================================================================
+  
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}
+    text:
+      - title: Data Pipeline Created
+        content: |
+          ## 📊 Data Pipeline Created!
+          
+          **Pipeline:** ${{ parameters.pipelineName }}
+          **Type:** ${{ parameters.pipelineType }}
+          **Framework:** ${{ parameters.framework }}
+          
+          **Configuration:**
+          - Language: ${{ parameters.language }}
+          - Orchestrator: ${{ parameters.orchestrator }}
+          - Trigger: ${{ parameters.triggerType }}
+          - Schedule: ${{ parameters.schedule }}
+          
+          **Data Flow:**
+          - Sources: ${{ parameters.sources | length }}
+          - Destinations: ${{ parameters.destinations | length }}
+          
+          **Governance:**
+          - ${{ parameters.enableDataLineage ? '✅' : '⏭️' }} Data Lineage (Purview)
+          - ${{ parameters.enableDataCatalog ? '✅' : '⏭️' }} Data Catalog
+          - Classification: ${{ parameters.dataClassification }}
+          
+          **Next Steps:**
+          1. Configure data source connections
+          2. Define transformation logic
+          3. Set up data quality expectations
+          4. Test pipeline locally
+          5. Deploy to development environment
+
+---
+# =============================================================================
+# SKELETON FILES
+# =============================================================================
+
+# skeleton/src/pipeline/main.py
+"""
+${{ values.pipelineName }} - Data Pipeline
+${{ values.description }}
+
+Type: ${{ values.pipelineType }}
+Framework: ${{ values.framework }}
+"""
+import logging
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+{%- if values.framework == 'databricks' %}
+from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql import functions as F
+from delta.tables import DeltaTable
+{%- elif values.framework == 'spark-on-aks' %}
+from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql import functions as F
+{%- endif %}
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+class DataPipeline:
+    """
+    ${{ values.pipelineType }} pipeline for data processing.
+    """
+    
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        self.config = config or {}
+        self.spark = self._create_spark_session()
+        self.metrics = {
+            "records_read": 0,
+            "records_written": 0,
+            "start_time": None,
+            "end_time": None,
+        }
+    
+    def _create_spark_session(self) -> "SparkSession":
+        """Initialize Spark session."""
+        {%- if values.framework == 'databricks' %}
+        # Databricks provides SparkSession automatically
+        from pyspark.sql import SparkSession
+        return SparkSession.builder.getOrCreate()
+        {%- else %}
+        from pyspark.sql import SparkSession
+        return (
+            SparkSession.builder
+            .appName("${{ values.pipelineName }}")
+            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+            .getOrCreate()
+        )
+        {%- endif %}
+    
+    def extract(self) -> Dict[str, "DataFrame"]:
+        """Extract data from configured sources."""
+        logger.info("Starting data extraction...")
+        self.metrics["start_time"] = datetime.utcnow()
+        
+        dataframes = {}
+        
+        {%- for source in values.sources %}
+        # Source: {{ source.name }}
+        logger.info("Reading from {{ source.name }} ({{ source.type }})")
+        {%- if source.type == 'adls-gen2' or source.type == 'blob-storage' %}
+        df_{{ source.name | replace('-', '_') }} = self.spark.read.format("{{ source.format }}").load(
+            self.config.get("{{ source.name }}_path", "abfss://container@storage.dfs.core.windows.net/{{ source.name }}")
+        )
+        {%- elif source.type == 'delta' %}
+        df_{{ source.name | replace('-', '_') }} = self.spark.read.format("delta").load(
+            self.config.get("{{ source.name }}_path")
+        )
+        {%- elif source.type == 'sql-database' %}
+        df_{{ source.name | replace('-', '_') }} = self.spark.read.format("jdbc").options(
+            url=self.config.get("{{ source.name }}_jdbc_url"),
+            dbtable=self.config.get("{{ source.name }}_table"),
+            driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+        ).load()
+        {%- elif source.type == 'event-hubs' or source.type == 'kafka' %}
+        df_{{ source.name | replace('-', '_') }} = self.spark.readStream.format("kafka").options(
+            kafka_bootstrap_servers=self.config.get("{{ source.name }}_bootstrap_servers"),
+            subscribe=self.config.get("{{ source.name }}_topic")
+        ).load()
+        {%- endif %}
+        dataframes["{{ source.name }}"] = df_{{ source.name | replace('-', '_') }}
+        self.metrics["records_read"] += df_{{ source.name | replace('-', '_') }}.count()
+        {%- endfor %}
+        
+        logger.info(f"Extracted {self.metrics['records_read']} total records")
+        return dataframes
+    
+    def transform(self, dataframes: Dict[str, "DataFrame"]) -> Dict[str, "DataFrame"]:
+        """Apply transformations to extracted data."""
+        logger.info("Starting data transformation...")
+        
+        transformed = {}
+        
+        {%- if values.pipelineType == 'batch-etl' %}
+        # Batch ETL transformations
+        for name, df in dataframes.items():
+            # Add processing metadata
+            transformed[name] = (
+                df
+                .withColumn("_processed_at", F.current_timestamp())
+                .withColumn("_pipeline_name", F.lit("${{ values.pipelineName }}"))
+                .withColumn("_pipeline_run_id", F.lit(self.config.get("run_id", "unknown")))
+            )
+        {%- elif values.pipelineType == 'streaming' %}
+        # Streaming transformations
+        for name, df in dataframes.items():
+            transformed[name] = (
+                df
+                .withWatermark("event_time", "10 minutes")
+                .withColumn("_processed_at", F.current_timestamp())
+            )
+        {%- elif values.pipelineType == 'change-data-capture' %}
+        # CDC transformations - merge logic
+        for name, df in dataframes.items():
+            transformed[name] = (
+                df
+                .withColumn("_cdc_operation", F.col("op"))
+                .withColumn("_cdc_timestamp", F.col("ts_ms"))
+            )
+        {%- endif %}
+        
+        logger.info("Transformation complete")
+        return transformed
+    
+    def validate(self, dataframes: Dict[str, "DataFrame"]) -> bool:
+        """Run data quality validations."""
+        logger.info("Running data quality checks...")
+        
+        {%- if values.enableDataValidation %}
+        all_valid = True
+        
+        for name, df in dataframes.items():
+            # Basic quality checks
+            row_count = df.count()
+            null_counts = df.select([F.sum(F.col(c).isNull().cast("int")).alias(c) for c in df.columns]).collect()[0]
+            
+            logger.info(f"Dataset {name}: {row_count} rows")
+            
+            # Check for excessive nulls (>50% threshold)
+            for col_name in df.columns:
+                null_pct = null_counts[col_name] / row_count if row_count > 0 else 0
+                if null_pct > 0.5:
+                    logger.warning(f"High null percentage in {name}.{col_name}: {null_pct:.2%}")
+                    all_valid = False
+        
+        return all_valid
+        {%- else %}
+        return True
+        {%- endif %}
+    
+    def load(self, dataframes: Dict[str, "DataFrame"]) -> None:
+        """Load transformed data to destinations."""
+        logger.info("Starting data load...")
+        
+        {%- for destination in values.destinations %}
+        # Destination: {{ destination.name }} ({{ destination.tier }})
+        if "{{ destination.name | replace('-', '_') }}" in dataframes or len(dataframes) == 1:
+            df = dataframes.get("{{ destination.name | replace('-', '_') }}", list(dataframes.values())[0])
+            
+            logger.info("Writing to {{ destination.name }} ({{ destination.type }})")
+            
+            {%- if destination.type == 'delta-lake' %}
+            output_path = self.config.get(
+                "{{ destination.name }}_path",
+                "abfss://{{ destination.tier }}@storage.dfs.core.windows.net/{{ destination.name }}"
+            )
+            
+            {%- if values.enablePartitioning %}
+            df.write.format("delta").mode("append").partitionBy(${{ values.partitionKeys | dump }}).save(output_path)
+            {%- else %}
+            df.write.format("delta").mode("append").save(output_path)
+            {%- endif %}
+            
+            {%- elif destination.type == 'synapse-sql' %}
+            df.write.format("com.databricks.spark.sqldw").options(
+                url=self.config.get("{{ destination.name }}_synapse_url"),
+                dbtable="{{ destination.name }}",
+                tempDir=self.config.get("temp_dir")
+            ).mode("append").save()
+            
+            {%- elif destination.type == 'cosmos-db' %}
+            df.write.format("cosmos.oltp").options(
+                spark_cosmos_accountEndpoint=self.config.get("cosmos_endpoint"),
+                spark_cosmos_accountKey=self.config.get("cosmos_key"),
+                spark_cosmos_database=self.config.get("cosmos_database"),
+                spark_cosmos_container="{{ destination.name }}"
+            ).mode("append").save()
+            {%- endif %}
+            
+            self.metrics["records_written"] += df.count()
+        {%- endfor %}
+        
+        self.metrics["end_time"] = datetime.utcnow()
+        logger.info(f"Wrote {self.metrics['records_written']} total records")
+    
+    def run(self) -> Dict[str, Any]:
+        """Execute the complete pipeline."""
+        logger.info(f"Starting pipeline: ${{ values.pipelineName }}")
+        
+        try:
+            # Extract
+            raw_data = self.extract()
+            
+            # Transform
+            transformed_data = self.transform(raw_data)
+            
+            # Validate
+            if not self.validate(transformed_data):
+                raise ValueError("Data quality validation failed")
+            
+            # Load
+            self.load(transformed_data)
+            
+            # Calculate metrics
+            duration = (self.metrics["end_time"] - self.metrics["start_time"]).total_seconds()
+            
+            result = {
+                "status": "success",
+                "records_read": self.metrics["records_read"],
+                "records_written": self.metrics["records_written"],
+                "duration_seconds": duration,
+                "throughput_records_per_second": self.metrics["records_written"] / duration if duration > 0 else 0,
+            }
+            
+            logger.info(f"Pipeline completed: {result}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Pipeline failed: {e}")
+            return {
+                "status": "failed",
+                "error": str(e),
+                "records_read": self.metrics["records_read"],
+                "records_written": self.metrics["records_written"],
+            }
+
+
+def main():
+    """Main entry point."""
+    import os
+    
+    config = {
+        "run_id": os.getenv("RUN_ID", datetime.utcnow().strftime("%Y%m%d_%H%M%S")),
+        # Add configuration from environment or config file
+    }
+    
+    pipeline = DataPipeline(config)
+    result = pipeline.run()
+    
+    # Exit with appropriate code
+    exit(0 if result["status"] == "success" else 1)
+
+
+if __name__ == "__main__":
+    main()
+
+---
+# skeleton/catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.pipelineName }}
+  title: ${{ values.pipelineName | replace('-pipeline', '') | title }} Pipeline
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: example/${{ values.pipelineName }}
+    datahub.io/pipeline: ${{ values.pipelineName }}
+  tags:
+    - data-pipeline
+    - ${{ values.pipelineType }}
+    - ${{ values.framework }}
+  links:
+    - url: https://adb-xxxxx.azuredatabricks.net
+      title: Databricks Workspace
+      icon: dashboard
+spec:
+  type: data-pipeline
+  lifecycle: production
+  owner: ${{ values.team }}
+  system: data-platform
+  dependsOn:
+    {%- for source in values.sources %}
+    - resource:default/{{ source.name }}
+    {%- endfor %}
+  providesApis: []

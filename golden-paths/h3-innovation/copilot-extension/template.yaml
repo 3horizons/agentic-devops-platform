@@ -1,0 +1,495 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: copilot-extension
+  title: GitHub Copilot Extension
+  description: |
+    Creates a GitHub Copilot Extension (Agent) with:
+    - Custom agent implementation
+    - Skillset configuration
+    - Azure integration for data retrieval
+    - OAuth authentication
+    - Deployment to GitHub Marketplace
+  tags:
+    - copilot
+    - ai
+    - github
+    - extension
+    - h3-innovation
+spec:
+  owner: platform-team
+  type: service
+  
+  parameters:
+    - title: Extension Configuration
+      required:
+        - name
+        - owner
+        - display_name
+      properties:
+        name:
+          title: Extension Name
+          type: string
+          description: Unique name for your Copilot extension (lowercase, hyphens)
+          pattern: '^[a-z0-9-]+$'
+          ui:autofocus: true
+        display_name:
+          title: Display Name
+          type: string
+          description: Human-readable name shown in Copilot
+        owner:
+          title: Owner Team
+          type: string
+          ui:field: OwnerPicker
+        description:
+          title: Description
+          type: string
+          description: What does this extension help users with?
+          ui:widget: textarea
+          
+    - title: Agent Capabilities
+      properties:
+        agent_type:
+          title: Agent Type
+          type: string
+          enum:
+            - skillset
+            - full_agent
+          enumNames:
+            - Skillset (Tools only)
+            - Full Agent (Custom logic)
+          default: skillset
+        skills:
+          title: Skills to Include
+          type: array
+          description: Select capabilities for your extension
+          items:
+            type: string
+            enum:
+              - code_search
+              - documentation_search
+              - database_query
+              - api_integration
+              - azure_resources
+              - ticket_lookup
+              - deployment_status
+        custom_instructions:
+          title: Custom Instructions
+          type: string
+          description: System prompt for the agent
+          ui:widget: textarea
+          
+    - title: Data Sources
+      properties:
+        enable_azure_search:
+          title: Enable Azure AI Search
+          type: boolean
+          default: false
+          description: Search internal documentation and knowledge bases
+        enable_github_search:
+          title: Enable GitHub Code Search
+          type: boolean
+          default: true
+          description: Search repositories and code
+        enable_database:
+          title: Enable Database Queries
+          type: boolean
+          default: false
+          description: Query internal databases
+        data_sources:
+          title: Additional Data Sources
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                enum: [rest_api, graphql, azure_function]
+              endpoint:
+                type: string
+                
+    - title: Infrastructure
+      required:
+        - environment
+      properties:
+        environment:
+          title: Environment
+          type: string
+          enum:
+            - dev
+            - staging
+            - prod
+        hosting:
+          title: Hosting Platform
+          type: string
+          enum:
+            - azure_functions
+            - azure_container_apps
+            - github_actions
+          default: azure_functions
+        azure_region:
+          title: Azure Region
+          type: string
+          enum:
+            - brazilsouth
+            - eastus
+            - westeurope
+          default: eastus
+          
+  steps:
+    - id: fetch-template
+      name: Fetch Copilot Extension Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          display_name: ${{ parameters.display_name }}
+          owner: ${{ parameters.owner }}
+          description: ${{ parameters.description }}
+          agent_type: ${{ parameters.agent_type }}
+          
+    - id: create-agent-config
+      name: Create Agent Configuration
+      action: roadiehq:utils:fs:write
+      input:
+        path: agent.yaml
+        content: |
+          # GitHub Copilot Extension Configuration
+          name: ${{ parameters.name }}
+          display_name: ${{ parameters.display_name }}
+          description: ${{ parameters.description }}
+          
+          type: ${{ parameters.agent_type }}
+          
+          # Agent behavior
+          instructions: |
+            ${{ parameters.custom_instructions }}
+            
+          # Skills/Tools configuration
+          skills:
+            ${{ parameters.skills | join('\n            - ') if parameters.skills else '[]' }}
+            
+          # Data sources
+          data_sources:
+            azure_search:
+              enabled: ${{ parameters.enable_azure_search }}
+            github_search:
+              enabled: ${{ parameters.enable_github_search }}
+            database:
+              enabled: ${{ parameters.enable_database }}
+              
+    - id: create-agent-handler
+      name: Create Agent Handler
+      action: roadiehq:utils:fs:write
+      input:
+        path: src/agent.ts
+        content: |
+          /**
+           * GitHub Copilot Extension - ${{ parameters.display_name }}
+           * 
+           * This agent handles requests from GitHub Copilot and provides
+           * custom capabilities for your organization.
+           */
+          import { Octokit } from "@octokit/rest";
+          import { createAzureOpenAI } from "@azure/openai";
+          
+          interface CopilotRequest {
+            messages: Array<{ role: string; content: string }>;
+            copilot_references?: any[];
+            copilot_confirmations?: any[];
+          }
+          
+          interface AgentResponse {
+            type: "message" | "reference" | "confirmation";
+            content: string;
+            references?: any[];
+          }
+          
+          export class CopilotAgent {
+            private octokit: Octokit;
+            private systemPrompt: string;
+            
+            constructor(token: string) {
+              this.octokit = new Octokit({ auth: token });
+              this.systemPrompt = `
+                ${{ parameters.custom_instructions }}
+                
+                You are a helpful assistant integrated with GitHub Copilot.
+                You have access to the following capabilities:
+                ${{ parameters.skills | join(', ') if parameters.skills else 'general assistance' }}
+              `;
+            }
+            
+            async handleRequest(request: CopilotRequest): Promise<AgentResponse> {
+              const userMessage = request.messages[request.messages.length - 1];
+              
+              // Process based on intent
+              const intent = await this.classifyIntent(userMessage.content);
+              
+              switch (intent) {
+                case "code_search":
+                  return await this.handleCodeSearch(userMessage.content);
+                case "documentation":
+                  return await this.handleDocumentation(userMessage.content);
+                case "deployment":
+                  return await this.handleDeployment(userMessage.content);
+                default:
+                  return await this.handleGeneral(userMessage.content);
+              }
+            }
+            
+            private async classifyIntent(message: string): Promise<string> {
+              // Intent classification logic
+              if (message.includes("search") || message.includes("find")) {
+                return "code_search";
+              }
+              if (message.includes("doc") || message.includes("how to")) {
+                return "documentation";
+              }
+              if (message.includes("deploy") || message.includes("release")) {
+                return "deployment";
+              }
+              return "general";
+            }
+            
+            private async handleCodeSearch(query: string): Promise<AgentResponse> {
+              const results = await this.octokit.search.code({
+                q: query,
+                per_page: 5,
+              });
+              
+              return {
+                type: "reference",
+                content: `Found ${results.data.total_count} results`,
+                references: results.data.items.map(item => ({
+                  type: "code",
+                  url: item.html_url,
+                  title: item.path,
+                })),
+              };
+            }
+            
+            private async handleDocumentation(query: string): Promise<AgentResponse> {
+              // Azure AI Search integration
+              return {
+                type: "message",
+                content: "Documentation search result...",
+              };
+            }
+            
+            private async handleDeployment(query: string): Promise<AgentResponse> {
+              return {
+                type: "confirmation",
+                content: "Would you like me to trigger a deployment?",
+              };
+            }
+            
+            private async handleGeneral(query: string): Promise<AgentResponse> {
+              return {
+                type: "message",
+                content: "I can help with that. Let me find the relevant information...",
+              };
+            }
+          }
+          
+    - id: create-azure-function
+      name: Create Azure Function
+      action: roadiehq:utils:fs:write
+      input:
+        path: src/functions/copilot-handler.ts
+        content: |
+          import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+          import { CopilotAgent } from "../agent";
+          
+          export async function copilotHandler(
+            request: HttpRequest,
+            context: InvocationContext
+          ): Promise<HttpResponseInit> {
+            context.log("Copilot Extension request received");
+            
+            // Verify GitHub signature
+            const signature = request.headers.get("x-github-signature-256");
+            if (!verifySignature(signature, await request.text())) {
+              return { status: 401, body: "Invalid signature" };
+            }
+            
+            const body = await request.json() as any;
+            const token = request.headers.get("x-github-token");
+            
+            const agent = new CopilotAgent(token!);
+            const response = await agent.handleRequest(body);
+            
+            // Stream response for better UX
+            return {
+              status: 200,
+              headers: {
+                "Content-Type": "text/event-stream",
+                "X-Copilot-Completion-Type": response.type,
+              },
+              body: formatSSEResponse(response),
+            };
+          }
+          
+          function verifySignature(signature: string | null, body: string): boolean {
+            // Implement HMAC verification
+            return true;
+          }
+          
+          function formatSSEResponse(response: any): string {
+            return `data: ${JSON.stringify(response)}\n\n`;
+          }
+          
+          app.http("copilot-handler", {
+            methods: ["POST"],
+            authLevel: "anonymous",
+            handler: copilotHandler,
+          });
+          
+    - id: create-github-app-manifest
+      name: Create GitHub App Manifest
+      action: roadiehq:utils:fs:write
+      input:
+        path: github-app-manifest.json
+        content: |
+          {
+            "name": "${{ parameters.display_name }}",
+            "description": "${{ parameters.description }}",
+            "url": "https://${{ parameters.name }}.azurewebsites.net",
+            "hook_attributes": {
+              "url": "https://${{ parameters.name }}.azurewebsites.net/api/copilot-handler"
+            },
+            "redirect_url": "https://${{ parameters.name }}.azurewebsites.net/callback",
+            "callback_urls": [
+              "https://${{ parameters.name }}.azurewebsites.net/callback"
+            ],
+            "public": false,
+            "default_permissions": {
+              "contents": "read",
+              "metadata": "read",
+              "copilot_chat": "write"
+            },
+            "default_events": []
+          }
+          
+    - id: create-terraform
+      name: Create Terraform Configuration
+      action: roadiehq:utils:fs:write
+      input:
+        path: terraform/main.tf
+        content: |
+          # Copilot Extension Infrastructure
+          
+          terraform {
+            required_providers {
+              azurerm = {
+                source  = "hashicorp/azurerm"
+                version = "~> 3.85"
+              }
+            }
+          }
+          
+          variable "name" {
+            default = "${{ parameters.name }}"
+          }
+          
+          variable "environment" {
+            default = "${{ parameters.environment }}"
+          }
+          
+          variable "location" {
+            default = "${{ parameters.azure_region }}"
+          }
+          
+          resource "azurerm_resource_group" "main" {
+            name     = "rg-${var.name}-${var.environment}"
+            location = var.location
+          }
+          
+          resource "azurerm_storage_account" "main" {
+            name                     = "st${replace(var.name, "-", "")}${var.environment}"
+            resource_group_name      = azurerm_resource_group.main.name
+            location                 = azurerm_resource_group.main.location
+            account_tier             = "Standard"
+            account_replication_type = "LRS"
+          }
+          
+          resource "azurerm_service_plan" "main" {
+            name                = "asp-${var.name}-${var.environment}"
+            resource_group_name = azurerm_resource_group.main.name
+            location            = azurerm_resource_group.main.location
+            os_type             = "Linux"
+            sku_name            = "Y1"
+          }
+          
+          resource "azurerm_linux_function_app" "main" {
+            name                       = "${var.name}-${var.environment}"
+            resource_group_name        = azurerm_resource_group.main.name
+            location                   = azurerm_resource_group.main.location
+            storage_account_name       = azurerm_storage_account.main.name
+            storage_account_access_key = azurerm_storage_account.main.primary_access_key
+            service_plan_id            = azurerm_service_plan.main.id
+            
+            site_config {
+              application_stack {
+                node_version = "20"
+              }
+            }
+            
+            app_settings = {
+              "GITHUB_APP_ID"          = "@Microsoft.KeyVault(SecretUri=...)"
+              "GITHUB_PRIVATE_KEY"     = "@Microsoft.KeyVault(SecretUri=...)"
+              "GITHUB_WEBHOOK_SECRET"  = "@Microsoft.KeyVault(SecretUri=...)"
+            }
+          }
+          
+    - id: create-catalog-info
+      name: Create Catalog Info
+      action: roadiehq:utils:fs:write
+      input:
+        path: catalog-info.yaml
+        content: |
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            name: ${{ parameters.name }}
+            description: ${{ parameters.description }}
+            tags:
+              - copilot-extension
+              - ai
+              - github
+            annotations:
+              github.com/project-slug: ${{ parameters.owner }}/${{ parameters.name }}
+          spec:
+            type: service
+            lifecycle: production
+            owner: ${{ parameters.owner }}
+            system: ai-platform
+            
+    - id: publish-github
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}
+        description: GitHub Copilot Extension - ${{ parameters.display_name }}
+        defaultBranch: main
+        repoVisibility: private
+        
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish-github'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+        
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish-github'].output.remoteUrl }}
+      - title: GitHub App Settings
+        url: https://github.com/organizations/${{ parameters.owner }}/settings/apps
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}

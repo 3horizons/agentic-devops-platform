@@ -1,0 +1,728 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H1 WEB APPLICATION GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating full-stack web applications.
+# Supports multiple frameworks, databases, and deployment targets.
+#
+# Horizon: H1 - Foundation
+# Use Case: Create production-ready web applications with best practices
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h1-web-application
+  title: "H1: Create Web Application"
+  description: |
+    Create a full-stack web application with your choice of frontend
+    and backend frameworks. Includes CI/CD, testing, and monitoring.
+  tags:
+    - h1-foundation
+    - web-application
+    - fullstack
+    - react
+    - python
+    - nodejs
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+
+spec:
+  owner: platform-engineering
+  type: website
+
+  # ===========================================================================
+  # PARAMETERS
+  # ===========================================================================
+  
+  parameters:
+    # -------------------------------------------------------------------------
+    # Application Information
+    # -------------------------------------------------------------------------
+    - title: Application Information
+      required:
+        - appName
+        - team
+      properties:
+        appName:
+          title: Application Name
+          description: Name of the web application
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 40
+
+        team:
+          title: Team
+          description: Team that owns this application
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        description:
+          title: Description
+          description: Brief description of the application
+          type: string
+          maxLength: 300
+
+    # -------------------------------------------------------------------------
+    # Frontend Configuration
+    # -------------------------------------------------------------------------
+    - title: Frontend Configuration
+      required:
+        - frontendFramework
+      properties:
+        frontendFramework:
+          title: Frontend Framework
+          type: string
+          default: react
+          enum:
+            - react
+            - nextjs
+            - vue
+            - angular
+            - svelte
+            - static
+          enumNames:
+            - React (Vite)
+            - Next.js (Full-stack)
+            - Vue 3
+            - Angular
+            - SvelteKit
+            - Static HTML/CSS/JS
+
+        uiLibrary:
+          title: UI Component Library
+          type: string
+          default: tailwind
+          enum:
+            - tailwind
+            - mui
+            - shadcn
+            - chakra
+            - bootstrap
+            - none
+          enumNames:
+            - Tailwind CSS
+            - Material UI
+            - shadcn/ui
+            - Chakra UI
+            - Bootstrap
+            - None (Custom)
+
+        enableTypeScript:
+          title: Use TypeScript
+          type: boolean
+          default: true
+
+        enablePWA:
+          title: Enable PWA Support
+          type: boolean
+          default: false
+
+    # -------------------------------------------------------------------------
+    # Backend Configuration
+    # -------------------------------------------------------------------------
+    - title: Backend Configuration
+      properties:
+        backendFramework:
+          title: Backend Framework
+          type: string
+          default: fastapi
+          enum:
+            - fastapi
+            - express
+            - nestjs
+            - django
+            - aspnet
+            - go
+            - none
+          enumNames:
+            - FastAPI (Python)
+            - Express (Node.js)
+            - NestJS (Node.js)
+            - Django (Python)
+            - ASP.NET Core
+            - Go (Gin)
+            - None (Frontend Only)
+
+        apiStyle:
+          title: API Style
+          type: string
+          default: rest
+          enum:
+            - rest
+            - graphql
+            - trpc
+
+        enableOpenAPI:
+          title: Generate OpenAPI Spec
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Database
+    # -------------------------------------------------------------------------
+    - title: Database Configuration
+      properties:
+        database:
+          title: Database
+          type: string
+          default: postgres
+          enum:
+            - postgres
+            - mysql
+            - mongodb
+            - cosmos-db
+            - sqlite
+            - none
+          enumNames:
+            - PostgreSQL
+            - MySQL
+            - MongoDB
+            - Cosmos DB
+            - SQLite (Dev only)
+            - None
+
+        enableORM:
+          title: Enable ORM
+          type: boolean
+          default: true
+
+        orm:
+          title: ORM Library
+          type: string
+          default: auto
+          enum:
+            - auto
+            - prisma
+            - sqlalchemy
+            - typeorm
+            - drizzle
+
+        enableCaching:
+          title: Enable Caching (Redis)
+          type: boolean
+          default: false
+
+    # -------------------------------------------------------------------------
+    # Authentication
+    # -------------------------------------------------------------------------
+    - title: Authentication
+      properties:
+        authProvider:
+          title: Authentication Provider
+          type: string
+          default: entra-id
+          enum:
+            - entra-id
+            - auth0
+            - cognito
+            - clerk
+            - custom
+            - none
+          enumNames:
+            - Microsoft Entra ID
+            - Auth0
+            - AWS Cognito
+            - Clerk
+            - Custom JWT
+            - None
+
+        enableRBAC:
+          title: Enable Role-Based Access Control
+          type: boolean
+          default: true
+
+        enableMFA:
+          title: Enable Multi-Factor Auth
+          type: boolean
+          default: false
+
+    # -------------------------------------------------------------------------
+    # Deployment
+    # -------------------------------------------------------------------------
+    - title: Deployment Configuration
+      properties:
+        deploymentTarget:
+          title: Deployment Target
+          type: string
+          default: aks
+          enum:
+            - aks
+            - container-apps
+            - app-service
+            - static-web-apps
+          enumNames:
+            - AKS (Kubernetes)
+            - Container Apps
+            - App Service
+            - Static Web Apps (Frontend only)
+
+        enableCDN:
+          title: Enable CDN (Front Door)
+          type: boolean
+          default: false
+
+        environments:
+          title: Environments
+          type: array
+          items:
+            type: string
+            enum:
+              - development
+              - staging
+              - production
+          default:
+            - development
+            - staging
+            - production
+
+    # -------------------------------------------------------------------------
+    # Observability
+    # -------------------------------------------------------------------------
+    - title: Observability
+      properties:
+        enableMonitoring:
+          title: Enable Monitoring
+          type: boolean
+          default: true
+
+        enableTracing:
+          title: Enable Distributed Tracing
+          type: boolean
+          default: true
+
+        enableRUM:
+          title: Enable Real User Monitoring
+          type: boolean
+          default: false
+
+        enableErrorTracking:
+          title: Enable Error Tracking
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Repository
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+        enableMonorepo:
+          title: Monorepo Structure
+          description: Use monorepo with frontend and backend in same repo
+          type: boolean
+          default: true
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    - id: fetch-template
+      name: Fetch Web Application Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./repo
+        values:
+          appName: ${{ parameters.appName }}
+          team: ${{ parameters.team }}
+          description: ${{ parameters.description }}
+          frontendFramework: ${{ parameters.frontendFramework }}
+          uiLibrary: ${{ parameters.uiLibrary }}
+          enableTypeScript: ${{ parameters.enableTypeScript }}
+          backendFramework: ${{ parameters.backendFramework }}
+          database: ${{ parameters.database }}
+          authProvider: ${{ parameters.authProvider }}
+          deploymentTarget: ${{ parameters.deploymentTarget }}
+          environments: ${{ parameters.environments }}
+
+    - id: generate-frontend
+      name: Generate Frontend
+      action: fetch:template
+      input:
+        url: ./skeleton/frontend/${{ parameters.frontendFramework }}
+        targetPath: ./repo/frontend
+        values:
+          appName: ${{ parameters.appName }}
+          uiLibrary: ${{ parameters.uiLibrary }}
+          enableTypeScript: ${{ parameters.enableTypeScript }}
+
+    - id: generate-backend
+      name: Generate Backend
+      if: ${{ parameters.backendFramework !== 'none' }}
+      action: fetch:template
+      input:
+        url: ./skeleton/backend/${{ parameters.backendFramework }}
+        targetPath: ./repo/backend
+        values:
+          appName: ${{ parameters.appName }}
+          database: ${{ parameters.database }}
+          authProvider: ${{ parameters.authProvider }}
+
+    - id: generate-infrastructure
+      name: Generate Infrastructure
+      action: fetch:template
+      input:
+        url: ./skeleton/infrastructure
+        targetPath: ./repo/infrastructure
+        values:
+          deploymentTarget: ${{ parameters.deploymentTarget }}
+          environments: ${{ parameters.environments }}
+
+    - id: generate-cicd
+      name: Generate CI/CD Workflows
+      action: fetch:template
+      input:
+        url: ./skeleton/cicd
+        targetPath: ./repo/.github/workflows
+        values:
+          frontendFramework: ${{ parameters.frontendFramework }}
+          backendFramework: ${{ parameters.backendFramework }}
+          deploymentTarget: ${{ parameters.deploymentTarget }}
+          environments: ${{ parameters.environments }}
+
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "Web Application: ${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./repo
+        protectDefaultBranch: true
+        requireCodeOwnerReviews: true
+
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  # ===========================================================================
+  # OUTPUT
+  # ===========================================================================
+  
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}
+    text:
+      - title: Web Application Created
+        content: |
+          ## 🌐 Web Application Created!
+          
+          **Application:** ${{ parameters.appName }}
+          
+          **Frontend:**
+          - Framework: ${{ parameters.frontendFramework }}
+          - UI Library: ${{ parameters.uiLibrary }}
+          - TypeScript: ${{ parameters.enableTypeScript ? '✅' : '❌' }}
+          
+          **Backend:**
+          - Framework: ${{ parameters.backendFramework }}
+          - Database: ${{ parameters.database }}
+          - Auth: ${{ parameters.authProvider }}
+          
+          **Deployment:**
+          - Target: ${{ parameters.deploymentTarget }}
+          - Environments: ${{ parameters.environments | join(', ') }}
+          
+          **Next Steps:**
+          1. Clone the repository
+          2. Run `make setup` to install dependencies
+          3. Run `make dev` to start local development
+          4. Push to trigger CI/CD pipeline
+
+---
+# =============================================================================
+# SKELETON FILES
+# =============================================================================
+
+# skeleton/frontend/react/src/App.tsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+{%- if values.authProvider == 'entra-id' %}
+import { MsalProvider } from '@azure/msal-react';
+import { msalInstance } from './auth/msalConfig';
+{%- endif %}
+
+import { Layout } from './components/Layout';
+import { HomePage } from './pages/HomePage';
+import { NotFoundPage } from './pages/NotFoundPage';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
+
+function App() {
+  return (
+    {%- if values.authProvider == 'entra-id' %}
+    <MsalProvider instance={msalInstance}>
+    {%- endif %}
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </QueryClientProvider>
+    {%- if values.authProvider == 'entra-id' %}
+    </MsalProvider>
+    {%- endif %}
+  );
+}
+
+export default App;
+
+---
+# skeleton/backend/fastapi/src/main.py
+"""
+${{ values.appName }} - Backend API
+"""
+import logging
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+{%- if values.enableTracing %}
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+{%- endif %}
+
+from src.config import settings
+from src.api.routes import router
+{%- if values.database != 'none' %}
+from src.db import init_db
+{%- endif %}
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifecycle management."""
+    logger.info("Starting ${{ values.appName }} API")
+    {%- if values.database != 'none' %}
+    await init_db()
+    {%- endif %}
+    yield
+    logger.info("Shutting down")
+
+
+app = FastAPI(
+    title="${{ values.appName }}",
+    description="${{ values.description }}",
+    version="1.0.0",
+    lifespan=lifespan,
+    {%- if values.enableOpenAPI %}
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+    {%- endif %}
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Routes
+app.include_router(router, prefix="/api")
+
+{%- if values.enableTracing %}
+# Tracing
+FastAPIInstrumentor.instrument_app(app)
+{%- endif %}
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "healthy", "app": "${{ values.appName }}"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+---
+# skeleton/.github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ "{{" }} env.NODE_VERSION {{ "}}" }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Lint
+        run: npm run lint
+      
+      - name: Type check
+        run: npm run type-check
+      
+      - name: Test
+        run: npm run test:ci
+      
+      - name: Build
+        run: npm run build
+
+  {%- if values.backendFramework != 'none' %}
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      {%- if values.backendFramework in ['fastapi', 'django'] %}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ "{{" }} env.PYTHON_VERSION {{ "}}" }}
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+      
+      - name: Type check
+        run: mypy src/
+      
+      - name: Test
+        run: pytest --cov=src --cov-report=xml
+      {%- endif %}
+  {%- endif %}
+
+---
+# skeleton/Makefile
+.PHONY: setup dev test build deploy
+
+# Variables
+APP_NAME := ${{ values.appName }}
+
+# Setup
+setup:
+	@echo "Setting up $(APP_NAME)..."
+	cd frontend && npm install
+	{%- if values.backendFramework != 'none' %}
+	cd backend && pip install -r requirements.txt -r requirements-dev.txt
+	{%- endif %}
+
+# Development
+dev:
+	@echo "Starting development servers..."
+	(cd frontend && npm run dev) & \
+	{%- if values.backendFramework != 'none' %}
+	(cd backend && uvicorn src.main:app --reload --port 8000)
+	{%- endif %}
+
+# Testing
+test:
+	@echo "Running tests..."
+	cd frontend && npm run test
+	{%- if values.backendFramework != 'none' %}
+	cd backend && pytest
+	{%- endif %}
+
+# Build
+build:
+	@echo "Building $(APP_NAME)..."
+	cd frontend && npm run build
+	{%- if values.backendFramework != 'none' %}
+	cd backend && docker build -t $(APP_NAME)-backend .
+	{%- endif %}
+
+# Deploy
+deploy:
+	@echo "Deploying $(APP_NAME)..."
+	cd infrastructure && terraform apply
+
+---
+# skeleton/catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.appName }}
+  title: ${{ values.appName | title }}
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: example/${{ values.appName }}
+  tags:
+    - web-application
+    - ${{ values.frontendFramework }}
+    {%- if values.backendFramework != 'none' %}
+    - ${{ values.backendFramework }}
+    {%- endif %}
+spec:
+  type: website
+  lifecycle: production
+  owner: ${{ values.team }}
+  {%- if values.backendFramework != 'none' %}
+  providesApis:
+    - ${{ values.appName }}-api
+  {%- endif %}

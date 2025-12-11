@@ -1,0 +1,800 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H2 BATCH JOB GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating batch processing jobs.
+# Supports Kubernetes Jobs, CronJobs, Azure Functions, and Container Apps Jobs.
+#
+# Horizon: H2 - Enhancement
+# Use Case: Scheduled tasks, data processing, report generation, ETL jobs
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h2-batch-job
+  title: "H2: Create Batch Job"
+  description: |
+    Create batch processing jobs for scheduled tasks, data processing,
+    and background operations. Supports multiple execution platforms.
+  tags:
+    - h2-enhancement
+    - batch-job
+    - cronjob
+    - kubernetes
+    - scheduled-task
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+
+spec:
+  owner: platform-engineering
+  type: batch-job
+
+  parameters:
+    # -------------------------------------------------------------------------
+    # Job Information
+    # -------------------------------------------------------------------------
+    - title: Job Information
+      required:
+        - jobName
+        - team
+        - jobType
+      properties:
+        jobName:
+          title: Job Name
+          description: Name of the batch job
+          type: string
+          pattern: '^[a-z][a-z0-9-]*-job$'
+          maxLength: 50
+
+        team:
+          title: Team
+          description: Team that owns this job
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        description:
+          title: Description
+          type: string
+          maxLength: 300
+
+        jobType:
+          title: Job Type
+          type: string
+          default: scheduled
+          enum:
+            - scheduled
+            - triggered
+            - event-driven
+            - manual
+          enumNames:
+            - Scheduled (Cron)
+            - Triggered (Webhook/API)
+            - Event-Driven (Queue/Topic)
+            - Manual (On-demand)
+
+    # -------------------------------------------------------------------------
+    # Execution Platform
+    # -------------------------------------------------------------------------
+    - title: Execution Platform
+      required:
+        - platform
+        - language
+      properties:
+        platform:
+          title: Execution Platform
+          type: string
+          default: kubernetes-cronjob
+          enum:
+            - kubernetes-cronjob
+            - kubernetes-job
+            - container-apps-job
+            - azure-functions
+            - azure-batch
+          enumNames:
+            - Kubernetes CronJob
+            - Kubernetes Job (manual/triggered)
+            - Azure Container Apps Job
+            - Azure Functions (Timer/Queue)
+            - Azure Batch (large-scale)
+
+        language:
+          title: Programming Language
+          type: string
+          default: python
+          enum:
+            - python
+            - nodejs
+            - dotnet
+            - go
+            - java
+
+        pythonVersion:
+          title: Python Version
+          type: string
+          default: "3.11"
+          enum:
+            - "3.10"
+            - "3.11"
+            - "3.12"
+
+    # -------------------------------------------------------------------------
+    # Schedule Configuration
+    # -------------------------------------------------------------------------
+    - title: Schedule Configuration
+      properties:
+        schedule:
+          title: Cron Schedule
+          description: "Cron expression (e.g., '0 2 * * *' for 2 AM daily)"
+          type: string
+          default: "0 2 * * *"
+
+        timezone:
+          title: Timezone
+          type: string
+          default: UTC
+          enum:
+            - UTC
+            - America/New_York
+            - America/Sao_Paulo
+            - America/Los_Angeles
+            - Europe/London
+            - Europe/Paris
+            - Asia/Tokyo
+
+        concurrencyPolicy:
+          title: Concurrency Policy
+          type: string
+          default: Forbid
+          enum:
+            - Allow
+            - Forbid
+            - Replace
+          enumNames:
+            - Allow (multiple concurrent)
+            - Forbid (skip if running)
+            - Replace (stop old, start new)
+
+        startingDeadlineSeconds:
+          title: Starting Deadline (seconds)
+          description: Deadline to start job if missed schedule
+          type: integer
+          default: 300
+          minimum: 60
+          maximum: 3600
+
+    # -------------------------------------------------------------------------
+    # Job Execution
+    # -------------------------------------------------------------------------
+    - title: Job Execution
+      properties:
+        timeout:
+          title: Job Timeout (minutes)
+          type: integer
+          default: 60
+          minimum: 1
+          maximum: 1440
+
+        retryCount:
+          title: Retry Count
+          type: integer
+          default: 3
+          minimum: 0
+          maximum: 10
+
+        retryDelay:
+          title: Retry Delay (seconds)
+          type: integer
+          default: 60
+          minimum: 10
+          maximum: 600
+
+        parallelism:
+          title: Parallelism
+          description: Number of parallel job instances
+          type: integer
+          default: 1
+          minimum: 1
+          maximum: 10
+
+        completions:
+          title: Completions Required
+          description: Number of successful completions needed
+          type: integer
+          default: 1
+          minimum: 1
+          maximum: 100
+
+    # -------------------------------------------------------------------------
+    # Data Sources & Targets
+    # -------------------------------------------------------------------------
+    - title: Data Sources & Targets
+      properties:
+        dataSources:
+          title: Data Sources
+          type: array
+          items:
+            type: string
+            enum:
+              - azure-storage
+              - sql-database
+              - cosmos-db
+              - event-hubs
+              - service-bus
+              - kafka
+              - api-endpoint
+              - sftp
+          default:
+            - azure-storage
+
+        dataTargets:
+          title: Data Targets
+          type: array
+          items:
+            type: string
+            enum:
+              - azure-storage
+              - sql-database
+              - cosmos-db
+              - event-hubs
+              - api-endpoint
+              - email
+              - teams-webhook
+          default:
+            - azure-storage
+
+        enableDataValidation:
+          title: Enable Data Validation
+          type: boolean
+          default: true
+
+        enableCheckpointing:
+          title: Enable Checkpointing
+          description: Resume from last checkpoint on failure
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Resources
+    # -------------------------------------------------------------------------
+    - title: Resource Configuration
+      properties:
+        resourcePreset:
+          title: Resource Preset
+          type: string
+          default: medium
+          enum:
+            - small
+            - medium
+            - large
+            - xlarge
+          enumNames:
+            - Small (256Mi/250m)
+            - Medium (512Mi/500m)
+            - Large (1Gi/1000m)
+            - X-Large (2Gi/2000m)
+
+        enableSpotInstances:
+          title: Use Spot/Low-Priority VMs
+          description: Reduce costs for fault-tolerant jobs
+          type: boolean
+          default: false
+
+        storageSize:
+          title: Temp Storage Size (Gi)
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+
+    # -------------------------------------------------------------------------
+    # Notifications & Monitoring
+    # -------------------------------------------------------------------------
+    - title: Notifications & Monitoring
+      properties:
+        enableNotifications:
+          title: Enable Notifications
+          type: boolean
+          default: true
+
+        notifyOn:
+          title: Notify On
+          type: array
+          items:
+            type: string
+            enum:
+              - success
+              - failure
+              - timeout
+              - start
+          default:
+            - failure
+            - timeout
+
+        notificationChannels:
+          title: Notification Channels
+          type: array
+          items:
+            type: string
+            enum:
+              - email
+              - teams
+              - slack
+              - pagerduty
+          default:
+            - teams
+
+        enableMetrics:
+          title: Enable Prometheus Metrics
+          type: boolean
+          default: true
+
+        enableTracing:
+          title: Enable Distributed Tracing
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Repository
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    - id: fetch-template
+      name: Fetch Batch Job Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./repo
+        values:
+          jobName: ${{ parameters.jobName }}
+          team: ${{ parameters.team }}
+          description: ${{ parameters.description }}
+          jobType: ${{ parameters.jobType }}
+          platform: ${{ parameters.platform }}
+          language: ${{ parameters.language }}
+          schedule: ${{ parameters.schedule }}
+          timezone: ${{ parameters.timezone }}
+
+    - id: generate-source
+      name: Generate Job Source Code
+      action: fetch:template
+      input:
+        url: ./skeleton/${{ parameters.language }}
+        targetPath: ./repo/src
+        values:
+          jobName: ${{ parameters.jobName }}
+          dataSources: ${{ parameters.dataSources }}
+          dataTargets: ${{ parameters.dataTargets }}
+          enableCheckpointing: ${{ parameters.enableCheckpointing }}
+
+    - id: generate-k8s
+      name: Generate Kubernetes Manifests
+      if: ${{ parameters.platform.startsWith('kubernetes') }}
+      action: fetch:template
+      input:
+        url: ./skeleton/kubernetes
+        targetPath: ./repo/kubernetes
+        values:
+          jobName: ${{ parameters.jobName }}
+          platform: ${{ parameters.platform }}
+          schedule: ${{ parameters.schedule }}
+          concurrencyPolicy: ${{ parameters.concurrencyPolicy }}
+          timeout: ${{ parameters.timeout }}
+          retryCount: ${{ parameters.retryCount }}
+          resourcePreset: ${{ parameters.resourcePreset }}
+
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "Batch Job: ${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./repo
+
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}
+    text:
+      - title: Batch Job Created
+        content: |
+          ## ⏰ Batch Job Created!
+          
+          **Job:** ${{ parameters.jobName }}
+          **Type:** ${{ parameters.jobType }}
+          **Platform:** ${{ parameters.platform }}
+          
+          **Schedule:**
+          - Cron: `${{ parameters.schedule }}`
+          - Timezone: ${{ parameters.timezone }}
+          - Concurrency: ${{ parameters.concurrencyPolicy }}
+          
+          **Execution:**
+          - Timeout: ${{ parameters.timeout }} minutes
+          - Retries: ${{ parameters.retryCount }}
+          - Parallelism: ${{ parameters.parallelism }}
+          
+          **Data:**
+          - Sources: ${{ parameters.dataSources | join(', ') }}
+          - Targets: ${{ parameters.dataTargets | join(', ') }}
+          
+          **Next Steps:**
+          1. Implement job logic in `src/`
+          2. Configure secrets in GitHub
+          3. Test locally with `make run`
+          4. Deploy via GitOps
+
+---
+# =============================================================================
+# SKELETON FILES
+# =============================================================================
+
+# skeleton/python/main.py
+"""
+${{ values.jobName }} - Batch Job
+${{ values.description }}
+"""
+import logging
+import sys
+from datetime import datetime
+from typing import Optional
+
+{%- if values.enableMetrics %}
+from prometheus_client import Counter, Histogram, push_to_gateway, CollectorRegistry
+{%- endif %}
+{%- if values.enableTracing %}
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+{%- endif %}
+
+from src.config import settings
+from src.job import JobProcessor
+{%- if values.enableCheckpointing %}
+from src.checkpoint import CheckpointManager
+{%- endif %}
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"timestamp":"%(asctime)s","level":"%(levelname)s","job":"${{ values.jobName }}","message":"%(message)s"}'
+)
+logger = logging.getLogger(__name__)
+
+{%- if values.enableMetrics %}
+# Metrics
+registry = CollectorRegistry()
+JOB_RUNS = Counter(
+    'batch_job_runs_total',
+    'Total job runs',
+    ['job_name', 'status'],
+    registry=registry
+)
+JOB_DURATION = Histogram(
+    'batch_job_duration_seconds',
+    'Job duration in seconds',
+    ['job_name'],
+    registry=registry
+)
+RECORDS_PROCESSED = Counter(
+    'batch_job_records_processed_total',
+    'Records processed',
+    ['job_name', 'source'],
+    registry=registry
+)
+{%- endif %}
+
+
+def main() -> int:
+    """Main job entry point."""
+    job_name = "${{ values.jobName }}"
+    start_time = datetime.utcnow()
+    
+    logger.info(f"Starting job: {job_name}")
+    logger.info(f"Run timestamp: {start_time.isoformat()}")
+    
+    try:
+        {%- if values.enableCheckpointing %}
+        # Initialize checkpoint manager
+        checkpoint = CheckpointManager(job_name)
+        last_checkpoint = checkpoint.get_last_checkpoint()
+        if last_checkpoint:
+            logger.info(f"Resuming from checkpoint: {last_checkpoint}")
+        {%- endif %}
+        
+        # Initialize and run processor
+        processor = JobProcessor(
+            job_name=job_name,
+            {%- if values.enableCheckpointing %}
+            checkpoint_manager=checkpoint,
+            {%- endif %}
+        )
+        
+        # Execute job
+        result = processor.run()
+        
+        # Log results
+        duration = (datetime.utcnow() - start_time).total_seconds()
+        logger.info(f"Job completed successfully")
+        logger.info(f"Records processed: {result.records_processed}")
+        logger.info(f"Duration: {duration:.2f}s")
+        
+        {%- if values.enableMetrics %}
+        # Push metrics
+        JOB_RUNS.labels(job_name=job_name, status='success').inc()
+        JOB_DURATION.labels(job_name=job_name).observe(duration)
+        RECORDS_PROCESSED.labels(job_name=job_name, source='all').inc(result.records_processed)
+        push_to_gateway(settings.pushgateway_url, job=job_name, registry=registry)
+        {%- endif %}
+        
+        return 0
+        
+    except Exception as e:
+        logger.error(f"Job failed: {str(e)}", exc_info=True)
+        
+        {%- if values.enableMetrics %}
+        JOB_RUNS.labels(job_name=job_name, status='failure').inc()
+        try:
+            push_to_gateway(settings.pushgateway_url, job=job_name, registry=registry)
+        except Exception:
+            pass
+        {%- endif %}
+        
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+---
+# skeleton/python/src/job.py
+"""Job processor implementation."""
+import logging
+from dataclasses import dataclass
+from typing import Optional, List, Any
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class JobResult:
+    """Result of job execution."""
+    records_processed: int
+    records_failed: int
+    output_location: Optional[str] = None
+
+
+class JobProcessor:
+    """Main job processor."""
+    
+    def __init__(
+        self,
+        job_name: str,
+        {%- if values.enableCheckpointing %}
+        checkpoint_manager: Optional[Any] = None,
+        {%- endif %}
+    ):
+        self.job_name = job_name
+        {%- if values.enableCheckpointing %}
+        self.checkpoint = checkpoint_manager
+        {%- endif %}
+    
+    def run(self) -> JobResult:
+        """Execute the job."""
+        logger.info("Starting job processing...")
+        
+        # Step 1: Extract data from sources
+        data = self._extract()
+        logger.info(f"Extracted {len(data)} records")
+        
+        # Step 2: Transform data
+        transformed = self._transform(data)
+        logger.info(f"Transformed {len(transformed)} records")
+        
+        # Step 3: Validate data
+        {%- if values.enableDataValidation %}
+        valid_data, invalid_count = self._validate(transformed)
+        logger.info(f"Validation: {len(valid_data)} valid, {invalid_count} invalid")
+        {%- else %}
+        valid_data = transformed
+        invalid_count = 0
+        {%- endif %}
+        
+        # Step 4: Load to targets
+        output_location = self._load(valid_data)
+        
+        {%- if values.enableCheckpointing %}
+        # Save checkpoint
+        self.checkpoint.save_checkpoint({
+            'records_processed': len(valid_data),
+            'output_location': output_location
+        })
+        {%- endif %}
+        
+        return JobResult(
+            records_processed=len(valid_data),
+            records_failed=invalid_count,
+            output_location=output_location
+        )
+    
+    def _extract(self) -> List[dict]:
+        """Extract data from sources."""
+        # TODO: Implement data extraction logic
+        # This is a placeholder - implement based on data sources
+        return []
+    
+    def _transform(self, data: List[dict]) -> List[dict]:
+        """Transform data."""
+        # TODO: Implement transformation logic
+        return data
+    
+    {%- if values.enableDataValidation %}
+    def _validate(self, data: List[dict]) -> tuple[List[dict], int]:
+        """Validate data records."""
+        valid = []
+        invalid_count = 0
+        
+        for record in data:
+            if self._is_valid(record):
+                valid.append(record)
+            else:
+                invalid_count += 1
+        
+        return valid, invalid_count
+    
+    def _is_valid(self, record: dict) -> bool:
+        """Check if a record is valid."""
+        # TODO: Implement validation rules
+        return True
+    {%- endif %}
+    
+    def _load(self, data: List[dict]) -> str:
+        """Load data to targets."""
+        # TODO: Implement data loading logic
+        return "output/processed_data.parquet"
+
+---
+# skeleton/kubernetes/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${{ values.jobName }}
+  labels:
+    app: ${{ values.jobName }}
+    app.kubernetes.io/name: ${{ values.jobName }}
+    app.kubernetes.io/component: batch-job
+spec:
+  schedule: "${{ values.schedule }}"
+  timeZone: "${{ values.timezone }}"
+  concurrencyPolicy: ${{ values.concurrencyPolicy }}
+  startingDeadlineSeconds: ${{ values.startingDeadlineSeconds }}
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: ${{ values.timeout * 60 }}
+      backoffLimit: ${{ values.retryCount }}
+      parallelism: ${{ values.parallelism }}
+      completions: ${{ values.completions }}
+      template:
+        metadata:
+          labels:
+            app: ${{ values.jobName }}
+          annotations:
+            prometheus.io/scrape: "true"
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: ${{ values.jobName }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 1000
+          containers:
+            - name: ${{ values.jobName }}
+              image: ${IMAGE}
+              imagePullPolicy: Always
+              env:
+                - name: JOB_NAME
+                  value: "${{ values.jobName }}"
+                - name: LOG_LEVEL
+                  value: "INFO"
+              envFrom:
+                - configMapRef:
+                    name: ${{ values.jobName }}-config
+                - secretRef:
+                    name: ${{ values.jobName }}-secrets
+                    optional: true
+              resources:
+                {%- if values.resourcePreset == 'small' %}
+                requests:
+                  memory: "256Mi"
+                  cpu: "250m"
+                limits:
+                  memory: "512Mi"
+                  cpu: "500m"
+                {%- elif values.resourcePreset == 'medium' %}
+                requests:
+                  memory: "512Mi"
+                  cpu: "500m"
+                limits:
+                  memory: "1Gi"
+                  cpu: "1000m"
+                {%- elif values.resourcePreset == 'large' %}
+                requests:
+                  memory: "1Gi"
+                  cpu: "1000m"
+                limits:
+                  memory: "2Gi"
+                  cpu: "2000m"
+                {%- else %}
+                requests:
+                  memory: "2Gi"
+                  cpu: "2000m"
+                limits:
+                  memory: "4Gi"
+                  cpu: "4000m"
+                {%- endif %}
+              volumeMounts:
+                - name: temp-storage
+                  mountPath: /tmp/data
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+          volumes:
+            - name: temp-storage
+              emptyDir:
+                sizeLimit: ${{ values.storageSize }}Gi
+
+---
+# skeleton/catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.jobName }}
+  title: ${{ values.jobName | replace('-job', '') | title }} Job
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: example/${{ values.jobName }}
+  tags:
+    - batch-job
+    - ${{ values.jobType }}
+    - ${{ values.platform }}
+spec:
+  type: batch-job
+  lifecycle: production
+  owner: ${{ values.team }}

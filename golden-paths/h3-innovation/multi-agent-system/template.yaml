@@ -1,0 +1,1126 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H3 MULTI-AGENT SYSTEM GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating multi-agent AI systems.
+# Supports various orchestration frameworks and agent patterns.
+#
+# Horizon: H3 - Innovation
+# Use Case: Build autonomous multi-agent systems for complex workflows
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h3-multi-agent-system
+  title: "H3: Create Multi-Agent System"
+  description: |
+    Create a production multi-agent AI system with orchestration,
+    collaboration patterns, and human-in-the-loop capabilities.
+    Supports AutoGen, Semantic Kernel, and custom frameworks.
+  tags:
+    - h3-innovation
+    - multi-agent
+    - ai-foundry
+    - autogen
+    - semantic-kernel
+    - autonomous
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: AutoGen Documentation
+      url: https://microsoft.github.io/autogen/
+    - title: Semantic Kernel
+      url: https://learn.microsoft.com/semantic-kernel/
+
+spec:
+  owner: platform-engineering
+  type: multi-agent-system
+
+  # ===========================================================================
+  # PARAMETERS
+  # ===========================================================================
+  
+  parameters:
+    # -------------------------------------------------------------------------
+    # System Information
+    # -------------------------------------------------------------------------
+    - title: System Information
+      required:
+        - systemName
+        - team
+        - useCase
+      properties:
+        systemName:
+          title: System Name
+          description: Name of the multi-agent system
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 40
+
+        team:
+          title: Team
+          description: Team that owns this system
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        description:
+          title: Description
+          description: What does this agent system do?
+          type: string
+          maxLength: 500
+
+        useCase:
+          title: Use Case
+          description: Primary use case for the agent system
+          type: string
+          enum:
+            - software-development
+            - customer-support
+            - data-analysis
+            - content-creation
+            - research-assistant
+            - workflow-automation
+            - code-review
+            - incident-response
+            - document-processing
+            - custom
+          enumNames:
+            - Software Development Team
+            - Customer Support Automation
+            - Data Analysis & Insights
+            - Content Creation & Review
+            - Research & Knowledge Discovery
+            - Business Workflow Automation
+            - Code Review & Quality
+            - Incident Response & Remediation
+            - Document Processing & Extraction
+            - Custom Use Case
+
+    # -------------------------------------------------------------------------
+    # Orchestration Framework
+    # -------------------------------------------------------------------------
+    - title: Orchestration Framework
+      required:
+        - framework
+      properties:
+        framework:
+          title: Agent Framework
+          description: Primary orchestration framework
+          type: string
+          default: autogen
+          enum:
+            - autogen
+            - semantic-kernel
+            - langchain
+            - crewai
+            - custom
+          enumNames:
+            - Microsoft AutoGen
+            - Semantic Kernel
+            - LangChain/LangGraph
+            - CrewAI
+            - Custom Framework
+
+        orchestrationPattern:
+          title: Orchestration Pattern
+          description: How agents collaborate
+          type: string
+          default: hierarchical
+          enum:
+            - sequential
+            - hierarchical
+            - collaborative
+            - competitive
+            - swarm
+          enumNames:
+            - Sequential (Pipeline)
+            - Hierarchical (Manager/Workers)
+            - Collaborative (Peer-to-peer)
+            - Competitive (Best Response)
+            - Swarm (Dynamic)
+
+        communicationProtocol:
+          title: Communication Protocol
+          type: string
+          default: async-message
+          enum:
+            - sync-rpc
+            - async-message
+            - event-driven
+            - shared-memory
+          enumNames:
+            - Synchronous RPC
+            - Asynchronous Messaging
+            - Event-Driven
+            - Shared Memory/State
+
+    # -------------------------------------------------------------------------
+    # Agent Configuration
+    # -------------------------------------------------------------------------
+    - title: Agent Configuration
+      properties:
+        agents:
+          title: Agent Definitions
+          description: Define the agents in your system
+          type: array
+          minItems: 2
+          maxItems: 10
+          items:
+            type: object
+            required:
+              - name
+              - role
+            properties:
+              name:
+                title: Agent Name
+                type: string
+              role:
+                title: Role
+                type: string
+                enum:
+                  - orchestrator
+                  - planner
+                  - executor
+                  - critic
+                  - researcher
+                  - coder
+                  - reviewer
+                  - writer
+                  - analyst
+                  - specialist
+              model:
+                title: LLM Model
+                type: string
+                default: gpt-4o
+                enum:
+                  - gpt-4o
+                  - gpt-4o-mini
+                  - gpt-4-turbo
+                  - o1
+                  - o1-mini
+              tools:
+                title: Available Tools
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - code-interpreter
+                    - file-search
+                    - web-search
+                    - api-call
+                    - database-query
+                    - github-actions
+                    - azure-cli
+                    - custom-function
+          default:
+            - name: orchestrator
+              role: orchestrator
+              model: gpt-4o
+              tools: []
+            - name: worker
+              role: executor
+              model: gpt-4o-mini
+              tools:
+                - code-interpreter
+
+        maxConcurrentAgents:
+          title: Max Concurrent Agents
+          type: integer
+          default: 5
+          minimum: 2
+          maximum: 20
+
+        agentTimeout:
+          title: Agent Timeout (seconds)
+          type: integer
+          default: 300
+          minimum: 60
+          maximum: 3600
+
+    # -------------------------------------------------------------------------
+    # Human-in-the-Loop
+    # -------------------------------------------------------------------------
+    - title: Human-in-the-Loop Configuration
+      properties:
+        enableHumanInLoop:
+          title: Enable Human-in-the-Loop
+          type: boolean
+          default: true
+
+        approvalTriggers:
+          title: Approval Triggers
+          description: When to require human approval
+          type: array
+          items:
+            type: string
+            enum:
+              - high-cost-operation
+              - external-api-call
+              - data-modification
+              - code-deployment
+              - sensitive-data-access
+              - threshold-exceeded
+              - error-recovery
+              - final-output
+          default:
+            - high-cost-operation
+            - code-deployment
+            - final-output
+
+        approvalChannel:
+          title: Approval Channel
+          type: string
+          default: teams
+          enum:
+            - teams
+            - slack
+            - email
+            - github-issue
+            - custom-webhook
+
+        approvalTimeout:
+          title: Approval Timeout (minutes)
+          type: integer
+          default: 30
+          minimum: 5
+          maximum: 1440
+
+        escalationPolicy:
+          title: Escalation Policy
+          description: What to do if approval times out
+          type: string
+          default: pause
+          enum:
+            - pause
+            - fail
+            - continue-limited
+            - escalate
+          enumNames:
+            - Pause and Wait
+            - Fail Task
+            - Continue with Limitations
+            - Escalate to Manager
+
+    # -------------------------------------------------------------------------
+    # Memory & State
+    # -------------------------------------------------------------------------
+    - title: Memory & State Management
+      properties:
+        memoryType:
+          title: Memory Type
+          type: string
+          default: conversation
+          enum:
+            - conversation
+            - long-term
+            - episodic
+            - semantic
+            - hybrid
+          enumNames:
+            - Conversation Only
+            - Long-term Memory
+            - Episodic Memory
+            - Semantic Memory (Knowledge Graph)
+            - Hybrid (All Types)
+
+        memoryBackend:
+          title: Memory Backend
+          type: string
+          default: redis
+          enum:
+            - in-memory
+            - redis
+            - cosmos-db
+            - postgres
+            - ai-search
+          enumNames:
+            - In-Memory (Dev only)
+            - Redis
+            - Cosmos DB
+            - PostgreSQL
+            - Azure AI Search
+
+        enableStateCheckpoints:
+          title: Enable State Checkpoints
+          description: Save agent state for recovery
+          type: boolean
+          default: true
+
+        checkpointInterval:
+          title: Checkpoint Interval (seconds)
+          type: integer
+          default: 60
+          minimum: 10
+          maximum: 300
+
+    # -------------------------------------------------------------------------
+    # Safety & Governance
+    # -------------------------------------------------------------------------
+    - title: Safety & Governance
+      properties:
+        enableContentSafety:
+          title: Enable Content Safety
+          type: boolean
+          default: true
+
+        safetyLevel:
+          title: Safety Level
+          type: string
+          default: medium
+          enum:
+            - low
+            - medium
+            - high
+            - custom
+
+        enableAuditLog:
+          title: Enable Audit Logging
+          description: Log all agent decisions and actions
+          type: boolean
+          default: true
+
+        auditRetentionDays:
+          title: Audit Log Retention (days)
+          type: integer
+          default: 90
+          minimum: 30
+          maximum: 365
+
+        costLimit:
+          title: Cost Limit (USD/day)
+          type: number
+          default: 100
+          minimum: 10
+          maximum: 10000
+
+        tokenLimitPerTask:
+          title: Token Limit per Task
+          type: integer
+          default: 100000
+          minimum: 10000
+          maximum: 1000000
+
+        enableGroundedness:
+          title: Enable Groundedness Check
+          description: Verify agent outputs are factually grounded
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Integration & Deployment
+    # -------------------------------------------------------------------------
+    - title: Integration & Deployment
+      properties:
+        integrations:
+          title: External Integrations
+          type: array
+          items:
+            type: string
+            enum:
+              - github
+              - azure-devops
+              - jira
+              - servicenow
+              - salesforce
+              - sharepoint
+              - confluence
+              - slack
+              - teams
+          default:
+            - github
+            - teams
+
+        deploymentTarget:
+          title: Deployment Target
+          type: string
+          default: aks
+          enum:
+            - aks
+            - container-apps
+            - azure-functions
+          enumNames:
+            - AKS (Full Control)
+            - Container Apps (Serverless)
+            - Azure Functions (Event-driven)
+
+        enableAutoScaling:
+          title: Enable Auto-Scaling
+          type: boolean
+          default: true
+
+        minReplicas:
+          title: Minimum Replicas
+          type: integer
+          default: 1
+          minimum: 0
+          maximum: 10
+
+        maxReplicas:
+          title: Maximum Replicas
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+
+    # -------------------------------------------------------------------------
+    # Repository
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    # -------------------------------------------------------------------------
+    # Fetch Base Template
+    # -------------------------------------------------------------------------
+    - id: fetch-template
+      name: Fetch Multi-Agent Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./repo
+        values:
+          systemName: ${{ parameters.systemName }}
+          team: ${{ parameters.team }}
+          description: ${{ parameters.description }}
+          useCase: ${{ parameters.useCase }}
+          framework: ${{ parameters.framework }}
+          orchestrationPattern: ${{ parameters.orchestrationPattern }}
+          agents: ${{ parameters.agents }}
+          enableHumanInLoop: ${{ parameters.enableHumanInLoop }}
+          approvalTriggers: ${{ parameters.approvalTriggers }}
+          memoryType: ${{ parameters.memoryType }}
+          memoryBackend: ${{ parameters.memoryBackend }}
+          enableContentSafety: ${{ parameters.enableContentSafety }}
+          safetyLevel: ${{ parameters.safetyLevel }}
+          integrations: ${{ parameters.integrations }}
+          deploymentTarget: ${{ parameters.deploymentTarget }}
+
+    # -------------------------------------------------------------------------
+    # Generate Agent Definitions
+    # -------------------------------------------------------------------------
+    - id: generate-agents
+      name: Generate Agent Configurations
+      action: fetch:template
+      input:
+        url: ./skeleton/agents
+        targetPath: ./repo/src/agents
+        values:
+          framework: ${{ parameters.framework }}
+          agents: ${{ parameters.agents }}
+          orchestrationPattern: ${{ parameters.orchestrationPattern }}
+
+    # -------------------------------------------------------------------------
+    # Generate Orchestrator
+    # -------------------------------------------------------------------------
+    - id: generate-orchestrator
+      name: Generate Orchestrator
+      action: fetch:template
+      input:
+        url: ./skeleton/orchestrator
+        targetPath: ./repo/src/orchestrator
+        values:
+          framework: ${{ parameters.framework }}
+          orchestrationPattern: ${{ parameters.orchestrationPattern }}
+          enableHumanInLoop: ${{ parameters.enableHumanInLoop }}
+
+    # -------------------------------------------------------------------------
+    # Generate Memory System
+    # -------------------------------------------------------------------------
+    - id: generate-memory
+      name: Generate Memory System
+      action: fetch:template
+      input:
+        url: ./skeleton/memory
+        targetPath: ./repo/src/memory
+        values:
+          memoryType: ${{ parameters.memoryType }}
+          memoryBackend: ${{ parameters.memoryBackend }}
+
+    # -------------------------------------------------------------------------
+    # Generate Kubernetes Manifests
+    # -------------------------------------------------------------------------
+    - id: generate-k8s
+      name: Generate Kubernetes Manifests
+      action: fetch:template
+      input:
+        url: ./skeleton/kubernetes
+        targetPath: ./repo/kubernetes
+        values:
+          systemName: ${{ parameters.systemName }}
+          team: ${{ parameters.team }}
+          deploymentTarget: ${{ parameters.deploymentTarget }}
+          enableAutoScaling: ${{ parameters.enableAutoScaling }}
+          minReplicas: ${{ parameters.minReplicas }}
+          maxReplicas: ${{ parameters.maxReplicas }}
+
+    # -------------------------------------------------------------------------
+    # Create Repository
+    # -------------------------------------------------------------------------
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "Multi-Agent System: ${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./repo
+        protectDefaultBranch: true
+        requireCodeOwnerReviews: true
+
+    # -------------------------------------------------------------------------
+    # Register in Catalog
+    # -------------------------------------------------------------------------
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  # ===========================================================================
+  # OUTPUT
+  # ===========================================================================
+  
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}
+    text:
+      - title: Multi-Agent System Created
+        content: |
+          ## 🤖 Multi-Agent System Created!
+          
+          **System:** ${{ parameters.systemName }}
+          **Use Case:** ${{ parameters.useCase }}
+          **Framework:** ${{ parameters.framework }}
+          
+          **Agents Configured:** ${{ parameters.agents | length }}
+          **Pattern:** ${{ parameters.orchestrationPattern }}
+          
+          **Features:**
+          - ${{ parameters.enableHumanInLoop ? '✅' : '⏭️' }} Human-in-the-Loop
+          - ${{ parameters.enableContentSafety ? '✅' : '⏭️' }} Content Safety
+          - ${{ parameters.enableAuditLog ? '✅' : '⏭️' }} Audit Logging
+          - Memory: ${{ parameters.memoryType }} (${{ parameters.memoryBackend }})
+          
+          **Next Steps:**
+          1. Configure agent prompts in `src/agents/`
+          2. Add custom tools in `src/tools/`
+          3. Set up integrations
+          4. Test locally with `make run-local`
+          5. Deploy to ${{ parameters.deploymentTarget }}
+
+---
+# =============================================================================
+# SKELETON FILES
+# =============================================================================
+
+# skeleton/src/main.py
+"""
+${{ values.systemName }} - Multi-Agent System
+${{ values.description }}
+
+Framework: ${{ values.framework }}
+Pattern: ${{ values.orchestrationPattern }}
+"""
+import asyncio
+import logging
+from typing import Any, Dict, List, Optional
+
+{%- if values.framework == 'autogen' %}
+import autogen
+from autogen import AssistantAgent, UserProxyAgent, GroupChat, GroupChatManager
+{%- elif values.framework == 'semantic-kernel' %}
+import semantic_kernel as sk
+from semantic_kernel.agents import ChatCompletionAgent
+from semantic_kernel.agents.group_chat import AgentGroupChat
+{%- elif values.framework == 'langchain' %}
+from langchain.agents import AgentExecutor
+from langgraph.graph import StateGraph, END
+{%- endif %}
+
+from src.config import Settings
+from src.orchestrator import Orchestrator
+from src.memory import MemoryManager
+from src.safety import SafetyFilter
+from src.audit import AuditLogger
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+class MultiAgentSystem:
+    """
+    Multi-agent system orchestrator for ${{ values.useCase }}.
+    
+    Orchestration Pattern: ${{ values.orchestrationPattern }}
+    """
+    
+    def __init__(self, settings: Optional[Settings] = None):
+        self.settings = settings or Settings()
+        self.orchestrator = None
+        self.memory = None
+        self.safety = None
+        self.audit = None
+        self.agents: Dict[str, Any] = {}
+        
+    async def initialize(self):
+        """Initialize all system components."""
+        logger.info("Initializing multi-agent system...")
+        
+        # Initialize memory
+        self.memory = MemoryManager(
+            backend="${{ values.memoryBackend }}",
+            memory_type="${{ values.memoryType }}",
+        )
+        await self.memory.connect()
+        
+        # Initialize safety filter
+        {%- if values.enableContentSafety %}
+        self.safety = SafetyFilter(level="${{ values.safetyLevel }}")
+        {%- endif %}
+        
+        # Initialize audit logger
+        {%- if values.enableAuditLog %}
+        self.audit = AuditLogger(retention_days=${{ values.auditRetentionDays }})
+        {%- endif %}
+        
+        # Initialize agents
+        await self._create_agents()
+        
+        # Initialize orchestrator
+        self.orchestrator = Orchestrator(
+            agents=self.agents,
+            pattern="${{ values.orchestrationPattern }}",
+            memory=self.memory,
+            {%- if values.enableHumanInLoop %}
+            human_in_loop=True,
+            approval_triggers=${{ values.approvalTriggers | dump }},
+            {%- endif %}
+        )
+        
+        logger.info("Multi-agent system initialized successfully")
+    
+    async def _create_agents(self):
+        """Create and configure all agents."""
+        {%- if values.framework == 'autogen' %}
+        # AutoGen agent configuration
+        llm_config = {
+            "config_list": [
+                {
+                    "model": "gpt-4o",
+                    "api_type": "azure",
+                    "api_key": self.settings.azure_openai_key,
+                    "base_url": self.settings.azure_openai_endpoint,
+                    "api_version": "2024-02-01",
+                }
+            ],
+            "temperature": 0.7,
+        }
+        
+        {%- for agent in values.agents %}
+        # Agent: {{ agent.name }}
+        self.agents["{{ agent.name }}"] = AssistantAgent(
+            name="{{ agent.name }}",
+            system_message=self._get_system_prompt("{{ agent.role }}"),
+            llm_config={**llm_config, "model": "{{ agent.model }}"},
+        )
+        {%- endfor %}
+        
+        # Create group chat
+        self.group_chat = GroupChat(
+            agents=list(self.agents.values()),
+            messages=[],
+            max_round=${{ values.maxConcurrentAgents * 2 }},
+        )
+        
+        self.manager = GroupChatManager(
+            groupchat=self.group_chat,
+            llm_config=llm_config,
+        )
+        
+        {%- elif values.framework == 'semantic-kernel' %}
+        # Semantic Kernel agent configuration
+        kernel = sk.Kernel()
+        
+        # Add Azure OpenAI service
+        kernel.add_service(
+            sk.connectors.AzureChatCompletion(
+                deployment_name="gpt-4o",
+                endpoint=self.settings.azure_openai_endpoint,
+                api_key=self.settings.azure_openai_key,
+            )
+        )
+        
+        {%- for agent in values.agents %}
+        # Agent: {{ agent.name }}
+        self.agents["{{ agent.name }}"] = ChatCompletionAgent(
+            kernel=kernel,
+            name="{{ agent.name }}",
+            instructions=self._get_system_prompt("{{ agent.role }}"),
+        )
+        {%- endfor %}
+        
+        # Create agent group chat
+        self.group_chat = AgentGroupChat(
+            agents=list(self.agents.values()),
+        )
+        {%- endif %}
+        
+        logger.info(f"Created {len(self.agents)} agents")
+    
+    def _get_system_prompt(self, role: str) -> str:
+        """Get system prompt for agent role."""
+        prompts = {
+            "orchestrator": """You are the orchestrator agent responsible for:
+- Coordinating other agents
+- Breaking down complex tasks
+- Ensuring quality of outputs
+- Managing workflow progression""",
+            
+            "planner": """You are a planning agent responsible for:
+- Analyzing tasks and requirements
+- Creating step-by-step plans
+- Identifying dependencies
+- Estimating effort and resources""",
+            
+            "executor": """You are an executor agent responsible for:
+- Carrying out assigned tasks
+- Reporting progress and results
+- Handling errors gracefully
+- Requesting clarification when needed""",
+            
+            "critic": """You are a critic agent responsible for:
+- Reviewing outputs from other agents
+- Identifying issues and improvements
+- Ensuring quality standards
+- Providing constructive feedback""",
+            
+            "researcher": """You are a research agent responsible for:
+- Gathering relevant information
+- Analyzing data and sources
+- Synthesizing findings
+- Providing evidence-based insights""",
+            
+            "coder": """You are a coding agent responsible for:
+- Writing clean, efficient code
+- Following best practices
+- Adding tests and documentation
+- Debugging and optimization""",
+            
+            "reviewer": """You are a code review agent responsible for:
+- Reviewing code for quality
+- Checking security vulnerabilities
+- Ensuring coding standards
+- Suggesting improvements""",
+        }
+        return prompts.get(role, f"You are a {role} agent.")
+    
+    async def run_task(self, task: str, context: Optional[Dict] = None) -> Dict[str, Any]:
+        """
+        Execute a task through the multi-agent system.
+        
+        Args:
+            task: The task description
+            context: Optional context information
+            
+        Returns:
+            Task result with agent outputs
+        """
+        logger.info(f"Starting task: {task[:100]}...")
+        
+        # Safety check on input
+        {%- if values.enableContentSafety %}
+        if not await self.safety.check_input(task):
+            return {"error": "Task blocked by safety filter"}
+        {%- endif %}
+        
+        # Log task start
+        {%- if values.enableAuditLog %}
+        await self.audit.log_event("task_start", {"task": task, "context": context})
+        {%- endif %}
+        
+        try:
+            # Run through orchestrator
+            result = await self.orchestrator.execute(task, context)
+            
+            # Safety check on output
+            {%- if values.enableContentSafety %}
+            result = await self.safety.filter_output(result)
+            {%- endif %}
+            
+            # Log completion
+            {%- if values.enableAuditLog %}
+            await self.audit.log_event("task_complete", {"result": result})
+            {%- endif %}
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Task failed: {e}")
+            {%- if values.enableAuditLog %}
+            await self.audit.log_event("task_error", {"error": str(e)})
+            {%- endif %}
+            raise
+    
+    async def shutdown(self):
+        """Gracefully shutdown the system."""
+        logger.info("Shutting down multi-agent system...")
+        
+        # Save state checkpoint
+        {%- if values.enableStateCheckpoints %}
+        await self.orchestrator.save_checkpoint()
+        {%- endif %}
+        
+        # Close connections
+        await self.memory.disconnect()
+        
+        logger.info("Shutdown complete")
+
+
+async def main():
+    """Main entry point."""
+    system = MultiAgentSystem()
+    
+    try:
+        await system.initialize()
+        
+        # Example task
+        result = await system.run_task(
+            task="Analyze the latest quarterly report and summarize key findings",
+            context={"source": "sharepoint://reports/Q4-2024"}
+        )
+        
+        print(f"Result: {result}")
+        
+    finally:
+        await system.shutdown()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+---
+# skeleton/src/orchestrator/__init__.py
+"""
+Orchestrator for ${{ values.orchestrationPattern }} pattern.
+"""
+import asyncio
+from typing import Any, Dict, List, Optional
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class Orchestrator:
+    """
+    Agent orchestrator implementing ${{ values.orchestrationPattern }} pattern.
+    """
+    
+    def __init__(
+        self,
+        agents: Dict[str, Any],
+        pattern: str,
+        memory: Any,
+        human_in_loop: bool = False,
+        approval_triggers: Optional[List[str]] = None,
+    ):
+        self.agents = agents
+        self.pattern = pattern
+        self.memory = memory
+        self.human_in_loop = human_in_loop
+        self.approval_triggers = approval_triggers or []
+        self.current_state = {}
+        
+    async def execute(self, task: str, context: Optional[Dict] = None) -> Dict[str, Any]:
+        """Execute task using the configured orchestration pattern."""
+        
+        {%- if values.orchestrationPattern == 'sequential' %}
+        return await self._execute_sequential(task, context)
+        {%- elif values.orchestrationPattern == 'hierarchical' %}
+        return await self._execute_hierarchical(task, context)
+        {%- elif values.orchestrationPattern == 'collaborative' %}
+        return await self._execute_collaborative(task, context)
+        {%- elif values.orchestrationPattern == 'swarm' %}
+        return await self._execute_swarm(task, context)
+        {%- else %}
+        return await self._execute_hierarchical(task, context)
+        {%- endif %}
+    
+    async def _execute_sequential(self, task: str, context: Optional[Dict]) -> Dict[str, Any]:
+        """Sequential pipeline execution."""
+        result = {"task": task, "outputs": []}
+        current_input = task
+        
+        for agent_name, agent in self.agents.items():
+            logger.info(f"Sequential: Running agent {agent_name}")
+            
+            output = await self._run_agent(agent, current_input, context)
+            result["outputs"].append({"agent": agent_name, "output": output})
+            current_input = output
+            
+            # Check for human approval if needed
+            if self.human_in_loop and self._needs_approval(agent_name, output):
+                approved = await self._request_approval(agent_name, output)
+                if not approved:
+                    result["status"] = "blocked_by_approval"
+                    return result
+        
+        result["final_output"] = current_input
+        result["status"] = "completed"
+        return result
+    
+    async def _execute_hierarchical(self, task: str, context: Optional[Dict]) -> Dict[str, Any]:
+        """Hierarchical manager/worker execution."""
+        result = {"task": task, "outputs": []}
+        
+        # Find orchestrator/manager agent
+        manager = self.agents.get("orchestrator") or list(self.agents.values())[0]
+        workers = {k: v for k, v in self.agents.items() if k != "orchestrator"}
+        
+        # Manager creates plan
+        plan = await self._run_agent(manager, f"Create a plan for: {task}", context)
+        result["plan"] = plan
+        
+        # Execute plan with workers
+        for step in self._parse_plan(plan):
+            worker_name = step.get("agent", list(workers.keys())[0])
+            worker = workers.get(worker_name, list(workers.values())[0])
+            
+            output = await self._run_agent(worker, step["task"], context)
+            result["outputs"].append({
+                "step": step,
+                "agent": worker_name,
+                "output": output,
+            })
+        
+        # Manager reviews and synthesizes
+        final = await self._run_agent(
+            manager,
+            f"Synthesize results: {result['outputs']}",
+            context,
+        )
+        
+        result["final_output"] = final
+        result["status"] = "completed"
+        return result
+    
+    async def _execute_collaborative(self, task: str, context: Optional[Dict]) -> Dict[str, Any]:
+        """Collaborative peer-to-peer execution."""
+        result = {"task": task, "outputs": [], "discussions": []}
+        
+        # All agents discuss simultaneously
+        tasks = [
+            self._run_agent(agent, task, context)
+            for agent in self.agents.values()
+        ]
+        
+        initial_outputs = await asyncio.gather(*tasks)
+        
+        for (name, _), output in zip(self.agents.items(), initial_outputs):
+            result["outputs"].append({"agent": name, "output": output})
+        
+        # Synthesize outputs (simple approach - could be more sophisticated)
+        synthesis_prompt = f"Synthesize these perspectives: {result['outputs']}"
+        synthesizer = list(self.agents.values())[0]
+        
+        result["final_output"] = await self._run_agent(synthesizer, synthesis_prompt, context)
+        result["status"] = "completed"
+        return result
+    
+    async def _execute_swarm(self, task: str, context: Optional[Dict]) -> Dict[str, Any]:
+        """Dynamic swarm execution with adaptive agent selection."""
+        result = {"task": task, "iterations": [], "status": "in_progress"}
+        max_iterations = 10
+        
+        current_state = {"task": task, "progress": 0, "outputs": []}
+        
+        for i in range(max_iterations):
+            # Dynamically select best agent for current state
+            agent_name = self._select_agent_for_state(current_state)
+            agent = self.agents[agent_name]
+            
+            # Run selected agent
+            output = await self._run_agent(
+                agent,
+                f"Continue task. Current state: {current_state}",
+                context,
+            )
+            
+            current_state["outputs"].append({"agent": agent_name, "output": output})
+            result["iterations"].append({"iteration": i, "agent": agent_name, "output": output})
+            
+            # Check if task is complete
+            if self._is_task_complete(output):
+                result["status"] = "completed"
+                result["final_output"] = output
+                break
+                
+            current_state["progress"] = (i + 1) / max_iterations
+        
+        return result
+    
+    async def _run_agent(self, agent: Any, prompt: str, context: Optional[Dict]) -> str:
+        """Run a single agent with the given prompt."""
+        # Implementation depends on framework
+        # This is a placeholder
+        return f"Agent response to: {prompt[:50]}..."
+    
+    def _parse_plan(self, plan: str) -> List[Dict]:
+        """Parse manager's plan into executable steps."""
+        # Simple implementation - would be more sophisticated in practice
+        return [{"task": plan, "agent": "worker"}]
+    
+    def _select_agent_for_state(self, state: Dict) -> str:
+        """Select best agent for current swarm state."""
+        # Simple round-robin - would use ML in practice
+        agents = list(self.agents.keys())
+        idx = len(state.get("outputs", [])) % len(agents)
+        return agents[idx]
+    
+    def _is_task_complete(self, output: str) -> bool:
+        """Check if task is complete based on output."""
+        completion_markers = ["DONE", "COMPLETE", "FINISHED", "FINAL"]
+        return any(marker in output.upper() for marker in completion_markers)
+    
+    def _needs_approval(self, agent_name: str, output: str) -> bool:
+        """Check if human approval is needed."""
+        for trigger in self.approval_triggers:
+            if trigger == "final-output" and agent_name == list(self.agents.keys())[-1]:
+                return True
+            if trigger == "code-deployment" and "deploy" in output.lower():
+                return True
+        return False
+    
+    async def _request_approval(self, agent_name: str, output: str) -> bool:
+        """Request human approval."""
+        logger.info(f"Requesting approval for {agent_name}: {output[:100]}...")
+        # Implementation would integrate with Teams/Slack/etc.
+        return True  # Auto-approve for now
+    
+    async def save_checkpoint(self):
+        """Save current state checkpoint."""
+        await self.memory.save("orchestrator_state", self.current_state)

@@ -1,0 +1,806 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H2 MICROSERVICE GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating containerized microservices.
+# Supports multiple languages, API styles, and deployment patterns.
+#
+# Horizon: H2 - Enhancement
+# Use Case: Create production-ready microservices with observability
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h2-microservice
+  title: "H2: Create Microservice"
+  description: |
+    Create a containerized microservice with your choice of language,
+    API style, and deployment configuration. Includes health checks,
+    metrics, tracing, and GitOps deployment.
+  tags:
+    - h2-enhancement
+    - microservice
+    - kubernetes
+    - container
+    - api
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+
+spec:
+  owner: platform-engineering
+  type: service
+
+  parameters:
+    # -------------------------------------------------------------------------
+    # Service Information
+    # -------------------------------------------------------------------------
+    - title: Service Information
+      required:
+        - serviceName
+        - team
+      properties:
+        serviceName:
+          title: Service Name
+          description: Name of the microservice
+          type: string
+          pattern: '^[a-z][a-z0-9-]*-service$'
+          maxLength: 50
+
+        team:
+          title: Team
+          description: Team that owns this service
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        description:
+          title: Description
+          type: string
+          maxLength: 300
+
+        system:
+          title: System
+          description: Parent system this service belongs to
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+
+    # -------------------------------------------------------------------------
+    # Language & Framework
+    # -------------------------------------------------------------------------
+    - title: Language & Framework
+      required:
+        - language
+      properties:
+        language:
+          title: Programming Language
+          type: string
+          default: python
+          enum:
+            - python
+            - nodejs
+            - go
+            - java
+            - csharp
+            - rust
+          enumNames:
+            - Python
+            - Node.js (TypeScript)
+            - Go
+            - Java (Spring Boot)
+            - C# (.NET)
+            - Rust
+
+        framework:
+          title: Framework
+          type: string
+          default: auto
+
+        pythonVersion:
+          title: Python Version
+          type: string
+          default: "3.11"
+          enum:
+            - "3.10"
+            - "3.11"
+            - "3.12"
+
+        nodeVersion:
+          title: Node.js Version
+          type: string
+          default: "20"
+          enum:
+            - "18"
+            - "20"
+            - "22"
+
+        goVersion:
+          title: Go Version
+          type: string
+          default: "1.22"
+          enum:
+            - "1.21"
+            - "1.22"
+            - "1.23"
+
+    # -------------------------------------------------------------------------
+    # API Configuration
+    # -------------------------------------------------------------------------
+    - title: API Configuration
+      properties:
+        apiStyle:
+          title: API Style
+          type: string
+          default: rest
+          enum:
+            - rest
+            - grpc
+            - graphql
+            - event-driven
+          enumNames:
+            - REST (OpenAPI)
+            - gRPC (Protocol Buffers)
+            - GraphQL
+            - Event-Driven (No HTTP API)
+
+        enableOpenAPI:
+          title: Generate OpenAPI Spec
+          type: boolean
+          default: true
+
+        enableAsyncAPI:
+          title: Generate AsyncAPI Spec
+          description: For event-driven services
+          type: boolean
+          default: false
+
+        httpPort:
+          title: HTTP Port
+          type: integer
+          default: 8080
+          minimum: 1024
+          maximum: 65535
+
+        grpcPort:
+          title: gRPC Port
+          type: integer
+          default: 50051
+
+    # -------------------------------------------------------------------------
+    # Data & Messaging
+    # -------------------------------------------------------------------------
+    - title: Data & Messaging
+      properties:
+        database:
+          title: Database
+          type: string
+          default: none
+          enum:
+            - none
+            - postgres
+            - mysql
+            - mongodb
+            - redis
+            - cosmos-db
+
+        messageQueue:
+          title: Message Queue
+          type: string
+          default: none
+          enum:
+            - none
+            - service-bus
+            - event-hubs
+            - kafka
+            - rabbitmq
+
+        enableCaching:
+          title: Enable Caching (Redis)
+          type: boolean
+          default: false
+
+        enableOutbox:
+          title: Enable Outbox Pattern
+          description: For reliable event publishing
+          type: boolean
+          default: false
+
+    # -------------------------------------------------------------------------
+    # Observability
+    # -------------------------------------------------------------------------
+    - title: Observability
+      properties:
+        enableMetrics:
+          title: Enable Prometheus Metrics
+          type: boolean
+          default: true
+
+        enableTracing:
+          title: Enable Distributed Tracing
+          type: boolean
+          default: true
+
+        enableLogging:
+          title: Enable Structured Logging
+          type: boolean
+          default: true
+
+        logFormat:
+          title: Log Format
+          type: string
+          default: json
+          enum:
+            - json
+            - text
+
+        enableHealthChecks:
+          title: Enable Health Checks
+          type: boolean
+          default: true
+
+        enableReadiness:
+          title: Enable Readiness Probe
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Security
+    # -------------------------------------------------------------------------
+    - title: Security
+      properties:
+        enableAuth:
+          title: Enable Authentication
+          type: boolean
+          default: true
+
+        authMethod:
+          title: Authentication Method
+          type: string
+          default: jwt
+          enum:
+            - jwt
+            - oauth2
+            - api-key
+            - mtls
+
+        enableRBAC:
+          title: Enable RBAC
+          type: boolean
+          default: true
+
+        enableSecurityScanning:
+          title: Enable Security Scanning
+          description: GHAS, container scanning
+          type: boolean
+          default: true
+
+    # -------------------------------------------------------------------------
+    # Deployment
+    # -------------------------------------------------------------------------
+    - title: Deployment Configuration
+      properties:
+        deploymentTarget:
+          title: Deployment Target
+          type: string
+          default: aks
+          enum:
+            - aks
+            - container-apps
+
+        replicas:
+          title: Default Replicas
+          type: integer
+          default: 2
+          minimum: 1
+          maximum: 10
+
+        enableHPA:
+          title: Enable Horizontal Pod Autoscaler
+          type: boolean
+          default: true
+
+        minReplicas:
+          title: Min Replicas (HPA)
+          type: integer
+          default: 2
+
+        maxReplicas:
+          title: Max Replicas (HPA)
+          type: integer
+          default: 10
+
+        resourcePreset:
+          title: Resource Preset
+          type: string
+          default: small
+          enum:
+            - small
+            - medium
+            - large
+          enumNames:
+            - Small (256Mi/250m)
+            - Medium (512Mi/500m)
+            - Large (1Gi/1000m)
+
+        environments:
+          title: Environments
+          type: array
+          items:
+            type: string
+            enum:
+              - dev
+              - staging
+              - prod
+          default:
+            - dev
+            - staging
+            - prod
+
+    # -------------------------------------------------------------------------
+    # Repository
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+  
+  steps:
+    - id: fetch-template
+      name: Fetch Microservice Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./repo
+        values:
+          serviceName: ${{ parameters.serviceName }}
+          team: ${{ parameters.team }}
+          description: ${{ parameters.description }}
+          system: ${{ parameters.system }}
+          language: ${{ parameters.language }}
+          apiStyle: ${{ parameters.apiStyle }}
+          database: ${{ parameters.database }}
+          messageQueue: ${{ parameters.messageQueue }}
+          enableMetrics: ${{ parameters.enableMetrics }}
+          enableTracing: ${{ parameters.enableTracing }}
+          deploymentTarget: ${{ parameters.deploymentTarget }}
+          environments: ${{ parameters.environments }}
+
+    - id: generate-source
+      name: Generate Source Code
+      action: fetch:template
+      input:
+        url: ./skeleton/${{ parameters.language }}
+        targetPath: ./repo/src
+        values:
+          serviceName: ${{ parameters.serviceName }}
+          apiStyle: ${{ parameters.apiStyle }}
+          database: ${{ parameters.database }}
+          httpPort: ${{ parameters.httpPort }}
+
+    - id: generate-k8s
+      name: Generate Kubernetes Manifests
+      action: fetch:template
+      input:
+        url: ./skeleton/kubernetes
+        targetPath: ./repo/kubernetes
+        values:
+          serviceName: ${{ parameters.serviceName }}
+          replicas: ${{ parameters.replicas }}
+          enableHPA: ${{ parameters.enableHPA }}
+          minReplicas: ${{ parameters.minReplicas }}
+          maxReplicas: ${{ parameters.maxReplicas }}
+          resourcePreset: ${{ parameters.resourcePreset }}
+          httpPort: ${{ parameters.httpPort }}
+          environments: ${{ parameters.environments }}
+
+    - id: generate-cicd
+      name: Generate CI/CD Workflows
+      action: fetch:template
+      input:
+        url: ./skeleton/cicd
+        targetPath: ./repo/.github/workflows
+        values:
+          language: ${{ parameters.language }}
+          deploymentTarget: ${{ parameters.deploymentTarget }}
+          enableSecurityScanning: ${{ parameters.enableSecurityScanning }}
+
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "Microservice: ${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        sourcePath: ./repo
+        protectDefaultBranch: true
+
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['create-repo'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register-catalog'].output.entityRef }}
+    text:
+      - title: Microservice Created
+        content: |
+          ## 🔧 Microservice Created!
+          
+          **Service:** ${{ parameters.serviceName }}
+          **Language:** ${{ parameters.language }}
+          **API:** ${{ parameters.apiStyle }}
+          
+          **Infrastructure:**
+          - Database: ${{ parameters.database }}
+          - Messaging: ${{ parameters.messageQueue }}
+          - Target: ${{ parameters.deploymentTarget }}
+          
+          **Observability:**
+          - ${{ parameters.enableMetrics ? '✅' : '⏭️' }} Prometheus Metrics
+          - ${{ parameters.enableTracing ? '✅' : '⏭️' }} Distributed Tracing
+          - ${{ parameters.enableHealthChecks ? '✅' : '⏭️' }} Health Checks
+          
+          **Environments:** ${{ parameters.environments | join(', ') }}
+          
+          **Next Steps:**
+          1. Clone repository
+          2. Implement business logic
+          3. Add unit tests
+          4. Push to trigger CI/CD
+
+---
+# =============================================================================
+# SKELETON FILES
+# =============================================================================
+
+# skeleton/python/main.py
+"""
+${{ values.serviceName }} - Microservice
+${{ values.description }}
+"""
+import logging
+from contextlib import asynccontextmanager
+from typing import Any
+
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+{%- if values.enableTracing %}
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+{%- endif %}
+{%- if values.enableMetrics %}
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from fastapi.responses import Response
+{%- endif %}
+
+from src.config import settings
+from src.api import router
+{%- if values.database != 'none' %}
+from src.db import init_db, close_db
+{%- endif %}
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"timestamp":"%(asctime)s","level":"%(levelname)s","message":"%(message)s","service":"${{ values.serviceName }}"}'
+)
+logger = logging.getLogger(__name__)
+
+{%- if values.enableMetrics %}
+# Metrics
+REQUEST_COUNT = Counter(
+    "http_requests_total",
+    "Total HTTP requests",
+    ["method", "endpoint", "status"]
+)
+REQUEST_LATENCY = Histogram(
+    "http_request_duration_seconds",
+    "HTTP request latency",
+    ["method", "endpoint"]
+)
+{%- endif %}
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifecycle management."""
+    logger.info("Starting ${{ values.serviceName }}")
+    {%- if values.database != 'none' %}
+    await init_db()
+    {%- endif %}
+    yield
+    logger.info("Shutting down ${{ values.serviceName }}")
+    {%- if values.database != 'none' %}
+    await close_db()
+    {%- endif %}
+
+
+app = FastAPI(
+    title="${{ values.serviceName }}",
+    description="${{ values.description }}",
+    version="1.0.0",
+    lifespan=lifespan,
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# API Routes
+app.include_router(router, prefix="/api")
+
+{%- if values.enableTracing %}
+# Tracing
+FastAPIInstrumentor.instrument_app(app)
+{%- endif %}
+
+
+# Health endpoints
+@app.get("/health")
+async def health():
+    """Liveness probe."""
+    return {"status": "healthy"}
+
+
+@app.get("/ready")
+async def ready():
+    """Readiness probe."""
+    {%- if values.database != 'none' %}
+    # Check database connectivity
+    try:
+        # Add database health check here
+        pass
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Not ready: {e}")
+    {%- endif %}
+    return {"status": "ready"}
+
+
+{%- if values.enableMetrics %}
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint."""
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+{%- endif %}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=${{ values.httpPort }})
+
+---
+# skeleton/kubernetes/base/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${{ values.serviceName }}
+  labels:
+    app: ${{ values.serviceName }}
+    app.kubernetes.io/name: ${{ values.serviceName }}
+    app.kubernetes.io/component: service
+spec:
+  replicas: ${{ values.replicas }}
+  selector:
+    matchLabels:
+      app: ${{ values.serviceName }}
+  template:
+    metadata:
+      labels:
+        app: ${{ values.serviceName }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "${{ values.httpPort }}"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: ${{ values.serviceName }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: ${{ values.serviceName }}
+          image: ${IMAGE}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: ${{ values.httpPort }}
+              protocol: TCP
+          env:
+            - name: SERVICE_NAME
+              value: "${{ values.serviceName }}"
+            - name: LOG_LEVEL
+              value: "info"
+          envFrom:
+            - configMapRef:
+                name: ${{ values.serviceName }}-config
+            - secretRef:
+                name: ${{ values.serviceName }}-secrets
+                optional: true
+          resources:
+            {%- if values.resourcePreset == 'small' %}
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            {%- elif values.resourcePreset == 'medium' %}
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+            {%- else %}
+            requests:
+              memory: "1Gi"
+              cpu: "1000m"
+            limits:
+              memory: "2Gi"
+              cpu: "2000m"
+            {%- endif %}
+          {%- if values.enableHealthChecks %}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          {%- endif %}
+          {%- if values.enableReadiness %}
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          {%- endif %}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+---
+# skeleton/kubernetes/base/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${{ values.serviceName }}
+  labels:
+    app: ${{ values.serviceName }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: ${{ values.serviceName }}
+
+---
+# skeleton/kubernetes/base/hpa.yaml
+{%- if values.enableHPA %}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ${{ values.serviceName }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ${{ values.serviceName }}
+  minReplicas: ${{ values.minReplicas }}
+  maxReplicas: ${{ values.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+{%- endif %}
+
+---
+# skeleton/Dockerfile
+FROM python:${{ values.pythonVersion }}-slim as builder
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --target=/app/deps -r requirements.txt
+
+# Production stage
+FROM python:${{ values.pythonVersion }}-slim
+
+WORKDIR /app
+
+# Create non-root user
+RUN useradd -m -u 1000 appuser
+
+# Copy dependencies and source
+COPY --from=builder /app/deps /app/deps
+COPY src/ /app/src/
+
+# Set Python path
+ENV PYTHONPATH=/app/deps:/app
+
+# Switch to non-root user
+USER appuser
+
+EXPOSE ${{ values.httpPort }}
+
+CMD ["python", "-m", "src.main"]
+
+---
+# skeleton/catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.serviceName }}
+  title: ${{ values.serviceName | replace('-service', '') | title }} Service
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: example/${{ values.serviceName }}
+    prometheus.io/scrape: "true"
+  tags:
+    - microservice
+    - ${{ values.language }}
+    - ${{ values.apiStyle }}
+spec:
+  type: service
+  lifecycle: production
+  owner: ${{ values.team }}
+  {%- if values.system %}
+  system: ${{ values.system }}
+  {%- endif %}
+  {%- if values.apiStyle == 'rest' and values.enableOpenAPI %}
+  providesApis:
+    - ${{ values.serviceName }}-api
+  {%- endif %}
