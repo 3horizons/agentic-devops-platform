@@ -56,14 +56,20 @@ resource "azurerm_kubernetes_cluster" "main" {
   # SYSTEM NODE POOL
   # ==========================================================================
   default_node_pool {
-    name           = var.system_node_pool.name
-    vm_size        = var.system_node_pool.vm_size
-    node_count     = var.system_node_pool.node_count
-    zones          = var.system_node_pool.zones
-    vnet_subnet_id = var.vnet_subnet_id
+    name                = var.default_node_pool.name
+    vm_size             = var.default_node_pool.vm_size
+    node_count          = var.default_node_pool.node_count
+    zones               = var.default_node_pool.zones
+    vnet_subnet_id      = var.network_config.nodes_subnet_id
+    min_count           = var.default_node_pool.enable_auto_scaling ? var.default_node_pool.min_count : null
+    max_count           = var.default_node_pool.enable_auto_scaling ? var.default_node_pool.max_count : null
+    enable_auto_scaling = var.default_node_pool.enable_auto_scaling
+    os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
+    os_disk_type        = var.default_node_pool.os_disk_type
+    max_pods            = var.default_node_pool.max_pods
 
     # Pod subnet for Azure CNI Overlay
-    pod_subnet_id = var.pod_subnet_id
+    pod_subnet_id = var.network_config.pods_subnet_id
 
     # System pool settings
     only_critical_addons_enabled = true
@@ -92,22 +98,22 @@ resource "azurerm_kubernetes_cluster" "main" {
   # NETWORK PROFILE
   # ==========================================================================
   network_profile {
-    network_plugin      = "azure"
+    network_plugin      = var.network_config.network_plugin
     network_plugin_mode = "overlay"
-    network_policy      = "calico"
+    network_policy      = var.network_config.network_policy
     load_balancer_sku   = "standard"
     outbound_type       = "loadBalancer"
 
     # Service CIDR (internal Kubernetes services)
-    service_cidr   = "10.0.32.0/24"
-    dns_service_ip = "10.0.32.10"
+    service_cidr   = var.network_config.service_cidr
+    dns_service_ip = var.network_config.dns_service_ip
   }
 
   # ==========================================================================
   # OIDC & WORKLOAD IDENTITY
   # ==========================================================================
-  oidc_issuer_enabled       = var.workload_identity
-  workload_identity_enabled = var.workload_identity
+  oidc_issuer_enabled       = var.enable_workload_identity
+  workload_identity_enabled = var.enable_workload_identity
 
   # ==========================================================================
   # AZURE AD INTEGRATION
@@ -120,24 +126,21 @@ resource "azurerm_kubernetes_cluster" "main" {
   # ==========================================================================
   # KEY VAULT SECRETS PROVIDER
   # ==========================================================================
-  dynamic "key_vault_secrets_provider" {
-    for_each = var.addons.azure_keyvault_secrets ? [1] : []
-    content {
-      secret_rotation_enabled  = true
-      secret_rotation_interval = "2m"
-    }
+  key_vault_secrets_provider {
+    secret_rotation_enabled  = true
+    secret_rotation_interval = "2m"
   }
 
   # ==========================================================================
   # AZURE POLICY
   # ==========================================================================
-  azure_policy_enabled = var.addons.azure_policy
+  azure_policy_enabled = var.enable_azure_policy
 
   # ==========================================================================
   # CONTAINER INSIGHTS (OMS AGENT)
   # ==========================================================================
   dynamic "oms_agent" {
-    for_each = var.addons.oms_agent && var.log_analytics_id != null ? [1] : []
+    for_each = var.log_analytics_id != null ? [1] : []
     content {
       log_analytics_workspace_id = var.log_analytics_id
     }
@@ -209,26 +212,28 @@ resource "azurerm_kubernetes_cluster" "main" {
 # =============================================================================
 
 resource "azurerm_kubernetes_cluster_node_pool" "user" {
-  for_each = { for np in var.user_node_pools : np.name => np }
+  for_each = var.additional_node_pools
 
   name                  = each.value.name
   kubernetes_cluster_id = azurerm_kubernetes_cluster.main.id
   vm_size               = each.value.vm_size
   zones                 = each.value.zones
-  vnet_subnet_id        = var.vnet_subnet_id
-  pod_subnet_id         = var.pod_subnet_id
+  vnet_subnet_id        = var.network_config.nodes_subnet_id
+  pod_subnet_id         = var.network_config.pods_subnet_id
+  max_pods              = each.value.max_pods
 
   # Auto-scaling
-  enable_auto_scaling = true
-  min_count           = each.value.min_count
-  max_count           = each.value.max_count
+  enable_auto_scaling = each.value.enable_auto_scaling
+  min_count           = each.value.enable_auto_scaling ? each.value.min_count : null
+  max_count           = each.value.enable_auto_scaling ? each.value.max_count : null
+  node_count          = each.value.enable_auto_scaling ? null : each.value.node_count
 
   # Labels and taints
-  node_labels = merge(each.value.labels, {
+  node_labels = merge(each.value.node_labels, {
     "environment" = var.environment
   })
 
-  node_taints = each.value.taints
+  node_taints = each.value.node_taints
 
   # Upgrade settings
   upgrade_settings {

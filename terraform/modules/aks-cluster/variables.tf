@@ -2,8 +2,13 @@
 # THREE HORIZONS ACCELERATOR - AKS CLUSTER MODULE VARIABLES
 # =============================================================================
 
-variable "resource_group_name" {
-  description = "Name of the resource group"
+variable "customer_name" {
+  description = "Customer name for resource naming"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment (dev, staging, prod)"
   type        = string
 }
 
@@ -12,13 +17,8 @@ variable "location" {
   type        = string
 }
 
-variable "customer_name" {
-  description = "Customer name for resource naming"
-  type        = string
-}
-
-variable "environment" {
-  description = "Environment (dev, staging, prod)"
+variable "resource_group_name" {
+  description = "Name of the resource group"
   type        = string
 }
 
@@ -34,43 +34,120 @@ variable "sku_tier" {
   default     = "Standard"
 }
 
-variable "system_node_pool" {
-  description = "System node pool configuration"
+variable "network_config" {
+  description = "Network configuration for AKS"
   type = object({
-    name       = string
-    vm_size    = string
-    node_count = number
-    zones      = list(string)
+    vnet_id         = string
+    nodes_subnet_id = string
+    pods_subnet_id  = string
+    network_plugin  = string
+    network_policy  = string
+    service_cidr    = string
+    dns_service_ip  = string
   })
-  default = {
-    name       = "system"
-    vm_size    = "Standard_D4s_v5"
-    node_count = 3
-    zones      = ["1", "2", "3"]
-  }
-}
-
-variable "user_node_pools" {
-  description = "User node pools configuration"
-  type = list(object({
-    name      = string
-    vm_size   = string
-    min_count = number
-    max_count = number
-    zones     = list(string)
-    labels    = map(string)
-    taints    = list(string)
-  }))
-  default = []
 }
 
 variable "vnet_subnet_id" {
-  description = "Subnet ID for AKS nodes"
+  description = "Subnet ID for AKS nodes (deprecated, use network_config)"
   type        = string
+  default     = null
 }
 
 variable "pod_subnet_id" {
-  description = "Subnet ID for pods (Azure CNI Overlay)"
+  description = "Subnet ID for pods (deprecated, use network_config)"
+  type        = string
+  default     = null
+}
+
+variable "default_node_pool" {
+  description = "Default (system) node pool configuration"
+  type = object({
+    name                = string
+    node_count          = number
+    vm_size             = string
+    min_count           = number
+    max_count           = number
+    os_disk_size_gb     = number
+    os_disk_type        = string
+    max_pods            = number
+    enable_auto_scaling = bool
+    zones               = list(string)
+  })
+  default = {
+    name                = "system"
+    node_count          = 3
+    vm_size             = "Standard_D4s_v5"
+    min_count           = 3
+    max_count           = 6
+    os_disk_size_gb     = 128
+    os_disk_type        = "Managed"
+    max_pods            = 110
+    enable_auto_scaling = true
+    zones               = ["1", "2", "3"]
+  }
+}
+
+variable "additional_node_pools" {
+  description = "Additional (user) node pools configuration"
+  type = map(object({
+    name                = string
+    node_count          = number
+    vm_size             = string
+    min_count           = number
+    max_count           = number
+    enable_auto_scaling = bool
+    max_pods            = number
+    node_labels         = map(string)
+    node_taints         = list(string)
+    zones               = list(string)
+  }))
+  default = {}
+}
+
+variable "enable_workload_identity" {
+  description = "Enable workload identity"
+  type        = bool
+  default     = true
+}
+
+variable "enable_azure_policy" {
+  description = "Enable Azure Policy"
+  type        = bool
+  default     = true
+}
+
+variable "enable_defender" {
+  description = "Enable Microsoft Defender for Containers"
+  type        = bool
+  default     = false
+}
+
+variable "enable_image_cleaner" {
+  description = "Enable image cleaner"
+  type        = bool
+  default     = true
+}
+
+variable "enable_cost_analysis" {
+  description = "Enable cost analysis"
+  type        = bool
+  default     = true
+}
+
+variable "enable_vertical_pod_autoscaler" {
+  description = "Enable vertical pod autoscaler"
+  type        = bool
+  default     = true
+}
+
+variable "admin_group_ids" {
+  description = "Azure AD group IDs for cluster admin access"
+  type        = list(string)
+  default     = []
+}
+
+variable "private_dns_zone_id" {
+  description = "Private DNS zone ID for private cluster"
   type        = string
   default     = null
 }
@@ -91,26 +168,6 @@ variable "log_analytics_id" {
   description = "Log Analytics Workspace ID for Container Insights"
   type        = string
   default     = null
-}
-
-variable "addons" {
-  description = "AKS add-ons configuration"
-  type = object({
-    azure_policy           = bool
-    azure_keyvault_secrets = bool
-    oms_agent              = bool
-  })
-  default = {
-    azure_policy           = true
-    azure_keyvault_secrets = true
-    oms_agent              = true
-  }
-}
-
-variable "workload_identity" {
-  description = "Enable workload identity"
-  type        = bool
-  default     = true
 }
 
 variable "tags" {
