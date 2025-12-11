@@ -13,20 +13,30 @@ output "key_vault_uri" {
   value       = azurerm_key_vault.main.vault_uri
 }
 
+output "keyvault_name" {
+  description = "Key Vault name (alias)"
+  value       = azurerm_key_vault.main.name
+}
+
+output "keyvault_uri" {
+  description = "Key Vault URI (alias)"
+  value       = azurerm_key_vault.main.vault_uri
+}
+
 output "workload_identity_client_ids" {
   description = "Workload identity client IDs"
   value = {
     for name, identity in azurerm_user_assigned_identity.workload : name => identity.client_id
   }
 }
---
+
 output "workload_identity_principal_ids" {
   description = "Workload identity principal IDs"
   value = {
     for name, identity in azurerm_user_assigned_identity.workload : name => identity.principal_id
   }
 }
---
+
 output "external_secrets_client_id" {
   description = "External Secrets Operator client ID"
   value       = azurerm_user_assigned_identity.external_secrets.client_id

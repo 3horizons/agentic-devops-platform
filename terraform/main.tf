@@ -367,7 +367,7 @@ module "security" {
 # =============================================================================
 
 module "aks" {
-  source = "./modules/aks"
+  source = "./modules/aks-cluster"
   
   customer_name       = var.customer_name
   environment         = var.environment
@@ -612,63 +612,8 @@ module "argocd" {
 }
 
 # =============================================================================
-# OUTPUTS
+# NOTE: Outputs are defined in outputs.tf
 # =============================================================================
-
-output "resource_group_name" {
-  description = "Resource group name"
-  value       = azurerm_resource_group.main.name
-}
-
-output "aks_cluster_name" {
-  description = "AKS cluster name"
-  value       = module.aks.cluster_name
-}
-
-output "aks_cluster_id" {
-  description = "AKS cluster ID"
-  value       = module.aks.cluster_id
-}
-
-output "key_vault_name" {
-  description = "Key Vault name"
-  value       = module.security.key_vault_name
-}
-
-output "key_vault_uri" {
-  description = "Key Vault URI"
-  value       = module.security.key_vault_uri
-}
-
-output "postgresql_fqdn" {
-  description = "PostgreSQL server FQDN"
-  value       = module.databases.postgresql_server_fqdn
-}
-
-output "redis_hostname" {
-  description = "Redis hostname"
-  value       = module.databases.redis_hostname
-}
-
-output "grafana_endpoint" {
-  description = "Grafana endpoint URL"
-  value       = module.observability.grafana_endpoint
-}
-
-output "argocd_url" {
-  description = "ArgoCD URL"
-  value       = module.argocd.url
-}
-
-output "openai_endpoint" {
-  description = "Azure OpenAI endpoint"
-  value       = var.enable_ai_foundry && local.config.enable_ai ? module.ai_foundry[0].openai_endpoint : null
-}
-
-output "ai_search_endpoint" {
-  description = "Azure AI Search endpoint"
-  value       = var.enable_ai_foundry && local.config.enable_ai ? module.ai_foundry[0].search_endpoint : null
-}
 
 output "dns_name_servers" {
   description = "DNS name servers (configure at your registrar)"

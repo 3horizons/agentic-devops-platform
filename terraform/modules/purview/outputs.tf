@@ -49,7 +49,9 @@ output "estimated_monthly_cost" {
     small  = "$0-100"
     medium = "$500-800"
     large  = "$2,000-3,000"
---
+  }
+}
+
 output "portal_url" {
   description = "Purview governance portal URL"
   value       = "https://${local.purview_name}.purview.azure.com"

@@ -19,7 +19,10 @@ output "openai_deployments" {
     for name, deployment in azurerm_cognitive_deployment.models : name => {
       id   = deployment.id
       name = deployment.name
---
+    }
+  } : {}
+}
+
 output "search_id" {
   description = "Azure AI Search ID"
   value       = var.ai_search_config.enabled ? azurerm_search_service.main[0].id : null
@@ -51,10 +54,15 @@ output "private_endpoint_ips" {
     openai         = var.openai_config.enabled ? azurerm_private_endpoint.openai[0].private_service_connection[0].private_ip_address : null
     search         = var.ai_search_config.enabled ? azurerm_private_endpoint.search[0].private_service_connection[0].private_ip_address : null
     content_safety = var.content_safety_config.enabled ? azurerm_private_endpoint.content_safety[0].private_service_connection[0].private_ip_address : null
---
+  }
+}
+
 output "key_vault_secrets" {
   description = "Key Vault secret names"
   value = {
-    openai_endpoint       = var.openai_config.enabled ? azurerm_key_vault_secret.openai_endpoint[0].name : null
-    openai_key            = var.openai_config.enabled ? azurerm_key_vault_secret.openai_key[0].name : null
-    search_endpoint       = var.ai_search_config.enabled ? azurerm_key_vault_secret.search_endpoint[0].name : null
+    openai_endpoint  = var.openai_config.enabled ? azurerm_key_vault_secret.openai_endpoint[0].name : null
+    openai_key       = var.openai_config.enabled ? azurerm_key_vault_secret.openai_key[0].name : null
+    search_endpoint  = var.ai_search_config.enabled ? azurerm_key_vault_secret.search_endpoint[0].name : null
+    search_key       = var.ai_search_config.enabled ? azurerm_key_vault_secret.search_key[0].name : null
+  }
+}

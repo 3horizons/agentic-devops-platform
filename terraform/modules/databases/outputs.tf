@@ -44,3 +44,22 @@ output "key_vault_secret_names" {
     postgresql_connection_string = var.postgresql_config.enabled ? azurerm_key_vault_secret.postgresql_connection_string[0].name : null
     postgresql_password          = var.postgresql_config.enabled ? azurerm_key_vault_secret.postgresql_password[0].name : null
     redis_connection_string      = var.redis_config.enabled ? azurerm_key_vault_secret.redis_connection_string[0].name : null
+    redis_primary_key            = var.redis_config.enabled ? azurerm_key_vault_secret.redis_primary_key[0].name : null
+  }
+}
+
+output "server_name" {
+  description = "Database server name"
+  value       = var.postgresql_config.enabled ? azurerm_postgresql_flexible_server.main[0].name : null
+}
+
+output "server_fqdn" {
+  description = "Database server FQDN"
+  value       = var.postgresql_config.enabled ? azurerm_postgresql_flexible_server.main[0].fqdn : null
+}
+
+output "connection_string" {
+  description = "Database connection string"
+  value       = var.postgresql_config.enabled ? "postgresql://${var.postgresql_config.admin_username}@${azurerm_postgresql_flexible_server.main[0].name}:@${azurerm_postgresql_flexible_server.main[0].fqdn}:5432/${var.postgresql_config.databases[0]}?sslmode=require" : null
+  sensitive   = true
+}
