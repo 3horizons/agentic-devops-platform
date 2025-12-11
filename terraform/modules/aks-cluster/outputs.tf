@@ -60,5 +60,5 @@ output "node_resource_group" {
 
 output "key_vault_secrets_provider_identity" {
   description = "Key Vault secrets provider identity"
-  value       = var.addons.azure_keyvault_secrets ? azurerm_kubernetes_cluster.main.key_vault_secrets_provider[0].secret_identity[0].object_id : null
+  value       = azurerm_kubernetes_cluster.main.key_vault_secrets_provider[0].secret_identity[0].object_id
 }
