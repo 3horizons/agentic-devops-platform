@@ -41,27 +41,27 @@ output "aks_subnet_id" {
 
 output "aks_cluster_name" {
   description = "Name of the AKS cluster"
-  value       = var.kubernetes_platform == "aks" ? module.aks_cluster[0].cluster_name : null
+  value       = module.aks.cluster_name
 }
 
 output "aks_cluster_id" {
   description = "ID of the AKS cluster"
-  value       = var.kubernetes_platform == "aks" ? module.aks_cluster[0].cluster_id : null
+  value       = module.aks.cluster_id
 }
 
 output "aks_cluster_fqdn" {
   description = "FQDN of the AKS cluster"
-  value       = var.kubernetes_platform == "aks" ? module.aks_cluster[0].cluster_fqdn : null
+  value       = module.aks.cluster_fqdn
 }
 
 output "aks_kubelet_identity" {
   description = "Kubelet managed identity"
-  value       = var.kubernetes_platform == "aks" ? module.aks_cluster[0].kubelet_identity : null
+  value       = module.aks.kubelet_identity
 }
 
 output "kube_config" {
   description = "Kubernetes config for kubectl"
-  value       = var.kubernetes_platform == "aks" ? module.aks_cluster[0].kube_config : null
+  value       = module.aks.kube_config
   sensitive   = true
 }
 
@@ -178,7 +178,7 @@ output "deployment_summary" {
     platform    = var.kubernetes_platform
 
     endpoints = {
-      aks_fqdn   = var.kubernetes_platform == "aks" ? module.aks_cluster[0].cluster_fqdn : "N/A"
+      aks_fqdn   = module.aks.cluster_fqdn
       acr_server = module.container_registry.login_server
       keyvault   = module.security.keyvault_uri
       argocd     = var.enable_argocd ? module.argocd[0].argocd_url : "Not deployed"
