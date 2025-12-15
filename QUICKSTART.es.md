@@ -299,8 +299,8 @@ Después de deployment exitoso:
 | Recurso | Enlace |
 |---------|--------|
 | Documentación Completa | [README.es.md](README.es.md) |
-| Solución de Problemas | [README.es.md#solución-de-problemas](README.es.md#-solución-de-problemas) |
-| Canal de Soporte | #platform-engineering |
+| Solución de Problemas | [docs/guides/TROUBLESHOOTING_GUIDE.md](docs/guides/TROUBLESHOOTING_GUIDE.md) |
+| GitHub Issues | [Crear Issue](https://github.com/paulanunes85/three-horizons-accelerator-v4/issues) |
 
 ---
 

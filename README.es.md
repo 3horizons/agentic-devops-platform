@@ -138,6 +138,27 @@ three-horizons-accelerator-v4/
 
 ---
 
+## 📚 Documentación
+
+### Guías Paso a Paso
+
+| Guía | Descripción |
+|------|-------------|
+| [🚀 Guía de Deployment](./docs/guides/DEPLOYMENT_GUIDE.md) | Instrucciones completas de deployment paso a paso |
+| [🏗️ Guía de Arquitectura](./docs/guides/ARCHITECTURE_GUIDE.md) | Arquitectura Three Horizons explicada |
+| [🔧 Guía del Administrador](./docs/guides/ADMINISTRATOR_GUIDE.md) | Operaciones Day-2 y mantenimiento |
+| [📦 Referencia de Módulos](./docs/guides/MODULE_REFERENCE.md) | Todos los módulos Terraform con ejemplos |
+| [🔍 Guía de Troubleshooting](./docs/guides/TROUBLESHOOTING_GUIDE.md) | Diagnóstico y resolución de problemas |
+
+### Documentación de Referencia
+
+- [Enterprise Review](./ENTERPRISE_REVIEW.md) - Decisiones de arquitectura
+- [Inventario](./INVENTORY_v4.md) - Lista completa de componentes
+- [Catálogo de Agentes](./AGENT_CATALOG.md) - Documentación de agentes AI
+- [Perfiles de Sizing](./config/sizing-profiles.yaml) - Estimación de costos
+
+---
+
 ## 🔧 Guía de Uso Detallada
 
 ### Paso 1: Deploy de Infraestructura Base (H1)
@@ -460,12 +481,8 @@ kubectl logs <nombre-pod> -n <namespace> --previous
 
 ## 📞 Soporte
 
-| Canal | Contacto |
-|-------|----------|
-| Equipo de Plataforma | #platform-engineering (Slack/Teams) |
-| Equipo de AI/ML | #ai-agents (Slack/Teams) |
-| Equipo de Seguridad | #security (Slack/Teams) |
-| Emergencia | platform-oncall@microsoft.com |
+Para dudas, problemas o sugerencias, abra un issue en GitHub:
+- **GitHub Issues:** [Crear Issue](https://github.com/paulanunes85/three-horizons-accelerator-v4/issues)
 
 ---
 

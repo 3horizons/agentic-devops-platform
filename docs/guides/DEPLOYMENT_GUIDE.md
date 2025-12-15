@@ -2502,10 +2502,8 @@ Type `yes` to confirm. This will:
 
 - **GitHub Issues:** [Create an Issue](https://github.com/paulanunes85/three-horizons-accelerator-v4/issues)
 - **Documentation:** Check other guides in `/docs/guides/`
-- **Community:** Join #platform-engineering on Slack
 
 ---
 
 **Document Version:** 2.0.0
 **Last Updated:** December 2025
-**Maintainer:** Platform Engineering Team
