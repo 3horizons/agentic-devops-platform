@@ -22,9 +22,11 @@ name: ai-foundry-agent
 version: 1.0.0
 horizon: H3 - Innovation
 description: |
-  Deploys and configures Azure AI Foundry for AI applications.
-  Creates AI projects, deploys models, configures agents, and sets up
-  RAG pipelines. Integrates AI capabilities into the platform.
+  Deploys and configures Azure AI Foundry - Microsoft's comprehensive enterprise AI platform.
+  AI Foundry is a unified hub supporting multiple AI providers (Azure OpenAI, Anthropic Claude,
+  Meta Llama, Mistral), agent development, RAG pipelines, and responsible AI controls.
+  Creates AI projects, deploys models across providers, configures autonomous agents,
+  and integrates enterprise AI capabilities into the platform.
   
 author: Microsoft LATAM Platform Engineering
 model_compatibility:

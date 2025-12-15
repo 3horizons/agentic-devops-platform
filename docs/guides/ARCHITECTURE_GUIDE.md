@@ -976,10 +976,17 @@ NSGs act as firewalls at the subnet level:
 
 ### 9.1 AI Foundry Integration
 
-> 💡 **What is AI Foundry?**
+> 💡 **What is Azure AI Foundry?**
 >
-> AI Foundry is our name for the Azure OpenAI integration in the platform.
-> It provides access to GPT-4, embeddings, and other AI models.
+> Azure AI Foundry is a comprehensive enterprise AI platform that goes far beyond just Azure OpenAI.
+> It provides a unified hub for building, deploying, and managing AI solutions at scale, including:
+>
+> - **Multiple AI Model Providers:** Azure OpenAI (GPT-4, GPT-4o), Anthropic Claude, Meta Llama, Mistral, and more
+> - **AI Agent Development:** Tools for building autonomous agents for enterprise workflows
+> - **RAG & Knowledge Management:** Vector search, document intelligence, and knowledge bases
+> - **Responsible AI:** Built-in content safety, prompt shields, and governance controls
+> - **MLOps Integration:** Model versioning, deployment pipelines, and monitoring
+> - **Enterprise Security:** Private endpoints, managed identities, and compliance certifications
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -1304,7 +1311,7 @@ This Architecture Guide covered:
 5. **Security:** Zero trust implementation and secret management
 6. **GitOps:** ArgoCD workflow and application model
 7. **Observability:** Prometheus, Grafana, and alerting
-8. **AI/ML:** Azure OpenAI integration
+8. **AI/ML:** Azure AI Foundry - enterprise AI hub with multiple model providers and agent capabilities
 9. **Agents:** 23 intelligent agents organized by horizon
 10. **Data Flows:** How deployments and secret access work
 11. **ADRs:** Key architecture decisions and rationale

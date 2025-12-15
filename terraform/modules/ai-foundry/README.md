@@ -1,15 +1,25 @@
 # AI Foundry Module
 
-Azure AI services for H3 Innovation workloads including OpenAI, AI Search, and Content Safety.
+Azure AI Foundry integration for H3 Innovation workloads - a comprehensive enterprise AI platform.
+
+## Overview
+
+Azure AI Foundry is a unified hub for building, deploying, and managing AI solutions at scale. This module provisions the core Azure AI services that power the platform:
+
+- **Multiple AI Providers:** Azure OpenAI (GPT-4, GPT-4o), with support for Anthropic Claude, Meta Llama, Mistral
+- **AI Search:** Semantic search, vector embeddings, and knowledge retrieval
+- **Content Safety:** Responsible AI controls, content filtering, and prompt shields
+- **Agent Capabilities:** Infrastructure for building autonomous AI agents
 
 ## Features
 
 - Azure OpenAI Service with model deployments
-- Azure AI Search with semantic search
-- Azure AI Content Safety
-- Private endpoint connectivity
+- Azure AI Search with semantic search and vector capabilities
+- Azure AI Content Safety for responsible AI
+- Private endpoint connectivity (enterprise security)
 - Key Vault secrets integration
-- Diagnostic settings
+- Managed Identity authentication
+- Diagnostic settings and monitoring
 
 ## Usage
 
