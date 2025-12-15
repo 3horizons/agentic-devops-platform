@@ -104,8 +104,8 @@ declare -A EXPECTED_AGENTS=(
     ["cross-cutting/identity-federation-agent.md"]="Identity Federation Agent"
 )
 
-# Valid MCP servers
-VALID_MCP_SERVERS=(
+# Valid MCP servers (exported for use by other scripts)
+export VALID_MCP_SERVERS=(
     "kubernetes"
     "azure"
     "github"
@@ -138,7 +138,8 @@ validate_agent() {
     fi
 
     # Get line count
-    local line_count=$(wc -l < "$full_path")
+    local line_count
+    line_count=$(wc -l < "$full_path")
     if [[ $line_count -lt 50 ]]; then
         print_warning "$agent_name: File seems too short ($line_count lines)"
         file_valid=false
@@ -186,7 +187,8 @@ validate_structure() {
 
     for category in "${categories[@]}"; do
         if [[ -d "$AGENTS_DIR/$category" ]]; then
-            local count=$(find "$AGENTS_DIR/$category" -name "*.md" | wc -l)
+            local count
+            count=$(find "$AGENTS_DIR/$category" -name "*.md" | wc -l)
             print_success "$category/: $count agents found"
         else
             print_error "$category/: Directory not found"
@@ -221,7 +223,8 @@ validate_docs() {
 
     for doc in "${docs[@]}"; do
         if [[ -f "$AGENTS_DIR/$doc" ]]; then
-            local line_count=$(wc -l < "$AGENTS_DIR/$doc")
+            local line_count
+            line_count=$(wc -l < "$AGENTS_DIR/$doc")
             print_success "$doc: Found ($line_count lines)"
         else
             print_warning "$doc: Not found (optional)"
@@ -247,7 +250,8 @@ validate_crossrefs() {
 
                 # Check if referenced file exists
                 local ref_path="$AGENTS_DIR/$link"
-                local dir_path=$(dirname "$file")
+                local dir_path
+                dir_path=$(dirname "$file")
                 local rel_path="$dir_path/$link"
 
                 if [[ ! -f "$ref_path" && ! -f "$rel_path" ]]; then
