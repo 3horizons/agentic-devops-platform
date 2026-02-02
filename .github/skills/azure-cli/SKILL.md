@@ -6,6 +6,23 @@ license: Complete terms in LICENSE.txt
 
 # Azure CLI (az)
 
+USE FOR:
+- `az` commands and Azure resource management
+- Creating, updating, deleting Azure resources
+- AKS cluster operations (`az aks`)
+- ACR registry management (`az acr`)
+- Key Vault operations (`az keyvault`)
+- Networking configuration (`az network`)
+- RBAC and identity management (`az role`, `az identity`)
+- Resource group and subscription management
+
+DO NOT USE FOR:
+- Terraform-based infrastructure (use terraform-cli)
+- Kubernetes pod/deployment management (use kubectl-cli)
+- OpenShift-specific operations (use oc-cli)
+- GitHub operations (use github-cli)
+- ARM templates authoring (use azure-infrastructure skill)
+
 Comprehensive reference for Azure CLI - manage Azure resources from the command line.
 
 **Version:** 2.70.0+ (current as of 2026)

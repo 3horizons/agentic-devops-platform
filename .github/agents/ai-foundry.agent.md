@@ -1,9 +1,10 @@
 ---
 name: ai-foundry
 description: 'Azure AI Foundry specialist for deploying and managing AI models, agents, RAG pipelines, and responsible AI practices'
-tools: ['read', 'search', 'edit', 'execute']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - ai-foundry-operations
+  - azure-cli
+  - terraform-cli
 ---
 
 # AI Foundry Agent

@@ -1,6 +1,11 @@
 ---
 name: deploy-infrastructure
 description: Deploy and manage Azure infrastructure using Terraform following Three Horizons patterns
+mode: agent
+tools:
+  - run_in_terminal
+  - read_file
+  - create_file
 ---
 
 ## Role

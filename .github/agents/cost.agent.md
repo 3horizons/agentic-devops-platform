@@ -1,10 +1,10 @@
-```chatagent
 ---
 name: cost
 description: 'FinOps specialist for Azure cost optimization, resource rightsizing, and financial governance'
-tools: ['read', 'search', 'edit', 'execute']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - azure-cli
+  - terraform-cli
+  - validation-scripts
 ---
 
 # Cost Optimization Agent

@@ -6,6 +6,23 @@ license: Complete terms in LICENSE.txt
 
 # kubectl CLI
 
+USE FOR:
+- `kubectl` commands and Kubernetes resource management
+- Deploying workloads (pods, deployments, services)
+- Debugging pods (`kubectl logs`, `kubectl exec`, `kubectl describe`)
+- Applying Kubernetes manifests (`kubectl apply`)
+- Managing namespaces and contexts
+- RBAC configuration (roles, rolebindings)
+- ConfigMaps and Secrets management
+- Resource scaling and updates
+
+DO NOT USE FOR:
+- OpenShift-specific resources like Routes, SCCs (use oc-cli)
+- Helm chart operations (use helm-cli)
+- ArgoCD application management (use argocd-cli)
+- Azure resource management (use azure-cli)
+- AKS cluster provisioning (use terraform-cli)
+
 Comprehensive reference for kubectl - the Kubernetes command-line tool.
 
 **Version:** 1.31+ (current as of 2026)

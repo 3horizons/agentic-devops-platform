@@ -1,10 +1,10 @@
-```chatagent
 ---
 name: migration
 description: 'Migration specialist for Azure DevOps to GitHub migrations, repository transfers, and pipeline conversions'
-tools: ['read', 'search', 'edit', 'execute', 'web/fetch']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - github-cli
+  - azure-cli
+  - terraform-cli
 ---
 
 # Migration Agent

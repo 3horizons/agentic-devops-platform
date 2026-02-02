@@ -16,32 +16,42 @@ that can include scripts, examples, templates, and reference data.
 | [terraform-cli](./terraform-cli/) | Terraform CLI reference | Infrastructure as Code |
 | [kubectl-cli](./kubectl-cli/) | Kubernetes CLI reference | Cluster management |
 | [argocd-cli](./argocd-cli/) | ArgoCD CLI reference | GitOps deployment |
+| [helm-cli](./helm-cli/) | Helm CLI reference | Chart management |
+| [github-cli](./github-cli/) | GitHub CLI reference | Repository operations |
+| [oc-cli](./oc-cli/) | OpenShift CLI reference | OpenShift operations |
+| [mcp-cli](./mcp-cli/) | MCP server configuration | AI tool integration |
+| [prerequisites](./prerequisites/) | CLI installation guide | Tool setup |
 | [validation-scripts](./validation-scripts/) | Validation patterns | Reusable scripts |
+| [azure-infrastructure](./azure-infrastructure/) | Azure IaC patterns | Infrastructure design |
+| [aro-deployment](./aro-deployment/) | ARO deployment patterns | OpenShift on Azure |
+| [openshift-operations](./openshift-operations/) | OpenShift operations | Day-2 operations |
+| [database-management](./database-management/) | Database patterns | PostgreSQL/Cosmos |
+| [observability-stack](./observability-stack/) | Monitoring patterns | Prometheus/Grafana |
+| [ai-foundry-operations](./ai-foundry-operations/) | AI Foundry patterns | Azure AI services |
+| [rhdh-portal](./rhdh-portal/) | Developer Hub patterns | Backstage/RHDH |
 
 ## Directory Structure
 
 ```text
 .github/skills/
 ├── README.md                      # This file
-├── azure-cli/
-│   ├── SKILL.md                   # Azure CLI comprehensive reference
-│   └── LICENSE.txt                # Apache 2.0 license
-├── terraform-cli/
-│   ├── SKILL.md                   # Terraform CLI reference
-│   └── LICENSE.txt                # Apache 2.0 license
-├── kubectl-cli/
-│   ├── SKILL.md                   # Kubernetes CLI reference
-│   └── LICENSE.txt                # Apache 2.0 license
-├── argocd-cli/
-│   ├── SKILL.md                   # ArgoCD CLI reference
-│   └── LICENSE.txt                # Apache 2.0 license
-└── validation-scripts/
-    ├── SKILL.md                   # Validation patterns reference
-    ├── LICENSE.txt                # Apache 2.0 license
-    └── scripts/                   # Reusable validation scripts
-        ├── validate-azure.sh
-        ├── validate-kubernetes.sh
-        └── validate-terraform.sh
+├── azure-cli/                     # Azure CLI reference
+├── terraform-cli/                 # Terraform CLI reference
+├── kubectl-cli/                   # Kubernetes CLI reference
+├── argocd-cli/                    # ArgoCD CLI reference
+├── helm-cli/                      # Helm CLI reference
+├── github-cli/                    # GitHub CLI reference
+├── oc-cli/                        # OpenShift CLI reference
+├── mcp-cli/                       # MCP configuration
+├── prerequisites/                 # CLI installation guide
+├── validation-scripts/            # Validation patterns
+├── azure-infrastructure/          # Azure IaC patterns
+├── aro-deployment/                # ARO deployment patterns
+├── openshift-operations/          # OpenShift operations
+├── database-management/           # Database patterns
+├── observability-stack/           # Monitoring patterns
+├── ai-foundry-operations/         # AI Foundry patterns
+└── rhdh-portal/                   # Developer Hub patterns
 ```
 
 ## Progressive Loading Architecture
@@ -108,14 +118,33 @@ Follow the awesome-copilot agent-skills.instructions.md:
 
 ## Agent to Skills Mapping
 
+### Interactive Agents (24)
 | Agent | Primary Skills |
 |-------|----------------|
-| architect | `terraform-cli`, `azure-cli`, `kubectl-cli` |
-| devops | `azure-cli`, `terraform-cli`, `kubectl-cli`, `argocd-cli` |
-| platform | `kubectl-cli`, `argocd-cli` |
-| reviewer | `terraform-cli`, `kubectl-cli`, `validation-scripts` |
-| security | `azure-cli` (compliance) |
-| sre | `kubectl-cli`, `azure-cli`, `argocd-cli`, `validation-scripts` |
+| architect | terraform-cli, azure-cli, kubectl-cli |
+| devops | azure-cli, terraform-cli, kubectl-cli, argocd-cli |
+| platform | azure-cli, terraform-cli, kubectl-cli, helm-cli |
+| ai-foundry | ai-foundry-operations, azure-cli, terraform-cli |
+| security | azure-cli, terraform-cli, validation-scripts |
+| gitops | argocd-cli, helm-cli, kubectl-cli |
+| cost | azure-cli, validation-scripts |
+| deployment | terraform-cli, kubectl-cli, argocd-cli |
+| documentation | validation-scripts |
+| migration | azure-cli, github-cli, terraform-cli |
+| observability | observability-stack, helm-cli, kubectl-cli |
+| reviewer | terraform-cli, kubectl-cli, validation-scripts |
+| sre | kubectl-cli, observability-stack, argocd-cli |
+| terraform | terraform-cli, azure-cli, validation-scripts |
+| container-registry | azure-cli, terraform-cli, validation-scripts |
+| database | database-management, azure-cli, terraform-cli |
+| networking | azure-infrastructure, terraform-cli, kubectl-cli |
+| governance | azure-cli, terraform-cli, validation-scripts |
+| aro | aro-deployment, openshift-operations, oc-cli |
+| rhdh | rhdh-portal, helm-cli, kubectl-cli |
+| golden-paths | rhdh-portal, github-cli, validation-scripts |
+| runners | github-cli, kubectl-cli, helm-cli |
+| identity | azure-cli, github-cli, terraform-cli |
+| rollback | kubectl-cli, helm-cli, argocd-cli, terraform-cli |
 
 ## Related Resources
 

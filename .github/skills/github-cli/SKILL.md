@@ -1,3 +1,9 @@
+---
+name: github-cli
+description: 'GitHub CLI (gh) reference for repository and workflow management. Use when asked to create repos, configure Actions workflows, manage PRs, issues, secrets, GitHub Apps.'
+license: Complete terms in LICENSE.txt
+---
+
 # GitHub CLI Skill
 
 > **Domain:** GitHub Operations & Automation  
@@ -10,9 +16,9 @@ This skill provides comprehensive GitHub CLI (`gh`) reference for managing repos
 
 ---
 
-## When to Use This Skill
+## USE FOR
 
-Use this skill when user asks to:
+- When user asks to run `gh` commands
 - Create or configure GitHub repositories
 - Manage GitHub Actions workflows
 - Create or update GitHub Apps
@@ -21,6 +27,14 @@ Use this skill when user asks to:
 - Manage GitHub Issues and Pull Requests
 - Automate repository settings
 - Set up OIDC federation for Azure
+
+## DO NOT USE FOR
+
+- Git operations (use git commands directly)
+- Azure resource provisioning (use azure-cli skill)
+- Kubernetes deployments (use kubectl-cli skill)
+- ArgoCD GitOps sync (use argocd-cli skill)
+- Direct API calls without gh CLI (use MCP servers)
 
 ---
 

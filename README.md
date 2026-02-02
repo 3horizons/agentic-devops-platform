@@ -11,7 +11,7 @@ The **Three Horizons Implementation Accelerator** is a complete kit of Infrastru
 | Component | Quantity | Description |
 |-----------|----------|-------------|
 | **Terraform Modules** | 16 | Complete Azure infrastructure |
-| **AI Agents** | 23 | Intelligent deployment orchestration |
+| **AI Agents** | 30 | Intelligent deployment orchestration |
 | **Golden Path Templates** | 22 | Self-service templates for RHDH |
 | **Issue Templates** | 28 | GitHub Issues templates |
 | **Automation Scripts** | 14 | Bootstrap and operations |
@@ -96,11 +96,11 @@ cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 ```
 three-horizons-accelerator-v4/
 │
-├── agents/                         # 23 AI agent specifications
-│   ├── h1-foundation/              # 8 agents (infra, network, security, ACR, DB, defender, purview, ARO)
-│   ├── h2-enhancement/             # 5 agents (gitops, golden-paths, observability, rhdh, runners)
-│   ├── h3-innovation/              # 4 agents (ai-foundry, sre, mlops, multi-agent)
-│   └── cross-cutting/              # 6 agents (migration, validation, rollback, cost, github-app, identity)
+├── .github/
+│   ├── agents/                     # 30 AI agents (flat structure)
+│   ├── skills/                     # 17 CLI reference skills
+│   ├── prompts/                    # 10 reusable prompts
+│   └── instructions/               # 8 project conventions
 │
 ├── terraform/                      # 16 Infrastructure as Code modules
 │   ├── main.tf                     # Root module
@@ -155,11 +155,10 @@ three-horizons-accelerator-v4/
 
 | Document | Description |
 |----------|-------------|
-| [Agent Overview](./agents/README.md) | Introduction to 23 AI deployment agents |
-| [Agent Index](./agents/INDEX.md) | Complete agent catalog by horizon |
-| [Deployment Sequence](./agents/DEPLOYMENT_SEQUENCE.md) | Step-by-step agent deployment order |
-| [MCP Servers Guide](./agents/MCP_SERVERS_GUIDE.md) | Model Context Protocol server setup |
-| [Dependency Graph](./agents/DEPENDENCY_GRAPH.md) | Visual agent dependencies |
+| [Agent Overview](./.github/agents/README.md) | Introduction to 30 AI deployment agents |
+| [Skills Reference](./.github/skills/README.md) | 17 CLI reference skills |
+| [Prompts](./.github/prompts/README.md) | 10 reusable prompts |
+| [MCP Servers Guide](./mcp-servers/README.md) | Model Context Protocol server setup |
 
 ### Reference
 

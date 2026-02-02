@@ -1,6 +1,11 @@
 ---
 name: create-documentation
 description: Generate comprehensive documentation for Three Horizons components
+mode: agent
+tools:
+  - read_file
+  - create_file
+  - replace_string_in_file
 ---
 
 ## Role

@@ -1,4 +1,3 @@
-````skill
 ---
 name: database-management
 description: 'Database management for Three Horizons Accelerator. Use when deploying Azure Database for PostgreSQL, Cosmos DB, database migrations, backup configuration. Covers database provisioning, connection management, security hardening, performance tuning.'
@@ -10,6 +9,26 @@ license: Complete terms in LICENSE.txt
 Comprehensive skill for database operations in the Three Horizons Accelerator platform.
 
 **Version:** 1.0.0
+
+---
+
+## USE FOR
+
+- Deploy Azure Database for PostgreSQL Flexible Server
+- Configure Cosmos DB for NoSQL workloads
+- Set up database connections and connection strings
+- Configure database backup and restore policies
+- Manage database security and firewall rules
+- Run database migrations and schema updates
+- Monitor database performance and metrics
+- Configure high availability and geo-replication
+
+## DO NOT USE FOR
+
+- General Azure infrastructure (use azure-infrastructure skill)
+- Kubernetes/AKS deployments (use kubectl-cli or azure-cli skills)
+- Application code database clients (application-specific)
+- AI/ML data stores (use ai-foundry-operations skill)
 
 ---
 

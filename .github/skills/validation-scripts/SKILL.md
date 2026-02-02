@@ -8,6 +8,24 @@ license: Complete terms in LICENSE.txt
 
 Comprehensive validation patterns and reusable scripts for Three Horizons Accelerator deployments.
 
+## USE FOR
+
+- Validate Azure resource deployment status
+- Check Kubernetes cluster health and connectivity
+- Verify Terraform state consistency
+- Detect infrastructure drift
+- Run compliance and security checks
+- Validate networking configuration
+- Verify RBAC permissions
+- Check GitOps sync status
+
+## DO NOT USE FOR
+
+- Creating new Azure resources (use azure-cli skill)
+- Deploying Kubernetes workloads (use kubectl-cli skill)
+- Writing Terraform code (use terraform-cli skill)
+- Configuring ArgoCD applications (use argocd-cli skill)
+
 ## Overview
 
 This skill provides validation patterns for:

@@ -85,52 +85,42 @@ Located in `.github/agents/`:
 | Cost | `cost.agent.md` | Cost optimization |
 | Migration | `migration.agent.md` | ADO to GitHub migration |
 
-### Workflow Agents (23 Total)
+### All Agents (30 Total)
 
-Located in `agents/` with specifications organized by horizon:
+All agents are located in `.github/agents/` with a flat structure:
 
-#### H1 Foundation (8 Agents)
-
-| Agent | File | Dependencies |
-|-------|------|--------------|
-| Infrastructure | `h1-foundation/infrastructure-agent.md` | Base module, no deps |
-| Networking | `h1-foundation/networking-agent.md` | Infrastructure |
-| Security | `h1-foundation/security-agent.md` | Networking |
-| Container Registry | `h1-foundation/container-registry-agent.md` | Security |
-| Database | `h1-foundation/database-agent.md` | Networking, Security |
-| Defender Cloud | `h1-foundation/defender-cloud-agent.md` | Infrastructure |
-| ARO Platform | `h1-foundation/aro-platform-agent.md` | Networking, Security (alt to AKS) |
-| Purview Governance | `h1-foundation/purview-governance-agent.md` | Infrastructure |
-
-#### H2 Enhancement (5 Agents)
-
-| Agent | File | Dependencies |
-|-------|------|--------------|
-| GitOps | `h2-enhancement/gitops-agent.md` | H1 Foundation complete |
-| Observability | `h2-enhancement/observability-agent.md` | GitOps |
-| RHDH Portal | `h2-enhancement/rhdh-portal-agent.md` | GitOps |
-| Golden Paths | `h2-enhancement/golden-paths-agent.md` | RHDH Portal |
-| GitHub Runners | `h2-enhancement/github-runners-agent.md` | Container Registry |
-
-#### H3 Innovation (4 Agents)
-
-| Agent | File | Dependencies |
-|-------|------|--------------|
-| AI Foundry | `h3-innovation/ai-foundry-agent.md` | H2 Enhancement complete |
-| MLOps Pipeline | `h3-innovation/mlops-pipeline-agent.md` | AI Foundry |
-| SRE Agent Setup | `h3-innovation/sre-agent-setup.md` | Observability, AI Foundry |
-| Multi-Agent Setup | `h3-innovation/multi-agent-setup.md` | All H3 agents |
-
-#### Cross-Cutting (6 Agents)
-
-| Agent | File | Dependencies |
-|-------|------|--------------|
-| Validation | `cross-cutting/validation-agent.md` | None (runs anytime) |
-| Migration | `cross-cutting/migration-agent.md` | None (standalone) |
-| Rollback | `cross-cutting/rollback-agent.md` | None (emergency use) |
-| Cost Optimization | `cross-cutting/cost-optimization-agent.md` | Infrastructure |
-| GitHub App | `cross-cutting/github-app-agent.md` | None (setup task) |
-| Identity Federation | `cross-cutting/identity-federation-agent.md` | None (setup task) |
+| Agent | File | Purpose |
+|-------|------|---------|
+| AI Foundry | `ai-foundry.agent.md` | Azure AI Foundry, models, RAG |
+| Architect | `architect.agent.md` | System architecture design |
+| ARO | `aro.agent.md` | Azure Red Hat OpenShift |
+| Container Registry | `container-registry.agent.md` | ACR deployment |
+| Cost | `cost.agent.md` | FinOps, cost optimization |
+| Database | `database.agent.md` | PostgreSQL/Cosmos DB |
+| Defender Cloud | `defender-cloud.agent.md` | Microsoft Defender |
+| Deployment | `deployment.agent.md` | Interactive deployment |
+| DevOps | `devops.agent.md` | CI/CD pipelines |
+| Documentation | `documentation.agent.md` | Doc creation/updates |
+| GitHub App | `github-app.agent.md` | GitHub App config |
+| GitOps | `gitops.agent.md` | ArgoCD operations |
+| Golden Paths | `golden-paths.agent.md` | Software templates |
+| Governance | `governance.agent.md` | Purview compliance |
+| Identity | `identity.agent.md` | Workload identity |
+| Infrastructure | `infrastructure.agent.md` | Core infrastructure |
+| Migration | `migration.agent.md` | ADO to GitHub |
+| MLOps Pipeline | `mlops-pipeline.agent.md` | ML pipelines |
+| Multi-Agent | `multi-agent.agent.md` | AI agent orchestration |
+| Networking | `networking.agent.md` | VNet/NSG/endpoints |
+| Observability | `observability.agent.md` | Monitoring/alerting |
+| Platform | `platform.agent.md` | Platform engineering |
+| Reviewer | `reviewer.agent.md` | Code/infra review |
+| RHDH | `rhdh.agent.md` | Developer Hub |
+| Rollback | `rollback.agent.md` | Deployment rollback |
+| Runners | `runners.agent.md` | GitHub runners |
+| Security | `security.agent.md` | Security scanning |
+| SRE | `sre.agent.md` | Site reliability |
+| Terraform | `terraform.agent.md` | Infrastructure as Code |
+| Validation | `validation.agent.md` | Deployment validation |
 
 ---
 
@@ -138,19 +128,29 @@ Located in `agents/` with specifications organized by horizon:
 
 Skills provide domain-specific knowledge and command patterns for agents.
 
-### Available Skills (7 Total)
+### Available Skills (17 Total)
 
 Located in `.github/skills/`:
 
-| Skill | File | Commands |
-|-------|------|----------|
-| Azure CLI | `azure-cli/SKILL.md` | `az aks`, `az acr`, `az keyvault`, `az network` |
-| Terraform CLI | `terraform-cli/SKILL.md` | `terraform init`, `plan`, `apply`, `destroy` |
-| Kubectl CLI | `kubectl-cli/SKILL.md` | `kubectl get`, `apply`, `delete`, `logs` |
-| ArgoCD CLI | `argocd-cli/SKILL.md` | `argocd app sync`, `argocd app get` |
-| Helm CLI | `helm-cli/SKILL.md` | `helm install`, `upgrade`, `list` |
-| GitHub CLI | `github-cli/SKILL.md` | `gh repo`, `gh issue`, `gh pr`, `gh workflow` |
-| Validation Scripts | `validation-scripts/SKILL.md` | Deployment validation patterns |
+| Skill | File | Purpose |
+|-------|------|---------|
+| AI Foundry Operations | `ai-foundry-operations/SKILL.md` | Azure AI Foundry deployment |
+| ArgoCD CLI | `argocd-cli/SKILL.md` | GitOps continuous delivery |
+| ARO Deployment | `aro-deployment/SKILL.md` | Azure Red Hat OpenShift |
+| Azure CLI | `azure-cli/SKILL.md` | Azure resource management |
+| Azure Infrastructure | `azure-infrastructure/SKILL.md` | Infrastructure provisioning |
+| Database Management | `database-management/SKILL.md` | PostgreSQL/Cosmos DB |
+| GitHub CLI | `github-cli/SKILL.md` | Repository/workflow management |
+| Helm CLI | `helm-cli/SKILL.md` | Kubernetes package management |
+| Kubectl CLI | `kubectl-cli/SKILL.md` | Cluster operations |
+| MCP CLI | `mcp-cli/SKILL.md` | Model Context Protocol |
+| OC CLI | `oc-cli/SKILL.md` | OpenShift CLI |
+| Observability Stack | `observability-stack/SKILL.md` | Monitoring setup |
+| OpenShift Operations | `openshift-operations/SKILL.md` | ARO operations |
+| Prerequisites | `prerequisites/SKILL.md` | Tool validation |
+| RHDH Portal | `rhdh-portal/SKILL.md` | Developer Hub |
+| Terraform CLI | `terraform-cli/SKILL.md` | Infrastructure as Code |
+| Validation Scripts | `validation-scripts/SKILL.md` | Deployment validation |
 
 ### Skill Structure
 

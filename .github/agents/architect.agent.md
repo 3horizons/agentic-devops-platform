@@ -1,9 +1,11 @@
 ---
 name: architect
 description: 'Solution Architecture specialist for system design, Azure Well-Architected Framework, technical decisions, and infrastructure planning'
-tools: ['read', 'search', 'edit', 'execute', 'web/fetch']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - azure-infrastructure
+  - terraform-cli
+  - azure-cli
+  - validation-scripts
 ---
 
 # Solution Architect Agent

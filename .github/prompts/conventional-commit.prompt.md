@@ -1,6 +1,7 @@
 ---
 name: conventional-commit
 description: Generate conventional commit messages following Three Horizons standards
+mode: agent
 ---
 
 ## Role

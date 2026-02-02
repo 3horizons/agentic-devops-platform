@@ -1,4 +1,3 @@
-````skill
 ---
 name: rhdh-portal
 description: 'Red Hat Developer Hub (RHDH) operations for Three Horizons Accelerator. Use when deploying developer portal, configuring software catalogs, creating golden paths. Covers RHDH installation, Backstage configuration, software templates, catalog entities, TechDocs.'
@@ -10,6 +9,26 @@ license: Complete terms in LICENSE.txt
 Comprehensive skill for Red Hat Developer Hub operations in the Three Horizons Accelerator platform.
 
 **Version:** 1.0.0
+
+---
+
+## USE FOR
+
+- Deploy Red Hat Developer Hub on OpenShift or AKS
+- Configure software catalog and entities
+- Create and manage golden path templates
+- Set up TechDocs documentation
+- Configure RHDH plugins and integrations
+- Manage team and user onboarding
+- Configure GitHub/GitLab integration
+- Set up authentication providers (OAuth, OIDC)
+
+## DO NOT USE FOR
+
+- OpenShift cluster operations (use openshift-operations skill)
+- ARO deployment (use aro-deployment skill)
+- General Kubernetes deployments (use kubectl-cli skill)
+- Helm chart management (use helm-cli skill)
 
 ---
 

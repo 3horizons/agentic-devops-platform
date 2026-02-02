@@ -1,6 +1,10 @@
 ---
 name: create-gitops-app
 description: Create ArgoCD Application for GitOps deployment following Three Horizons patterns
+mode: agent
+tools:
+  - create_file
+  - run_in_terminal
 ---
 
 ## Role

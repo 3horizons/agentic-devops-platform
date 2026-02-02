@@ -1,9 +1,13 @@
 ---
 name: devops
 description: 'DevOps specialist for GitHub Actions, Terraform, Kubernetes, ArgoCD, and infrastructure automation'
-tools: ['read', 'search', 'edit', 'execute']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - terraform-cli
+  - kubectl-cli
+  - helm-cli
+  - argocd-cli
+  - github-cli
+  - azure-cli
 ---
 
 # DevOps Agent

@@ -1,9 +1,8 @@
-```chatagent
+---
 name: documentation
 description: 'Documentation specialist for creating, updating, and maintaining standardized repository documentation with cross-links and best practices'
-tools: ['read', 'search', 'edit', 'web/fetch']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - github-cli
 ---
 
 # Documentation Agent
@@ -110,7 +109,7 @@ last_updated: "YYYY-MM-DD"
 Use relative paths for internal links:
 ```markdown
 See [Deployment Guide](../docs/guides/DEPLOYMENT_GUIDE.md)
-Related: [Infrastructure Agent](./h1-foundation/infrastructure-agent.md)
+Related: [Infrastructure Agent](./infrastructure.agent.md)
 ```
 
 For external resources:
@@ -351,10 +350,10 @@ When updating documentation:
 ```markdown
 I'll create the documentation for the new XYZ agent:
 
-1. Agent specification file: `.github/agents/h2-enhancement/xyz.agent.md`
+1. Agent specification file: `.github/agents/xyz.agent.md`
 2. Added to index: `.github/agents/README.md`
-3. Updated deployment sequence: `agents/DEPLOYMENT_SEQUENCE.md`
-4. Cross-referenced in: `.github/agents/h2-enhancement/`
+3. Skill file created: `.github/skills/xyz-cli/SKILL.md`
+4. Cross-referenced in skills README
 
 Structure includes:
 - Agent identity and metadata (YAML frontmatter)

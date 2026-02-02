@@ -1,4 +1,3 @@
-````skill
 ---
 name: ai-foundry-operations
 description: 'Azure AI Foundry operations for Three Horizons Accelerator. Use when deploying AI workloads, managing AI models, configuring AI endpoints. Covers Azure AI Studio, model deployment, RAG patterns, prompt flow, AI agents, MLOps pipelines.'
@@ -10,6 +9,26 @@ license: Complete terms in LICENSE.txt
 Comprehensive skill for Azure AI Foundry operations in the Three Horizons Accelerator platform.
 
 **Version:** 1.0.0
+
+---
+
+## USE FOR
+
+- Deploy Azure AI Foundry resources
+- Configure AI model endpoints
+- Set up RAG (Retrieval Augmented Generation) patterns
+- Create and manage prompt flows
+- Configure AI agents and assistants
+- Set up MLOps pipelines
+- Integrate with Azure OpenAI and AI Search
+- Manage AI model versions and deployments
+
+## DO NOT USE FOR
+
+- General Azure infrastructure (use azure-infrastructure skill)
+- Kubernetes ML workloads (use kubectl-cli skill)
+- Database for AI data (use database-management skill)
+- Non-Azure AI platforms (platform-specific)
 
 ---
 

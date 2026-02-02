@@ -6,6 +6,23 @@ license: Complete terms in LICENSE.txt
 
 # Terraform CLI
 
+USE FOR:
+- `terraform` commands and infrastructure as code
+- Initializing Terraform projects (`terraform init`)
+- Planning infrastructure changes (`terraform plan`)
+- Applying configurations (`terraform apply`)
+- Managing Terraform state (`terraform state`)
+- Importing existing resources (`terraform import`)
+- Destroying infrastructure (`terraform destroy`)
+- Module development and usage
+
+DO NOT USE FOR:
+- Azure CLI commands (use azure-cli)
+- Kubernetes manifest management (use kubectl-cli)
+- Helm chart deployments (use helm-cli)
+- Direct API calls to cloud providers
+- Bicep or ARM template authoring
+
 Comprehensive reference for Terraform CLI - infrastructure as code tool.
 
 **Version:** 1.10.0+ (current as of 2026)

@@ -1,4 +1,3 @@
-````skill
 ---
 name: observability-stack
 description: 'Observability stack operations for Three Horizons Accelerator. Use when deploying Prometheus, Grafana, alerting, dashboards. Covers monitoring setup, metrics collection, log aggregation, alerting rules, dashboard provisioning, SLI/SLO configuration.'
@@ -10,6 +9,26 @@ license: Complete terms in LICENSE.txt
 Comprehensive skill for deploying and managing the observability stack in the Three Horizons Accelerator platform.
 
 **Version:** 1.0.0
+
+---
+
+## USE FOR
+
+- Deploy Prometheus and Grafana on Kubernetes
+- Configure alerting rules and alert routing
+- Create and manage Grafana dashboards
+- Set up metrics collection and scraping
+- Configure log aggregation
+- Define SLIs and SLOs
+- Set up on-call notifications
+- Monitor cluster and workload health
+
+## DO NOT USE FOR
+
+- Azure Monitor configuration (use azure-cli skill)
+- Application-level logging code (application-specific)
+- Kubernetes cluster deployment (use kubectl-cli skill)
+- Helm chart generic operations (use helm-cli skill)
 
 ---
 

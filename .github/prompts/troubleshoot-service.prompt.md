@@ -1,6 +1,10 @@
 ---
 name: troubleshoot-service
 description: Diagnose and resolve issues with services running on AKS/ARO clusters
+mode: agent
+tools:
+  - run_in_terminal
+  - read_file
 ---
 
 ## Role

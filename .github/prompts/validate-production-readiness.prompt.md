@@ -2,6 +2,11 @@
 name: validate-production-readiness
 description: Comprehensive validation and configuration plan for Three Horizons Accelerator production readiness with RHDH v1.8, AKS/ARO, GitHub Enterprise, Defender for Cloud, and Azure DevOps hybrid support
 version: 1.0.0
+mode: agent
+tools:
+  - run_in_terminal
+  - read_file
+  - runTests
 tags: [validation, production-readiness, rhdh, aks, aro, defender, github-enterprise, azure-devops, planning]
 ---
 

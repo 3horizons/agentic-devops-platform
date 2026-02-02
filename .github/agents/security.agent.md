@@ -1,9 +1,11 @@
 ---
 name: security
 description: 'Security specialist for Azure compliance, vulnerability scanning, RBAC, and Defender configuration'
-tools: ['read', 'search', 'web/fetch']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - azure-cli
+  - kubectl-cli
+  - terraform-cli
+  - validation-scripts
 ---
 
 # Security Agent

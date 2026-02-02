@@ -1,4 +1,3 @@
-````skill
 ---
 name: openshift-operations
 description: 'Azure Red Hat OpenShift (ARO) operations for Three Horizons Accelerator. Use when deploying ARO clusters, managing OpenShift projects, configuring operators, setting up routes. Covers oc CLI, OpenShift operators, RHDH on OpenShift, GitOps with OpenShift.'
@@ -10,6 +9,26 @@ license: Complete terms in LICENSE.txt
 Comprehensive skill for Azure Red Hat OpenShift (ARO) operations in the Three Horizons Accelerator platform.
 
 **Version:** 1.0.0
+
+---
+
+## USE FOR
+
+- Manage OpenShift projects and namespaces
+- Configure OpenShift routes and ingress
+- Install and manage OpenShift operators
+- Configure Security Context Constraints (SCCs)
+- Manage OpenShift image streams
+- Set up OpenShift service mesh
+- Configure OpenShift GitOps
+- Manage OpenShift RBAC and permissions
+
+## DO NOT USE FOR
+
+- Initial ARO cluster deployment (use aro-deployment skill)
+- Vanilla Kubernetes operations (use kubectl-cli skill)
+- Azure resource provisioning (use azure-cli skill)
+- Terraform infrastructure (use terraform-cli skill)
 
 ---
 

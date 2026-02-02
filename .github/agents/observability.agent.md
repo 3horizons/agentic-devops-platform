@@ -1,10 +1,11 @@
-```chatagent
 ---
 name: observability
 description: 'Observability specialist for monitoring, logging, alerting with Prometheus, Grafana, and Azure Monitor'
-tools: ['read', 'search', 'edit', 'execute']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - observability-stack
+  - helm-cli
+  - kubectl-cli
+  - azure-cli
 ---
 
 # Observability Agent

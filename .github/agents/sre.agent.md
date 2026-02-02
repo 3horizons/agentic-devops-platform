@@ -1,9 +1,12 @@
 ---
 name: sre
 description: 'Site Reliability Engineering specialist for operations, incident response, observability, SLOs/SLIs, and operational excellence'
-tools: ['read', 'search', 'edit', 'execute']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - observability-stack
+  - kubectl-cli
+  - azure-cli
+  - helm-cli
+  - validation-scripts
 ---
 
 # SRE Agent

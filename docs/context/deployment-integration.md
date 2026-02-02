@@ -498,8 +498,8 @@ az keyvault secret set --vault-name $KV_NAME --name "ai-foundry-key" --value $AI
 ### 7.3 Deploy AI Agents
 
 ```bash
-# Deploy SRE agent
-kubectl apply -f agents/h3-innovation/sre-agent-deployment.yaml
+# Deploy SRE agent (example)
+kubectl apply -f deploy/kubernetes/ai-agents/sre-agent-deployment.yaml
 
 # Verify
 kubectl get pods -n ai-agents

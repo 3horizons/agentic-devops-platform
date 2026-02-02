@@ -1,6 +1,11 @@
 ---
 name: review-code
 description: Perform comprehensive code review with security and best practices checks
+mode: agent
+tools:
+  - read_file
+  - grep_search
+  - get_errors
 ---
 
 # Code Review Agent

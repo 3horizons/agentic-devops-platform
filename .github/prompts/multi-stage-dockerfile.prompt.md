@@ -1,6 +1,10 @@
 ---
 name: multi-stage-dockerfile
 description: Create optimized multi-stage Dockerfiles for secure, minimal container images
+mode: agent
+tools:
+  - create_file
+  - run_in_terminal
 ---
 
 ## Role

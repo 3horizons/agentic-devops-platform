@@ -1,4 +1,3 @@
-````skill
 ---
 name: aro-deployment
 description: 'Azure Red Hat OpenShift (ARO) deployment and configuration for Three Horizons Accelerator. Use when deploying new ARO clusters, configuring OAuth, installing operators, deploying RHDH on OpenShift. Covers full platform setup from scratch to production-ready.'
@@ -10,6 +9,25 @@ license: Complete terms in LICENSE.txt
 Comprehensive skill for deploying and configuring Azure Red Hat OpenShift (ARO) as the enterprise Kubernetes platform.
 
 **Version:** 1.0.0
+
+---
+
+## USE FOR
+
+- Deploy new Azure Red Hat OpenShift clusters
+- Configure ARO cluster OAuth and authentication
+- Install required OpenShift operators (GitOps, External Secrets)
+- Deploy RHDH on OpenShift platform
+- Configure ARO networking and private clusters
+- Set up ARO integration with Azure services
+- run deploy-aro.sh script
+
+## DO NOT USE FOR
+
+- Day-to-day OpenShift operations (use openshift-operations skill)
+- Vanilla AKS deployment (use azure-infrastructure skill)
+- General Kubernetes workloads (use kubectl-cli skill)
+- Non-OpenShift Helm deployments (use helm-cli skill)
 
 ---
 

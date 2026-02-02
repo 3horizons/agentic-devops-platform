@@ -1,4 +1,3 @@
-````skill
 ---
 name: azure-infrastructure
 description: 'Azure infrastructure provisioning for Three Horizons Accelerator. Use when deploying AKS clusters, networking, security, container registries, Key Vault. Covers resource groups, VNets, subnets, NSGs, private endpoints, managed identities, RBAC, and Defender for Cloud.'
@@ -10,6 +9,27 @@ license: Complete terms in LICENSE.txt
 Comprehensive skill for provisioning and managing Azure infrastructure for the Three Horizons Accelerator platform.
 
 **Version:** 1.0.0
+
+---
+
+## USE FOR
+
+- Provision AKS clusters with best practices
+- Configure Azure VNet, subnets, and NSGs
+- Set up Azure Container Registry (ACR)
+- Deploy Azure Key Vault for secrets management
+- Configure managed identities and RBAC
+- Set up private endpoints and network security
+- Enable Azure Defender for Cloud
+- Configure Log Analytics workspaces
+
+## DO NOT USE FOR
+
+- OpenShift/ARO specific operations (use aro-deployment skill)
+- Kubernetes workload deployments (use kubectl-cli skill)
+- Helm chart installations (use helm-cli skill)
+- Database provisioning (use database-management skill)
+- AI/ML workloads (use ai-foundry-operations skill)
 
 ---
 

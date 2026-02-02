@@ -1,10 +1,11 @@
-```chatagent
 ---
 name: gitops
 description: 'GitOps specialist for ArgoCD operations, application deployments, sync policies, and continuous delivery workflows'
-tools: ['read', 'search', 'edit', 'execute']
-model: 'Claude Sonnet 4.5'
-user-invokable: true
+skills:
+  - argocd-cli
+  - kubectl-cli
+  - helm-cli
+  - github-cli
 ---
 
 # GitOps Agent

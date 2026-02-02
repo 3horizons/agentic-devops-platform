@@ -42,18 +42,22 @@
 | Document | Description |
 |----------|-------------|
 | [Branching Strategy](BRANCHING_STRATEGY.md) | Git workflow and branch protection |
-| [Agent Documentation](../agents/README.md) | 23 AI agents for deployment automation |
+| [Agent Documentation](../.github/agents/README.md) | 30 AI agents for deployment automation |
 
 ### Agent Documentation
 
-Located in `/agents/`:
+Located in `/.github/agents/`:
 
-| Horizon | Agents |
-|---------|--------|
-| H1 Foundation | infrastructure, networking, database, security, defender, purview, container-registry, aro-platform |
-| H2 Enhancement | gitops, rhdh-portal, golden-paths, observability, github-runners |
-| H3 Innovation | ai-foundry, mlops-pipeline, sre-agent, multi-agent-setup |
-| Cross-Cutting | github-app, identity-federation, validation, migration, rollback, cost-optimization |
+All 30 agents are in a flat structure. Key agents include:
+
+| Category | Agents |
+|----------|--------|
+| Infrastructure | infrastructure, networking, database, security, container-registry, aro |
+| Platform | platform, deployment, devops, terraform, gitops |
+| Operations | observability, sre, governance, reviewer |
+| AI/ML | ai-foundry, mlops-pipeline, multi-agent |
+| Portal | rhdh, golden-paths, documentation |
+| Utilities | validation, migration, rollback, cost, runners, identity |
 
 ---
 

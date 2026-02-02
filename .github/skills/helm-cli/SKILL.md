@@ -1,3 +1,9 @@
+---
+name: helm-cli
+description: 'Helm CLI reference for Kubernetes package management. Use when asked to deploy, upgrade, rollback Helm releases, manage repositories, inspect charts.'
+license: Complete terms in LICENSE.txt
+---
+
 # Helm CLI Skill
 
 > **Domain:** Kubernetes Package Management  
@@ -10,16 +16,24 @@ This skill provides comprehensive Helm CLI reference for managing Kubernetes app
 
 ---
 
-## When to Use This Skill
+## USE FOR
 
-Use this skill when user asks to:
-- Deploy Helm charts (ArgoCD, Prometheus, Grafana, cert-manager, etc.)
-- Upgrade existing Helm releases
-- Rollback failed deployments
-- List or inspect Helm releases
-- Add or manage Helm repositories
-- Troubleshoot Helm deployment issues
-- Generate Kubernetes manifests from Helm charts
+- When user asks to run `helm` commands
+- Deploy Helm charts (ArgoCD, Prometheus, Grafana, cert-manager, external-secrets)
+- Upgrade existing Helm releases with new values
+- Rollback failed Helm deployments to previous revision
+- List or inspect Helm releases in namespaces
+- Add, update, or remove Helm repositories
+- Template Helm charts to generate Kubernetes manifests
+- Troubleshoot Helm release failures
+
+## DO NOT USE FOR
+
+- Creating raw Kubernetes manifests (use kubectl-cli skill)
+- Azure resource provisioning (use azure-cli skill)
+- OpenShift-specific operations (use oc-cli skill)
+- ArgoCD application management (use argocd-cli skill)
+- Terraform infrastructure code (use terraform-cli skill)
 
 ---
 

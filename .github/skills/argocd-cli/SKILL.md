@@ -6,6 +6,23 @@ license: Complete terms in LICENSE.txt
 
 # ArgoCD CLI
 
+USE FOR:
+- `argocd` commands and GitOps operations
+- Syncing applications (`argocd app sync`)
+- Checking application status (`argocd app get`)
+- Managing Git repositories (`argocd repo add`)
+- Creating projects (`argocd proj create`)
+- Rolling back deployments (`argocd app rollback`)
+- Managing application sets and sync policies
+- ArgoCD RBAC configuration
+
+DO NOT USE FOR:
+- Direct Kubernetes manifest application (use kubectl-cli)
+- Helm chart management outside ArgoCD (use helm-cli)
+- Flux-based GitOps workflows
+- CI/CD pipeline execution (use github-cli)
+- Infrastructure provisioning (use terraform-cli)
+
 Comprehensive reference for ArgoCD CLI - declarative GitOps continuous delivery tool.
 
 **Version:** 2.13+ (current as of 2026)
