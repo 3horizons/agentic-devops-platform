@@ -9,6 +9,9 @@ body:
       value: |
         ## Platform Validation
         This issue triggers the **validation-agent** to verify deployment.
+        
+        **Agent:** [`.github/agents/cross-cutting/validation.agent.md`](../agents/cross-cutting/validation.agent.md)
+        **Skills:** validation-scripts, terraform-cli, kubectl-cli
 
   - type: dropdown
     id: validation_scope

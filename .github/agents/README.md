@@ -1,10 +1,23 @@
 # GitHub Copilot Agents
 
-> Interactive agents for Three Horizons Accelerator platform operations via chat
+> Task-specific agents organized by Three Horizons framework + interactive agents for platform operations
 
 ## Overview
 
-This directory contains **GitHub Copilot Agents** (`.agent.md` files) that enable interactive platform operations through chat conversations. These agents complement the automated workflow agents in `/agents/` by providing:
+This directory contains **37 agents** organized into two categories:
+
+### Task-Specific Agents (23) - Horizon-Based
+Organized by **Three Horizons** framework. Each agent focuses on **one task** and references **Skills** for tooling.
+
+| Horizon | Agents | Description |
+|---------|--------|-------------|
+| [h1-foundation/](h1-foundation/) | 8 | Core infrastructure (networking, security, AKS/ARO, databases) |
+| [h2-enhancement/](h2-enhancement/) | 5 | Platform capabilities (GitOps, observability, RHDH) |
+| [h3-innovation/](h3-innovation/) | 4 | AI/ML and advanced (AI Foundry, MLOps, SRE) |
+| [cross-cutting/](cross-cutting/) | 6 | Shared operations (validation, migration, rollback) |
+
+### Interactive Agents (14) - Legacy
+General-purpose conversational agents providing:
 
 - **Interactive execution** - Step-by-step guidance via chat
 - **Learning-focused** - Understand what each command does
@@ -44,6 +57,55 @@ This directory contains **GitHub Copilot Agents** (`.agent.md` files) that enabl
 | **🔀 Migration** | [migration.agent.md](./migration.agent.md) | Azure DevOps to GitHub migrations |
 
 **Total: 14 Interactive Agents**
+
+---
+
+## Task-Specific Agents Detail
+
+### H1-Foundation (8 agents)
+| Agent | Task | Key Skills |
+|-------|------|------------|
+| [networking](h1-foundation/networking.agent.md) | Deploy VNet/subnets/NSGs | azure-infrastructure, terraform-cli |
+| [security](h1-foundation/security.agent.md) | Deploy Key Vault/RBAC | azure-infrastructure, terraform-cli |
+| [infrastructure](h1-foundation/infrastructure.agent.md) | Deploy AKS cluster | azure-infrastructure, kubectl-cli |
+| [aro-platform](h1-foundation/aro-platform.agent.md) | Deploy ARO cluster | aro-deployment, openshift-operations |
+| [container-registry](h1-foundation/container-registry.agent.md) | Deploy ACR | azure-infrastructure |
+| [database](h1-foundation/database.agent.md) | Deploy PostgreSQL/Cosmos | database-management |
+| [defender-cloud](h1-foundation/defender-cloud.agent.md) | Enable Defender | azure-infrastructure |
+| [purview-governance](h1-foundation/purview-governance.agent.md) | Configure Purview | azure-infrastructure |
+
+### H2-Enhancement (5 agents)
+| Agent | Task | Key Skills |
+|-------|------|------------|
+| [gitops](h2-enhancement/gitops.agent.md) | Configure ArgoCD | argocd-cli, helm-cli |
+| [observability](h2-enhancement/observability.agent.md) | Deploy monitoring | observability-stack, helm-cli |
+| [rhdh-portal](h2-enhancement/rhdh-portal.agent.md) | Configure Developer Hub | rhdh-portal, openshift-operations |
+| [golden-paths](h2-enhancement/golden-paths.agent.md) | Manage templates | rhdh-portal, github-cli |
+| [github-runners](h2-enhancement/github-runners.agent.md) | Deploy self-hosted runners | github-cli, helm-cli |
+
+### H3-Innovation (4 agents)
+| Agent | Task | Key Skills |
+|-------|------|------------|
+| [ai-foundry](h3-innovation/ai-foundry.agent.md) | Deploy AI Foundry | ai-foundry-operations |
+| [mlops-pipeline](h3-innovation/mlops-pipeline.agent.md) | Configure ML pipelines | ai-foundry-operations |
+| [multi-agent](h3-innovation/multi-agent.agent.md) | Setup AI agents | ai-foundry-operations |
+| [sre](h3-innovation/sre.agent.md) | Configure SRE automation | ai-foundry-operations, observability-stack |
+
+### Cross-Cutting (6 agents)
+| Agent | Task | Key Skills |
+|-------|------|------------|
+| [validation](cross-cutting/validation.agent.md) | Validate deployments | validation-scripts |
+| [migration](cross-cutting/migration.agent.md) | Migrate workloads | terraform-cli, kubectl-cli |
+| [rollback](cross-cutting/rollback.agent.md) | Rollback deployments | argocd-cli, kubectl-cli |
+| [cost-optimization](cross-cutting/cost-optimization.agent.md) | Optimize costs | azure-infrastructure |
+| [identity-federation](cross-cutting/identity-federation.agent.md) | Setup OIDC | azure-infrastructure, github-cli |
+| [github-app](cross-cutting/github-app.agent.md) | Configure GitHub App | github-cli |
+
+### Skills Reference
+
+Task-specific agents reference Skills in [.github/skills/](../skills/):
+- **CLI Skills**: azure-cli, terraform-cli, kubectl-cli, argocd-cli, helm-cli, github-cli, validation-scripts
+- **Domain Skills**: azure-infrastructure, aro-deployment, openshift-operations, observability-stack, database-management, ai-foundry-operations, rhdh-portal
 
 ---
 
@@ -399,5 +461,5 @@ To add or improve agents:
 ---
 
 **Last Updated:** February 2, 2026  
-**Version:** 1.0.0  
-**Total Agents:** 14
+**Version:** 2.0.0  
+**Total Agents:** 37 (23 task-specific + 14 interactive)

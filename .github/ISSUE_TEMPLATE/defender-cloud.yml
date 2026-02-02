@@ -9,6 +9,9 @@ body:
       value: |
         ## Defender for Cloud Deployment
         This issue triggers the **defender-cloud-agent** for CSPM and workload protection.
+        
+        **Agent:** [`.github/agents/h1-foundation/defender-cloud.agent.md`](../agents/h1-foundation/defender-cloud.agent.md)
+        **Skills:** azure-infrastructure, terraform-cli, validation-scripts
 
   - type: dropdown
     id: sizing_profile

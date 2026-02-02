@@ -23,7 +23,8 @@ body:
         |-----------|------|-------------|
         | Terraform Module | `terraform/modules/container-registry/` | ACR infrastructure |
         | **Naming Module** | `terraform/modules/naming/` | `cr{project}{env}{region}` |
-        | Agent Spec | `agents/h1-foundation/container-registry-agent.md` | Agent definition |
+        | Agent Spec | [`.github/agents/h1-foundation/container-registry.agent.md`](../agents/h1-foundation/container-registry.agent.md) | Agent definition |
+        | **Skills** | azure-infrastructure, terraform-cli, validation-scripts | Agent skills |
         
         ### 🏷️ ACR Naming (CRITICAL!)
         

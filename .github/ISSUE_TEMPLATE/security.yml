@@ -23,8 +23,9 @@ body:
         |-----------|------|-------------|
         | Terraform Module | `terraform/modules/security/` | Security infrastructure |
         | **Naming Module** | `terraform/modules/naming/` | `kv-{project}-{env}-{region}` |
-        | Agent Spec | `agents/h1-foundation/security-agent.md` | Agent definition |
-        | Defender Agent | `agents/h1-foundation/defender-cloud-agent.md` | Advanced security |
+        | Agent Spec | [`.github/agents/h1-foundation/security.agent.md`](../agents/h1-foundation/security.agent.md) | Agent definition |
+        | **Skills** | azure-infrastructure, terraform-cli, validation-scripts | Agent skills |
+        | Defender Agent | [`.github/agents/h1-foundation/defender-cloud.agent.md`](../agents/h1-foundation/defender-cloud.agent.md) | Advanced security |
         
         ### 🏷️ Security Resource Naming
         

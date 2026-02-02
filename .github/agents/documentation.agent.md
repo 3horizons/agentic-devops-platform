@@ -351,18 +351,16 @@ When updating documentation:
 ```markdown
 I'll create the documentation for the new XYZ agent:
 
-1. Agent specification file: `agents/h2-enhancement/xyz-agent.md`
-2. Added to index: `agents/INDEX.md`
+1. Agent specification file: `.github/agents/h2-enhancement/xyz.agent.md`
+2. Added to index: `.github/agents/README.md`
 3. Updated deployment sequence: `agents/DEPLOYMENT_SEQUENCE.md`
-4. Cross-referenced in: `agents/h2-enhancement/README.md`
+4. Cross-referenced in: `.github/agents/h2-enhancement/`
 
 Structure includes:
-- Agent identity and metadata
-- Capabilities matrix
-- Skills integration
-- Issue template
-- Workflow diagram
-- Validation checklist
+- Agent identity and metadata (YAML frontmatter)
+- Task definition (One Agent, One Task)
+- Skills references
+- Issue template trigger
 - Dependencies
 ```
 

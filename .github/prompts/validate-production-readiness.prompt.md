@@ -71,7 +71,7 @@ Create a comprehensive production readiness assessment report that:
 ## Validation Scope - 12 Major Areas
 
 ### 1. Red Hat Developer Hub (RHDH) v1.8 Configuration
-**Location**: `platform/rhdh/`, `agents/h2-enhancement/rhdh-portal-agent.md`
+**Location**: `platform/rhdh/`, `.github/agents/h2-enhancement/rhdh-portal.agent.md`
 
 Validate against official RHDH 1.8 documentation:
 

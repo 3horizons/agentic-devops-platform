@@ -8,8 +8,9 @@ body:
     attributes:
       value: |
         ## Observability Stack Deployment
-        This issue triggers the **observability-agent**.
-
+        This issue triggers the **observability-agent**.        
+        **Agent:** [`.github/agents/h2-enhancement/observability.agent.md`](../agents/h2-enhancement/observability.agent.md)
+        **Skills:** observability-stack, helm-cli, kubectl-cli, validation-scripts
   - type: dropdown
     id: sizing_profile
     attributes:

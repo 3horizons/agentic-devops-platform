@@ -11,6 +11,9 @@ body:
         ## 🔴 Azure Red Hat OpenShift (ARO) Deployment
         Deploy a complete ARO cluster with RHDH, GitOps, and enterprise integrations.
         
+        **Agent:** [`.github/agents/h1-foundation/aro-platform.agent.md`](../agents/h1-foundation/aro-platform.agent.md)
+        **Skills:** aro-deployment, openshift-operations, terraform-cli, validation-scripts
+        
         **Prerequisites:**
         - Red Hat pull secret from cloud.redhat.com
         - Azure subscription with ARO quota
