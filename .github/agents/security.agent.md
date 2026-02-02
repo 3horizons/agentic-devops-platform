@@ -1,9 +1,9 @@
 ---
 name: security
 description: 'Security specialist for Azure compliance, vulnerability scanning, RBAC, and Defender configuration'
-tools: ['read', 'search', 'web']
+tools: ['read', 'search', 'web/fetch']
 model: 'Claude Sonnet 4.5'
-infer: true
+user-invokable: true
 ---
 
 # Security Agent

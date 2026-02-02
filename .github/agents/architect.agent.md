@@ -1,9 +1,9 @@
 ---
 name: architect
 description: 'Solution Architecture specialist for system design, Azure Well-Architected Framework, technical decisions, and infrastructure planning'
-tools: ['read', 'search', 'edit', 'execute', 'microsoft.docs.mcp', 'azure_query_learn', 'fetch', 'azureterraformbestpractices']
+tools: ['read', 'search', 'edit', 'execute', 'web/fetch']
 model: 'Claude Sonnet 4.5'
-infer: true
+user-invokable: true
 ---
 
 # Solution Architect Agent

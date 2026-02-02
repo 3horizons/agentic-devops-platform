@@ -3,7 +3,7 @@ name: devops
 description: 'DevOps specialist for GitHub Actions, Terraform, Kubernetes, ArgoCD, and infrastructure automation'
 tools: ['read', 'search', 'edit', 'execute']
 model: 'Claude Sonnet 4.5'
-infer: true
+user-invokable: true
 ---
 
 # DevOps Agent

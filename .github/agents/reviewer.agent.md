@@ -3,7 +3,7 @@ name: reviewer
 description: 'Code Review specialist for thorough code analysis, security review, Terraform IaC review, best practices validation, and quality feedback'
 tools: ['read', 'search', 'edit', 'codebase', 'githubRepo']
 model: 'Claude Sonnet 4.5'
-infer: true
+user-invokable: true
 ---
 
 # Code Reviewer Agent

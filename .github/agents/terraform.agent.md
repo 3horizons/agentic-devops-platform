@@ -1,9 +1,9 @@
 ---
 name: terraform
 description: 'Azure Terraform Infrastructure as Code specialist - creates, reviews, and validates Terraform configurations using Azure Verified Modules'
-tools: ['read', 'search', 'edit', 'runCommands', 'fetch', 'todos', 'azureterraformbestpractices', 'microsoft.docs.mcp', 'get_bestpractices']
+tools: ['read', 'search', 'edit', 'execute', 'web/fetch']
 model: 'Claude Sonnet 4.5'
-infer: true
+user-invokable: true
 ---
 
 # Azure Terraform IaC Specialist
