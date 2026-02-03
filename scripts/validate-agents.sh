@@ -4,9 +4,10 @@
 #
 # This script checks:
 # - All agent files exist and are non-empty
+# - Required frontmatter fields are present (name, description, task)
 # - Required sections are present in each file
-# - MCP server references are valid
-# - Cross-references between agents are valid
+# - Task-driven structure with sub-tasks
+# - Skills, scripts, and terraform module references
 #
 # Usage: ./scripts/validate-agents.sh [--verbose]
 #
@@ -30,7 +31,7 @@ else
     SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 fi
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-AGENTS_DIR="$PROJECT_ROOT/agents"
+AGENTS_DIR="$PROJECT_ROOT/.github/agents"
 
 # Counters
 TOTAL_AGENTS=0
@@ -71,66 +72,57 @@ print_info() {
     fi
 }
 
-# Required sections in agent files
+# Required sections in agent files (task-driven structure)
 REQUIRED_SECTIONS=(
-    "Agent Identity"
-    "Capabilities"
-    "MCP Servers"
-    "Trigger Labels"
-    "Validation"
+    "Your Mission"
+    "Clarifying Questions"
+    "Sub-Tasks"
+    "Resources"
+    "Completion Checklist"
+    "Rollback Procedure"
+    "Important Reminders"
 )
 
-# Expected agent files (using parallel arrays for portability)
-AGENT_PATHS=(
-    "h1-foundation/infrastructure-agent.md"
-    "h1-foundation/networking-agent.md"
-    "h1-foundation/security-agent.md"
-    "h1-foundation/container-registry-agent.md"
-    "h1-foundation/database-agent.md"
-    "h1-foundation/defender-cloud-agent.md"
-    "h1-foundation/aro-platform-agent.md"
-    "h1-foundation/purview-governance-agent.md"
-    "h2-enhancement/gitops-agent.md"
-    "h2-enhancement/observability-agent.md"
-    "h2-enhancement/rhdh-portal-agent.md"
-    "h2-enhancement/golden-paths-agent.md"
-    "h2-enhancement/github-runners-agent.md"
-    "h3-innovation/ai-foundry-agent.md"
-    "h3-innovation/mlops-pipeline-agent.md"
-    "h3-innovation/sre-agent-setup.md"
-    "h3-innovation/multi-agent-setup.md"
-    "cross-cutting/validation-agent.md"
-    "cross-cutting/migration-agent.md"
-    "cross-cutting/rollback-agent.md"
-    "cross-cutting/cost-optimization-agent.md"
-    "cross-cutting/github-app-agent.md"
-    "cross-cutting/identity-federation-agent.md"
+# Required frontmatter fields
+REQUIRED_FRONTMATTER=(
+    "name:"
+    "description:"
+    "task:"
+    "tools:"
 )
 
-AGENT_NAMES=(
-    "Infrastructure Agent"
-    "Networking Agent"
-    "Security Agent"
-    "Container Registry Agent"
-    "Database Agent"
-    "Defender Cloud Agent"
-    "ARO Platform Agent"
-    "Purview Governance Agent"
-    "GitOps Agent"
-    "Observability Agent"
-    "RHDH Portal Agent"
-    "Golden Paths Agent"
-    "GitHub Runners Agent"
-    "AI Foundry Agent"
-    "MLOps Pipeline Agent"
-    "SRE Agent Setup"
-    "Multi-Agent Setup"
-    "Validation Agent"
-    "Migration Agent"
-    "Rollback Agent"
-    "Cost Optimization Agent"
-    "GitHub App Agent"
-    "Identity Federation Agent"
+# Expected agent files (flat structure in .github/agents/)
+AGENT_FILES=(
+    "infrastructure.agent.md"
+    "aro.agent.md"
+    "networking.agent.md"
+    "security.agent.md"
+    "defender-cloud.agent.md"
+    "database.agent.md"
+    "container-registry.agent.md"
+    "governance.agent.md"
+    "gitops.agent.md"
+    "rhdh.agent.md"
+    "observability.agent.md"
+    "golden-paths.agent.md"
+    "runners.agent.md"
+    "ai-foundry.agent.md"
+    "mlops-pipeline.agent.md"
+    "multi-agent.agent.md"
+    "sre.agent.md"
+    "validation.agent.md"
+    "migration.agent.md"
+    "rollback.agent.md"
+    "cost.agent.md"
+    "github-app.agent.md"
+    "identity.agent.md"
+    "deployment.agent.md"
+    "terraform.agent.md"
+    "architect.agent.md"
+    "devops.agent.md"
+    "platform.agent.md"
+    "reviewer.agent.md"
+    "documentation.agent.md"
 )
 
 # Valid MCP servers (exported for use by other scripts)
@@ -147,16 +139,16 @@ export VALID_MCP_SERVERS=(
 
 # Validate single agent file
 validate_agent() {
-    local file_path="$1"
-    local agent_name="$2"
-    local full_path="$AGENTS_DIR/$file_path"
+    local file_name="$1"
+    local full_path="$AGENTS_DIR/$file_name"
+    local agent_name="${file_name%.agent.md}"
     local file_valid=true
 
     print_info "Validating: $agent_name"
 
     # Check file exists
     if [[ ! -f "$full_path" ]]; then
-        print_error "$agent_name: File not found ($file_path)"
+        print_error "$agent_name: File not found ($file_name)"
         return 1
     fi
 
@@ -169,10 +161,24 @@ validate_agent() {
     # Get line count
     local line_count
     line_count=$(wc -l < "$full_path")
-    if [[ $line_count -lt 50 ]]; then
-        print_warning "$agent_name: File seems too short ($line_count lines)"
+    if [[ $line_count -lt 100 ]]; then
+        print_warning "$agent_name: File seems too short ($line_count lines, expected 100+)"
         file_valid=false
     fi
+
+    # Check frontmatter
+    if ! head -1 "$full_path" | grep -q "^---$"; then
+        print_error "$agent_name: Missing YAML frontmatter"
+        file_valid=false
+    fi
+
+    # Check required frontmatter fields
+    for field in "${REQUIRED_FRONTMATTER[@]}"; do
+        if ! grep -q "^$field" "$full_path"; then
+            print_warning "$agent_name: Missing frontmatter field '$field'"
+            file_valid=false
+        fi
+    done
 
     # Check required sections
     for section in "${REQUIRED_SECTIONS[@]}"; do
@@ -182,15 +188,11 @@ validate_agent() {
         fi
     done
 
-    # Check for MCP server references
-    if ! grep -qi "mcp" "$full_path"; then
-        print_warning "$agent_name: No MCP server references found"
-        file_valid=false
-    fi
-
-    # Check for trigger labels
-    if ! grep -qi "agent:" "$full_path"; then
-        print_warning "$agent_name: No trigger labels found"
+    # Check for Sub-Tasks (should have at least 4)
+    local subtask_count
+    subtask_count=$(grep -c "^### [0-9]" "$full_path" 2>/dev/null || echo 0)
+    if [[ $subtask_count -lt 4 ]]; then
+        print_warning "$agent_name: Only $subtask_count sub-tasks found (expected 4-6)"
         file_valid=false
     fi
 
@@ -200,8 +202,14 @@ validate_agent() {
         file_valid=false
     fi
 
+    # Check for Input/Actions/Output pattern
+    if ! grep -qi "**Input:**" "$full_path"; then
+        print_warning "$agent_name: Missing Input/Actions/Output pattern in sub-tasks"
+        file_valid=false
+    fi
+
     if [[ "$file_valid" == true ]]; then
-        print_success "$agent_name: Valid ($line_count lines)"
+        print_success "$agent_name: Valid ($line_count lines, $subtask_count sub-tasks)"
         return 0
     else
         return 1
@@ -212,44 +220,45 @@ validate_agent() {
 validate_structure() {
     print_header "Validating Directory Structure"
 
-    local categories=("h1-foundation" "h2-enhancement" "h3-innovation" "cross-cutting")
-
-    for category in "${categories[@]}"; do
-        if [[ -d "$AGENTS_DIR/$category" ]]; then
-            local count
-            count=$(find "$AGENTS_DIR/$category" -name "*.md" | wc -l)
-            print_success "$category/: $count agents found"
-        else
-            print_error "$category/: Directory not found"
+    if [[ -d "$AGENTS_DIR" ]]; then
+        local count
+        count=$(find "$AGENTS_DIR" -name "*.agent.md" -type f | wc -l)
+        print_success ".github/agents/: $count agents found"
+        
+        if [[ $count -ne 30 ]]; then
+            print_warning "Expected 30 agents, found $count"
         fi
-    done
+    else
+        print_error ".github/agents/: Directory not found"
+    fi
+
+    # Check for template
+    if [[ -f "$AGENTS_DIR/AGENT_TEMPLATE.md" ]]; then
+        print_success "AGENT_TEMPLATE.md found"
+    else
+        print_warning "AGENT_TEMPLATE.md not found"
+    fi
 }
 
 # Validate all agent files
 validate_agents() {
     print_header "Validating Agent Specifications"
 
-    local i=0
-    for file_path in "${AGENT_PATHS[@]}"; do
+    for file_name in "${AGENT_FILES[@]}"; do
         ((TOTAL_AGENTS++)) || true
-        if validate_agent "$file_path" "${AGENT_NAMES[$i]}"; then
+        if validate_agent "$file_name"; then
             ((VALID_AGENTS++)) || true
         fi
-        ((i++)) || true
     done
 }
 
 # Validate documentation files
 validate_docs() {
-    print_header "Validating Documentation Files"
+    print_header "Validating Supporting Documentation"
 
     local docs=(
         "README.md"
-        "INDEX.md"
-        "DEPLOYMENT_SEQUENCE.md"
-        "MCP_SERVERS_GUIDE.md"
-        "TERRAFORM_MODULES_REFERENCE.md"
-        "DEPENDENCY_GRAPH.md"
+        "AGENT_TEMPLATE.md"
     )
 
     for doc in "${docs[@]}"; do
@@ -258,9 +267,18 @@ validate_docs() {
             line_count=$(wc -l < "$AGENTS_DIR/$doc")
             print_success "$doc: Found ($line_count lines)"
         else
-            print_warning "$doc: Not found (optional)"
+            print_warning "$doc: Not found"
         fi
     done
+
+    # Check for skills directory
+    if [[ -d "$PROJECT_ROOT/.github/skills" ]]; then
+        local skill_count
+        skill_count=$(find "$PROJECT_ROOT/.github/skills" -name "SKILL.md" | wc -l)
+        print_success ".github/skills/: $skill_count skills found"
+    else
+        print_warning ".github/skills/: Directory not found"
+    fi
 }
 
 # Check cross-references
@@ -270,35 +288,47 @@ validate_crossrefs() {
     # Check for broken links within agents directory
     local broken_links=0
 
-    for file in "$AGENTS_DIR"/**/*.md; do
+    for file in "$AGENTS_DIR"/*.agent.md; do
         if [[ -f "$file" ]]; then
-            # Extract markdown links
-            while IFS= read -r link; do
-                # Skip external links
-                if [[ "$link" == http* ]]; then
-                    continue
-                fi
-
-                # Check if referenced file exists
-                local ref_path="$AGENTS_DIR/$link"
-                local dir_path
-                dir_path=$(dirname "$file")
-                local rel_path="$dir_path/$link"
-
-                if [[ ! -f "$ref_path" && ! -f "$rel_path" ]]; then
+            # Check for related agent references
+            while IFS= read -r agent_ref; do
+                local ref_file="${agent_ref}.agent.md"
+                if [[ ! -f "$AGENTS_DIR/$ref_file" ]]; then
                     if [[ "$VERBOSE" == true ]]; then
-                        print_warning "Broken link in $(basename "$file"): $link"
+                        print_warning "Unknown agent reference in $(basename "$file"): $agent_ref"
                     fi
                     ((broken_links++))
                 fi
-            done < <(grep -oE '\[.*\]\([^)]+\)' "$file" 2>/dev/null | sed 's/.*(\([^)]*\))/\1/' || true)
+            done < <(grep -oE '\| [a-z-]+-agent \|' "$file" 2>/dev/null | sed 's/| //g; s/ |//g; s/-agent$//' || true)
         fi
     done
 
     if [[ $broken_links -eq 0 ]]; then
         print_success "No broken cross-references found"
     else
-        print_warning "$broken_links potential broken links found (run with --verbose for details)"
+        print_warning "$broken_links potential broken references (run with --verbose for details)"
+    fi
+
+    # Validate skill references
+    local missing_skills=0
+    for file in "$AGENTS_DIR"/*.agent.md; do
+        if [[ -f "$file" ]]; then
+            while IFS= read -r skill; do
+                skill=$(echo "$skill" | tr -d ' ')
+                if [[ ! -d "$PROJECT_ROOT/.github/skills/$skill" ]]; then
+                    if [[ "$VERBOSE" == true ]]; then
+                        print_warning "Unknown skill reference in $(basename "$file"): $skill"
+                    fi
+                    ((missing_skills++))
+                fi
+            done < <(grep -A 10 "^skills:" "$file" 2>/dev/null | grep "^\s*-" | sed 's/.*- //' || true)
+        fi
+    done
+
+    if [[ $missing_skills -eq 0 ]]; then
+        print_success "All skill references valid"
+    else
+        print_warning "$missing_skills skill references to non-existent skills"
     fi
 }
 

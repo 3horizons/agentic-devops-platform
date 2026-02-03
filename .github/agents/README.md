@@ -373,38 +373,69 @@ graph LR
 
 ### Agent File Structure
 
-Each agent follows this structure:
+Each agent follows this **task-driven structure** (awesome-copilot best practices):
 
 ```markdown
-````chatagent
 ---
 name: agent-name
-description: Brief description
-tools: ['read', 'search', 'edit', 'execute']
-model: 'Claude Sonnet 4.5'
-infer: true
+description: 'Action-oriented task description'
+version: '1.0.0'
+task: 'Primary Task Name'
+tools:
+  - 'codebase'
+  - 'editFiles'
+  - 'terminal'
+  - 'run_in_terminal'
+  - 'mcp'
+skills:
+  - skill-1
+  - skill-2
+scripts:
+  - script.sh
+terraform-modules:
+  - module-name
+mcp-servers:
+  azure:
+    command: 'npx'
+    args: ['-y', '@anthropic/azure-mcp']
 ---
 
-# Agent Name
+# Agent Name: Primary Task
 
-Agent description and purpose
+## Your Mission
+Clear description of the agent's primary task
 
-## Capabilities
-What the agent can do
+## Clarifying Questions
+3-4 questions with checkboxes to gather requirements
 
-## Common Tasks
-Frequent operations with examples
+## Sub-Tasks (6 total)
+### 1. Sub-Task Name
+**Input:** What the agent needs
+**Actions:**
+1. Step 1
+2. Step 2
+3. Step 3
+**Output:** What the agent produces
 
-## Best Practices
-Industry-standard patterns
+[Repeat for 6 sub-tasks]
 
-## Integration Points
-Tools and services used
+## Resources
+Tables linking to Skills, Scripts, and Terraform Modules
 
-## Output Format
-How the agent responds
-````
+## Completion Checklist
+Verification steps before completing
+
+## Rollback Procedure
+How to undo if something goes wrong
+
+## Important Reminders
+Key best practices and warnings
+
+## Related Agents
+Table of agents to hand off to
 ```
+
+See [AGENT_TEMPLATE.md](./AGENT_TEMPLATE.md) for the full template.
 
 ---
 
