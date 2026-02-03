@@ -9,9 +9,6 @@ body:
       value: |
         ## Azure AI Foundry Deployment
         This issue triggers the **ai-foundry-agent**.
-        
-        **Agent:** [`.github/agents/h3-innovation/ai-foundry.agent.md`](../agents/h3-innovation/ai-foundry.agent.md)
-        **Skills:** ai-foundry-operations, azure-infrastructure, terraform-cli, validation-scripts
 
   - type: dropdown
     id: sizing_profile

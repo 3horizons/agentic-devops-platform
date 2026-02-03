@@ -29,17 +29,9 @@ upstream:
     image:
       registry: registry.redhat.io
       repository: rhdh/rhdh-hub-rhel9
-      tag: "1.8"
-      pullSecrets:
-        - rhdh-pull-secret
+      tag: "1.2"
       
     replicas: 2
-    
-    # -------------------------------------------------------------------------
-    # Pod Security Context (required for AKS)
-    # -------------------------------------------------------------------------
-    podSecurityContext:
-      fsGroup: 3000
     
     # -------------------------------------------------------------------------
     # Resources

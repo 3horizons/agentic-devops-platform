@@ -23,8 +23,7 @@ body:
         |-----------|------|-------------|
         | Terraform Module | `terraform/modules/databases/` | Database infrastructure |
         | **Naming Module** | `terraform/modules/naming/` | Database naming |
-        | Agent Spec | [`.github/agents/h1-foundation/database.agent.md`](../agents/h1-foundation/database.agent.md) | Agent definition |
-        | **Skills** | database-management, azure-infrastructure, terraform-cli, validation-scripts | Agent skills |
+        | Agent Spec | `agents/h1-foundation/database-agent.md` | Agent definition |
         | Security Module | `terraform/modules/security/` | Key Vault for secrets |
         
         ### 🏷️ Database Naming

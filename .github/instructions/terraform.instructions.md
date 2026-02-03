@@ -1,6 +1,5 @@
 ---
-description: 'Terraform coding standards, naming conventions, module patterns, and security requirements for Azure infrastructure deployment in Three Horizons Accelerator'
-applyTo: '**/*.tf,**/terraform/**,**/*.tfvars'
+applyTo: "**/*.tf,**/terraform/**,**/*.tfvars"
 ---
 
 # Terraform Coding Standards
@@ -131,56 +130,6 @@ locals {
 }
 ```
 
-## Provider Selection (AzureRM vs AzAPI)
-
-- Use `azurerm` provider for most scenarios – it offers high stability and covers the majority of Azure services
-- Use `azapi` provider only for cases where you need:
-  - The very latest Azure features not yet in azurerm
-  - A resource not yet supported in `azurerm`
-- Document the choice in code comments
-- Both providers can be used together if needed, but prefer `azurerm` when in doubt
-
-```hcl
-# Example: Using azapi for preview features
-resource "azapi_resource" "example" {
-  type      = "Microsoft.ContainerService/managedClusters@2024-01-01"
-  name      = "aks-preview-feature"
-  parent_id = azurerm_resource_group.main.id
-  # ... configuration for preview features
-}
-```
-
-## Minimal Dependencies
-
-- Do not introduce additional providers or modules beyond the project's scope without confirmation
-- If a special provider (e.g., `random`, `tls`) is needed:
-  - Add a comment to explain why
-  - Ensure the team approves it
-- Keep the infrastructure stack lean and avoid unnecessary complexity
-- Prefer built-in Terraform functions over external providers
-
-## Ensure Idempotency
-
-- Write configurations that can be applied repeatedly with the same outcome
-- Avoid non-idempotent actions:
-  - Scripts that run on every apply
-  - Resources that might conflict if created twice
-- Test by doing multiple `terraform apply` runs and ensure the second run results in zero changes
-- Use resource lifecycle settings for drift handling:
-
-```hcl
-resource "azurerm_kubernetes_cluster" "main" {
-  # ... configuration
-
-  lifecycle {
-    ignore_changes = [
-      tags["LastModified"],
-      default_node_pool[0].node_count,
-    ]
-  }
-}
-```
-
 ## Security Requirements
 
 - NEVER hardcode secrets
@@ -189,7 +138,6 @@ resource "azurerm_kubernetes_cluster" "main" {
 - Enable soft delete and purge protection for Key Vault
 - Use private endpoints for PaaS services
 - Enable diagnostic settings on all resources
-- Use Workload Identity instead of service principal secrets
 
 ## Module Best Practices
 
@@ -198,39 +146,3 @@ resource "azurerm_kubernetes_cluster" "main" {
 - Provide sensible defaults
 - Use count or for_each for conditional resources
 - Include examples in README.md
-- Create a module with its own variables/outputs
-- Reference modules rather than duplicating code
-
-## Documentation and Diagrams
-
-- Maintain up-to-date documentation in README.md
-- Update README.md with any new variables, outputs, or usage instructions
-- Use `terraform-docs` to generate documentation automatically:
-
-```bash
-# Generate documentation
-terraform-docs markdown table . > README.md
-```
-
-- Update architecture diagrams after significant infrastructure changes
-- Document module dependencies and relationships
-
-## Validate and Test Changes
-
-- Run `terraform validate` before committing changes
-- Review `terraform plan` output before applying
-- Implement automated checks in CI pipeline:
-
-```bash
-# Validation commands
-terraform fmt -check -recursive
-terraform validate
-terraform plan -var-file=environments/dev.tfvars -out=plan.tfplan
-
-# Security scanning
-tfsec .
-checkov -d .
-```
-
-- Use pre-commit hooks for formatting and validation
-- Consider Terratest for infrastructure testing

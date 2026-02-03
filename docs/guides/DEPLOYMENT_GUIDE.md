@@ -2389,11 +2389,9 @@ three-horizons-accelerator-v4/
 │   │   ├── ci.yml              # Continuous Integration
 │   │   ├── cd.yml              # Continuous Deployment
 │   │   └── terraform-test.yml  # Terraform tests
-│   ├── agents/                 # 30 AI agents (flat structure)
-│   ├── skills/                 # 17 CLI reference skills
-│   ├── prompts/                # 10 reusable prompts
-│   ├── instructions/           # 8 project conventions
 │   └── ISSUE_TEMPLATE/         # Issue templates
+│
+├── agents/                     # AI Agent specifications (23 agents)
 │
 ├── argocd/                     # ArgoCD GitOps configuration
 │   ├── apps/                   # Application definitions

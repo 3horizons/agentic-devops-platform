@@ -9,9 +9,6 @@ body:
       value: |
         ## GitOps Infrastructure Deployment
         This issue triggers the **gitops-agent** to deploy ArgoCD.
-        
-        **Agent:** [`.github/agents/h2-enhancement/gitops.agent.md`](../agents/h2-enhancement/gitops.agent.md)
-        **Skills:** argocd-cli, helm-cli, kubectl-cli, validation-scripts
 
   - type: dropdown
     id: sizing_profile

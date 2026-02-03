@@ -98,7 +98,7 @@ resource "azurerm_subnet" "private_endpoints" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = [var.subnet_config.private_endpoints_cidr]
 
-  private_endpoint_network_policies = "Enabled"
+  private_endpoint_network_policies_enabled = true
 }
 
 # Azure Bastion Subnet (if enabled)

@@ -93,37 +93,3 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-
-# =============================================================================
-# GITHUB ADVANCED SECURITY (GHAS) INTEGRATION
-# =============================================================================
-
-variable "enable_github_connector" {
-  description = "Enable GitHub connector for GHAS unified view in Defender for Cloud"
-  type        = bool
-  default     = true
-}
-
-variable "github_organization" {
-  description = "GitHub organization name for DevOps security connector"
-  type        = string
-  default     = ""
-}
-
-variable "enable_azdo_connector" {
-  description = "Enable Azure DevOps connector for hybrid scenarios"
-  type        = bool
-  default     = false
-}
-
-variable "azdo_organization" {
-  description = "Azure DevOps organization name for DevOps security connector"
-  type        = string
-  default     = ""
-}
-
-variable "enable_pr_annotations" {
-  description = "Enable pull request annotations for security findings"
-  type        = bool
-  default     = true
-}

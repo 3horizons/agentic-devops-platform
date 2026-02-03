@@ -81,8 +81,8 @@ resource "azurerm_cognitive_deployment" "models" {
     version = each.value.model_version
   }
 
-  sku {
-    name     = "Standard"
+  scale {
+    type     = "Standard"
     capacity = each.value.capacity
   }
 
@@ -322,7 +322,7 @@ resource "azurerm_monitor_diagnostic_setting" "openai" {
     category = "Trace"
   }
 
-  enabled_metric {
+  metric {
     category = "AllMetrics"
   }
 }
@@ -338,7 +338,7 @@ resource "azurerm_monitor_diagnostic_setting" "search" {
     category = "OperationLogs"
   }
 
-  enabled_metric {
+  metric {
     category = "AllMetrics"
   }
 }

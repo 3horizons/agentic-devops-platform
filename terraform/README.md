@@ -71,7 +71,7 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-## Module Overview (18 modules)
+## Module Overview (16 modules)
 
 | Module | Horizon | Description |
 |--------|---------|-------------|
@@ -89,8 +89,6 @@ terraform apply tfplan
 | **external-secrets** | H2 | External Secrets Operator |
 | **ai-foundry** | H3 | Azure OpenAI, AI Search |
 | **purview** | H3 | Microsoft Purview governance |
-| **dev-center** | H3 | Azure Dev Center for Dev Box |
-| **dev-center-project** | H3 | Dev Center Project & Pools |
 | **cost-management** | - | Cost analysis and budgets |
 | **disaster-recovery** | - | Velero backup configuration |
 

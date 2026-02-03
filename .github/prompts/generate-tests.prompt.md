@@ -2,10 +2,6 @@
 name: generate-tests
 description: Generate comprehensive test suites for code
 mode: agent
-tools:
-  - read_file
-  - create_file
-  - runTests
 ---
 
 # Test Generation Agent

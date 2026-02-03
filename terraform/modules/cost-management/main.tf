@@ -222,7 +222,7 @@ resource "azurerm_storage_container" "cost_export" {
   count = var.enable_cost_export ? 1 : 0
 
   name                  = "cost-exports"
-  storage_account_id    = azurerm_storage_account.cost_export[0].id
+  storage_account_name  = azurerm_storage_account.cost_export[0].name
   container_access_type = "private"
 }
 

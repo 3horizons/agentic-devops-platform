@@ -86,7 +86,7 @@ resource "azurerm_storage_container" "techdocs" {
   count = var.enable_techdocs ? 1 : 0
 
   name                  = "techdocs"
-  storage_account_id    = azurerm_storage_account.techdocs[0].id
+  storage_account_name  = azurerm_storage_account.techdocs[0].name
   container_access_type = "private"
 }
 
@@ -389,9 +389,9 @@ resource "helm_release" "rhdh" {
         replicas = var.replicas
 
         image = {
-          registry   = "registry.redhat.io"
+          registry   = "quay.io"
           repository = "rhdh/rhdh-hub-rhel9"
-          tag        = "1.8"
+          tag        = "1.2"
         }
 
         appConfig = {

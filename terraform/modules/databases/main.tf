@@ -163,8 +163,8 @@ resource "azurerm_redis_cache" "main" {
   family   = var.redis_config.family
   sku_name = var.redis_config.sku_name
 
-  non_ssl_port_enabled = var.redis_config.enable_non_ssl_port
-  minimum_tls_version  = var.redis_config.minimum_tls_version
+  enable_non_ssl_port = var.redis_config.enable_non_ssl_port
+  minimum_tls_version = var.redis_config.minimum_tls_version
 
   redis_configuration {
     maxmemory_policy = var.redis_config.maxmemory_policy

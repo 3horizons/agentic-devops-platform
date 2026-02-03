@@ -9,9 +9,6 @@ body:
       value: |
         ## Red Hat Developer Hub Deployment
         This issue triggers the **rhdh-portal-agent** for IDP setup.
-        
-        **Agent:** [`.github/agents/h2-enhancement/rhdh-portal.agent.md`](../agents/h2-enhancement/rhdh-portal.agent.md)
-        **Skills:** rhdh-portal, openshift-operations, helm-cli, validation-scripts
 
   - type: dropdown
     id: platform

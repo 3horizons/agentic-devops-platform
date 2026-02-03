@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/bash
 # =============================================================================
 # THREE HORIZONS PLATFORM - CLI PREREQUISITES VALIDATION
 # =============================================================================
@@ -8,7 +8,6 @@
 #
 # Usage: ./scripts/validate-cli-prerequisites.sh [--install]
 #
-# NOTE: Uses zsh for associative array support on macOS
 # =============================================================================
 
 set -euo pipefail
@@ -28,40 +27,38 @@ INSTALL_MODE="${1:-}"
 # CLI TOOLS DEFINITIONS
 # =============================================================================
 
-typeset -A CLI_TOOLS
-CLI_TOOLS=(
+declare -A CLI_TOOLS=(
     # Core Infrastructure
-    "terraform" "Terraform IaC|terraform version|brew install terraform"
-    "az" "Azure CLI|az version|curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash"
-    "kubectl" "Kubernetes CLI|kubectl version --client|az aks install-cli"
-    "helm" "Helm Charts|helm version|brew install helm"
+    ["terraform"]="Terraform IaC|terraform version|brew install terraform"
+    ["az"]="Azure CLI|az version|curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash"
+    ["kubectl"]="Kubernetes CLI|kubectl version --client|az aks install-cli"
+    ["helm"]="Helm Charts|helm version|brew install helm"
     
     # GitHub
-    "gh" "GitHub CLI|gh --version|brew install gh"
+    ["gh"]="GitHub CLI|gh --version|brew install gh"
     
     # OpenShift (ARO)
-    "oc" "OpenShift CLI|oc version --client|brew install openshift-cli"
+    ["oc"]="OpenShift CLI|oc version --client|brew install openshift-cli"
     
     # Utilities
-    "jq" "JSON Processor|jq --version|brew install jq"
-    "yq" "YAML Processor|yq --version|brew install yq"
-    "curl" "HTTP Client|curl --version|built-in"
-    "git" "Git|git --version|brew install git"
+    ["jq"]="JSON Processor|jq --version|brew install jq"
+    ["yq"]="YAML Processor|yq --version|brew install yq"
+    ["curl"]="HTTP Client|curl --version|built-in"
+    ["git"]="Git|git --version|brew install git"
     
     # Container
-    "docker" "Docker|docker --version|brew install docker"
+    ["docker"]="Docker|docker --version|brew install docker"
     
     # Optional but recommended
-    "kubelogin" "Azure AKS Auth|kubelogin --version|brew install Azure/kubelogin/kubelogin"
-    "argocd" "ArgoCD CLI|argocd version --client|brew install argocd"
+    ["kubelogin"]="Azure AKS Auth|kubelogin --version|brew install Azure/kubelogin/kubelogin"
+    ["argocd"]="ArgoCD CLI|argocd version --client|brew install argocd"
 )
 
-typeset -A AUTH_CHECKS
-AUTH_CHECKS=(
-    "az" "az account show"
-    "gh" "gh auth status"
-    "oc" "oc whoami"
-    "docker" "docker info"
+declare -A AUTH_CHECKS=(
+    ["az"]="az account show"
+    ["gh"]="gh auth status"
+    ["oc"]="oc whoami"
+    ["docker"]="docker info"
 )
 
 # =============================================================================
@@ -239,7 +236,7 @@ main() {
     # Authentication status
     header "Authentication Status"
     
-    for tool in "${(k)AUTH_CHECKS[@]}"; do
+    for tool in "${!AUTH_CHECKS[@]}"; do
         if command -v "$tool" &> /dev/null; then
             check_auth "$tool" || ((auth_missing++))
         fi

@@ -421,7 +421,7 @@ spec:
           environments: ${{ parameters.environment }}
           
     # -------------------------------------------------------------------------
-    # Step 4: Fetch Azure Infrastructure (Terraform)
+    # Step 4: Fetch Azure Infrastructure (Bicep)
     # -------------------------------------------------------------------------
     - id: fetch-infra
       name: Generate Azure Infrastructure
@@ -493,14 +493,14 @@ spec:
     # -------------------------------------------------------------------------
     - id: create-azure-resources
       name: Provision Azure AI Resources
-      action: terraform:apply
+      action: azure:deploy
       input:
-        workingDir: ./deploy/infrastructure
-        variables:
-          app_name: ${{ parameters.appName }}
+        templatePath: ./deploy/infrastructure/main.bicep
+        parameters:
+          appName: ${{ parameters.appName }}
           environment: dev
-          search_tier: ${{ parameters.searchTier }}
-          resource_group_name: rg-${{ parameters.appName }}-dev
+          searchTier: ${{ parameters.searchTier }}
+        resourceGroup: rg-${{ parameters.appName }}-dev
         
     # -------------------------------------------------------------------------
     # Step 9: Create ArgoCD Application

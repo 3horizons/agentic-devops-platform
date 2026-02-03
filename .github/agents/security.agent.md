@@ -1,11 +1,6 @@
 ---
 name: security
-description: 'Security specialist for Azure compliance, vulnerability scanning, RBAC, and Defender configuration'
-skills:
-  - azure-cli
-  - kubectl-cli
-  - terraform-cli
-  - validation-scripts
+description: Security Agent for compliance, vulnerability scanning, and security best practices
 ---
 
 # Security Agent

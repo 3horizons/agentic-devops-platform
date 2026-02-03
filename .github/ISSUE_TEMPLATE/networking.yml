@@ -9,9 +9,6 @@ body:
       value: |
         ## Network Architecture Deployment
         This issue triggers the **networking-agent** to deploy hub-spoke topology.
-        
-        **Agent:** [`.github/agents/h1-foundation/networking.agent.md`](../agents/h1-foundation/networking.agent.md)
-        **Skills:** azure-infrastructure, terraform-cli, validation-scripts
 
   - type: dropdown
     id: sizing_profile

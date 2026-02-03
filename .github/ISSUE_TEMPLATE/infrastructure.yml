@@ -25,8 +25,7 @@ body:
         | Terraform | `terraform/modules/` | Infrastructure as Code |
         | **Naming Module** | `terraform/modules/naming/` | CAF-compliant naming |
         | Scripts | `scripts/` | Automation scripts |
-        | Agent Spec | [`.github/agents/h1-foundation/infrastructure.agent.md`](../agents/h1-foundation/infrastructure.agent.md) | Agent definition |
-        | **Skills** | azure-infrastructure, kubectl-cli, terraform-cli, validation-scripts | Agent skills |
+        | Agent Spec | `agents/h1-foundation/infrastructure-agent.md` | Agent definition |
         
         ### 🏷️ Naming Convention (CAF)
         

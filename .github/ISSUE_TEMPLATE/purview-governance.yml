@@ -9,9 +9,6 @@ body:
       value: |
         ## Microsoft Purview Deployment
         This issue triggers the **purview-governance-agent** for data catalog and quality.
-        
-        **Agent:** [`.github/agents/h1-foundation/purview-governance.agent.md`](../agents/h1-foundation/purview-governance.agent.md)
-        **Skills:** azure-infrastructure, terraform-cli, validation-scripts
 
   - type: dropdown
     id: sizing_profile

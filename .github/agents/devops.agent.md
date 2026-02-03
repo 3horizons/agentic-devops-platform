@@ -1,13 +1,6 @@
 ---
 name: devops
-description: 'DevOps specialist for GitHub Actions, Terraform, Kubernetes, ArgoCD, and infrastructure automation'
-skills:
-  - terraform-cli
-  - kubectl-cli
-  - helm-cli
-  - argocd-cli
-  - github-cli
-  - azure-cli
+description: DevOps Agent for CI/CD, Terraform, and Kubernetes operations
 ---
 
 # DevOps Agent

@@ -119,7 +119,6 @@ locals {
 # =============================================================================
 
 resource "azurerm_security_center_contact" "main" {
-  name                = "primary"
   email               = var.security_contact_email
   phone               = var.security_contact_phone != "" ? var.security_contact_phone : null
   alert_notifications = true
@@ -275,13 +274,11 @@ resource "azapi_resource" "regulatory_compliance" {
   name      = each.value
   parent_id = "/subscriptions/${var.subscription_id}"
 
-  schema_validation_enabled = false
-
-  body = {
+  body = jsonencode({
     properties = {
       state = "Enabled"
     }
-  }
+  })
 }
 
 # =============================================================================
@@ -346,12 +343,9 @@ resource "azapi_resource" "governance_rules" {
   name      = each.value.name
   parent_id = "/subscriptions/${var.subscription_id}"
 
-  schema_validation_enabled = false
-
-  body = {
+  body = jsonencode({
     properties = {
       displayName        = each.value.name
-      ruleType           = "Integrated"
       description        = each.value.description
       isDisabled         = false
       rulePriority       = 100
@@ -377,7 +371,7 @@ resource "azapi_resource" "governance_rules" {
       }
       remediationTimeframe = "P${each.value.grace_period_days}D"
     }
-  }
+  })
 }
 
 # =============================================================================
@@ -390,7 +384,7 @@ resource "azapi_update_resource" "defender_for_aks" {
   type        = "Microsoft.ContainerService/managedClusters@2023-08-01"
   resource_id = each.value
 
-  body = {
+  body = jsonencode({
     properties = {
       securityProfile = {
         defender = {
@@ -401,7 +395,7 @@ resource "azapi_update_resource" "defender_for_aks" {
         }
       }
     }
-  }
+  })
 }
 
 # =============================================================================
@@ -415,108 +409,12 @@ resource "azapi_resource" "jit_policy" {
   name      = "default"
   parent_id = "/subscriptions/${var.subscription_id}/resourceGroups/rg-${var.customer_name}-${var.environment}-compute/providers/Microsoft.Security/locations/brazilsouth"
 
-  body = {
+  body = jsonencode({
     properties = {
       virtualMachines = []
       requests        = []
     }
-  }
-}
-
-# =============================================================================
-# GITHUB ADVANCED SECURITY CONNECTOR (GHAS Integration)
-# =============================================================================
-#
-# Enables unified code-to-cloud security visibility by connecting
-# GitHub Advanced Security findings to Microsoft Defender for Cloud.
-#
-# Features:
-#   - Code scanning alerts from GHAS flow to Defender
-#   - Secret scanning alerts unified view
-#   - Dependabot alerts in cloud security context
-#   - DevOps security posture in Defender dashboard
-#
-# Documentation:
-# https://learn.microsoft.com/en-us/azure/defender-for-cloud/github-action
-#
-# =============================================================================
-
-# GitHub DevOps Security Connector
-resource "azapi_resource" "github_connector" {
-  count = var.enable_github_connector ? 1 : 0
-
-  type      = "Microsoft.Security/securityConnectors@2023-10-01-preview"
-  name      = "github-${var.customer_name}-${var.environment}"
-  location  = "centralus" # DevOps connectors are regional
-  parent_id = "/subscriptions/${var.subscription_id}"
-
-  schema_validation_enabled = false
-
-  body = {
-    properties = {
-      environmentName = "GitHub"
-      environmentData = {
-        environmentType = "GithubScope"
-      }
-      hierarchyIdentifier = var.github_organization
-      offerings = [
-        {
-          offeringType = "DefenderForDevOpsGithub"
-        }
-      ]
-    }
-  }
-
-  tags = local.common_tags
-}
-
-# Azure DevOps Connector (for hybrid scenarios)
-resource "azapi_resource" "azdo_connector" {
-  count = var.enable_azdo_connector ? 1 : 0
-
-  type      = "Microsoft.Security/securityConnectors@2023-10-01-preview"
-  name      = "azdo-${var.customer_name}-${var.environment}"
-  location  = "centralus"
-  parent_id = "/subscriptions/${var.subscription_id}"
-
-  schema_validation_enabled = false
-
-  body = {
-    properties = {
-      environmentName = "AzureDevOps"
-      environmentData = {
-        environmentType = "AzureDevOpsScope"
-      }
-      hierarchyIdentifier = var.azdo_organization
-      offerings = [
-        {
-          offeringType = "DefenderForDevOpsAzureDevOps"
-        }
-      ]
-    }
-  }
-
-  tags = local.common_tags
-}
-
-# DevOps Security Posture (unified view) - Using schema_validation_enabled = false
-# as this is a preview API that may not be in the azapi schema
-resource "azapi_resource" "devops_config" {
-  count = var.enable_github_connector || var.enable_azdo_connector ? 1 : 0
-
-  type      = "Microsoft.Security/securityConnectors@2024-03-01-preview"
-  name      = "devops-security-${var.customer_name}"
-  location  = "centralus"
-  parent_id = "/subscriptions/${var.subscription_id}/resourceGroups/rg-${var.customer_name}-${var.environment}-security"
-
-  schema_validation_enabled = false
-
-  body = {
-    properties = {
-      environmentName = "GitHub"
-      hierarchyIdentifier = var.github_organization
-    }
-  }
+  })
 }
 
 # =============================================================================

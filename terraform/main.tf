@@ -16,40 +16,40 @@
 # =============================================================================
 
 terraform {
-  required_version = ">= 1.9.0"
+  required_version = ">= 1.5.0"
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.14"
+      version = ">= 3.75"
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 3.0"
+      version = ">= 2.45"
     }
     azapi = {
       source  = "Azure/azapi"
-      version = "~> 2.0"
+      version = ">= 1.9"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.35"
+      version = ">= 2.23"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.17"
+      version = ">= 2.11"
     }
     kubectl = {
-      source  = "alekc/kubectl"
-      version = "~> 2.1"
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.14"
     }
     github = {
       source  = "integrations/github"
-      version = "~> 6.4"
+      version = ">= 5.40"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.6"
+      version = ">= 3.5"
     }
   }
 
@@ -73,17 +73,11 @@ provider "azurerm" {
       recover_soft_deleted_key_vaults = true
     }
     resource_group {
-      prevent_deletion_if_contains_resources = true
-    }
-    api_management {
-      purge_soft_delete_on_destroy = false
-      recover_soft_deleted         = true
+      prevent_deletion_if_contains_resources = false
     }
   }
 
-  subscription_id                 = var.azure_subscription_id
-  use_oidc                        = var.use_oidc_auth
-  resource_provider_registrations = "none"
+  subscription_id = var.azure_subscription_id
 }
 
 provider "azuread" {
@@ -158,12 +152,6 @@ variable "azure_subscription_id" {
 variable "azure_tenant_id" {
   description = "Azure tenant ID"
   type        = string
-}
-
-variable "use_oidc_auth" {
-  description = "Use OIDC authentication for Azure provider (recommended for GitHub Actions)"
-  type        = bool
-  default     = false
 }
 
 variable "github_org" {

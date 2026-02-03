@@ -9,9 +9,6 @@ body:
       value: |
         ## Golden Paths Deployment
         This issue triggers the **golden-paths-agent** to create software templates.
-        
-        **Agent:** [`.github/agents/h2-enhancement/golden-paths.agent.md`](../agents/h2-enhancement/golden-paths.agent.md)
-        **Skills:** rhdh-portal, github-cli, validation-scripts
 
   - type: checkboxes
     id: template_types

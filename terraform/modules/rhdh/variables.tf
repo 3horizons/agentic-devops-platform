@@ -31,7 +31,7 @@ variable "namespace" {
 variable "rhdh_version" {
   description = "RHDH Helm chart version"
   type        = string
-  default     = "1.8.1"
+  default     = "1.2.0"
 }
 
 variable "base_url" {
