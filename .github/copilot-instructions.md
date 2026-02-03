@@ -58,8 +58,11 @@ This is the Three Horizons Accelerator v4.0.0 - an enterprise-grade platform acc
 | Helm values | `deploy/helm/` |
 | Golden Path templates | `golden-paths/` |
 | Agent specifications | `agents/` |
+| Agent skills | `.github/skills/` |
 | Automation scripts | `scripts/` |
 | Documentation | `docs/` |
+| Prompt files | `.github/prompts/` |
+| Instructions | `.github/instructions/` |
 
 ## Security Requirements
 
@@ -98,11 +101,26 @@ terraform apply
 
 ## Agent System
 
-The platform uses 23 AI agents organized by horizon for deployment orchestration. There are also 16 Terraform modules, 22 Golden Path templates, and 28 Issue templates. When generating code for agents:
+The platform uses 23 AI agents organized by horizon for deployment orchestration, plus 17 skills for specialized CLI operations. There are also 16 Terraform modules, 22 Golden Path templates, and 28 Issue templates.
+
+### Agent Organization
+- **H1 Foundation**: infrastructure, networking, security, database, container-registry, defender-cloud, aro-platform, purview-governance
+- **H2 Enhancement**: gitops, observability, rhdh-portal, golden-paths, github-runners
+- **H3 Innovation**: ai-foundry, mlops-pipeline, sre-agent, multi-agent
+- **Cross-Cutting**: validation, migration, rollback, cost-optimization, github-app, identity-federation
+
+### Skills Available
+Agents can use skills from `.github/skills/` including: terraform-cli, kubectl-cli, azure-cli, argocd-cli, helm-cli, github-cli, oc-cli, validation-scripts, and more.
+
+### Agent Handoffs
+Agents support handoffs for workflow orchestration. Example: @infrastructure -> @networking -> @security -> @validation
+
+When generating code for agents:
 - Follow the agent specification format in `agents/`
-- Include proper YAML frontmatter
-- Define clear inputs, outputs, and steps
-- Reference existing modules and scripts
+- Include proper YAML frontmatter with `tools`, `infer`, `skills`, `handoffs`
+- Define three-tier boundaries: ALWAYS / ASK FIRST / NEVER
+- Reference skills for CLI operations
+- Include clarifying questions before proceeding
 
 ## Golden Paths
 
