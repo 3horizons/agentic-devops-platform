@@ -9,7 +9,7 @@
 ## Quick Navigation
 
 | I want to... | Go to... |
-|--------------|----------|
+| :--- | :--- |
 | **Deploy the platform from scratch** | [Deployment Guide](guides/DEPLOYMENT_GUIDE.md) |
 | **Understand the architecture** | [Architecture Guide](guides/ARCHITECTURE_GUIDE.md) |
 | **Manage the platform day-to-day** | [Administrator Guide](guides/ADMINISTRATOR_GUIDE.md) |
@@ -23,14 +23,14 @@
 ### Getting Started
 
 | Document | Description | Audience |
-|----------|-------------|----------|
+| :--- | :--- | :--- |
 | [README](../README.md) | Project overview and quick start | Everyone |
 | [CONTRIBUTING](../CONTRIBUTING.md) | How to contribute | Contributors |
 
 ### Comprehensive Guides
 
 | Guide | Description | Pages |
-|-------|-------------|-------|
+| :--- | :--- | :--- |
 | [Deployment Guide](guides/DEPLOYMENT_GUIDE.md) | Complete step-by-step deployment from Step 1 to production | ~50 |
 | [Architecture Guide](guides/ARCHITECTURE_GUIDE.md) | System architecture, diagrams, and design decisions | ~40 |
 | [Administrator Guide](guides/ADMINISTRATOR_GUIDE.md) | Day-2 operations, scaling, backup, monitoring | ~40 |
@@ -42,7 +42,8 @@
 | Document | Description |
 |----------|-------------|
 | [Branching Strategy](BRANCHING_STRATEGY.md) | Git workflow and branch protection |
-| [Agent Documentation](../agents/README.md) | 23 AI agents for deployment automation |
+| [Copilot Agents Playbook](../AGENTS.md) | **Interactive Chat Agents** (VS Code) |
+| [Deployment Agents Index](../agents/README.md) | **Automation Agents** (IssueOps) |
 
 ### Agent Documentation
 
@@ -51,9 +52,9 @@ Located in `/agents/`:
 | Horizon | Agents |
 |---------|--------|
 | H1 Foundation | infrastructure, networking, database, security, defender, purview, container-registry, aro-platform |
-| H2 Enhancement | gitops, rhdh-portal, golden-paths, observability, github-runners |
+| H2 Enhancement | gitops, RHDH-portal, golden-paths, observability, GitHub-runners |
 | H3 Innovation | ai-foundry, mlops-pipeline, sre-agent, multi-agent-setup |
-| Cross-Cutting | github-app, identity-federation, validation, migration, rollback, cost-optimization |
+| Cross-Cutting | GitHub-app, identity-federation, validation, migration, rollback, cost-optimization |
 
 ---
 
@@ -79,6 +80,7 @@ Step 10: Post-Deployment Configuration (30 min)
 ```
 
 **Includes:**
+
 - Prerequisites checklist
 - Command examples with expected outputs
 - Verification procedures
@@ -161,6 +163,7 @@ Terraform module documentation:
 - Minimal and full deployment examples
 
 **Modules covered:**
+
 - naming
 - networking
 - aks-cluster
@@ -170,9 +173,9 @@ Terraform module documentation:
 - defender
 - purview
 - observability
-- argocd
+- ArgoCD
 - external-secrets
-- github-runners
+- GitHub-runners
 - cost-management
 - disaster-recovery
 - ai-foundry
@@ -198,24 +201,24 @@ docs/
 
 ## How to Use This Documentation
 
-### New to the Project?
+### New to the Project
 
 1. Read the [README](../README.md) for an overview
 2. Study the [Architecture Guide](guides/ARCHITECTURE_GUIDE.md) to understand the system
 
-### Deploying for Production?
+### Deploying for Production
 
 1. Complete the [Deployment Guide](guides/DEPLOYMENT_GUIDE.md) step by step
 2. Reference the [Module Reference](guides/MODULE_REFERENCE.md) for customization
 3. Set up operations using the [Administrator Guide](guides/ADMINISTRATOR_GUIDE.md)
 
-### Operating the Platform?
+### Operating the Platform
 
 1. Use the [Administrator Guide](guides/ADMINISTRATOR_GUIDE.md) daily
 2. Reference the [Troubleshooting Guide](guides/TROUBLESHOOTING_GUIDE.md) for issues
 3. Check [Agent Documentation](../agents/README.md) for automation
 
-### Contributing?
+### Contributing
 
 1. Read [CONTRIBUTING](../CONTRIBUTING.md)
 2. Follow [Branching Strategy](BRANCHING_STRATEGY.md)
@@ -244,12 +247,14 @@ kubectl get pods -n my-namespace
 ### File References
 
 When referencing files, use the format:
+
 - **Absolute:** `/terraform/modules/aks-cluster/main.tf`
 - **Relative:** `../terraform/modules/aks-cluster/main.tf`
 
 ### Version Updates
 
 When updating documentation:
+
 1. Update the "Last Updated" date
 2. Update the document version if significant changes
 3. Add to CHANGELOG if applicable

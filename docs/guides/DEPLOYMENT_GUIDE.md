@@ -31,11 +31,11 @@
 
 ## 1. Introduction
 
-### What is the Three Horizons Accelerator?
+### What is the Three Horizons Accelerator
 
 The Three Horizons Accelerator is a **complete platform engineering solution** that helps organizations build and manage cloud-native applications on Azure. Think of it as a "starter kit" that provides everything you need to run modern applications in production.
 
-### What Will You Learn?
+### What Will You Learn
 
 By following this guide, you will:
 
@@ -45,7 +45,7 @@ By following this guide, you will:
 - Set up monitoring and observability
 - (Optionally) Enable AI capabilities
 
-### Who Is This Guide For?
+### Who Is This Guide For
 
 This guide is designed for:
 
@@ -56,6 +56,13 @@ This guide is designed for:
 
 > 💡 **No prior Kubernetes or Terraform experience required!**
 > We explain every concept before asking you to execute commands.
+>
+> 🤖 **Need help?**
+> Use the **Copilot Agents** in VS Code for guidance.
+>
+> - Ask `@onboarding` for a walkthrough.
+> - Ask `@terraform` to explain configurations.
+> - See [AGENTS.md](../../AGENTS.md) for the full playbook.
 
 ---
 
@@ -117,7 +124,7 @@ The platform is organized into three "horizons" (layers), each building on the p
 > 🎯 **Purpose:** Provides the basic infrastructure that everything else runs on.
 
 | Component | What It Does | Why We Need It |
-|-----------|--------------|----------------|
+| :--- | :--- | :--- |
 | **AKS Cluster** | Kubernetes cluster managed by Azure | Runs all our containerized applications |
 | **Container Registry** | Stores Docker images | Where we push our application images |
 | **Key Vault** | Stores secrets securely | Keeps passwords, API keys safe |
@@ -130,7 +137,7 @@ The platform is organized into three "horizons" (layers), each building on the p
 > 🎯 **Purpose:** Adds developer productivity and operational tools.
 
 | Component | What It Does | Why We Need It |
-|-----------|--------------|----------------|
+| :--- | :--- | :--- |
 | **ArgoCD** | GitOps continuous deployment | Automatically deploys changes from Git |
 | **RHDH Portal** | Developer self-service portal | Developers create services easily |
 | **External Secrets** | Syncs secrets from Key Vault | Kubernetes gets secrets automatically |
@@ -142,7 +149,7 @@ The platform is organized into three "horizons" (layers), each building on the p
 > 🎯 **Purpose:** Enables AI and machine learning capabilities.
 
 | Component | What It Does | Why We Need It |
-|-----------|--------------|----------------|
+| :--- | :--- | :--- |
 | **AI Foundry** | Azure OpenAI Service | GPT-4, embeddings, AI models |
 | **MLOps Pipelines** | ML model lifecycle | Train, deploy, monitor ML models |
 | **Intelligent Agents** | AI-powered automation | Automate complex tasks with AI |
@@ -186,6 +193,7 @@ Before starting, you need to gather some information and install some tools. Thi
 > ⚠️ **Important: Check Your Permissions First!**
 >
 > Many deployment failures happen because of insufficient permissions. Before proceeding:
+>
 > 1. Confirm you can create resources in your Azure subscription
 > 2. Confirm you're an owner/admin of your GitHub organization
 >
@@ -313,6 +321,7 @@ git --version
 ```
 
 **Expected output (versions may vary):**
+
 ```
 === Checking installed tools ===
 azure-cli                         2.55.0
@@ -338,6 +347,7 @@ git version 2.42.0
 **📁 Related Files:** `scripts/validate-cli-prerequisites.sh`
 
 In this step, we'll:
+
 1. Log into Azure
 2. Register required services
 3. Create a Service Principal (a "robot account" for Terraform)
@@ -357,6 +367,7 @@ az login
 ```
 
 **What happens:**
+
 1. A browser window opens
 2. You log in with your Azure credentials
 3. The browser shows "You have logged in"
@@ -370,6 +381,7 @@ az account list --output table
 ```
 
 **Expected output:**
+
 ```
 Name                    CloudName    SubscriptionId                        State    IsDefault
 ----------------------  -----------  ------------------------------------  -------  -----------
@@ -388,6 +400,7 @@ az account show --query '{Name:name, ID:id, State:state}' --output table
 ```
 
 **Expected output:**
+
 ```
 Name                    ID                                    State
 ----------------------  ------------------------------------  -------
@@ -466,6 +479,7 @@ az provider list --query "[?namespace=='Microsoft.ContainerService' || \
 ```
 
 **Expected output (all should say "Registered"):**
+
 ```
 Provider                        Status
 ------------------------------  ------------
@@ -494,6 +508,7 @@ Microsoft.Security              Registered
 > a dedicated identity just for automation.
 >
 > **Why do we need it?**
+>
 > - **Security:** Limited permissions, can be revoked independently
 > - **Automation:** Works in CI/CD pipelines without human interaction
 > - **Audit:** All actions are logged under this specific identity
@@ -535,7 +550,7 @@ echo "========================================="
 
 | Parameter | Value | Explanation |
 |-----------|-------|-------------|
-| `--name` | sp-threehorizons-terraform | Identifier for this Service Principal |
+| `--name` | sp-threehorizons-Terraform | Identifier for this Service Principal |
 | `--role` | Contributor | Permission level - can create and manage resources |
 | `--scopes` | /subscriptions/xxx | Limits access to only this subscription |
 | `--sdk-auth` | (flag) | Outputs in a format compatible with GitHub Actions |
@@ -563,11 +578,13 @@ echo "========================================="
 > your entire Azure subscription!
 >
 > **DO:**
+>
 > - Save it in a password manager (1Password, LastPass, etc.)
 > - Delete it from your computer after copying to GitHub Secrets
 > - Add `azure-credentials.json` to `.gitignore`
 >
 > **DON'T:**
+>
 > - Commit this file to Git
 > - Share it via email or Slack
 > - Leave it on shared computers
@@ -577,6 +594,7 @@ echo "========================================="
 > 💡 **Why Additional Permissions?**
 >
 > The "Contributor" role lets us create resources, but we also need:
+>
 > - **User Access Administrator:** To assign permissions to managed identities
 > - **Key Vault Administrator:** To manage secrets in Key Vault
 
@@ -649,6 +667,7 @@ echo "=== STEP 1 COMPLETE ==="
 **📁 Related Files:** `.github/workflows/*.yml`
 
 In this step, we'll:
+
 1. Log into GitHub CLI
 2. Fork/clone the repository
 3. Configure repository secrets
@@ -688,6 +707,7 @@ gh api /orgs/YOUR_ORG_NAME --jq '.login'
 ```
 
 **Expected output:**
+
 ```
 github.com
   ✓ Logged in to github.com as your-username (oauth_token)
@@ -785,6 +805,7 @@ gh secret list
 ```
 
 **Expected output:**
+
 ```
 NAME                 UPDATED
 ARM_CLIENT_ID        now
@@ -836,6 +857,7 @@ gh variable list
 ```
 
 **Expected output:**
+
 ```
 NAME            VALUE           UPDATED
 AZURE_LOCATION  brazilsouth     now
@@ -876,6 +898,7 @@ gh api repos/:owner/:repo/actions/permissions --jq '.enabled'
 **📁 Related Files:** `terraform/terraform.tfvars`, `config/`
 
 In this step, we'll:
+
 1. Verify repository structure
 2. Run prerequisites check
 3. Create Terraform configuration file
@@ -921,6 +944,7 @@ ls -la scripts/*.sh | head -5
 ```
 
 **Expected output (note the 'x' in -rwxr-xr-x):**
+
 ```
 -rwxr-xr-x  1 user  staff  2048 Dec 10 10:00 scripts/bootstrap.sh
 -rwxr-xr-x  1 user  staff  1024 Dec 10 10:00 scripts/validate-cli-prerequisites.sh
@@ -936,6 +960,7 @@ ls -la scripts/*.sh | head -5
 ```
 
 **Expected output:**
+
 ```
 === Three Horizons Accelerator - Prerequisites Check ===
 
@@ -1131,6 +1156,7 @@ terraform init
 ```
 
 **Expected output:**
+
 ```
 Initializing the backend...
 Initializing provider plugins...
@@ -1148,6 +1174,7 @@ terraform validate
 ```
 
 **Expected output:**
+
 ```
 Success! The configuration is valid.
 ```
@@ -1164,7 +1191,7 @@ terraform fmt -check -recursive
 >
 > - [ ] All scripts are executable
 > - [ ] Prerequisites check passed
-> - [ ] terraform.tfvars is created with YOUR values
+> - [ ] Terraform.tfvars is created with YOUR values
 > - [ ] `terraform init` succeeded
 > - [ ] `terraform validate` shows "Success"
 
@@ -1176,6 +1203,7 @@ terraform fmt -check -recursive
 **📁 Related Files:** `terraform/main.tf`, `terraform/modules/`
 
 This is where we actually create Azure resources! In this step, we'll:
+
 1. Review what will be created
 2. Apply the Terraform configuration
 3. Save the outputs
@@ -1203,7 +1231,8 @@ terraform plan -out=h1-foundation.tfplan
 ```
 
 **This command:**
-1. Reads your configuration (terraform.tfvars)
+
+1. Reads your configuration (Terraform.tfvars)
 2. Compares it to what exists in Azure (nothing yet)
 3. Shows what it will create
 4. Saves the plan to a file
@@ -1354,9 +1383,10 @@ vnet_id              = "/subscriptions/.../virtualNetworks/vnet-threehorizons-de
 >
 > Don't panic! Check the error message and refer to the Troubleshooting section.
 > Common issues:
+>
 > - Quota limits exceeded → Request quota increase in Azure Portal
 > - Permission denied → Verify Service Principal has correct roles
-> - Name already exists → Change project_name in terraform.tfvars
+> - Name already exists → Change project_name in Terraform.tfvars
 
 ---
 
@@ -1382,6 +1412,7 @@ az aks get-credentials \
 ```
 
 **Expected output:**
+
 ```
 Merged "aks-threehorizons-dev" as current context in /Users/you/.kube/config
 ```
@@ -1393,6 +1424,7 @@ kubectl cluster-info
 ```
 
 **Expected output:**
+
 ```
 Kubernetes control plane is running at https://aks-threehorizons-dev-abc123.hcp.brazilsouth.azmk8s.io:443
 CoreDNS is running at https://aks-threehorizons-dev-abc123.hcp.brazilsouth.azmk8s.io:443/api/v1/...
@@ -1414,6 +1446,7 @@ kubectl get nodes -o wide
 ```
 
 **Expected output:**
+
 ```
 NAME                                STATUS   ROLES   AGE   VERSION   INTERNAL-IP   OS-IMAGE
 aks-system-12345678-vmss000000      Ready    agent   10m   v1.29.0   10.0.0.4      Ubuntu 22.04.3 LTS
@@ -1422,6 +1455,7 @@ aks-system-12345678-vmss000002      Ready    agent   10m   v1.29.0   10.0.0.6   
 ```
 
 **What to check:**
+
 - All nodes show `STATUS: Ready`
 - Node count matches your sizing profile (small = 3 nodes)
 - VERSION shows Kubernetes version (1.28+)
@@ -1434,6 +1468,7 @@ kubectl get pods -n kube-system
 ```
 
 **Expected output (all should be Running):**
+
 ```
 NAME                                  READY   STATUS    RESTARTS   AGE
 azure-ip-masq-agent-xxxxx             1/1     Running   0          15m
@@ -1479,6 +1514,7 @@ az acr login --name $(terraform output -raw acr_login_server | cut -d'.' -f1)
 ```
 
 **Expected output:**
+
 ```
 Login Succeeded
 ```
@@ -1490,10 +1526,12 @@ az acr repository list --name $(terraform output -raw acr_login_server | cut -d'
 ```
 
 **Expected output:**
+
 ```
 Result
 --------
 ```
+
 (Empty because we haven't pushed any images yet)
 
 ### 5.6 H1 Verification Checklist
@@ -1549,6 +1587,7 @@ kubectl delete pod test-pod
 **📁 Related Files:** `argocd/`, `terraform/modules/observability/`
 
 In this step, we'll deploy:
+
 - ArgoCD (GitOps continuous deployment)
 - External Secrets Operator (syncs secrets from Key Vault)
 - Prometheus + Grafana (monitoring and dashboards)
@@ -1573,6 +1612,7 @@ kubectl get namespaces | grep -E "argocd|observability|external-secrets|gatekeep
 ```
 
 **Expected output:**
+
 ```
 argocd              Active   5s
 external-secrets    Active   5s
@@ -1595,6 +1635,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 ```
 
 **Expected output:**
+
 ```
 customresourcedefinition.apiextensions.k8s.io/applications.argoproj.io created
 customresourcedefinition.apiextensions.k8s.io/applicationsets.argoproj.io created
@@ -1615,6 +1656,7 @@ kubectl wait --for=condition=available deployment/argocd-server -n argocd --time
 ```
 
 **Expected output:**
+
 ```
 deployment.apps/argocd-server condition met
 ```
@@ -1668,6 +1710,7 @@ helm install external-secrets \
 ```
 
 **Expected output:**
+
 ```
 NAME: external-secrets
 NAMESPACE: external-secrets
@@ -1683,6 +1726,7 @@ kubectl get pods -n external-secrets
 ```
 
 **Expected output:**
+
 ```
 NAME                                                READY   STATUS    RESTARTS   AGE
 external-secrets-xxxxxxxxx-xxxxx                    1/1     Running   0          30s
@@ -1725,6 +1769,7 @@ EOF
 ```
 
 **Expected output:**
+
 ```
 clustersecretstore.external-secrets.io/azure-key-vault created
 ```
@@ -1736,6 +1781,7 @@ kubectl get clustersecretstore
 ```
 
 **Expected output:**
+
 ```
 NAME              AGE   STATUS   CAPABILITIES   READY
 azure-key-vault   10s   Valid    ReadWrite      True
@@ -1746,6 +1792,7 @@ azure-key-vault   10s   Valid    ReadWrite      True
 > 💡 **What is kube-prometheus-stack?**
 >
 > It's a complete monitoring solution that includes:
+>
 > - **Prometheus:** Collects and stores metrics
 > - **Grafana:** Visualizes metrics in dashboards
 > - **Alertmanager:** Sends alerts when things go wrong
@@ -1779,6 +1826,7 @@ kubectl get pods -n observability
 ```
 
 **Expected output (all should be Running):**
+
 ```
 NAME                                                   READY   STATUS    RESTARTS   AGE
 alertmanager-prometheus-kube-prometheus-alertmanager-0 2/2     Running   0          2m
@@ -1794,6 +1842,7 @@ prometheus-prometheus-node-exporter-xxxxx              1/1     Running   0      
 > 💡 **What is Gatekeeper?**
 >
 > Gatekeeper enforces policies on Kubernetes resources. For example, it can:
+>
 > - Block containers running as root
 > - Require all pods to have resource limits
 > - Enforce naming conventions
@@ -1821,6 +1870,7 @@ kubectl get pods -n gatekeeper-system
 ```
 
 **Expected output:**
+
 ```
 NAME                                            READY   STATUS    RESTARTS   AGE
 gatekeeper-audit-xxxxxxxxx-xxxxx                1/1     Running   0          30s
@@ -1852,7 +1902,7 @@ echo ""
 echo "Note: You may see a certificate warning - this is normal for local access."
 ```
 
-**Open your browser and go to:** https://localhost:8080
+**Open your browser and go to:** <https://localhost:8080>
 
 1. Accept the certificate warning
 2. Log in with username `admin` and the password from Step 6.2
@@ -1873,7 +1923,7 @@ echo "Username: admin"
 echo "Password: $GRAFANA_PASSWORD"
 ```
 
-**Open your browser and go to:** http://localhost:3000
+**Open your browser and go to:** <http://localhost:3000>
 
 1. Log in with username `admin` and password `admin123`
 2. Navigate to Dashboards → Browse
@@ -1930,6 +1980,7 @@ kubectl get secret test-k8s-secret -o jsonpath='{.data.my-value}' | base64 -d
 ```
 
 **Expected output:**
+
 ```
 hello-from-keyvault
 ```
@@ -1963,6 +2014,7 @@ EOF
 ```
 
 **Expected output (may vary based on installed policies):**
+
 ```
 Error from server (Forbidden): error when creating "STDIN": admission webhook "validation.gatekeeper.sh" denied the request: ...
 ```
@@ -2010,7 +2062,7 @@ Gatekeeper:
 
 > ⚠️ **Prerequisites for H3:**
 >
-> - Azure OpenAI access must be approved (request at https://aka.ms/oai/access)
+> - Azure OpenAI access must be approved (request at <https://aka.ms/oai/access>)
 > - H1 and H2 must be successfully deployed and verified
 
 ### 8.1 Enable H3 in Configuration
@@ -2027,6 +2079,7 @@ grep enable_h3 terraform.tfvars
 ```
 
 **Expected output:**
+
 ```
 enable_h3 = true
 ```
@@ -2039,6 +2092,7 @@ terraform plan -out=h3-innovation.tfplan
 ```
 
 **Expected new resources:**
+
 ```
 Plan: 8 to add, 0 to change, 0 to destroy.
 
@@ -2081,6 +2135,7 @@ az cognitiveservices account deployment list \
 ```
 
 **Expected output:**
+
 ```
 Name             Model        Version   Capacity   ProvisioningState
 ---------------  -----------  --------  ---------  ------------------
@@ -2116,6 +2171,7 @@ curl -s -X POST "${AI_ENDPOINT}openai/deployments/gpt-4o-mini/chat/completions?a
 ```
 
 **Expected output:**
+
 ```
 "Hello! How can I assist you today?"
 ```
@@ -2174,9 +2230,9 @@ echo "════════════════════════�
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| ArgoCD | https://localhost:8080 | admin / (saved password) |
-| Grafana | http://localhost:3000 | admin / admin123 |
-| Prometheus | http://localhost:9090 | (no auth) |
+| ArgoCD | <https://localhost:8080> | admin / (saved password) |
+| Grafana | <http://localhost:3000> | admin / admin123 |
+| Prometheus | <http://localhost:9090> | (no auth) |
 
 **To access these services:**
 
@@ -2309,6 +2365,7 @@ Create a document with your deployment details:
 **Cause:** Your Azure account doesn't have permission to create applications.
 
 **Solution:**
+
 1. Ask your Azure AD administrator for "Application Administrator" role
 2. Or ask them to create the Service Principal for you
 
@@ -2317,6 +2374,7 @@ Create a document with your deployment details:
 **Cause:** The provider wasn't registered in Step 1.2.
 
 **Solution:**
+
 ```bash
 az provider register --namespace Microsoft.ContainerService --wait
 ```
@@ -2326,6 +2384,7 @@ az provider register --namespace Microsoft.ContainerService --wait
 **Cause:** Your subscription doesn't have enough VM quota.
 
 **Solution:**
+
 1. Go to Azure Portal → Subscriptions → Usage + quotas
 2. Request a quota increase for the VM family you're using
 
@@ -2334,7 +2393,8 @@ az provider register --namespace Microsoft.ContainerService --wait
 **Cause:** Resource names must be globally unique in Azure.
 
 **Solution:**
-1. Change `project_name` in terraform.tfvars to something unique
+
+1. Change `project_name` in Terraform.tfvars to something unique
 2. Run `terraform plan` and `terraform apply` again
 
 ### Issue: kubectl commands timeout
@@ -2342,6 +2402,7 @@ az provider register --namespace Microsoft.ContainerService --wait
 **Cause:** Can't reach the Kubernetes API server.
 
 **Solution:**
+
 1. Verify your internet connection
 2. Run `az aks get-credentials` again
 3. If using private cluster, connect through VNet or Bastion
@@ -2351,6 +2412,7 @@ az provider register --namespace Microsoft.ContainerService --wait
 **Cause:** Not enough node resources.
 
 **Solution:**
+
 ```bash
 # Check what's happening
 kubectl describe pod <pod-name>
@@ -2364,6 +2426,7 @@ az aks scale --resource-group <rg> --name <aks> --node-count 5
 **Cause:** Workload Identity not configured correctly.
 
 **Solution:**
+
 ```bash
 # Check ClusterSecretStore status
 kubectl describe clustersecretstore azure-key-vault
@@ -2443,10 +2506,10 @@ three-horizons-accelerator-v4/
 
 | Variable | Description | Where to Get It |
 |----------|-------------|-----------------|
-| ARM_CLIENT_ID | Service Principal Client ID | azure-credentials.json |
-| ARM_CLIENT_SECRET | Service Principal Secret | azure-credentials.json |
-| ARM_SUBSCRIPTION_ID | Azure Subscription ID | azure-credentials.json |
-| ARM_TENANT_ID | Azure Tenant ID | azure-credentials.json |
+| ARM_CLIENT_ID | Service Principal Client ID | Azure-credentials.json |
+| ARM_CLIENT_SECRET | Service Principal Secret | Azure-credentials.json |
+| ARM_SUBSCRIPTION_ID | Azure Subscription ID | Azure-credentials.json |
+| ARM_TENANT_ID | Azure Tenant ID | Azure-credentials.json |
 
 ### Optional Configuration
 
@@ -2454,7 +2517,7 @@ three-horizons-accelerator-v4/
 |----------|---------|-------------|
 | PROJECT_NAME | threehorizons | Used in all resource names |
 | ENVIRONMENT | dev | Environment (dev/staging/prod) |
-| AZURE_LOCATION | brazilsouth | Azure region |
+| Azure_LOCATION | brazilsouth | Azure region |
 | SIZING_PROFILE | small | Resource sizing (small/medium/large) |
 
 ---
@@ -2491,6 +2554,7 @@ terraform destroy
 ```
 
 Type `yes` to confirm. This will:
+
 - Delete all Azure resources
 - Remove the AKS cluster
 - Delete the resource group

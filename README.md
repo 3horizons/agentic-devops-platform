@@ -61,9 +61,13 @@ helm version      # >= 3.12
 gh --version      # >= 2.30
 
 # Authentication
+# Authentication
 az login
 gh auth login
 ```
+
+> 📘 **New to this accelerator?**
+> We strongly recommend following the **[Step-by-Step Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md)** for a detailed walkthrough.
 
 ### Quick Deploy
 

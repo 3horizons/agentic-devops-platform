@@ -7,13 +7,16 @@
 ## Quick Reference
 
 | Category | Agents | Purpose |
-|----------|--------|---------|
+| :--- | :--- | :--- |
 | [H1 Foundation](./h1-foundation/) | 8 | Core infrastructure (AKS, networking, security, databases) |
 | [H2 Enhancement](./h2-enhancement/) | 5 | Platform capabilities (GitOps, observability, developer portal) |
 | [H3 Innovation](./h3-innovation/) | 4 | Advanced features (AI/ML, SRE automation, multi-agent) |
 | [Cross-Cutting](./cross-cutting/) | 6 | Utilities (validation, migration, rollback, cost optimization) |
 
 **Total: 23 agents | 10,362 lines of specifications**
+
+> 🤖 **Looking for Chat Agents?**
+> If you want interactive help in VS Code (e.g., `@architect`, `@terraform`), see the [Copilot Agents Playbook](../AGENTS.md).
 
 ---
 
@@ -42,9 +45,9 @@ These agents add operational patterns and developer experience improvements.
 |-------|------|---------|
 | GitOps | [gitops-agent.md](./h2-enhancement/gitops-agent.md) | ArgoCD, ApplicationSets, RBAC, notifications |
 | Observability | [observability-agent.md](./h2-enhancement/observability-agent.md) | Prometheus, Grafana, Alertmanager, Loki |
-| RHDH Portal | [rhdh-portal-agent.md](./h2-enhancement/rhdh-portal-agent.md) | Red Hat Developer Hub / Backstage |
+| RHDH Portal | [RHDH-portal-agent.md](./h2-enhancement/rhdh-portal-agent.md) | Red Hat Developer Hub / Backstage |
 | Golden Paths | [golden-paths-agent.md](./h2-enhancement/golden-paths-agent.md) | Self-service templates management |
-| GitHub Runners | [github-runners-agent.md](./h2-enhancement/github-runners-agent.md) | Self-hosted GitHub Actions runners |
+| GitHub Runners | [GitHub-runners-agent.md](./h2-enhancement/github-runners-agent.md) | Self-hosted GitHub Actions runners |
 
 ### H3 Innovation - Advanced Features
 
@@ -67,7 +70,7 @@ These agents support any horizon level and can run independently.
 | Migration | [migration-agent.md](./cross-cutting/migration-agent.md) | ADO to GitHub migration |
 | Rollback | [rollback-agent.md](./cross-cutting/rollback-agent.md) | Emergency rollback procedures |
 | Cost Optimization | [cost-optimization-agent.md](./cross-cutting/cost-optimization-agent.md) | Cost analysis, rightsizing |
-| GitHub App | [github-app-agent.md](./cross-cutting/github-app-agent.md) | GitHub App setup, permissions |
+| GitHub App | [GitHub-app-agent.md](./cross-cutting/github-app-agent.md) | GitHub App setup, permissions |
 | Identity Federation | [identity-federation-agent.md](./cross-cutting/identity-federation-agent.md) | Entra ID, OIDC, workload identity |
 
 ---
@@ -186,6 +189,7 @@ All agents follow a consistent specification format:
 ## Related Documentation
 
 ### Agent Documentation
+
 - [INDEX.md](./INDEX.md) - Complete agent inventory
 - [DEPLOYMENT_SEQUENCE.md](./DEPLOYMENT_SEQUENCE.md) - Step-by-step deployment guide
 - [MCP_SERVERS_GUIDE.md](./MCP_SERVERS_GUIDE.md) - MCP server setup instructions
@@ -193,6 +197,7 @@ All agents follow a consistent specification format:
 - [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) - Visual dependency map
 
 ### Main Documentation
+
 - [Deployment Guide](../docs/guides/DEPLOYMENT_GUIDE.md) - Complete deployment instructions
 - [Architecture Guide](../docs/guides/ARCHITECTURE_GUIDE.md) - Three Horizons architecture
 - [Troubleshooting Guide](../docs/guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
@@ -203,6 +208,7 @@ All agents follow a consistent specification format:
 ## Support
 
 For questions or issues:
+
 - **GitHub Issues:** [Create Issue](https://github.com/paulanunes85/three-horizons-accelerator-v4/issues)
 
 ---

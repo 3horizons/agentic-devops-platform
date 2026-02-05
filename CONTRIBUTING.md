@@ -35,11 +35,14 @@ This project follows a standard code of conduct. Please be respectful and constr
 
 1. Fork the repository on GitHub
 2. Clone your fork:
+
    ```bash
    git clone https://github.com/YOUR-USERNAME/three-horizons-accelerator-v4.git
    cd three-horizons-accelerator-v4
    ```
+
 3. Add upstream remote:
+
    ```bash
    git remote add upstream https://github.com/ORIGINAL-OWNER/three-horizons-accelerator-v4.git
    ```
@@ -61,8 +64,8 @@ Pre-commit hooks ensure code quality and security before commits. This is the mo
 **What the hooks check:**
 
 | Category | Checks |
-|----------|--------|
-| Terraform | Format, validate, TFLint, TFSec, Checkov, terraform-docs |
+| :--- | :--- |
+| Terraform | Format, validate, TFLint, TFSec, Checkov, Terraform-docs |
 | Shell | ShellCheck, shfmt formatting |
 | Kubernetes | Kubeconform validation |
 | YAML/JSON | Syntax validation, yamllint |
@@ -135,6 +138,7 @@ type(scope): description
 ```
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation
@@ -145,6 +149,7 @@ Types:
 - `infra`: Infrastructure changes
 
 Examples:
+
 ```
 feat(aks): add support for spot node pools
 
@@ -312,11 +317,12 @@ shellcheck scripts/*.sh
 ### Documentation Files
 
 | File | Purpose |
-|------|---------|
-| README.md | Project overview |
-| agents/README.md | Agent documentation |
-| docs/guides/*.md | Comprehensive guides |
-| module/README.md | Module-specific docs |
+| :--- | :--- |
+| `README.md` | Project overview |
+| `AGENTS.md` | **Copilot Agents Playbook** (VS Code) |
+| `agents/README.md` | **Deployment Agents Index** (IssueOps) |
+| `docs/guides/*.md` | Comprehensive guides |
+| `module/README.md` | Module-specific docs |
 
 ### Documentation Style
 
@@ -335,6 +341,7 @@ shellcheck scripts/*.sh
 ## Recognition
 
 Contributors will be recognized in:
+
 - Release notes
 - CONTRIBUTORS.md (for significant contributions)
 - Project documentation

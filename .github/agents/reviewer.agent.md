@@ -2,11 +2,9 @@
 name: reviewer
 description: Specialist in Code Quality, Best Practices, and Constructive Feedback.
 tools:
-  - codebase
+  - read
   - search
-  - problems
-user-invokable: true
-disable-model-invocation: false
+infer: false
 handoffs:
   - label: "Security Deep Dive"
     agent: security

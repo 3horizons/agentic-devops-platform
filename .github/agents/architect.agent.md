@@ -2,11 +2,9 @@
 name: architect
 description: Specialist in Solution Design, Patterns, and the Azure Well-Architected Framework.
 tools:
-  - codebase
+  - read
   - search
-  - problems
-user-invokable: true
-disable-model-invocation: true
+infer: false
 handoffs:
   - label: "Implementation (IaC)"
     agent: terraform
