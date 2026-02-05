@@ -1071,11 +1071,12 @@ enable_h3 = false
 # - large:  7 nodes, 16 vCPU each, good for production
 # - xlarge: 10 nodes, 32 vCPU each, good for large production
 #
-# Estimated monthly costs (USD):
-# - small:  ~$300-500/month
-# - medium: ~$800-1200/month
-# - large:  ~$2000-3000/month
-# - xlarge: ~$5000-8000/month
+#
+# Sizing Implications:
+# - small: Minimal resources for testing
+# - medium: Balanced performance
+# - large: Production capacity
+# - xlarge: High throughput workloads
 
 sizing_profile = "small"
 
@@ -1113,12 +1114,12 @@ subnet_config = {
 
 # Enable Microsoft Defender for Cloud
 # Provides security recommendations and threat detection
-# Cost: Varies based on resources monitored
+# Cost: Additional charges apply per resource
 enable_defender = true
 
 # Enable Microsoft Purview
 # Provides data governance and classification
-# Cost: ~$0.25/asset scanned
+# Cost: Additional charges apply per scan
 enable_purview = true
 
 # Enable private AKS cluster
@@ -1211,7 +1212,7 @@ This is where we actually create Azure resources! In this step, we'll:
 > ⚠️ **Cost Warning!**
 >
 > This step will create Azure resources that **cost money**.
-> With the "small" sizing profile, expect ~$10-20/day.
+> Please verify your subscription limits and credits.
 >
 > Make sure you have budget approval before proceeding!
 
