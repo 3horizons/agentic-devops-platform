@@ -7,8 +7,6 @@ tools:
   - terminalCommand
   - search
   - problems
-user-invokable: true
-disable-model-invocation: false
 handoffs:
   - label: "Code Review"
     agent: reviewer

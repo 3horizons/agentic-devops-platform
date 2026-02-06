@@ -2,14 +2,10 @@
 name: devops
 description: Specialist in DevOps operations, CI/CD pipelines, and Kubernetes orchestration.
 tools:
-  - codebase
-  - edit/editFiles
-  - terminalCommand
-  - search
-  - githubRepo
-  - problems
-user-invokable: true
-disable-model-invocation: false
+  - view_file
+  - run_command
+  - grep_search
+  - list_dir
 handoffs:
   - label: "Security Review"
     agent: security

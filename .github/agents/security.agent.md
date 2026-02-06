@@ -5,8 +5,6 @@ tools:
   - codebase
   - search
   - problems
-user-invokable: true
-disable-model-invocation: false
 handoffs:
   - label: "Remediate Findings"
     agent: devops

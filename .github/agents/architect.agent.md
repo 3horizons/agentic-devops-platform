@@ -2,8 +2,9 @@
 name: architect
 description: Specialist in Solution Design, Patterns, and the Azure Well-Architected Framework.
 tools:
-  - read
-  - search
+  - view_file
+  - grep_search
+  - list_dir
 infer: false
 handoffs:
   - label: "Implementation (IaC)"
