@@ -2,17 +2,12 @@
 name: reviewer
 description: Specialist in Code Quality, Best Practices, and Constructive Feedback.
 tools:
-  - read
-  - search
-infer: false
+  - view_file
+  - grep_search
 handoffs:
   - label: "Security Deep Dive"
     agent: security
     prompt: "Perform a deeper security analysis on the flagged issues."
-    send: false
-  - label: "Test Coverage"
-    agent: test
-    prompt: "Verify if unit tests cover these changes."
     send: false
 ---
 

@@ -100,7 +100,7 @@ jobs:
         run: |
           cd terraform
           terraform fmt -check -recursive -diff
-        continue-on-error: true  # Format is a soft check - warns but doesn't block
+        continue-on-error: true # Format is a soft check - warns but doesn't block
 
       - name: Terraform Init
         id: init
@@ -165,7 +165,7 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
           working_directory: terraform
-          soft_fail: false  # Block pipeline on security issues
+          soft_fail: false # Block pipeline on security issues
           format: sarif
           sarif_file: tfsec.sarif
 
@@ -174,7 +174,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: tfsec.sarif
-        continue-on-error: true  # Upload failure shouldn't block CI
+        continue-on-error: true # Upload failure shouldn't block CI
 
   # ===========================================================================
   # CHECKOV SECURITY SCAN
@@ -196,7 +196,7 @@ jobs:
           framework: terraform
           output_format: cli,sarif
           output_file_path: console,checkov.sarif
-          soft_fail: false  # Block pipeline on security issues
+          soft_fail: false # Block pipeline on security issues
           skip_check: CKV_AZURE_35,CKV_AZURE_59,CKV2_AZURE_1,CKV2_AZURE_18
 
       - name: Upload SARIF
@@ -204,7 +204,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: checkov.sarif
-        continue-on-error: true  # Upload failure shouldn't block CI
+        continue-on-error: true # Upload failure shouldn't block CI
 
   # ===========================================================================
   # INFRACOST - COST ESTIMATION
@@ -237,14 +237,14 @@ jobs:
           infracost breakdown --path=base/terraform --format=json --out-file=/tmp/infracost-base.json || true
           infracost breakdown --path=terraform --format=json --out-file=/tmp/infracost.json
           infracost diff --path=terraform --format=json --compare-to=/tmp/infracost-base.json --out-file=/tmp/infracost-diff.json || true
-        continue-on-error: true  # Cost estimation is informational only
+        continue-on-error: true # Cost estimation is informational only
 
       - name: Post Infracost Comment
         uses: infracost/actions/comment@v1
         with:
           path: /tmp/infracost-diff.json
           behavior: update
-        continue-on-error: true  # PR comment failure shouldn't block CI
+        continue-on-error: true # PR comment failure shouldn't block CI
 
   # ===========================================================================
   # KUBERNETES VALIDATION
@@ -287,7 +287,7 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v4
         with:
-          version: 'v3.14.0'
+          version: "v3.14.0"
 
       - name: Validate Helm Charts
         run: |
@@ -401,7 +401,7 @@ jobs:
             **/*.md
             !**/node_modules/**
             !golden-paths/**
-        continue-on-error: true  # Documentation lint is a soft check
+        continue-on-error: true # Documentation lint is a soft check
 
       - name: Check Links
         uses: lycheeverse/lychee-action@v2
@@ -434,7 +434,7 @@ jobs:
 
       - name: Run yamllint
         run: yamllint -c .yamllint.yml deploy/ argocd/ config/ --format github
-        continue-on-error: true  # YAML lint is a soft check for style issues
+        continue-on-error: true # YAML lint is a soft check for style issues
 
   # ===========================================================================
   # AGENTS VALIDATION
@@ -464,11 +464,11 @@ jobs:
               fi
             fi
           done
-          if [ -f "apm.yml" ]; then
-            if python3 -c "import yaml; yaml.safe_load(open('apm.yml'))" 2>/dev/null; then
-              echo "- OK: apm.yml" >> $GITHUB_STEP_SUMMARY
+          if [ -f "config/apm.yml" ]; then
+            if python3 -c "import yaml; yaml.safe_load(open('config/apm.yml'))" 2>/dev/null; then
+              echo "- OK: config/apm.yml" >> $GITHUB_STEP_SUMMARY
             else
-              echo "- FAIL: apm.yml - Invalid YAML" >> $GITHUB_STEP_SUMMARY
+              echo "- FAIL: config/apm.yml - Invalid YAML" >> $GITHUB_STEP_SUMMARY
               ERRORS=$((ERRORS+1))
             fi
           fi
@@ -510,7 +510,7 @@ jobs:
           results_file: scorecard.sarif
           results_format: sarif
           publish_results: true
-        continue-on-error: true  # Informational only - scorecard results don't block CI
+        continue-on-error: true # Informational only - scorecard results don't block CI
 
   # ===========================================================================
   # CI SUMMARY

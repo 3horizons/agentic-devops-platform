@@ -4,7 +4,7 @@ import sys
 import re
 from pathlib import Path
 
-AGENTS_DIR = Path(".github/agents")
+AGENTS_DIR = Path(__file__).resolve().parents[4] / ".github" / "agents"
 REQUIRED_FIELDS = ["name", "description", "tools", "handoffs"]
 REQUIRED_SECTIONS = ["# Identity", "# Capabilities", "# Skill Set", "# Boundaries"]
 

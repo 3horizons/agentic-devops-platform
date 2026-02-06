@@ -7,12 +7,12 @@ on:
   push:
     branches: [main]
     paths:
-      - 'terraform/**'
-      - 'deploy/**'
+      - "terraform/**"
+      - "deploy/**"
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Target environment'
+        description: "Target environment"
         required: true
         type: choice
         options:
@@ -20,7 +20,7 @@ on:
           - staging
           - prod
       horizon:
-        description: 'Horizon to deploy'
+        description: "Horizon to deploy"
         required: true
         type: choice
         options:
@@ -29,7 +29,7 @@ on:
           - h3-innovation
           - all
       dry_run:
-        description: 'Dry run (plan only)'
+        description: "Dry run (plan only)"
         required: false
         type: boolean
         default: true
@@ -131,7 +131,6 @@ jobs:
       (needs.prepare.outputs.horizon == 'h2-enhancement' || needs.prepare.outputs.horizon == 'all') &&
       (needs.deploy-h1.result == 'success' || needs.deploy-h1.result == 'skipped')
     environment: ${{ needs.prepare.outputs.environment }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -182,7 +181,6 @@ jobs:
       (needs.prepare.outputs.horizon == 'h3-innovation' || needs.prepare.outputs.horizon == 'all') &&
       (needs.deploy-h2.result == 'success' || needs.deploy-h2.result == 'skipped')
     environment: ${{ needs.prepare.outputs.environment }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -219,7 +217,7 @@ jobs:
 
       - name: Run Validation Script
         run: |
-          ./scripts/validate-deployment.sh \
+          ./.github/skills/validation-scripts/scripts/validate-deployment.sh \
             --environment ${{ needs.prepare.outputs.environment }} \
             --horizon ${{ needs.prepare.outputs.horizon }}
 

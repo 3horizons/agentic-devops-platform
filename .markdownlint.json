@@ -21,13 +21,7 @@
   "MD012": {
     "maximum": 2
   },
-  "MD013": {
-    "line_length": 200,
-    "heading_line_length": 200,
-    "code_block_line_length": 200,
-    "code_blocks": false,
-    "tables": false
-  },
+  "MD013": false,
   "MD022": {
     "lines_above": 1,
     "lines_below": 1

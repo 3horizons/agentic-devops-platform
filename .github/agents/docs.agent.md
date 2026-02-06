@@ -6,8 +6,6 @@ tools:
   - edit/editFiles
   - search
   - githubRepo
-user-invokable: true
-disable-model-invocation: false
 handoffs:
   - label: "Technical Review"
     agent: architect

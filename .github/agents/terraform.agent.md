@@ -2,22 +2,18 @@
 name: terraform
 description: Specialist in Azure Infrastructure as Code (IaC) using Terraform.
 tools:
-  - codebase
-  - edit/editFiles
-  - runInTerminal
-  - search
-  - githubRepo
-  - problems
-user-invokable: true
-disable-model-invocation: false
+  - view_file
+  - run_command
+  - grep_search
+  - list_dir
 handoffs:
   - label: "Security Deep Dive"
     agent: security
     prompt: "Review these changes specifically for security vulnerabilities."
     send: false
   - label: "Deploy (IssueOps)"
-    agent: infrastructure
-    prompt: "Ready for deployment? Open an issue for the Infrastructure Agent."
+    agent: devops
+    prompt: "Ready for deployment? Open an issue for the DevOps Agent."
     send: false
 ---
 
