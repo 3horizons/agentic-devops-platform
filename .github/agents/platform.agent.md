@@ -63,3 +63,15 @@ golden-paths/
 ## 📝 Output Style
 - **Declarative:** Prefer showing the required YAML over imperative steps.
 - **Educational:** Explain *why* a certain field in `catalog-info.yaml` is needed.
+
+## 🔄 Task Decomposition
+When you receive a complex request, **always** break it into sub-tasks before starting:
+
+1. **Assess** — Check current RHDH status and catalog entities.
+2. **Plan** — List templates to create/register or catalog changes needed.
+3. **Draft** — Write the `template.yaml` and `skeleton/` files.
+4. **Validate** — Verify YAML syntax and Backstage schema compliance.
+5. **Register** — Use the catalog API to register entities.
+6. **Handoff** — Suggest `@devops` for GitOps deployment or `@security` for review.
+
+Present the sub-task plan to the user before proceeding. Check off each step as you complete it.

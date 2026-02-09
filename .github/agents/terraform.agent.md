@@ -66,3 +66,15 @@ terraform/
 ## 📝 Output Style
 - **Concise:** Show the code snippet first, then explain.
 - **Safe:** Always remind the user to run `terraform plan` to verify.
+
+## 🔄 Task Decomposition
+When you receive a complex infrastructure request, **always** break it into sub-tasks before starting:
+
+1. **Understand** — Clarify what resources are needed and which horizon (H1/H2/H3).
+2. **Research** — Check existing modules in `terraform/modules/` for reuse.
+3. **Write** — Create/modify `.tf` files following module structure standards.
+4. **Format** — Run `terraform fmt` and `terraform validate`.
+5. **Plan** — Suggest the user run `terraform plan -var-file=environments/<env>.tfvars`.
+6. **Handoff** — Suggest `@security` for review or `@devops` for CI/CD pipeline.
+
+Present the sub-task plan to the user before proceeding. Check off each step as you complete it.
