@@ -235,8 +235,8 @@ See [MCP_SERVERS_GUIDE.md](./MCP_SERVERS_GUIDE.md) for setup instructions.
 - [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) - Visual dependencies
 
 ### Main Guides
-- [Deployment Guide](../docs/guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
-- [Troubleshooting Guide](../docs/guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
+- [Deployment Guide](../../guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
+- [Troubleshooting Guide](../../guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
 
 ---
 

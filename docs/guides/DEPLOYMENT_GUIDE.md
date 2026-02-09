@@ -921,7 +921,7 @@ ls -la
 | Directory | Contents | Purpose |
 |-----------|----------|---------|
 | `.github/` | GitHub Actions workflows, templates | CI/CD automation |
-| `agents/` | AI agent specifications | 23 AI agent definitions |
+| `agents/` | AI agent specifications (legacy) | 23 v1 agent definitions (archived in `docs/legacy/agents_v1/`) |
 | `argocd/` | ArgoCD configurations | GitOps setup |
 | `config/` | Sizing profiles, region configs | Platform configuration |
 | `docs/` | Documentation (you're reading it!) | Guides and references |
@@ -2455,7 +2455,7 @@ three-horizons-accelerator-v4/
 │   │   └── terraform-test.yml  # Terraform tests
 │   └── ISSUE_TEMPLATE/         # Issue templates
 │
-├── agents/                     # AI Agent specifications (23 agents)
+├── .github/agents/                 # Copilot Chat Agents (10 v2 agents)
 │
 ├── argocd/                     # ArgoCD GitOps configuration
 │   ├── apps/                   # Application definitions

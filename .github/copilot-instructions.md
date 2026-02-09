@@ -57,7 +57,7 @@ This is the Three Horizons Accelerator v4.0.0 - an enterprise-grade platform acc
 | Kubernetes manifests | `deploy/kubernetes/` |
 | Helm values | `deploy/helm/` |
 | Golden Path templates | `golden-paths/` |
-| Agent specifications | `agents/` |
+| Agent specifications | `.github/agents/` |
 | Agent skills | `.github/skills/` |
 | Automation scripts | `scripts/` |
 | Documentation | `docs/` |
@@ -101,22 +101,28 @@ terraform apply
 
 ## Agent System
 
-The platform uses 23 AI agents organized by horizon for deployment orchestration, plus 17 skills for specialized CLI operations. There are also 16 Terraform modules, 22 Golden Path templates, and 28 Issue templates.
+The platform uses 10 Copilot Chat Agents (v2) in `.github/agents/` for interactive development assistance, plus 17 skills for specialized CLI operations. There are also 18 Terraform modules, 22 Golden Path templates, and 28 Issue templates. The legacy v1 system (23 deployment agents) is archived in `docs/legacy/agents_v1/`.
 
-### Agent Organization
-- **H1 Foundation**: infrastructure, networking, security, database, container-registry, defender-cloud, aro-platform, purview-governance
-- **H2 Enhancement**: gitops, observability, rhdh-portal, golden-paths, github-runners
-- **H3 Innovation**: ai-foundry, mlops-pipeline, sre-agent, multi-agent
-- **Cross-Cutting**: validation, migration, rollback, cost-optimization, github-app, identity-federation
+### Agent Organization (v2)
+- **@architect**: System architecture, AI Foundry, multi-agent design
+- **@devops**: CI/CD, GitOps, MLOps, Golden Paths, pipelines
+- **@docs**: Documentation generation and maintenance
+- **@onboarding**: New team member onboarding and guidance
+- **@platform**: RHDH portal, platform services, developer experience
+- **@reviewer**: Code review, PR analysis, quality checks
+- **@security**: Security policies, scanning, compliance
+- **@sre**: Reliability engineering, incident response, monitoring
+- **@terraform**: Infrastructure as Code, Terraform modules
+- **@test**: Test generation, validation, quality assurance
 
 ### Skills Available
 Agents can use skills from `.github/skills/` including: terraform-cli, kubectl-cli, azure-cli, argocd-cli, helm-cli, github-cli, oc-cli, validation-scripts, and more.
 
 ### Agent Handoffs
-Agents support handoffs for workflow orchestration. Example: @infrastructure -> @networking -> @security -> @validation
+Agents support handoffs for workflow orchestration. Example: @terraform -> @devops -> @security -> @test
 
 When generating code for agents:
-- Follow the agent specification format in `agents/`
+- Follow the agent specification format in `.github/agents/`
 - Include proper YAML frontmatter with `tools`, `infer`, `skills`, `handoffs`
 - Define three-tier boundaries: ALWAYS / ASK FIRST / NEVER
 - Reference skills for CLI operations

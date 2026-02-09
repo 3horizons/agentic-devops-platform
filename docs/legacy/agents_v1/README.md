@@ -16,7 +16,7 @@
 **Total: 23 agents | 10,362 lines of specifications**
 
 > 🤖 **Looking for Chat Agents?**
-> If you want interactive help in VS Code (e.g., `@architect`, `@terraform`), see the [Copilot Agents Playbook](../AGENTS.md).
+> If you want interactive help in VS Code (e.g., `@architect`, `@terraform`), see the [Copilot Agents Playbook](../../../AGENTS.md).
 
 ---
 
@@ -198,10 +198,10 @@ All agents follow a consistent specification format:
 
 ### Main Documentation
 
-- [Deployment Guide](../docs/guides/DEPLOYMENT_GUIDE.md) - Complete deployment instructions
-- [Architecture Guide](../docs/guides/ARCHITECTURE_GUIDE.md) - Three Horizons architecture
-- [Troubleshooting Guide](../docs/guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
-- [Module Reference](../docs/guides/MODULE_REFERENCE.md) - Terraform modules details
+- [Deployment Guide](../../guides/DEPLOYMENT_GUIDE.md) - Complete deployment instructions
+- [Architecture Guide](../../guides/ARCHITECTURE_GUIDE.md) - Three Horizons architecture
+- [Troubleshooting Guide](../../guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
+- [Module Reference](../../guides/MODULE_REFERENCE.md) - Terraform modules details
 
 ---
 

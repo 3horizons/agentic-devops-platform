@@ -280,7 +280,7 @@ See [rollback-agent.md](./cross-cutting/rollback-agent.md) for detailed procedur
 ### Getting Help
 
 1. Run Validation Agent to diagnose issues
-2. Check [TROUBLESHOOTING_GUIDE.md](../docs/guides/TROUBLESHOOTING_GUIDE.md)
+2. Check [TROUBLESHOOTING_GUIDE.md](../../guides/TROUBLESHOOTING_GUIDE.md)
 3. Open a [GitHub Issue](https://github.com/paulanunes85/three-horizons-accelerator-v4/issues)
 
 ---
@@ -307,9 +307,9 @@ After completing deployment:
 - [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) - Visual dependencies
 
 ### Main Guides
-- [Deployment Guide](../docs/guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
-- [Administrator Guide](../docs/guides/ADMINISTRATOR_GUIDE.md) - Day-2 operations
-- [Troubleshooting Guide](../docs/guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
+- [Deployment Guide](../../guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
+- [Administrator Guide](../../guides/ADMINISTRATOR_GUIDE.md) - Day-2 operations
+- [Troubleshooting Guide](../../guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
 
 ---
 

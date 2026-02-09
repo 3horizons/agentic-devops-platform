@@ -251,5 +251,5 @@ az group list --query "[?starts_with(name, 'rg-')]" -o table
 ## References
 
 - [Deployment Guide](../guides/DEPLOYMENT_GUIDE.md)
-- [Validate Deployment Script](../../scripts/validate-deployment.sh)
+- [Validate Deployment Script](../../.github/skills/validation-scripts/scripts/validate-deployment.sh)
 - [Rollback Runbook](rollback-runbook.md)

@@ -265,5 +265,5 @@ terraform state list
 ## Related Documentation
 
 - [Agent Playbook](../AGENTS.md)
-- [Skills Reference](.github/skills/)
-- [Security Guidelines](docs/security/)
+- [Skills Reference](../.github/skills/)
+- [Security Guidelines](../SECURITY.md)

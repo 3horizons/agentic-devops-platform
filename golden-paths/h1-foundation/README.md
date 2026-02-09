@@ -70,4 +70,4 @@ Select any template from the RHDH portal under "Create" → "Choose a Template" 
 ## Related Documentation
 
 - [Golden Paths Overview](../README.md)
-- [RHDH Portal Agent](../../agents/h2-enhancement/rhdh-portal-agent.md)
+- [Platform Agent](../../.github/agents/platform.agent.md)

@@ -16,13 +16,16 @@ This directory contains automation scripts for the Three Horizons Platform.
 
 ### Validation Scripts
 
+> **Note:** Validation scripts are located in `.github/skills/validation-scripts/scripts/`, not in this directory.
+> They are part of the agent skills system. See [AGENTS.md](../AGENTS.md) for details.
+
 | Script | Description | Usage |
 |--------|-------------|-------|
-| `validate-config.sh` | Configuration validation | `./validate-config.sh --config terraform.tfvars` |
-| `validate-cli-prerequisites.sh` | CLI tools verification | `./validate-cli-prerequisites.sh` |
-| `validate-naming.sh` | Naming conventions check | `./validate-naming.sh` |
-| `validate-agents.sh` | Agent specifications validation | `./validate-agents.sh` |
-| `validate-deployment.sh` | Post-deployment health check | `./validate-deployment.sh --environment prod` |
+| `validate-config.sh` | Configuration validation | `.github/skills/validation-scripts/scripts/validate-config.sh --config terraform.tfvars` |
+| `validate-cli-prerequisites.sh` | CLI tools verification | `.github/skills/validation-scripts/scripts/validate-cli-prerequisites.sh` |
+| `validate-naming.sh` | Naming conventions check | `.github/skills/validation-scripts/scripts/validate-naming.sh` |
+| `validate-agents.sh` | Agent specifications validation | `.github/skills/validation-scripts/scripts/validate-agents.sh` |
+| `validate-deployment.sh` | Post-deployment health check | `.github/skills/validation-scripts/scripts/validate-deployment.sh --environment prod` |
 
 ### Setup Scripts
 

@@ -118,4 +118,4 @@ Select any template from the RHDH portal under "Create" → "Choose a Template" 
 ## Related Documentation
 
 - [Golden Paths Overview](../README.md)
-- [GitOps Agent](../../agents/h2-enhancement/gitops-agent.md)
+- [DevOps Agent](../../.github/agents/devops.agent.md)

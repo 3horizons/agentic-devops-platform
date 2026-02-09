@@ -88,5 +88,5 @@ Ensure H3 infrastructure (AI Foundry) is deployed before using these templates.
 ## Related Documentation
 
 - [Golden Paths Overview](../README.md)
-- [AI Foundry Agent](../../agents/h3-innovation/ai-foundry-agent.md)
-- [MLOps Pipeline Agent](../../agents/h3-innovation/mlops-pipeline-agent.md)
+- [Architect Agent](../../.github/agents/architect.agent.md)
+- [DevOps Agent](../../.github/agents/devops.agent.md)

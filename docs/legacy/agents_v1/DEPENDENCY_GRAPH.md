@@ -483,9 +483,9 @@ After understanding dependencies:
 - [TERRAFORM_MODULES_REFERENCE.md](./TERRAFORM_MODULES_REFERENCE.md) - Terraform modules
 
 ### Main Guides
-- [Architecture Guide](../docs/guides/ARCHITECTURE_GUIDE.md) - Three Horizons architecture
-- [Deployment Guide](../docs/guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
-- [Troubleshooting Guide](../docs/guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
+- [Architecture Guide](../../guides/ARCHITECTURE_GUIDE.md) - Three Horizons architecture
+- [Deployment Guide](../../guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
+- [Troubleshooting Guide](../../guides/TROUBLESHOOTING_GUIDE.md) - Problem resolution
 
 ---
 

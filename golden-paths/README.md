@@ -237,6 +237,6 @@ yarn dev
 
 ## Related Documentation
 
-- [RHDH Portal Agent](../agents/h2-enhancement/rhdh-portal-agent.md)
-- [Golden Paths Agent](../agents/h2-enhancement/golden-paths-agent.md)
+- [Platform Agent](../.github/agents/platform.agent.md)
+- [DevOps Agent](../.github/agents/devops.agent.md)
 - [Backstage Scaffolder](https://backstage.io/docs/features/software-templates/)

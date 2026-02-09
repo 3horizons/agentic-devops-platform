@@ -79,9 +79,9 @@ These agents are autonomous robots triggered by **GitHub Issues**. They perform 
 
 ## Agent Directories
 
-- **Copilot Agents:** Definitions located in [`.github/agents/`](./.github/agents/).
-- **Deployment Agents:** Specifications located in [`agents/`](./agents/). See [Deployment Agent Index](./agents/README.md) for details.
-- **Skills:** Reusable tools located in [`.github/skills/`](./.github/skills/).
+- **Copilot Agents:** Definitions located in [`.github/agents/`](../../.github/agents/).
+- **Legacy Deployment Agents:** Specifications archived in [`docs/legacy/agents_v1/`](../legacy/agents_v1/). See [Legacy Agent Index](../legacy/agents_v1/README.md) for details.
+- **Skills:** Reusable tools located in [`.github/skills/`](../../.github/skills/).
 
 ---
 
@@ -96,5 +96,5 @@ These agents are autonomous robots triggered by **GitHub Issues**. They perform 
 
 ## Related Documentation
 
-- [Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md)
-- [Copilot Agents Best Practices](github-copilot-agents-best-practices.md)
+- [Deployment Guide](../guides/DEPLOYMENT_GUIDE.md)
+- [Copilot Agents Best Practices](../guides/copilot-agents-best-practices.md)

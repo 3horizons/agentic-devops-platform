@@ -319,8 +319,8 @@ shellcheck scripts/*.sh
 | File | Purpose |
 | :--- | :--- |
 | `README.md` | Project overview |
-| `AGENTS.md` | **Copilot Agents Playbook** (VS Code) |
-| `agents/README.md` | **Deployment Agents Index** (IssueOps) |
+| `AGENTS.md` | **Agent System Overview** (10 Copilot Chat Agents) |
+| `docs/legacy/agents_v1/README.md` | **Legacy Deployment Agents** (23 v1 agents, archived) |
 | `docs/guides/*.md` | Comprehensive guides |
 | `module/README.md` | Module-specific docs |
 

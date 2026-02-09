@@ -546,7 +546,7 @@ naming (no dependencies)
 After understanding the module mapping:
 
 1. **Deploy modules** - Follow [DEPLOYMENT_SEQUENCE.md](./DEPLOYMENT_SEQUENCE.md)
-2. **Detailed module docs** - See [Module Reference Guide](../docs/guides/MODULE_REFERENCE.md)
+2. **Detailed module docs** - See [Module Reference Guide](../../guides/MODULE_REFERENCE.md)
 3. **Understand dependencies** - Check [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md)
 4. **Validate deployment** - Run `./scripts/validate-agents.sh`
 
@@ -562,9 +562,9 @@ After understanding the module mapping:
 - [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) - Visual dependencies
 
 ### Main Guides
-- [Module Reference Guide](../docs/guides/MODULE_REFERENCE.md) - Detailed module documentation
-- [Deployment Guide](../docs/guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
-- [Architecture Guide](../docs/guides/ARCHITECTURE_GUIDE.md) - Three Horizons architecture
+- [Module Reference Guide](../../guides/MODULE_REFERENCE.md) - Detailed module documentation
+- [Deployment Guide](../../guides/DEPLOYMENT_GUIDE.md) - Full deployment instructions
+- [Architecture Guide](../../guides/ARCHITECTURE_GUIDE.md) - Three Horizons architecture
 
 ---
 
