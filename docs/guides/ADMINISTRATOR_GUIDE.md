@@ -1541,6 +1541,23 @@ For specific troubleshooting scenarios, see the [Troubleshooting Guide](./TROUBL
 
 ---
 
+## 🤖 Using Copilot Agents for Administration
+
+The platform includes AI agents that assist with day-2 operations:
+
+| Task | Agent | Example Prompt |
+|------|-------|---------------|
+| Monitoring & alerts | `@sre` | "Show me the current error rate and latency for all services" |
+| Security operations | `@security` | "Audit RBAC assignments on the AKS cluster" |
+| Scaling decisions | `@terraform` | "Help me scale the AKS nodepool to 5 nodes" |
+| Cost optimization | `@architect` | "Suggest cost savings for our current Azure setup" |
+| Pipeline management | `@devops` | "Help me set up a new GitHub Actions workflow" |
+| Documentation updates | `@docs` | "Update the README to reflect the new module we added" |
+
+> **Tip:** Use `@sre` as your daily operations companion. It will triage issues, check metrics, and suggest fixes.
+
+---
+
 **Document Version:** 2.0.0
 **Last Updated:** December 2025
 **Maintainer:** Platform Engineering Team

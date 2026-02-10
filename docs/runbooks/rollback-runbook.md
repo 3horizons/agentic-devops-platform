@@ -4,6 +4,11 @@
 
 This runbook provides procedures for rolling back deployments on the Three Horizons Platform. Use these procedures when a deployment causes issues that require reverting to a previous state.
 
+> 🤖 **Copilot Agents can help!**
+> - Ask `@devops` for ArgoCD rollback: "Help me rollback app-name to its previous version"
+> - Ask `@terraform` for infrastructure rollback: "Show me how to revert the last Terraform state change"
+> - Ask `@sre` to verify health after rollback: "Check if all services are healthy after the rollback"
+
 ## Rollback Decision Matrix
 
 | Issue Type | Rollback Method | Time to Rollback |

@@ -4,6 +4,11 @@
 
 This runbook provides procedures for responding to production incidents on the Three Horizons Platform.
 
+> 🤖 **Copilot Agents can help!**
+> - Ask `@sre` to run diagnostics: "Analyze the failing pods in namespace X"
+> - Ask `@security` if you suspect a security breach: "Check for unauthorized access patterns"
+> - Ask `@devops` to deploy a hotfix: "Help me push an emergency fix via ArgoCD"
+
 ## Severity Classification
 
 | Severity | Impact | Response Time | Examples |

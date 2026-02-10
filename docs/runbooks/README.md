@@ -90,3 +90,19 @@ kubectl get events -A --sort-by='.lastTimestamp' | tail -20
 - [Administrator Guide](../guides/ADMINISTRATOR_GUIDE.md)
 - [Troubleshooting Guide](../guides/TROUBLESHOOTING_GUIDE.md)
 - [Architecture Guide](../guides/ARCHITECTURE_GUIDE.md)
+
+---
+
+## 🤖 Using Copilot Agents with Runbooks
+
+The Three Horizons platform includes **Copilot Chat Agents** that can assist you during operations. Use them alongside these runbooks for faster resolution.
+
+| Scenario | Agent | How to Use |
+|----------|-------|----------|
+| Incident response & triage | `@sre` | "Help me diagnose why pods are crashing in namespace X" |
+| Security incidents | `@security` | "Check RBAC misconfigurations on the AKS cluster" |
+| Rollback & deployment issues | `@devops` | "Help me rollback the ArgoCD application to the previous version" |
+| Infrastructure recovery | `@terraform` | "Show me the Terraform plan to recreate the networking module" |
+| Log & metric analysis | `@sre` | "Query Prometheus for error rate in the last 30 minutes" |
+
+> **Tip:** Type `@sre` in Copilot Chat as your on-call companion for any runbook. The agent will decompose your request into sub-tasks and guide you step by step.

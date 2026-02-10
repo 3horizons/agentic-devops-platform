@@ -4,6 +4,12 @@
 
 This runbook provides procedures for deploying the Three Horizons Platform. Use this for initial deployments, updates, and environment provisioning.
 
+> 🤖 **Copilot Agents can help!**
+> - Ask `@onboarding` for a guided first-time setup
+> - Ask `@terraform` to validate your `.tfvars` before applying
+> - Ask `@devops` to help with ArgoCD sync issues during deployment
+> - Ask `@sre` to verify platform health after deployment
+
 ## Prerequisites
 
 ### Required Tools
