@@ -2376,6 +2376,23 @@ az keyvault secret list --vault-name $KV   # Key Vault secrets
 
 ---
 
+## 🤖 Using Copilot Agents for Troubleshooting
+
+Before diving into manual troubleshooting, try asking a Copilot Agent:
+
+| Problem Area | Agent | Example Prompt |
+|-------------|-------|---------------|
+| Pod crashes & errors | `@sre` | "Pods in namespace X are CrashLoopBackOff, help me diagnose" |
+| Terraform errors | `@terraform` | "My terraform plan fails with error Y, help me fix" |
+| ArgoCD sync failures | `@devops` | "ArgoCD app is stuck in Progressing, what should I check?" |
+| Network connectivity | `@sre` | "Service A can't reach Service B, help me debug" |
+| Security findings | `@security` | "tfsec found High severity issues, help me remediate" |
+| Performance issues | `@sre` | "Latency is above SLO, help me find the bottleneck" |
+
+> **Tip:** `@sre` follows a systematic approach: **Triage → Observe → Hypothesize → Investigate → Mitigate → Root Cause**. It will walk you through each step.
+
+---
+
 **Document Version:** 2.0.0
 **Last Updated:** December 2025
 **Maintainer:** Platform Engineering Team

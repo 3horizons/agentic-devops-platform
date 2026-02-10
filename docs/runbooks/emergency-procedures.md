@@ -4,6 +4,11 @@
 
 This runbook contains critical emergency procedures for the Three Horizons Platform. Use these procedures when immediate action is required to protect the platform, data, or users.
 
+> 🤖 **Copilot Agents can help during emergencies!**
+> - Ask `@sre` for rapid diagnostics: "All pods are crashing, help me triage"
+> - Ask `@security` for security emergencies: "We may have compromised credentials, guide me through rotation"
+> - Ask `@terraform` for infrastructure emergencies: "The AKS cluster is unreachable, help me recover"
+
 ## Emergency Contact Chain
 
 1. **Platform On-Call**: PagerDuty rotation

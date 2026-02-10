@@ -622,3 +622,16 @@ Add buffer: 3 × 1.3 = 4 nodes recommended
 - [Kubernetes Resource Management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 - [Azure OpenAI Quotas](https://docs.microsoft.com/azure/cognitive-services/openai/quotas-limits)
 - [Sizing Profiles](../../config/sizing-profiles.yaml)
+
+---
+
+## 🤖 Using Copilot Agents for Performance Tuning
+
+| Task | Agent | Example Prompt |
+|------|-------|---------------|
+| Prometheus metric analysis | `@sre` | "Query Prometheus for p99 latency over the last 24h" |
+| AKS node tuning | `@terraform` | "Help me adjust the AKS nodepool SKU and autoscaler settings" |
+| Resource limits review | `@sre` | "Which pods are over their memory limits?" |
+| Cost vs performance analysis | `@architect` | "Evaluate trade-offs between Standard_D4s_v3 and Standard_D8s_v3" |
+
+> **Tip:** Ask `@sre` to analyze metrics before making tuning decisions — data-driven changes are safer.

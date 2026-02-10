@@ -1320,6 +1320,20 @@ For implementation details, see the [Deployment Guide](./DEPLOYMENT_GUIDE.md).
 
 ---
 
+## 🤖 Using Copilot Agents for Architecture
+
+| Task | Agent | Example Prompt |
+|------|-------|---------------|
+| System design | `@architect` | "Design a microservice architecture for order processing" |
+| WAF review | `@architect` | "Evaluate this design against the Reliability WAF pillar" |
+| Module structure | `@terraform` | "Help me decompose this into reusable Terraform modules" |
+| Security review | `@security` | "Review this architecture for Zero Trust compliance" |
+| ADR creation | `@docs` | "Create an ADR for choosing Cosmos DB over PostgreSQL" |
+
+> **Tip:** `@architect` will create Mermaid diagrams, evaluate trade-offs, and write ADRs. It automatically hands off to `@terraform` for implementation and `@security` for review.
+
+---
+
 **Document Version:** 2.0.0
 **Last Updated:** December 2025
 **Maintainer:** Platform Engineering Team
