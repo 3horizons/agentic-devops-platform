@@ -41,20 +41,7 @@ kubectl apply -f app-of-apps/root-application.yaml
 
 ## Application Hierarchy
 
-```
-root-application (ApplicationSet)
-├── gatekeeper (Helm)
-│   ├── gatekeeper-templates
-│   └── gatekeeper-constraints
-├── external-secrets (Helm)
-│   └── cluster-secret-store
-├── observability (Helm)
-│   ├── prometheus
-│   ├── grafana
-│   └── loki
-└── platform-apps (Directory)
-    └── [Team applications]
-```
+![Application Hierarchy](docs/assets/argocd-app-hierarchy.svg)
 
 ## Sync Policies
 

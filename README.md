@@ -24,27 +24,7 @@ The **Three Horizons Implementation Accelerator** is a complete kit of Infrastru
 
 ## Three Horizons Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        H3: INNOVATION                                    │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │ AI Foundry  │  │ SRE Agent   │  │ Multi-Agent │  │   MLOps     │    │
-│  │   Agents    │  │ Integration │  │  Systems    │  │  Pipeline   │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                        H2: ENHANCEMENT                                   │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │   ArgoCD    │  │    RHDH     │  │Observability│  │   GitOps    │    │
-│  │   GitOps    │  │   Portal    │  │    Stack    │  │  Workflows  │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘    │
-├─────────────────────────────────────────────────────────────────────────┤
-│                        H1: FOUNDATION                                    │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │     AKS     │  │  Network    │  │  Security   │  │     ACR     │    │
-│  │   Cluster   │  │  VNet/NSG   │  │  KeyVault   │  │  Registry   │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘    │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+![Three Horizons Architecture](docs/assets/three-horizons-architecture.svg)
 
 ---
 
