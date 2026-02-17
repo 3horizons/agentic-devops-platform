@@ -51,36 +51,7 @@ This Administrator Guide provides everything you need to **operate and maintain*
 
 Keep this handy for daily operations:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    QUICK REFERENCE - COMMON COMMANDS                         │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  CLUSTER ACCESS:                                                             │
-│  az aks get-credentials --resource-group rg-XXX --name aks-XXX              │
-│                                                                              │
-│  HEALTH CHECK:                                                               │
-│  kubectl get nodes                    # Check node health                   │
-│  kubectl get pods -A | grep -v Running  # Find problem pods                 │
-│  kubectl top nodes                    # Check resource usage                │
-│                                                                              │
-│  ARGOCD:                                                                     │
-│  kubectl port-forward svc/argocd-server -n argocd 8080:443                  │
-│  # Then visit https://localhost:8080                                        │
-│                                                                              │
-│  GRAFANA:                                                                    │
-│  kubectl port-forward svc/prometheus-grafana -n observability 3000:80       │
-│  # Then visit http://localhost:3000                                         │
-│                                                                              │
-│  LOGS:                                                                       │
-│  kubectl logs -f deployment/XXX -n NAMESPACE                                │
-│  kubectl logs -f deployment/XXX -n NAMESPACE --previous  # Crashed pod     │
-│                                                                              │
-│  RESTART:                                                                    │
-│  kubectl rollout restart deployment/XXX -n NAMESPACE                        │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+![Quick Reference](../assets/admin-quick-reference.svg)
 
 ---
 
@@ -300,36 +271,7 @@ echo ""
 
 Print this and check off each item:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    DAILY OPERATIONS CHECKLIST                                │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  MORNING (Start of Day):                                                    │
-│  □ Run health check script                                                  │
-│  □ Review overnight alerts in Slack/PagerDuty                              │
-│  □ Check Grafana dashboards for anomalies                                  │
-│  □ Verify last night's backup completed                                    │
-│                                                                              │
-│  MIDDAY:                                                                    │
-│  □ Review ArgoCD sync status                                               │
-│  □ Check for pending deployments                                           │
-│  □ Monitor resource usage trends                                           │
-│                                                                              │
-│  END OF DAY:                                                                │
-│  □ Review Defender for Cloud alerts                                        │
-│  □ Check cost dashboard for anomalies                                      │
-│  □ Document any issues encountered                                         │
-│  □ Handoff notes for on-call (if applicable)                              │
-│                                                                              │
-│  WEEKLY (Pick a day):                                                       │
-│  □ Review security alerts summary                                          │
-│  □ Check certificate expiry dates                                          │
-│  □ Review and clean up unused resources                                    │
-│  □ Test backup restoration (monthly)                                       │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+![Daily Operations Checklist](../assets/admin-daily-checklist.svg)
 
 ---
 
@@ -571,23 +513,7 @@ watch kubectl get nodes
 
 **Understanding the scaling process:**
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                    NODE SCALING TIMELINE                                    │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  T+0      │ Scale command issued                                           │
-│  T+1 min  │ Azure starts provisioning VM                                   │
-│  T+3 min  │ VM is running, joining cluster                                │
-│  T+4 min  │ Node appears as "NotReady"                                     │
-│  T+5 min  │ Node is "Ready", pods can be scheduled                        │
-│           │                                                                 │
-│  TOTAL: ~5 minutes to add a node                                           │
-│                                                                             │
-│  ⚠️ If you need capacity NOW, plan ahead!                                  │
-│                                                                             │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+![Node Scaling Timeline](../assets/admin-node-scaling-timeline.svg)
 
 ### 4.3 Configuring Horizontal Pod Autoscaler
 
@@ -736,43 +662,7 @@ velero restore describe <restore-name>
 
 **Disaster Recovery Runbook:**
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                    DISASTER RECOVERY STEPS                                  │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  1. ASSESS THE SITUATION                                                   │
-│     □ What was lost? (cluster, namespace, specific app?)                   │
-│     □ What's the Recovery Point Objective (RPO)?                          │
-│     □ What's the Recovery Time Objective (RTO)?                           │
-│                                                                             │
-│  2. IDENTIFY THE BACKUP                                                    │
-│     □ List available backups: velero backup get                           │
-│     □ Choose appropriate backup (before incident)                         │
-│     □ Verify backup integrity: velero backup describe <name>              │
-│                                                                             │
-│  3. COMMUNICATE                                                            │
-│     □ Notify stakeholders of recovery timeline                            │
-│     □ Update status page                                                   │
-│     □ Create incident ticket                                               │
-│                                                                             │
-│  4. RESTORE                                                                │
-│     □ If cluster lost: Recreate with Terraform                            │
-│     □ Restore Velero itself (bootstrap)                                   │
-│     □ Restore workloads from backup                                        │
-│                                                                             │
-│  5. VERIFY                                                                 │
-│     □ Run health check script                                              │
-│     □ Verify all applications are running                                  │
-│     □ Test critical user flows                                             │
-│                                                                             │
-│  6. POST-INCIDENT                                                          │
-│     □ Write post-mortem                                                    │
-│     □ Update procedures if needed                                          │
-│     □ Close incident ticket                                                │
-│                                                                             │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+![Disaster Recovery Steps](../assets/admin-dr-steps.svg)
 
 ---
 
@@ -867,42 +757,7 @@ kubectl get secret my-app-secrets -n my-app -o jsonpath='{.data.DATABASE_PASSWOR
 
 **Secret rotation procedure:**
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                    SECRET ROTATION PROCEDURE                                │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  1. CREATE NEW VERSION IN KEY VAULT                                        │
-│     az keyvault secret set \                                               │
-│       --vault-name kv-XXX \                                                │
-│       --name "database-password" \                                         │
-│       --value "new-password-456"                                           │
-│                                                                             │
-│  2. WAIT FOR ESO TO SYNC (up to 1 hour)                                   │
-│     OR force immediate sync:                                               │
-│     kubectl annotate externalsecret my-app-secrets \                       │
-│       force-sync=$(date +%s) -n my-app                                    │
-│                                                                             │
-│  3. VERIFY SECRET UPDATED                                                  │
-│     kubectl get secret my-app-secrets -n my-app \                         │
-│       -o jsonpath='{.metadata.annotations}'                                │
-│                                                                             │
-│  4. RESTART APPLICATIONS (if they don't watch for changes)                │
-│     kubectl rollout restart deployment/my-app -n my-app                   │
-│                                                                             │
-│  5. VERIFY APPLICATION HEALTH                                              │
-│     kubectl get pods -n my-app                                             │
-│     kubectl logs deployment/my-app -n my-app | tail -20                   │
-│                                                                             │
-│  6. DISABLE OLD SECRET VERSION (optional, after verification)              │
-│     az keyvault secret set-attributes \                                    │
-│       --vault-name kv-XXX \                                                │
-│       --name "database-password" \                                         │
-│       --version <old-version-id> \                                         │
-│       --enabled false                                                       │
-│                                                                             │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+![Secret Rotation Procedure](../assets/admin-secret-rotation.svg)
 
 ---
 
@@ -1146,44 +1001,7 @@ az monitor activity-log list \
 
 ### 10.2 Security Incident Response
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                    SECURITY INCIDENT RESPONSE                               │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  SEVERITY 1 (Critical) - Immediate Response                                │
-│  Examples: Data breach, active attack, compromised credentials             │
-│                                                                             │
-│  IMMEDIATE ACTIONS:                                                         │
-│  □ Alert security team and management                                      │
-│  □ Isolate affected systems (if safe to do so)                            │
-│  □ Preserve evidence (don't delete logs)                                   │
-│  □ Rotate compromised credentials                                          │
-│  □ Engage incident response retainer (if available)                        │
-│                                                                             │
-│  ──────────────────────────────────────────────────────────────────────────│
-│                                                                             │
-│  SEVERITY 2 (High) - Same Day Response                                     │
-│  Examples: Vulnerability in production, suspicious activity                │
-│                                                                             │
-│  ACTIONS:                                                                   │
-│  □ Assess scope and impact                                                 │
-│  □ Implement mitigation if available                                       │
-│  □ Create incident ticket                                                  │
-│  □ Schedule remediation                                                    │
-│                                                                             │
-│  ──────────────────────────────────────────────────────────────────────────│
-│                                                                             │
-│  SEVERITY 3 (Medium) - This Week Response                                  │
-│  Examples: Missing patches, configuration drift                            │
-│                                                                             │
-│  ACTIONS:                                                                   │
-│  □ Document in backlog                                                     │
-│  □ Schedule for next sprint                                                │
-│  □ Monitor for escalation                                                  │
-│                                                                             │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+![Security Incident Response](../assets/admin-security-incident.svg)
 
 ---
 
@@ -1200,37 +1018,7 @@ az monitor activity-log list \
 
 ### 11.2 Pre-Maintenance Checklist
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                    PRE-MAINTENANCE CHECKLIST                                │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  1 WEEK BEFORE:                                                            │
-│  □ Send maintenance notification to stakeholders                           │
-│  □ Review change request / approval                                        │
-│  □ Test procedure in staging environment                                   │
-│  □ Verify backup is current                                                │
-│                                                                             │
-│  1 DAY BEFORE:                                                             │
-│  □ Send reminder notification                                              │
-│  □ Confirm on-call personnel                                               │
-│  □ Review rollback procedure                                               │
-│  □ Prepare status page update                                              │
-│                                                                             │
-│  DURING MAINTENANCE:                                                        │
-│  □ Update status page to "maintenance"                                     │
-│  □ Execute change following procedure                                      │
-│  □ Document any deviations                                                 │
-│  □ Run health checks after each step                                       │
-│                                                                             │
-│  AFTER MAINTENANCE:                                                         │
-│  □ Run full health check                                                   │
-│  □ Update status page to "operational"                                     │
-│  □ Send completion notification                                            │
-│  □ Document lessons learned                                                │
-│                                                                             │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+![Pre-Maintenance Checklist](../assets/admin-pre-maintenance.svg)
 
 ---
 
@@ -1247,43 +1035,7 @@ az monitor activity-log list \
 
 ### 12.2 Incident Response Procedure
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                    INCIDENT RESPONSE TIMELINE                               │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  T+0 min     DETECT                                                        │
-│              • Alert received or customer report                           │
-│              • Open incident channel (#inc-YYYYMMDD-XXX)                   │
-│              • Page incident commander (if SEV1/2)                         │
-│                                                                             │
-│  T+5 min     TRIAGE                                                        │
-│              • Assess severity                                              │
-│              • Identify affected systems                                    │
-│              • Determine scope of impact                                    │
-│                                                                             │
-│  T+15 min    COMMUNICATE                                                   │
-│              • Update status page                                           │
-│              • Notify stakeholders                                          │
-│              • Assign roles (IC, Comms, Tech Lead)                         │
-│                                                                             │
-│  T+30 min    MITIGATE                                                      │
-│              • Implement quick fixes                                        │
-│              • Rollback if necessary                                        │
-│              • Scale resources if needed                                    │
-│                                                                             │
-│  T+??        RESOLVE                                                       │
-│              • Root cause addressed                                         │
-│              • Service restored                                             │
-│              • Monitoring confirms stability                               │
-│                                                                             │
-│  T+24h       POST-INCIDENT                                                 │
-│              • Write post-mortem                                            │
-│              • Identify action items                                        │
-│              • Schedule review meeting                                      │
-│                                                                             │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+![Incident Response Timeline](../assets/admin-incident-timeline.svg)
 
 ---
 

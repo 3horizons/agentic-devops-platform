@@ -511,48 +511,7 @@ kubectl top node aks-system-12345678-vmss000001
 
 **Solutions by Condition:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    NODE NOT READY - Solutions                       │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  NetworkUnavailable = True                                          │
-│  ───────────────────────                                            │
-│  Cause: CNI plugin issue, NSG blocking                              │
-│  Fix:                                                               │
-│    1. Check NSG rules allow node communication                      │
-│    2. Reimage the node (forces CNI reinstall):                      │
-│       az vmss reimage --instance-ids <ID> \                         │
-│         --name <VMSS_NAME> --resource-group <MC_RG>                 │
-│                                                                     │
-│  MemoryPressure = True                                              │
-│  ─────────────────────                                              │
-│  Cause: Workloads using too much memory                             │
-│  Fix:                                                               │
-│    1. Find memory-hungry pods:                                      │
-│       kubectl top pods -A --sort-by=memory | head -10               │
-│    2. Scale down or set memory limits                               │
-│    3. Add more nodes or use larger VM size                          │
-│                                                                     │
-│  DiskPressure = True                                                │
-│  ──────────────────                                                 │
-│  Cause: Disk full (usually container images)                        │
-│  Fix:                                                               │
-│    1. Clean up unused images:                                       │
-│       (AKS does this automatically, but you can trigger)            │
-│    2. Increase node disk size in Terraform                          │
-│    3. Use smaller container images                                  │
-│                                                                     │
-│  PIDPressure = True                                                 │
-│  ─────────────────                                                  │
-│  Cause: Too many processes (possible fork bomb or leak)             │
-│  Fix:                                                               │
-│    1. Identify pods with many processes                             │
-│    2. Check for runaway applications                                │
-│    3. Set PID limits in pod spec                                    │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Node Not Ready Solutions](../assets/ts-node-not-ready.svg)
 
 **Emergency: Cordon, Drain, and Replace Node:**
 
@@ -686,52 +645,7 @@ kubectl describe pod my-app-xxx -n my-namespace
 
 **Solutions by Event Message:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    PENDING POD - Solutions                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  "Insufficient cpu" or "Insufficient memory"                        │
-│  ───────────────────────────────────────────                        │
-│  Cause: Not enough resources on any node                            │
-│  Diagnosis:                                                         │
-│    kubectl describe nodes | grep -A 5 "Allocated resources"         │
-│  Fix:                                                               │
-│    1. Scale up nodes: az aks nodepool scale ...                     │
-│    2. Reduce pod requests in deployment                             │
-│    3. Delete unused pods to free resources                          │
-│                                                                     │
-│  "didn't match node selector"                                       │
-│  ────────────────────────────                                       │
-│  Cause: Pod requires specific node labels that don't exist          │
-│  Diagnosis:                                                         │
-│    kubectl get nodes --show-labels                                  │
-│  Fix:                                                               │
-│    1. Label a node: kubectl label node <name> <key>=<value>         │
-│    2. Remove nodeSelector from pod spec                             │
-│                                                                     │
-│  "didn't tolerate taint"                                            │
-│  ───────────────────────                                            │
-│  Cause: All nodes have taints the pod doesn't tolerate              │
-│  Diagnosis:                                                         │
-│    kubectl describe nodes | grep Taints                             │
-│  Fix:                                                               │
-│    1. Add toleration to pod spec                                    │
-│    2. Remove taint: kubectl taint node <name> <key>-                │
-│                                                                     │
-│  "pod has unbound immediate PersistentVolumeClaims"                 │
-│  ──────────────────────────────────────────────────                 │
-│  Cause: PVC can't be bound to a PV                                  │
-│  Diagnosis:                                                         │
-│    kubectl get pvc -n my-namespace                                  │
-│    kubectl describe pvc <pvc-name>                                  │
-│  Fix:                                                               │
-│    1. Check StorageClass exists                                     │
-│    2. Check storage quota                                           │
-│    3. For Azure Disk: Check disk is in same zone as pod             │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Pending Pod Solutions](../assets/ts-pending-pod.svg)
 
 ### 5.3 ImagePullBackOff
 
@@ -831,56 +745,7 @@ kubectl describe pod my-app-xxx -n my-namespace | tail -20
 
 **Exit Code Reference:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    EXIT CODE MEANINGS                               │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Exit Code 0                                                        │
-│  ────────────                                                       │
-│  Meaning: Container exited successfully                             │
-│  Common cause: App finished (normal for Jobs), or crashed with      │
-│                graceful shutdown                                    │
-│  Check: Liveness probe might be restarting healthy container        │
-│                                                                     │
-│  Exit Code 1                                                        │
-│  ────────────                                                       │
-│  Meaning: General application error                                 │
-│  Common causes:                                                     │
-│    - Missing environment variable                                   │
-│    - Configuration error                                            │
-│    - Dependency not available (DB, service)                         │
-│  Check: Application logs                                            │
-│                                                                     │
-│  Exit Code 137                                                      │
-│  ─────────────                                                      │
-│  Meaning: SIGKILL (128 + 9)                                         │
-│  Common causes:                                                     │
-│    - OOMKilled (out of memory)                                      │
-│    - Liveness probe timeout                                         │
-│  Check: kubectl describe pod ... | grep OOM                         │
-│  Fix: Increase memory limits                                        │
-│                                                                     │
-│  Exit Code 143                                                      │
-│  ─────────────                                                      │
-│  Meaning: SIGTERM (128 + 15)                                        │
-│  Common cause: Graceful shutdown didn't complete in time            │
-│  Fix: Increase terminationGracePeriodSeconds                        │
-│                                                                     │
-│  Exit Code 126                                                      │
-│  ─────────────                                                      │
-│  Meaning: Command cannot be executed                                │
-│  Common cause: Permission issue, binary not executable              │
-│  Check: Container entrypoint/command                                │
-│                                                                     │
-│  Exit Code 127                                                      │
-│  ─────────────                                                      │
-│  Meaning: Command not found                                         │
-│  Common cause: Wrong entrypoint, missing binary                     │
-│  Check: Dockerfile CMD/ENTRYPOINT                                   │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Exit Code Meanings](../assets/ts-exit-codes.svg)
 
 **Solutions:**
 
@@ -1018,25 +883,7 @@ argocd app get my-app --show-operation
 
 **Common Causes and Solutions:**
 
-```
-OutOfSync
-    │
-    ├─► Manual changes in cluster
-    │   Someone ran kubectl apply directly
-    │   Fix: argocd app sync my-app
-    │
-    ├─► Webhook didn't fire
-    │   Git changed but ArgoCD doesn't know
-    │   Fix: argocd app get my-app --hard-refresh
-    │
-    ├─► Resource in Git doesn't match expected
-    │   Image tag changed, values updated
-    │   Fix: Review diff, then sync
-    │
-    └─► Sync failed previously
-        Check: argocd app get my-app
-        Fix: Resolve error, then sync
-```
+![OutOfSync Causes](../assets/ts-outofsync.svg)
 
 **Sync Commands:**
 
@@ -1258,38 +1105,7 @@ kubectl exec -it $(kubectl get pod -n namespace-a -l app=my-service-a -o name | 
 
 **Troubleshooting Matrix:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│              SERVICE COMMUNICATION TROUBLESHOOTING                   │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  "no such host"                                                     │
-│  ─────────────                                                      │
-│  Cause: DNS can't resolve service name                              │
-│  Check:                                                             │
-│    1. Service exists: kubectl get svc -n namespace                  │
-│    2. Service name spelled correctly                                │
-│    3. Using correct namespace in DNS name                           │
-│    4. CoreDNS is running                                            │
-│                                                                     │
-│  "connection refused"                                               │
-│  ────────────────────                                               │
-│  Cause: Service exists but nothing is listening                     │
-│  Check:                                                             │
-│    1. Endpoints exist: kubectl get endpoints svc-name               │
-│    2. If no endpoints: pod labels don't match service selector      │
-│    3. Pod is listening on correct port                              │
-│                                                                     │
-│  "connection timed out"                                             │
-│  ──────────────────────                                             │
-│  Cause: Network policy or firewall blocking                         │
-│  Check:                                                             │
-│    1. Network policies: kubectl get networkpolicy -n namespace      │
-│    2. Pod is in Running state                                       │
-│    3. Port in service matches containerPort                         │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Service Communication Troubleshooting](../assets/ts-service-comm.svg)
 
 ### 7.4 Private Endpoint Not Working
 
@@ -1418,49 +1234,7 @@ kubectl logs -n external-secrets -l app.kubernetes.io/name=external-secrets --ta
 
 **Error Message Solutions:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│            EXTERNAL SECRETS ERROR MESSAGES                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  "could not get secret data from provider"                          │
-│  ─────────────────────────────────────────                          │
-│  Cause: Secret doesn't exist in Key Vault                           │
-│  Fix:                                                               │
-│    1. Verify secret name in ExternalSecret matches Key Vault        │
-│    2. Create secret in Key Vault if missing                         │
-│    az keyvault secret set --vault-name $KV --name my-secret \       │
-│      --value "my-value"                                             │
-│                                                                     │
-│  "failed to get authentication"                                     │
-│  ─────────────────────────────                                      │
-│  Cause: Workload Identity not working                               │
-│  Fix:                                                               │
-│    1. Check service account annotation:                             │
-│       kubectl get sa external-secrets -n external-secrets -o yaml   │
-│    2. Verify federated credential in Azure AD                       │
-│    3. Restart ESO: kubectl rollout restart deployment \             │
-│         external-secrets -n external-secrets                        │
-│                                                                     │
-│  "user or principal not found"                                      │
-│  ────────────────────────────                                       │
-│  Cause: Managed Identity doesn't have Key Vault access              │
-│  Fix:                                                               │
-│    az keyvault set-policy --name $KV \                              │
-│      --object-id $MI_OBJECT_ID \                                    │
-│      --secret-permissions get list                                  │
-│    OR (if using RBAC):                                              │
-│    az role assignment create --role "Key Vault Secrets User" \      │
-│      --assignee $MI_OBJECT_ID \                                     │
-│      --scope /subscriptions/.../keyvaults/$KV                       │
-│                                                                     │
-│  "403 Forbidden"                                                    │
-│  ──────────────                                                     │
-│  Cause: Permission denied                                           │
-│  Fix: Same as above - check Key Vault access policies or RBAC       │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![External Secrets Errors](../assets/ts-eso-errors.svg)
 
 ### 8.3 Secret Not Updating After Key Vault Change
 
@@ -1580,38 +1354,7 @@ kubectl describe servicemonitor my-app-monitor -n observability
 
 **Common Issues:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                PROMETHEUS SCRAPING ISSUES                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Target shows "DOWN"                                                │
-│  ──────────────────                                                 │
-│  Check:                                                             │
-│    1. Pod is running: kubectl get pods -l app=my-app                │
-│    2. Metrics port is exposed: kubectl get svc my-app               │
-│    3. Can reach metrics endpoint:                                   │
-│       kubectl exec -it <prometheus-pod> -- wget -qO- \              │
-│         http://my-app.namespace:port/metrics                        │
-│                                                                     │
-│  Target not appearing at all                                        │
-│  ───────────────────────────                                        │
-│  Check:                                                             │
-│    1. ServiceMonitor exists in correct namespace                    │
-│    2. ServiceMonitor selector matches Service labels                │
-│    3. Prometheus is configured to watch namespace:                  │
-│       kubectl get prometheus -n observability -o yaml | \           │
-│         grep -A 10 serviceMonitorNamespaceSelector                  │
-│                                                                     │
-│  Target shows "UP" but missing specific metrics                     │
-│  ──────────────────────────────────────────────                     │
-│  Check:                                                             │
-│    1. Application is actually exposing those metrics                │
-│    2. Metric name hasn't changed                                    │
-│    3. Check cardinality issues (too many labels)                    │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Prometheus Scraping Issues](../assets/ts-prometheus-scraping.svg)
 
 **Create ServiceMonitor Example:**
 
@@ -1760,24 +1503,7 @@ Error: Model 'gpt-4o' is not available in region 'brazilsouth'
 
 **Model Availability Reference:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                AZURE OPENAI MODEL AVAILABILITY                      │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Model                    │ Brazil South │ East US 2 │ West Europe │
-│  ─────────────────────────┼──────────────┼───────────┼─────────────│
-│  gpt-4o                   │      ❌      │    ✅     │     ✅      │
-│  gpt-4o-mini              │      ❌      │    ✅     │     ✅      │
-│  gpt-4-turbo              │      ❌      │    ✅     │     ✅      │
-│  gpt-35-turbo             │      ✅      │    ✅     │     ✅      │
-│  text-embedding-3-large   │      ❌      │    ✅     │     ✅      │
-│  text-embedding-ada-002   │      ✅      │    ✅     │     ✅      │
-│                                                                     │
-│  Recommendation: Use East US 2 for best model availability          │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Model Availability](../assets/ts-model-availability.svg)
 
 **Solution:** Deploy AI Foundry in East US 2:
 
@@ -1940,35 +1666,7 @@ kubectl describe pod $POD_NAME | grep -A 20 Events
 
 **Solutions:**
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                SLOW POD STARTUP SOLUTIONS                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  Slow Image Pull (10s+)                                             │
-│  ──────────────────────                                             │
-│  Solutions:                                                         │
-│    - Use smaller base images (alpine, distroless)                   │
-│    - Multi-stage builds to reduce image size                        │
-│    - Pre-pull images on nodes (DaemonSet)                           │
-│    - Use ACR in same region as AKS                                  │
-│                                                                     │
-│  Slow Init Containers                                               │
-│  ─────────────────────                                              │
-│  Solutions:                                                         │
-│    - Optimize init container logic                                  │
-│    - Parallelize if possible                                        │
-│    - Consider moving logic to app startup                           │
-│                                                                     │
-│  Slow Readiness Probe                                               │
-│  ─────────────────────                                              │
-│  Solutions:                                                         │
-│    - Reduce initialDelaySeconds                                     │
-│    - Optimize application startup                                   │
-│    - Use startupProbe for slow-starting apps                        │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Slow Pod Startup Solutions](../assets/ts-slow-startup.svg)
 
 ### 12.3 Memory/CPU Throttling
 
@@ -2032,38 +1730,7 @@ resources:
 
 ### 14.1 When to Escalate
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    ESCALATION CRITERIA                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  ESCALATE IMMEDIATELY (SEV1):                                       │
-│  ────────────────────────────                                       │
-│  - Complete production outage                                       │
-│  - Data loss or security breach                                     │
-│  - Multiple customers affected                                      │
-│  - No workaround available                                          │
-│                                                                     │
-│  ESCALATE AFTER 1 HOUR (SEV2):                                      │
-│  ──────────────────────────────                                     │
-│  - Significant feature broken                                       │
-│  - Workaround exists but impacts users                              │
-│  - Performance severely degraded                                    │
-│                                                                     │
-│  ESCALATE AFTER 4 HOURS (SEV3):                                     │
-│  ───────────────────────────────                                    │
-│  - Non-critical feature broken                                      │
-│  - Affects small number of users                                    │
-│  - Workaround available                                             │
-│                                                                     │
-│  NEXT BUSINESS DAY (SEV4):                                          │
-│  ─────────────────────────                                          │
-│  - Cosmetic issues                                                  │
-│  - Documentation problems                                           │
-│  - Feature requests                                                 │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![Escalation Criteria](../assets/ts-escalation-criteria.svg)
 
 ### 14.2 Information to Collect Before Escalating
 

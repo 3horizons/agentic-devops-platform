@@ -1106,14 +1106,8 @@ tags = {
 
 After editing, verify the file is valid:
 
-```bash
-# Make sure you're in the terraform directory
-pwd
-# Should show: .../three-horizons-accelerator-v4/terraform
+![Repository Structure](../assets/mod-directory-structure.svg)
 
-# Initialize Terraform (downloads required providers)
-terraform init
-```
 
 **Expected output:**
 
@@ -2404,59 +2398,7 @@ az keyvault show --name <kv-name> --query "properties.accessPolicies"
 
 ### Directory Structure
 
-```
-three-horizons-accelerator-v4/
-│
-├── .github/                    # GitHub configuration
-│   ├── workflows/              # CI/CD pipelines
-│   │   ├── ci.yml              # Continuous Integration
-│   │   ├── cd.yml              # Continuous Deployment
-│   │   └── terraform-test.yml  # Terraform tests
-│   └── ISSUE_TEMPLATE/         # Issue templates
-│
-├── .github/agents/                 # Copilot Chat Agents (10 agents)
-│
-├── argocd/                     # ArgoCD GitOps configuration
-│   ├── apps/                   # Application definitions
-│   └── applicationsets/        # ApplicationSet templates
-│
-├── config/                     # Configuration files
-│   └── sizing-profiles.yaml    # T-shirt sizing definitions
-│
-├── docs/                       # Documentation
-│   └── guides/                 # This and other guides
-│
-├── golden-paths/               # Developer self-service templates
-│
-├── grafana/                    # Grafana dashboard JSON files
-│
-├── policies/                   # Security policies
-│   ├── kubernetes/             # Gatekeeper constraints
-│   └── terraform/              # OPA policies for Terraform
-│
-├── prometheus/                 # Prometheus configuration
-│   ├── values.yaml             # Helm values
-│   └── alerting-rules.yaml     # Alert definitions
-│
-├── scripts/                    # Automation scripts
-│
-├── terraform/                  # Infrastructure as Code
-│   ├── main.tf                 # Root module
-│   ├── variables.tf            # Variable definitions
-│   ├── outputs.tf              # Output values
-│   ├── terraform.tfvars        # Your configuration (create this)
-│   └── modules/                # Reusable modules
-│       ├── naming/             # Naming conventions
-│       ├── networking/         # VNet, subnets, NSGs
-│       ├── aks-cluster/        # AKS configuration
-│       ├── container-registry/ # ACR
-│       ├── security/           # Key Vault, identities
-│       ├── observability/      # Azure Monitor
-│       └── ai-foundry/         # Azure OpenAI
-│
-└── tests/                      # Test files
-    └── terraform/              # Terratest modules
-```
+![Repository Structure](../assets/mod-directory-structure.svg)
 
 ---
 

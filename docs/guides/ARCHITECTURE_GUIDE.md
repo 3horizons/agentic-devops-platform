@@ -215,28 +215,7 @@ These are additional capabilities we enable on the AKS cluster:
 
 NSGs act as firewalls at the subnet level:
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                        NSG: nsg-aks-nodes                                   │
-├────────────────────────────────────────────────────────────────────────────┤
-│  INBOUND RULES (what traffic is allowed IN):                               │
-│                                                                             │
-│  Priority │ Name              │ Source          │ Port  │ Action          │
-│  ─────────┼───────────────────┼─────────────────┼───────┼─────────────────│
-│  100      │ AllowAppGateway   │ AppGw Subnet    │ 443   │ Allow           │
-│  110      │ AllowKubeAPI      │ AzureCloud      │ 443   │ Allow           │
-│  120      │ AllowLoadBalancer │ AzureLoadBal    │ *     │ Allow           │
-│  4096     │ DenyAllInbound    │ *               │ *     │ Deny            │
-│                                                                             │
-│  OUTBOUND RULES (what traffic is allowed OUT):                             │
-│                                                                             │
-│  Priority │ Name              │ Destination     │ Port  │ Action          │
-│  ─────────┼───────────────────┼─────────────────┼───────┼─────────────────│
-│  100      │ AllowAzureServices│ AzureCloud      │ 443   │ Allow           │
-│  110      │ AllowPrivateEndpt │ VirtualNetwork  │ *     │ Allow           │
-│  4096     │ DenyAllOutbound   │ Internet        │ *     │ Deny            │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+![NSG Rules](../assets/nsg-rules-table.svg)
 
 ---
 

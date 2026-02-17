@@ -467,30 +467,6 @@ Skills provide focused, reusable capabilities that agents can invoke. They use "
 
 ### Directory Structure
 
-```
-.github/skills/
-├── terraform-cli/
-│   ├── SKILL.md
-│   ├── scripts/
-│   │   ├── validate.sh
-│   │   └── plan.sh
-│   └── references/
-│       └── best-practices.md
-├── kubectl-cli/
-│   └── SKILL.md
-├── azure-cli/
-│   └── SKILL.md
-├── argocd-cli/
-│   └── SKILL.md
-├── helm-cli/
-│   └── SKILL.md
-└── validation-scripts/
-    ├── SKILL.md
-    └── scripts/
-        ├── validate-azure.sh
-        ├── validate-kubernetes.sh
-        └── validate-terraform.sh
-```
 
 ### SKILL.md Format
 
@@ -1625,26 +1601,6 @@ The Three Horizons Accelerator v4 is an enterprise platform accelerator featurin
 
 ### Current Structure
 
-```
-.github/
-├── agents/                    # 30 custom agents
-│   ├── platform.agent.md
-│   ├── terraform.agent.md
-│   ├── security.agent.md
-│   └── ...
-├── skills/                    # 17 skills
-│   ├── terraform-cli/
-│   ├── kubectl-cli/
-│   └── ...
-├── prompts/                   # 10 prompts
-│   ├── create-service.prompt.md
-│   └── ...
-├── instructions/              # 8 instructions
-│   ├── copilot-instructions.md
-│   ├── terraform.instructions.md
-│   └── ...
-└── copilot-instructions.md    # Repository-wide rules
-```
 
 ### Agent Examples in Use
 
@@ -1802,90 +1758,6 @@ This plan file contains the complete content. Implementation will copy this cont
 
 ### Skills Directory Structure (TO CREATE)
 
-```
-.github/skills/
-├── README.md                          # Skills overview and usage
-├── terraform-cli/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── validate.sh
-│       ├── plan.sh
-│       └── apply.sh
-├── kubectl-cli/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── health-check.sh
-│       └── rollout.sh
-├── azure-cli/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── resource-query.sh
-│       └── subscription-check.sh
-├── argocd-cli/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── sync-status.sh
-│       └── app-diff.sh
-├── helm-cli/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── lint.sh
-│       └── template.sh
-├── github-cli/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── pr-create.sh
-│       └── workflow-trigger.sh
-├── oc-cli/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── aro-operations.sh
-├── validation-scripts/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── validate-azure.sh
-│       ├── validate-kubernetes.sh
-│       ├── validate-terraform.sh
-│       ├── validate-config.sh
-│       └── validate-naming.sh
-├── azure-infrastructure/
-│   ├── SKILL.md
-│   └── references/
-│       └── azure-verified-modules.md
-├── aro-deployment/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── deploy-aro.sh
-├── openshift-operations/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── oc-admin.sh
-├── database-management/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── db-health.sh
-├── observability-stack/
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── prometheus-query.sh
-│       └── grafana-dashboard.sh
-├── ai-foundry-operations/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── model-deploy.sh
-├── rhdh-portal/
-│   ├── SKILL.md
-│   └── scripts/
-│       └── catalog-sync.sh
-├── mcp-cli/
-│   ├── SKILL.md
-│   └── references/
-│       └── mcp-servers.md
-└── prerequisites/
-    ├── SKILL.md
-    └── scripts/
-        └── validate-cli-prerequisites.sh
-```
 
 ### Complete SKILL.md Specifications
 

@@ -37,40 +37,18 @@ Before diving into the specific modules, let's understand what Terraform modules
 > In technical terms: A module is a **container for multiple resources** that are used together. It's a way to package and reuse infrastructure code.
 
 **Without modules** (everything in one file):
-```
-main.tf (3000 lines)
-├── VNet configuration
-├── Subnets
-├── NSGs
-├── AKS cluster
-├── Node pools
-├── Key Vault
-├── ACR
-└── ... (hard to maintain, hard to reuse)
-```
+![Modules vs Monolithic](../assets/mod-with-without-modules.svg)
+
 
 **With modules** (organized and reusable):
-```
-main.tf (100 lines - just module calls)
-│
-├── module "networking"  → Creates VNet, subnets, NSGs
-├── module "aks"         → Creates AKS cluster
-├── module "security"    → Creates Key Vault, identities
-└── module "acr"         → Creates Container Registry
-```
+
 
 ### 1.2 Module Structure
 
 Every module in this accelerator follows a standard structure:
 
-```
-module-name/
-├── main.tf          # The actual resource definitions
-├── variables.tf     # Input parameters you can configure
-├── outputs.tf       # Values the module returns for use elsewhere
-├── versions.tf      # Required provider versions
-└── README.md        # Module documentation
-```
+![Module File Structure](../assets/mod-file-structure.svg)
+
 
 > 💡 **Understanding the Files**
 >
@@ -99,33 +77,8 @@ Here's a decision guide for which modules to use:
 
 ### 2.1 Module Directory Structure
 
-```
-terraform/modules/
-│
-├── H1 - FOUNDATION (Core Infrastructure)
-│   ├── naming/              # Generate consistent resource names
-│   ├── networking/          # VNet, subnets, NSGs, DNS
-│   ├── aks-cluster/         # Kubernetes cluster
-│   ├── container-registry/  # Azure Container Registry
-│   ├── databases/           # PostgreSQL, Redis
-│   ├── security/            # Key Vault, managed identities
-│   ├── defender/            # Microsoft Defender for Cloud
-│   └── purview/             # Data governance
-│
-├── H2 - ENHANCEMENT (Operations & Automation)
-│   ├── argocd/              # GitOps deployments
-│   ├── external-secrets/    # Secrets synchronization
-│   ├── observability/       # Monitoring & logging
-│   └── github-runners/      # CI/CD runners
-│
-├── H3 - INNOVATION (Advanced Capabilities)
-│   ├── ai-foundry/          # Azure OpenAI
-│   └── rhdh/                # Red Hat Developer Hub
-│
-└── CROSS-CUTTING (Platform Support)
-    ├── cost-management/     # Budgets and alerts
-    └── disaster-recovery/   # DR configuration
-```
+![Module Directory](../assets/mod-directory-structure.svg)
+
 
 ### 2.2 Module Categories Explained
 
@@ -382,23 +335,7 @@ module "networking" {
 
 The module creates Network Security Groups with these default rules:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   NSG: AKS Nodes                            │
-├─────────────────────────────────────────────────────────────┤
-│ INBOUND:                                                    │
-│   ✓ Allow Azure Load Balancer health probes                │
-│   ✓ Allow internal VNet traffic                            │
-│   ✓ Allow pod-to-node communication                        │
-│   ✗ Deny all other inbound traffic                         │
-│                                                             │
-│ OUTBOUND:                                                   │
-│   ✓ Allow HTTPS (443) - for Azure services                 │
-│   ✓ Allow DNS (53) - for name resolution                   │
-│   ✓ Allow NTP (123) - for time sync                        │
-│   ✓ Allow internal VNet traffic                            │
-└─────────────────────────────────────────────────────────────┘
-```
+![NSG Rules](../assets/nsg-rules-table.svg)
 
 #### Private DNS Zones Created
 
