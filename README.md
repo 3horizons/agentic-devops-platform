@@ -4,7 +4,7 @@
 
 ## Overview
 
-The **Three Horizons Implementation Accelerator** is a complete kit of Infrastructure as Code (IaC), GitOps, and developer templates designed to implement the Three Horizons platform for LATAM clients.
+The **Three Horizons Implementation Accelerator** is a complete kit of Infrastructure as Code (IaC), GitOps, and developer templates designed to implement the Three Horizons platform.
 
 ### What's Included
 
