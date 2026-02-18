@@ -23,7 +23,7 @@ NC='\033[0m' # No Color
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-AGENTS_DIR="$PROJECT_ROOT/agents"
+AGENTS_DIR="$PROJECT_ROOT/.github/agents"
 
 # Counters
 TOTAL_AGENTS=0
@@ -66,42 +66,23 @@ print_info() {
 
 # Required sections in agent files
 REQUIRED_SECTIONS=(
-    "Agent Identity"
-    "Capabilities"
-    "MCP Servers"
-    "Trigger Labels"
-    "Validation"
+    "tools"
+    "description"
 )
 
-# Expected agent files
+# Expected agent files (flat structure in .github/agents/)
 declare -A EXPECTED_AGENTS=(
-    # H1 Foundation
-    ["h1-foundation/infrastructure-agent.md"]="Infrastructure Agent"
-    ["h1-foundation/networking-agent.md"]="Networking Agent"
-    ["h1-foundation/security-agent.md"]="Security Agent"
-    ["h1-foundation/container-registry-agent.md"]="Container Registry Agent"
-    ["h1-foundation/database-agent.md"]="Database Agent"
-    ["h1-foundation/defender-cloud-agent.md"]="Defender Cloud Agent"
-    ["h1-foundation/aro-platform-agent.md"]="ARO Platform Agent"
-    ["h1-foundation/purview-governance-agent.md"]="Purview Governance Agent"
-    # H2 Enhancement
-    ["h2-enhancement/gitops-agent.md"]="GitOps Agent"
-    ["h2-enhancement/observability-agent.md"]="Observability Agent"
-    ["h2-enhancement/rhdh-portal-agent.md"]="RHDH Portal Agent"
-    ["h2-enhancement/golden-paths-agent.md"]="Golden Paths Agent"
-    ["h2-enhancement/github-runners-agent.md"]="GitHub Runners Agent"
-    # H3 Innovation
-    ["h3-innovation/ai-foundry-agent.md"]="AI Foundry Agent"
-    ["h3-innovation/mlops-pipeline-agent.md"]="MLOps Pipeline Agent"
-    ["h3-innovation/sre-agent-setup.md"]="SRE Agent Setup"
-    ["h3-innovation/multi-agent-setup.md"]="Multi-Agent Setup"
-    # Cross-Cutting
-    ["cross-cutting/validation-agent.md"]="Validation Agent"
-    ["cross-cutting/migration-agent.md"]="Migration Agent"
-    ["cross-cutting/rollback-agent.md"]="Rollback Agent"
-    ["cross-cutting/cost-optimization-agent.md"]="Cost Optimization Agent"
-    ["cross-cutting/github-app-agent.md"]="GitHub App Agent"
-    ["cross-cutting/identity-federation-agent.md"]="Identity Federation Agent"
+    ["architect.agent.md"]="Architect Agent"
+    ["deploy.agent.md"]="Deploy Agent"
+    ["devops.agent.md"]="DevOps Agent"
+    ["docs.agent.md"]="Docs Agent"
+    ["onboarding.agent.md"]="Onboarding Agent"
+    ["platform.agent.md"]="Platform Agent"
+    ["reviewer.agent.md"]="Reviewer Agent"
+    ["security.agent.md"]="Security Agent"
+    ["sre.agent.md"]="SRE Agent"
+    ["terraform.agent.md"]="Terraform Agent"
+    ["test.agent.md"]="Test Agent"
 )
 
 # Valid MCP servers (exported for use by other scripts)
@@ -159,15 +140,9 @@ validate_agent() {
         file_valid=false
     fi
 
-    # Check for trigger labels
-    if ! grep -qi "agent:" "$full_path"; then
-        print_warning "$agent_name: No trigger labels found"
-        file_valid=false
-    fi
-
-    # Check for code blocks
-    if ! grep -q '```' "$full_path"; then
-        print_warning "$agent_name: No code blocks found"
+    # Check for YAML frontmatter (---)
+    if ! head -1 "$full_path" | grep -q '^---'; then
+        print_warning "$agent_name: Missing YAML frontmatter"
         file_valid=false
     fi
 
@@ -183,17 +158,13 @@ validate_agent() {
 validate_structure() {
     print_header "Validating Directory Structure"
 
-    local categories=("h1-foundation" "h2-enhancement" "h3-innovation" "cross-cutting")
-
-    for category in "${categories[@]}"; do
-        if [[ -d "$AGENTS_DIR/$category" ]]; then
-            local count
-            count=$(find "$AGENTS_DIR/$category" -name "*.md" | wc -l)
-            print_success "$category/: $count agents found"
-        else
-            print_error "$category/: Directory not found"
-        fi
-    done
+    if [[ -d "$AGENTS_DIR" ]]; then
+        local count
+        count=$(find "$AGENTS_DIR" -maxdepth 1 -name "*.agent.md" | wc -l)
+        print_success "Agent directory found: $count agents"
+    else
+        print_error "Agent directory not found: $AGENTS_DIR"
+    fi
 }
 
 # Validate all agent files

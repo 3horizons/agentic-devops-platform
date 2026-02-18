@@ -415,8 +415,7 @@ get_credentials() {
     log_info "Logging in to cluster..."
     oc login "$API_SERVER" \
         --username kubeadmin \
-        --password "$KUBEADMIN_PASSWORD" \
-        --insecure-skip-tls-verify=true
+        --password "$KUBEADMIN_PASSWORD"
     
     log_success "Logged in to cluster"
 }

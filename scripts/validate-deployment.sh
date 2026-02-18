@@ -63,11 +63,27 @@ if [[ "$PHASE" == "h1" || "$PHASE" == "all" ]]; then
   done
 
   header "H1: Azure Resources"
-  RG=$(kubectl config current-context 2>/dev/null | head -1 || echo "unknown")
-  if az group show --name "rg-*" &>/dev/null 2>&1; then
-    pass "Resource group exists"
+  CUSTOMER_NAME=$(terraform -chdir="$(dirname "$0")/../terraform" output -raw customer_name 2>/dev/null || echo "")
+  if [[ -n "$CUSTOMER_NAME" ]]; then
+    RG_NAME="rg-${CUSTOMER_NAME}-${ENVIRONMENT}"
+    if az group show --name "$RG_NAME" &>/dev/null 2>&1; then
+      pass "Resource group exists: $RG_NAME"
+    else
+      warn "Resource group not found: $RG_NAME (may need az login or different naming)"
+    fi
   else
-    warn "Could not verify resource group (may need az login)"
+    # Try to detect resource group from kubectl context
+    RG_CONTEXT=$(kubectl config current-context 2>/dev/null | head -1 || echo "unknown")
+    if az group list --query "[?starts_with(name, 'rg-')]" -o tsv &>/dev/null 2>&1; then
+      RG_COUNT=$(az group list --query "length([?starts_with(name, 'rg-')])" -o tsv 2>/dev/null || echo 0)
+      if [[ "$RG_COUNT" -gt 0 ]]; then
+        pass "Found $RG_COUNT resource group(s) with rg- prefix"
+      else
+        warn "No resource groups with rg- prefix found"
+      fi
+    else
+      warn "Could not verify resource group (may need az login)"
+    fi
   fi
 fi
 

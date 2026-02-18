@@ -1,4 +1,9 @@
-# GitHub Copilot Agents Playbook
+# Three Horizons Accelerator - GitHub Copilot Agents Complete Guide
+
+> **Version:** 4.0.0
+> **Last Updated:** December 2025
+> **Audience:** Developers, Platform Engineers
+
 _A structured, example-driven guide to working predictably with GitHub Copilot Agent Mode (IDE), Copilot Coding Agent (GitHub), Copilot CLI, Custom Agents, Agent Skills, MCP, scripts, hooks, memory, and integrations._
 
 > **Core goal:** LLMs are probabilistic systems. You won’t make them perfectly deterministic, but you can make outcomes **much more predictable** by constraining scope (“one agent, one task”), reducing tool access, anchoring with examples, and validating with repeatable commands/tests.
@@ -771,3 +776,9 @@ https://onlyutkarsh.com/posts/2026/github-copilot-customization/
 https://github.com/orgs/community/discussions/182197
 https://github.com/orgs/community/discussions/183962
 ```
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

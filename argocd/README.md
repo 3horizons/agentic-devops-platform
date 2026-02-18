@@ -41,7 +41,7 @@ kubectl apply -f app-of-apps/root-application.yaml
 
 ## Application Hierarchy
 
-![Application Hierarchy](docs/assets/argocd-app-hierarchy.svg)
+![Application Hierarchy](../docs/assets/argocd-app-hierarchy.svg)
 
 ## Sync Policies
 

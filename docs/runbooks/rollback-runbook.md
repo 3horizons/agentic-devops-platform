@@ -1,5 +1,9 @@
 # Rollback Runbook
 
+> **Version:** 2.0.0
+> **Last Updated:** December 2025
+> **Audience:** Platform Engineers, DevOps Engineers
+
 ## Overview
 
 This runbook provides procedures for rolling back deployments on the Three Horizons Platform. Use these procedures when a deployment causes issues that require reverting to a previous state.
@@ -293,3 +297,9 @@ If rollback fails:
 - [Emergency Procedures](emergency-procedures.md)
 - [Deployment Runbook](deployment-runbook.md)
 - [Disaster Recovery](disaster-recovery.md)
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

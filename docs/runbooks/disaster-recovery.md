@@ -1,5 +1,9 @@
 # Disaster Recovery Runbook
 
+> **Version:** 2.0.0
+> **Last Updated:** December 2025
+> **Audience:** SRE, Platform Engineers, Infrastructure Engineers
+
 ## Overview
 
 This runbook provides procedures for disaster recovery of the Three Horizons Platform. Use these procedures when recovering from major incidents that require restoration of the platform.
@@ -268,3 +272,9 @@ az monitor diagnostic-settings create ...
 - [Incident Response](incident-response.md)
 - [Azure DR Documentation](https://docs.microsoft.com/azure/site-recovery/)
 - [AKS BCDR Best Practices](https://docs.microsoft.com/azure/aks/operator-best-practices-multi-region)
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

@@ -1,5 +1,11 @@
 # Three Horizons Accelerator - Agent Playbook
 
+> **Version:** 4.0.0
+> **Last Updated:** December 2025
+> **Audience:** All Team Members
+
+---
+
 ## Overview
 
 This repository uses **Copilot Chat Agents** to accelerate development and operations. These are conversational agents in your IDE that help you plan, code, configure, and deploy.
@@ -22,6 +28,7 @@ These agents live in GitHub Copilot (Chat). Use them to accelerate your daily ta
 | `@sre` | Observability | "How do I debug this production error?" |
 | `@test` | Testing & QA | "Write a unit test for this function." |
 | `@docs` | Documentation | "Generate a Mermaid diagram for this flow." |
+| `@deploy` | Deployment & Release | "Deploy this service to staging environment." |
 
 ### How to use
 
@@ -70,7 +77,25 @@ In VS Code or GitHub.com, type `@agent-name` in the Copilot Chat window.
 
 ---
 
-## Related Documentation
+## 📚 Related Documentation
 
-- [Deployment Guide](../guides/DEPLOYMENT_GUIDE.md)
-- [Copilot Agents Best Practices](../guides/copilot-agents-best-practices.md)
+| Document | Description |
+|----------|-------------|
+| [Deployment Guide](../guides/DEPLOYMENT_GUIDE.md) | Step-by-step platform deployment instructions |
+| [Architecture Guide](../guides/ARCHITECTURE_GUIDE.md) | Overall system architecture and design |
+| [Copilot Agents Best Practices](../guides/copilot-agents-best-practices.md) | Best practices for using Copilot agents |
+| [Copilot Agents Complete Guide](../guides/copilot-agents-complete-guide.md) | Comprehensive agent usage guide |
+| [AGENTS.md](../../AGENTS.md) | Agent system overview and skill reference |
+
+## ➡️ Next Steps
+
+- **Get Started**: Use `@onboarding` in Copilot Chat to set up your environment
+- **Design Architecture**: Use `@architect` to plan new features or services
+- **Deploy Platform**: Follow the [Deployment Guide](../guides/DEPLOYMENT_GUIDE.md) for end-to-end deployment
+- **Learn Best Practices**: Read the [Copilot Agents Best Practices](../guides/copilot-agents-best-practices.md)
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

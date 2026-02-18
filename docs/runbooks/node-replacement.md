@@ -1,5 +1,9 @@
 # Node Replacement Runbook
 
+> **Version:** 2.0.0
+> **Last Updated:** December 2025
+> **Audience:** SRE, Platform Engineers
+
 ## Overview
 
 This runbook describes the procedures for replacing AKS nodes in the Three Horizons platform, including planned replacements and emergency scenarios.
@@ -346,3 +350,9 @@ kubectl get pdb --all-namespaces
 - [Disaster Recovery](./disaster-recovery.md)
 - [Emergency Procedures](./emergency-procedures.md)
 - [Incident Response](./incident-response.md)
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

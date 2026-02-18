@@ -38,7 +38,7 @@ NC='\033[0m' # No Color
 # Paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-CONFIG_DIR="$ROOT_DIR/customer-config"
+CONFIG_DIR="$ROOT_DIR/terraform/environments"
 TERRAFORM_DIR="$ROOT_DIR/terraform"
 OUTPUT_DIR="$ROOT_DIR/outputs"
 
@@ -182,12 +182,12 @@ check_prerequisites() {
     
     # Check configuration file
     log_step "Checking configuration..."
-    if [ ! -f "$CONFIG_DIR/customer.tfvars" ]; then
-        log_error "customer.tfvars not found"
+    if [ ! -f "$CONFIG_DIR/${ENVIRONMENT}.tfvars" ]; then
+        log_error "${ENVIRONMENT}.tfvars not found"
         echo ""
         echo "Create configuration:"
-        echo "  cp $CONFIG_DIR/customer.tfvars.example $CONFIG_DIR/customer.tfvars"
-        echo "  code $CONFIG_DIR/customer.tfvars"
+        echo "  cp $ROOT_DIR/terraform/terraform.tfvars.example $CONFIG_DIR/${ENVIRONMENT}.tfvars"
+        echo "  code $CONFIG_DIR/${ENVIRONMENT}.tfvars"
         exit 1
     fi
     log_success "Configuration file found"
@@ -203,12 +203,12 @@ validate_configuration() {
     log_step "Validating customer.tfvars..."
     
     # Extract key values
-    CUSTOMER_NAME=$(grep 'customer_name' "$CONFIG_DIR/customer.tfvars" | head -1 | cut -d'"' -f2)
-    SUBSCRIPTION_ID=$(grep 'azure_subscription_id' "$CONFIG_DIR/customer.tfvars" | head -1 | cut -d'"' -f2)
-    AZURE_REGION=$(grep 'azure_region' "$CONFIG_DIR/customer.tfvars" | head -1 | cut -d'"' -f2 | head -1)
-    K8S_PLATFORM=$(grep 'kubernetes_platform' "$CONFIG_DIR/customer.tfvars" | head -1 | cut -d'"' -f2)
-    GITHUB_ORG=$(grep -A5 'github_config' "$CONFIG_DIR/customer.tfvars" | grep 'organization' | head -1 | cut -d'"' -f2)
-    DNS_ZONE=$(grep 'dns_zone_name' "$CONFIG_DIR/customer.tfvars" | head -1 | cut -d'"' -f2)
+    CUSTOMER_NAME=$(grep 'customer_name' "$CONFIG_DIR/${ENVIRONMENT}.tfvars" | head -1 | cut -d'"' -f2)
+    SUBSCRIPTION_ID=$(grep 'azure_subscription_id' "$CONFIG_DIR/${ENVIRONMENT}.tfvars" | head -1 | cut -d'"' -f2)
+    AZURE_REGION=$(grep 'azure_region' "$CONFIG_DIR/${ENVIRONMENT}.tfvars" | head -1 | cut -d'"' -f2 | head -1)
+    K8S_PLATFORM=$(grep 'kubernetes_platform' "$CONFIG_DIR/${ENVIRONMENT}.tfvars" | head -1 | cut -d'"' -f2)
+    GITHUB_ORG=$(grep -A5 'github_config' "$CONFIG_DIR/${ENVIRONMENT}.tfvars" | grep 'organization' | head -1 | cut -d'"' -f2)
+    DNS_ZONE=$(grep 'dns_zone_name' "$CONFIG_DIR/${ENVIRONMENT}.tfvars" | head -1 | cut -d'"' -f2)
     
     # Validate required values
     local errors=()
@@ -247,7 +247,7 @@ validate_configuration() {
     
     # Validate DNS zone access
     log_step "Validating DNS zone access..."
-    DNS_RG=$(grep 'dns_zone_resource_group' "$CONFIG_DIR/customer.tfvars" | head -1 | cut -d'"' -f2)
+    DNS_RG=$(grep 'dns_zone_resource_group' "$CONFIG_DIR/${ENVIRONMENT}.tfvars" | head -1 | cut -d'"' -f2)
     if ! az network dns zone show --name "$DNS_ZONE" --resource-group "$DNS_RG" &> /dev/null; then
         log_warning "DNS zone not accessible. Ensure it exists and you have permissions."
     else
@@ -283,7 +283,7 @@ deploy_infrastructure() {
     # Plan
     log_step "Planning infrastructure..."
     terraform plan \
-        -var-file="$CONFIG_DIR/customer.tfvars" \
+        -var-file="$CONFIG_DIR/${ENVIRONMENT}.tfvars" \
         -var="deployment_mode=$DEPLOYMENT_MODE" \
         -out=tfplan \
         -detailed-exitcode || true
@@ -394,7 +394,7 @@ deploy_argocd() {
     log_step "Deploying root application..."
     
     # Substitute variables in root-app.yaml
-    envsubst < "$ROOT_DIR/argocd/app-of-apps/root-app.yaml" | kubectl apply -f -
+    envsubst < "$ROOT_DIR/argocd/app-of-apps/root-application.yaml" | kubectl apply -f -
     
     log_success "ArgoCD configured"
 }

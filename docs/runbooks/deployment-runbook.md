@@ -1,5 +1,9 @@
 # Deployment Runbook
 
+> **Version:** 2.0.0
+> **Last Updated:** December 2025
+> **Audience:** Platform Engineers, DevOps Engineers
+
 ## Overview
 
 This runbook provides procedures for deploying the Three Horizons Platform. Use this for initial deployments, updates, and environment provisioning.
@@ -259,3 +263,9 @@ az group list --query "[?starts_with(name, 'rg-')]" -o table
 - [Deployment Guide](../guides/DEPLOYMENT_GUIDE.md)
 - [Validate Deployment Script](../../.github/skills/validation-scripts/scripts/validate-deployment.sh)
 - [Rollback Runbook](rollback-runbook.md)
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

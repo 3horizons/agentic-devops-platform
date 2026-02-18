@@ -19,6 +19,47 @@
 # Global configuration
 global:
   clusterRouterBase: ${DNS_ZONE_NAME}
+  dynamic:
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins:
+      # GitHub Plugins
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-github-issues
+        disabled: false
+        
+      # Kubernetes Plugins
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+        disabled: false
+        
+      # ArgoCD Plugins
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd
+        disabled: false
+        
+      # TechDocs
+      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+        disabled: false
+        
+      # Scaffolder Actions
+      - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
+        disabled: false
+        
+      # Security (if GHAS enabled)
+      - package: ./dynamic-plugins/dist/backstage-plugin-security-insights
+        disabled: false
   
 # =============================================================================
 # BACKSTAGE CONFIGURATION
@@ -291,53 +332,6 @@ upstream:
 
 postgresql:
   enabled: false  # Using external Azure PostgreSQL
-  
-# =============================================================================
-# DYNAMIC PLUGINS
-# =============================================================================
-
-global:
-  dynamic:
-    includes:
-      - dynamic-plugins.default.yaml
-    plugins:
-      # GitHub Plugins
-      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
-        disabled: false
-      - package: ./dynamic-plugins/dist/backstage-plugin-github-issues
-        disabled: false
-        
-      # Kubernetes Plugins
-      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
-        disabled: false
-        
-      # ArgoCD Plugins
-      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd
-        disabled: false
-        
-      # TechDocs
-      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
-        disabled: false
-        
-      # Scaffolder Actions
-      - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
-        disabled: false
-        
-      # Security (if GHAS enabled)
-      - package: ./dynamic-plugins/dist/backstage-plugin-security-insights
-        disabled: false
         
 # =============================================================================
 # ADDITIONAL SECRETS TO CREATE

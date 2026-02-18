@@ -238,9 +238,26 @@ if [[ "$LAST_PHASE" -lt 6 ]] && [[ "$HORIZON" == "h2" || "$HORIZON" == "all" ]];
   phase 5 "Deploy H2 Enhancement (ArgoCD, Observability, External Secrets)"
   cd "$TERRAFORM_DIR"
 
-  # H2 modules are deployed via the same terraform apply
-  # (they were already planned in Phase 3 if all flags are enabled)
-  echo -e "  ${GREEN}✓${NC} H2 modules deployed via Terraform (ArgoCD, Observability, External Secrets)"
+  if $DRY_RUN; then
+    echo -e "  ${BLUE}Running terraform plan for H2 modules...${NC}"
+    terraform plan \
+      -var-file="environments/${ENVIRONMENT}.tfvars" \
+      -target=module.argocd \
+      -target=module.observability \
+      -target=module.external_secrets \
+      -target=module.databases 2>&1 | tail -5
+    echo -e "  ${YELLOW}DRY RUN — skipping H2 apply${NC}"
+  else
+    echo -e "  ${BLUE}Applying H2 modules (ArgoCD, Observability, External Secrets, Databases)...${NC}"
+    terraform apply \
+      -var-file="environments/${ENVIRONMENT}.tfvars" \
+      -target=module.argocd \
+      -target=module.observability \
+      -target=module.external_secrets \
+      -target=module.databases \
+      $(if $AUTO_APPROVE; then echo "-auto-approve"; fi)
+    echo -e "  ${GREEN}\u2713${NC} H2 modules deployed via Terraform"
+  fi
   echo "  Verify with: kubectl get pods -n argocd"
 
   save_checkpoint 6
@@ -260,7 +277,20 @@ if [[ "$LAST_PHASE" -lt 8 ]] && [[ "$HORIZON" == "h3" || "$HORIZON" == "all" ]];
 
   if grep -q 'enable_ai_foundry.*=.*true' "environments/${ENVIRONMENT}.tfvars"; then
     echo -e "  ${GREEN}✓${NC} AI Foundry enabled in configuration"
-    echo "  AI models deployed via Terraform"
+    if $DRY_RUN; then
+      echo -e "  ${BLUE}Running terraform plan for AI Foundry...${NC}"
+      terraform plan \
+        -var-file="environments/${ENVIRONMENT}.tfvars" \
+        -target=module.ai_foundry 2>&1 | tail -5
+      echo -e "  ${YELLOW}DRY RUN — skipping H3 apply${NC}"
+    else
+      echo -e "  ${BLUE}Applying AI Foundry module...${NC}"
+      terraform apply \
+        -var-file="environments/${ENVIRONMENT}.tfvars" \
+        -target=module.ai_foundry \
+        $(if $AUTO_APPROVE; then echo "-auto-approve"; fi)
+      echo -e "  ${GREEN}\u2713${NC} AI Foundry deployed via Terraform"
+    fi
   else
     echo -e "  ${YELLOW}!${NC} AI Foundry disabled in ${ENVIRONMENT}.tfvars"
     echo "  To enable: set enable_ai_foundry = true and re-run"

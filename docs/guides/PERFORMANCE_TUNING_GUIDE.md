@@ -1,14 +1,10 @@
-# Performance Tuning Guide
+# Three Horizons Accelerator - Performance Tuning Guide
 
 > **Version:** 4.0.0
 > **Last Updated:** December 2025
-> **Audience:** Platform Engineers, SRE Teams
+> **Audience:** Platform Engineers, DevOps Teams
 
 ---
-
-## Overview
-
-This guide provides recommendations for optimizing the performance of the Three Horizons Platform across all components.
 
 ## Table of Contents
 
@@ -23,6 +19,12 @@ This guide provides recommendations for optimizing the performance of the Three 
 9. [AI Workload Optimization](#ai-workload-optimization)
 10. [Load Testing](#load-testing)
 11. [Capacity Planning](#capacity-planning)
+
+---
+
+## Overview
+
+This guide provides recommendations for optimizing the performance of the Three Horizons Platform across all components.
 
 ---
 
@@ -641,3 +643,9 @@ Add buffer: 3 × 1.3 = 4 nodes recommended
 | Cost vs performance analysis | `@architect` | "Evaluate trade-offs between Standard_D4s_v3 and Standard_D8s_v3" |
 
 > **Tip:** Ask `@sre` to analyze metrics before making tuning decisions — data-driven changes are safer.
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

@@ -15,6 +15,25 @@ pass()   { echo -e "  ${GREEN}✓${NC} $1"; }
 fail()   { echo -e "  ${RED}✗${NC} $1"; ERRORS=$((ERRORS + 1)); }
 warn()   { echo -e "  ${YELLOW}!${NC} $1"; }
 
+# Semver comparison: returns 0 if $1 >= $2
+version_gte() {
+  local v1="$1" v2="$2"
+  # Pad to 3 parts
+  local IFS='.'
+  read -ra a1 <<< "$v1"
+  read -ra a2 <<< "$v2"
+  for i in 0 1 2; do
+    local n1=${a1[$i]:-0}
+    local n2=${a2[$i]:-0}
+    # strip non-numeric suffix
+    n1=$(echo "$n1" | grep -oE '^[0-9]+' || echo 0)
+    n2=$(echo "$n2" | grep -oE '^[0-9]+' || echo 0)
+    if (( n1 > n2 )); then return 0; fi
+    if (( n1 < n2 )); then return 1; fi
+  done
+  return 0
+}
+
 check_tool() {
   local tool="$1" min_version="$2" purpose="$3"
   if ! command -v "$tool" &>/dev/null; then
@@ -35,7 +54,11 @@ check_tool() {
     *)         version="unknown" ;;
   esac
 
-  pass "$tool $version (required: >= $min_version) — $purpose"
+  if version_gte "$version" "$min_version"; then
+    pass "$tool $version (required: >= $min_version) — $purpose"
+  else
+    fail "$tool $version is below minimum $min_version — $purpose"
+  fi
   return 0
 }
 

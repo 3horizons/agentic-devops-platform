@@ -14,7 +14,7 @@ This document describes the Git branching strategy used in the Three Horizons Ac
 
 ## Branch Flow
 
-![Branch Flow](docs/assets/branching-strategy.svg)
+![Branch Flow](assets/branching-strategy.svg)
 
 ## Workflow
 

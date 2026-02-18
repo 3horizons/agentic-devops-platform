@@ -110,9 +110,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 28 Issue templates with T-shirt sizing
 - 6 CI/CD workflows
 - 3 Copilot chat modes (architect, reviewer, sre)
-- 3 Copilot agents (platform, devops, security)
+- 11 Copilot agents (onboarding, architect, platform, terraform, reviewer, devops, security, sre, test, docs, deploy)
+- 18 skills (azure-cli, azure-infrastructure, terraform-cli, kubectl-cli, helm-cli, oc-cli, argocd-cli, github-cli, mcp-cli, openshift-operations, aro-deployment, rhdh-portal, database-management, observability-stack, ai-foundry-operations, validation-scripts, deploy-orchestration, prerequisites)
 - 3 instruction files (terraform, kubernetes, python)
-- 3 prompts (create-service, review-code, generate-tests)
+- 7 prompts (create-service, review-code, generate-tests, deploy-service, deploy-platform, troubleshoot-incident, generate-docs)
 - Branch protection workflow
 - Dependabot configuration
 

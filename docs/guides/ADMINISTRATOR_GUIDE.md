@@ -1167,6 +1167,24 @@ The platform includes AI agents that assist with day-2 operations:
 
 ---
 
+## Related Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Troubleshooting Guide](./TROUBLESHOOTING_GUIDE.md) | Diagnostic workflows for common platform issues |
+| [Performance Tuning Guide](./PERFORMANCE_TUNING_GUIDE.md) | Optimization recommendations for all components |
+| [Deployment Guide](./DEPLOYMENT_GUIDE.md) | Step-by-step platform deployment instructions |
+| [Module Reference](./MODULE_REFERENCE.md) | Detailed inputs/outputs for all Terraform modules |
+| [Runbooks](../runbooks/README.md) | Operational runbooks for common procedures |
+
+## Next Steps
+
+- **Review performance tuning**: Optimize cluster resources — see [Performance Tuning Guide](./PERFORMANCE_TUNING_GUIDE.md)
+- **Set up runbooks**: Familiarize with operational procedures — see [Runbooks](../runbooks/README.md)
+- **Configure alerting**: Set up alerting rules and notification channels
+
+---
+
 **Document Version:** 2.0.0
 **Last Updated:** December 2025
 **Maintainer:** Platform Engineering Team

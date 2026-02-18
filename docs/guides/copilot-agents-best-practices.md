@@ -1,4 +1,9 @@
-# Best Practices for Working with GitHub Copilot Agents
+# Three Horizons Accelerator - GitHub Copilot Agents Best Practices
+
+> **Version:** 4.0.0
+> **Last Updated:** December 2025
+> **Audience:** All Team Members
+
 _A practical playbook for Agent Mode (IDE), Copilot Coding Agent (GitHub), Copilot CLI, Custom Agents, Skills, MCP, scripts, and integrations._
 
 ---
@@ -387,3 +392,9 @@ https://github.com/githubnext/agentics
 https://code.visualstudio.com/docs/copilot/agents/agents-tutorial
 https://techcommunity.microsoft.com/blog/azuredevcommunityblog/building-agents-with-github-copilot-sdk-a-practical-guide-to-automated-tech-upda/4488948
 ```
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

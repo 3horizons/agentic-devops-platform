@@ -116,7 +116,7 @@ metadata:
   annotations:
     description: "Requires containers to run as non-root user"
 spec:
-  enforcementAction: warn
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]

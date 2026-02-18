@@ -222,6 +222,20 @@ variable "github_app_client_secret" {
   sensitive   = true
 }
 
+variable "github_app_installation_id" {
+  description = "GitHub App Installation ID for self-hosted runners"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "github_app_private_key" {
+  description = "GitHub App Private Key (PEM format) for self-hosted runners"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
 # -----------------------------------------------------------------------------
 # Cost Management — Required when enable_cost_management = true
 # -----------------------------------------------------------------------------

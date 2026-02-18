@@ -1,5 +1,9 @@
 # Emergency Procedures Runbook
 
+> **Version:** 2.0.0
+> **Last Updated:** December 2025
+> **Audience:** SRE, Platform Engineers, On-Call Engineers
+
 ## Overview
 
 This runbook contains critical emergency procedures for the Three Horizons Platform. Use these procedures when immediate action is required to protect the platform, data, or users.
@@ -231,3 +235,9 @@ argocd app sync --all
 - [Incident Response](incident-response.md)
 - [Rollback Runbook](rollback-runbook.md)
 - [Disaster Recovery](disaster-recovery.md)
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

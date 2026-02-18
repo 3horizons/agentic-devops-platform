@@ -1,5 +1,9 @@
 # Incident Response Runbook
 
+> **Version:** 2.0.0
+> **Last Updated:** December 2025
+> **Audience:** SRE, Platform Engineers, On-Call Engineers
+
 ## Overview
 
 This runbook provides procedures for responding to production incidents on the Three Horizons Platform.
@@ -237,3 +241,9 @@ Follow-up: [Any required actions]
 - [Troubleshooting Guide](../guides/TROUBLESHOOTING_GUIDE.md)
 - [Emergency Procedures](emergency-procedures.md)
 - [Rollback Runbook](rollback-runbook.md)
+
+---
+
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team

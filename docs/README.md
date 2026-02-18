@@ -15,6 +15,10 @@
 | **Manage the platform day-to-day** | [Administrator Guide](guides/ADMINISTRATOR_GUIDE.md) |
 | **Fix a problem** | [Troubleshooting Guide](guides/TROUBLESHOOTING_GUIDE.md) |
 | **Learn about Terraform modules** | [Module Reference](guides/MODULE_REFERENCE.md) |
+| **Tune performance** | [Performance Tuning Guide](guides/PERFORMANCE_TUNING_GUIDE.md) |
+| **Run operational procedures** | [Runbooks](runbooks/README.md) |
+| **Use Copilot Agents** | [Agent System](../AGENTS.md) |
+| **Review platform configuration** | [Config](../config/README.md) · [Helm Charts](../deploy/README.md) · [Grafana](../grafana/README.md) |
 
 ---
 
@@ -37,6 +41,26 @@
 | [Troubleshooting Guide](guides/TROUBLESHOOTING_GUIDE.md) | Common issues and solutions | ~35 |
 | [Module Reference](guides/MODULE_REFERENCE.md) | Terraform module documentation | ~30 |
 | [Performance Tuning Guide](guides/PERFORMANCE_TUNING_GUIDE.md) | Performance optimization recommendations | ~20 |
+
+### Copilot Agent Guides
+
+| Guide | Description |
+|-------|-------------|
+| [Copilot Agents Best Practices](guides/copilot-agents-best-practices.md) | Implementation patterns and recommendations |
+| [Copilot Agents Complete Guide](guides/copilot-agents-complete-guide.md) | Comprehensive agent system documentation |
+| [Agents Overview](architecture/agents-overview.md) | Architecture and design decisions |
+| [Improvement Plan](architecture/copilot-agents-improvement-plan.md) | Roadmap for agent enhancements |
+
+### Operational Runbooks
+
+| Runbook | Description |
+|---------|-------------|
+| [Deployment Runbook](runbooks/deployment-runbook.md) | Standard deployment procedures |
+| [Rollback Runbook](runbooks/rollback-runbook.md) | Rollback procedures |
+| [Incident Response](runbooks/incident-response.md) | Incident response workflows |
+| [Emergency Procedures](runbooks/emergency-procedures.md) | Emergency actions |
+| [Disaster Recovery](runbooks/disaster-recovery.md) | DR procedures |
+| [Node Replacement](runbooks/node-replacement.md) | Node drain and replacement |
 
 ### Reference Documentation
 
@@ -190,6 +214,25 @@ Terraform module documentation:
 
 ---
 
+## Platform Resources
+
+Key directories outside `docs/` with their own README navigators:
+
+| Directory | Description |
+|-----------|-------------|
+| [terraform/](../terraform/README.md) | Terraform root module and infrastructure code |
+| [terraform/environments/](../terraform/environments/README.md) | Environment-specific tfvars (dev, staging, prod) |
+| [deploy/](../deploy/README.md) | Helm charts for ArgoCD and monitoring |
+| [config/](../config/README.md) | Platform configuration (APM, regions, sizing) |
+| [platform/](../platform/README.md) | Red Hat Developer Hub (RHDH) configuration |
+| [grafana/](../grafana/README.md) | Grafana dashboard definitions |
+| [prometheus/](../prometheus/README.md) | Alerting and recording rules |
+| [golden-paths/](../golden-paths/README.md) | Golden Path templates for scaffolding |
+| [argocd/](../argocd/README.md) | ArgoCD application definitions and policies |
+| [scripts/](../scripts/README.md) | Automation and validation scripts |
+
+---
+
 ## Document Structure
 
 ```
@@ -197,22 +240,31 @@ docs/
 ├── README.md                    # This index file
 ├── BRANCHING_STRATEGY.md        # Git workflow
 │
+├── architecture/
+│   ├── agents-overview.md       # Agent system architecture
+│   └── copilot-agents-improvement-plan.md
+│
 ├── guides/
 │   ├── DEPLOYMENT_GUIDE.md      # Step-by-step deployment
 │   ├── ARCHITECTURE_GUIDE.md    # System architecture
 │   ├── ADMINISTRATOR_GUIDE.md   # Operations manual
 │   ├── TROUBLESHOOTING_GUIDE.md # Problem solving
 │   ├── MODULE_REFERENCE.md      # Terraform modules
-│   └── PERFORMANCE_TUNING_GUIDE.md # Performance optimization
+│   ├── PERFORMANCE_TUNING_GUIDE.md # Performance optimization
+│   ├── copilot-agents-best-practices.md  # Agent best practices
+│   └── copilot-agents-complete-guide.md  # Agent complete guide
 │
-└── runbooks/
-    ├── README.md                # Runbook index
-    ├── deployment-runbook.md    # Deployment procedures
-    ├── rollback-runbook.md      # Rollback procedures
-    ├── incident-response.md     # Incident response
-    ├── emergency-procedures.md  # Emergency actions
-    ├── disaster-recovery.md     # DR procedures
-    └── node-replacement.md      # Node drain/replace
+├── runbooks/
+│   ├── README.md                # Runbook index
+│   ├── deployment-runbook.md    # Deployment procedures
+│   ├── rollback-runbook.md      # Rollback procedures
+│   ├── incident-response.md     # Incident response
+│   ├── emergency-procedures.md  # Emergency actions
+│   ├── disaster-recovery.md     # DR procedures
+│   └── node-replacement.md      # Node drain/replace
+│
+├── assets/                      # Images and diagrams (SVG, PNG)
+└── research/                    # Agent research notes
 ```
 
 ---
@@ -235,6 +287,12 @@ docs/
 1. Use the [Administrator Guide](guides/ADMINISTRATOR_GUIDE.md) daily
 2. Reference the [Troubleshooting Guide](guides/TROUBLESHOOTING_GUIDE.md) for issues
 3. Check [Agent Documentation](../AGENTS.md) for automation
+
+### Working with Copilot Agents
+
+1. Read the [Agent System](../AGENTS.md) overview
+2. Study the [Copilot Agents Best Practices](guides/copilot-agents-best-practices.md)
+3. Explore the [Complete Guide](guides/copilot-agents-complete-guide.md) for advanced usage
 
 ### Contributing
 
@@ -288,5 +346,7 @@ Found an issue or want to improve the documentation?
 
 ---
 
-**Maintained by:** Platform Engineering Team
+**Document Version:** 2.0.0
+**Last Updated:** December 2025
+**Maintainer:** Platform Engineering Team
 **License:** MIT

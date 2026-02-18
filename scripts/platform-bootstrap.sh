@@ -222,11 +222,10 @@ check_prerequisites() {
 load_environment_config() {
     log STEP "Loading environment configuration for: $ENVIRONMENT"
     
-    local config_file="${ACCELERATOR_ROOT}/environments/${ENVIRONMENT}/config.env"
+    local config_file="${ACCELERATOR_ROOT}/terraform/environments/${ENVIRONMENT}.tfvars"
     
     if [[ -f "$config_file" ]]; then
-        source "$config_file"
-        log INFO "Loaded configuration from: $config_file"
+        log INFO "Found configuration at: $config_file"
     else
         log WARN "No environment config found at: $config_file"
         log WARN "Using default values"
@@ -286,33 +285,16 @@ deploy_h1_foundation() {
         --tags "Environment=${ENVIRONMENT}" "Platform=ThreeHorizons" \
         --output none
     
-    # Deploy networking
-    log INFO "Deploying networking infrastructure..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/networking"
+    # Deploy H1 Foundation via root module
+    log INFO "Deploying H1 Foundation infrastructure..."
+    cd "${ACCELERATOR_ROOT}/terraform"
     terraform init -upgrade
     terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="location=${AZURE_REGION}" \
-        -var="environment=${ENVIRONMENT}"
-    
-    # Deploy security
-    log INFO "Deploying security infrastructure..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/security"
-    terraform init -upgrade
-    terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="location=${AZURE_REGION}" \
-        -var="environment=${ENVIRONMENT}"
-    
-    # Deploy AKS
-    log INFO "Deploying AKS cluster..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/aks"
-    terraform init -upgrade
-    terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="location=${AZURE_REGION}" \
-        -var="cluster_name=${AKS_CLUSTER_NAME}" \
-        -var="environment=${ENVIRONMENT}"
+        -var-file="environments/${ENVIRONMENT}.tfvars" \
+        -target=module.networking \
+        -target=module.security \
+        -target=module.aks \
+        -target=azurerm_resource_group.main
     
     # Get AKS credentials
     log INFO "Configuring kubectl..."
@@ -321,14 +303,12 @@ deploy_h1_foundation() {
         --name "$AKS_CLUSTER_NAME" \
         --overwrite-existing
     
-    # Deploy container registry
+    # Deploy container registry via root module
     log INFO "Deploying container registry..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/container-registry"
-    terraform init -upgrade
+    cd "${ACCELERATOR_ROOT}/terraform"
     terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="location=${AZURE_REGION}" \
-        -var="environment=${ENVIRONMENT}"
+        -var-file="environments/${ENVIRONMENT}.tfvars" \
+        -target=module.container_registry
     
     save_checkpoint "h1_complete"
     log INFO "H1 Foundation deployment complete ✓"
@@ -349,51 +329,16 @@ deploy_h2_enhancement() {
         return 0
     fi
     
-    # Deploy ArgoCD
-    log INFO "Deploying ArgoCD..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/argocd"
-    terraform init -upgrade
+    # Deploy H2 Enhancement via root module
+    log INFO "Deploying H2 Enhancement components..."
+    cd "${ACCELERATOR_ROOT}/terraform"
     terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="cluster_name=${AKS_CLUSTER_NAME}" \
-        -var="environment=${ENVIRONMENT}"
-    
-    # Deploy observability
-    log INFO "Deploying observability stack..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/observability"
-    terraform init -upgrade
-    terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="cluster_name=${AKS_CLUSTER_NAME}" \
-        -var="environment=${ENVIRONMENT}"
-    
-    # Deploy databases
-    log INFO "Deploying managed databases..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/databases"
-    terraform init -upgrade
-    terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="location=${AZURE_REGION}" \
-        -var="environment=${ENVIRONMENT}"
-    
-    # Deploy RHDH
-    log INFO "Deploying Red Hat Developer Hub..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/rhdh"
-    terraform init -upgrade
-    terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="cluster_name=${AKS_CLUSTER_NAME}" \
-        -var="environment=${ENVIRONMENT}"
-    
-    # Deploy GitHub runners
-    log INFO "Deploying GitHub self-hosted runners..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/github-runners"
-    terraform init -upgrade
-    terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="cluster_name=${AKS_CLUSTER_NAME}" \
-        -var="github_org=${GITHUB_ORG}" \
-        -var="environment=${ENVIRONMENT}"
+        -var-file="environments/${ENVIRONMENT}.tfvars" \
+        -target=module.argocd \
+        -target=module.observability \
+        -target=module.databases \
+        -target=module.external_secrets \
+        -target=module.github_runners
     
     save_checkpoint "h2_complete"
     log INFO "H2 Enhancement deployment complete ✓"
@@ -413,14 +358,12 @@ deploy_h3_innovation() {
         return 0
     fi
     
-    # Deploy AI Foundry
+    # Deploy AI Foundry via root module
     log INFO "Deploying Azure AI Foundry..."
-    cd "${ACCELERATOR_ROOT}/terraform/modules/ai-foundry"
-    terraform init -upgrade
+    cd "${ACCELERATOR_ROOT}/terraform"
     terraform apply -auto-approve \
-        -var="resource_group_name=${RESOURCE_GROUP_NAME}" \
-        -var="location=${AZURE_REGION}" \
-        -var="environment=${ENVIRONMENT}"
+        -var-file="environments/${ENVIRONMENT}.tfvars" \
+        -target=module.ai_foundry
     
     save_checkpoint "h3_complete"
     log INFO "H3 Innovation deployment complete ✓"
@@ -441,7 +384,7 @@ configure_gitops() {
     
     # Configure ArgoCD applications
     log INFO "Configuring ArgoCD applications..."
-    kubectl apply -f "${ACCELERATOR_ROOT}/gitops/argocd-apps/"
+    kubectl apply -f "${ACCELERATOR_ROOT}/argocd/apps/"
     
     # Wait for sync
     log INFO "Waiting for ArgoCD sync..."
@@ -567,25 +510,12 @@ destroy_platform() {
         exit 0
     fi
     
-    # Destroy in reverse order
-    local modules=(
-        "ai-foundry"
-        "github-runners"
-        "rhdh"
-        "databases"
-        "observability"
-        "argocd"
-        "container-registry"
-        "aks"
-        "security"
-        "networking"
-    )
-    
-    for module in "${modules[@]}"; do
-        log INFO "Destroying module: $module"
-        cd "${ACCELERATOR_ROOT}/terraform/modules/${module}"
-        terraform destroy -auto-approve || true
-    done
+    # Destroy via root module
+    log INFO "Destroying all infrastructure via root Terraform module..."
+    cd "${ACCELERATOR_ROOT}/terraform"
+    terraform init -upgrade
+    terraform destroy -auto-approve \
+        -var-file="environments/${ENVIRONMENT}.tfvars" || true
     
     # Delete resource group
     log INFO "Deleting resource group..."

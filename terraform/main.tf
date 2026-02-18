@@ -136,7 +136,7 @@ locals {
   deployment_configs = {
     express = {
       aks_node_count    = 3
-      aks_node_size     = "Standard_D4s_v3"
+      aks_node_size     = "Standard_D4s_v5"
       enable_ha         = false
       enable_monitoring = true
       enable_databases  = true
@@ -144,7 +144,7 @@ locals {
     }
     standard = {
       aks_node_count    = 5
-      aks_node_size     = "Standard_D4s_v3"
+      aks_node_size     = "Standard_D4s_v5"
       enable_ha         = true
       enable_monitoring = true
       enable_databases  = true
@@ -152,7 +152,7 @@ locals {
     }
     enterprise = {
       aks_node_count    = 10
-      aks_node_size     = "Standard_D8s_v3"
+      aks_node_size     = "Standard_D8s_v5"
       enable_ha         = true
       enable_monitoring = true
       enable_databases  = true
@@ -298,7 +298,7 @@ module "aks" {
     "workload" = {
       name                = "workload"
       node_count          = 5
-      vm_size             = "Standard_D4s_v3"
+      vm_size             = "Standard_D4s_v5"
       min_count           = 3
       max_count           = 20
       enable_auto_scaling = true
@@ -566,8 +566,8 @@ module "github_runners" {
   namespace                   = "github-runners"
   github_org                  = var.github_org
   github_app_id               = var.github_app_id
-  github_app_installation_id  = ""
-  github_app_private_key      = ""
+  github_app_installation_id  = var.github_app_installation_id
+  github_app_private_key      = var.github_app_private_key
   runner_scale_set_name       = "arc-runners"
   min_runners                 = 1
   max_runners                 = var.deployment_mode == "enterprise" ? 10 : 5
@@ -575,6 +575,33 @@ module "github_runners" {
   tags = local.common_tags
 
   depends_on = [module.aks]
+}
+
+# =============================================================================
+# MODULE: RHDH (H2 — Optional)
+# =============================================================================
+
+module "rhdh" {
+  source = "./modules/rhdh"
+  count  = var.enable_rhdh ? 1 : 0
+
+  customer_name       = var.customer_name
+  environment         = var.environment
+  namespace           = "rhdh"
+
+  domain_name         = var.domain_name
+  github_org          = var.github_org
+
+  github_app_id            = var.github_app_id
+  github_app_client_id     = var.github_app_client_id
+  github_app_client_secret = var.github_app_client_secret
+
+  postgresql_host     = var.enable_databases ? module.databases[0].postgresql_host : ""
+  key_vault_id        = module.security.key_vault_id
+
+  tags = local.common_tags
+
+  depends_on = [module.aks, module.security, module.databases]
 }
 
 # =============================================================================

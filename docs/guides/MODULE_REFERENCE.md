@@ -945,7 +945,7 @@ module "databases" {
 
 #### Database Connection Security
 
-![Database Connection Flow](../assets/arch-secret-management.svg)
+![Database Connection Flow](../assets/mod-database-connection-flow.svg)
 
 ---
 
@@ -1181,7 +1181,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 #### How External Secrets Work
 
-![External Secrets Flow](../assets/arch-secret-management.svg)
+![External Secrets Flow](../assets/mod-external-secrets-flow.svg)
 
 #### Inputs
 
@@ -2210,6 +2210,37 @@ If you encounter issues not covered here:
 | PostgreSQL HA | Disabled | SameZone | ZoneRedundant |
 | DR enabled | No | No | Yes |
 | Budget alerts | 50%, 100% | 75%, 100% | 50%, 75%, 90%, 100% |
+
+---
+
+## 🤖 Using Copilot Agents for Module Configuration
+
+| Task | Agent / Prompt | Example |
+|------|---------------|---------|
+| Module selection guidance | `@terraform` | *"Which modules do I need for a production AKS deployment?"* |
+| Input variable configuration | `@terraform` | *"Help me configure the networking module variables for a hub-spoke topology"* |
+| Module dependency analysis | `@architect` | *"Show me the dependency graph between aks-cluster and networking modules"* |
+| Security review of module config | `@security` | *"Review my terraform.tfvars for security best practices"* |
+| Cost estimation | `@architect` | *"Estimate monthly costs for this module configuration"* |
+
+> **Tip:** Use `@terraform` to get help with module configuration and `@architect` to understand module dependencies and architecture decisions.
+
+---
+
+## 📚 Related Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Architecture Guide](ARCHITECTURE_GUIDE.md) | Platform architecture and design decisions |
+| [Deployment Guide](DEPLOYMENT_GUIDE.md) | Step-by-step deployment procedures |
+| [Terraform README](../../terraform/README.md) | Terraform workspace and backend configuration |
+| [Performance Tuning Guide](PERFORMANCE_TUNING_GUIDE.md) | Performance optimization and sizing |
+
+## ➡️ Next Steps
+
+- **Deploy modules**: Follow the [Deployment Guide](DEPLOYMENT_GUIDE.md) to deploy your configured modules
+- **Review architecture**: Understand the platform design in the [Architecture Guide](ARCHITECTURE_GUIDE.md)
+- **Create custom modules**: Reference the existing modules as templates for organization-specific infrastructure
 
 ---
 
