@@ -36,6 +36,7 @@ add-helm-repos: ## Add required Helm repositories
 	@helm repo add argo https://argoproj.github.io/argo-helm 2>/dev/null || true
 	@helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2>/dev/null || true
 	@helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts 2>/dev/null || true
+	@helm repo add backstage https://backstage.github.io/charts 2>/dev/null || true
 	@helm repo update
 	@echo "✓ Helm repos ready"
 
@@ -93,10 +94,13 @@ prometheus: ## Port-forward Prometheus → http://localhost:9090
 	@kubectl port-forward svc/monitoring-kube-prometheus-prometheus -n observability 9090:9090 2>/dev/null || \
 		kubectl port-forward svc/kube-prometheus-stack-prometheus -n observability 9090:9090
 
-rhdh: ## Port-forward RHDH → http://localhost:7007
-	@echo "RHDH → http://localhost:7007"
-	@kubectl port-forward svc/rhdh-redhat-developer-hub -n rhdh 7007:7007 2>/dev/null || \
-		echo "RHDH not installed. Set RHDH_ENABLED=true in local/config/local.env"
+portal: ## Port-forward Developer Portal (Backstage or RHDH) → http://localhost:7007
+	@echo "Developer Portal → http://localhost:7007"
+	@kubectl port-forward svc/backstage -n rhdh 7007:7007 2>/dev/null || \
+		kubectl port-forward svc/rhdh-redhat-developer-hub -n rhdh 7007:7007 2>/dev/null || \
+		echo "Portal not installed. Set RHDH_ENABLED=true in local/config/local.env"
+
+rhdh: portal ## Alias for portal (backward compat)
 
 argocd-password: ## Show ArgoCD admin password
 	@kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' 2>/dev/null | base64 -d && echo "" || \

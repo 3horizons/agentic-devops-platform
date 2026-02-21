@@ -284,3 +284,6 @@ argocd-credentials.txt
 
 # Generated files
 *.generated.*
+
+# Local demo secrets (contains GitHub App credentials)
+local/config/local.env

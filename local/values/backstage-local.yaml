@@ -1,0 +1,123 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR — Backstage (Upstream) Local Values Override
+# =============================================================================
+# Open-source Backstage from Spotify — no Red Hat registry required.
+# Functionally identical to RHDH for demos: catalog, templates, scaffolding.
+#
+# Chart: backstage/backstage (https://backstage.github.io/charts)
+# Image: ghcr.io/backstage/backstage (free, public)
+#
+# Use with: PORTAL_TYPE="backstage" in local/config/local.env
+# =============================================================================
+
+backstage:
+  replicas: 1
+
+  image:
+    registry: ghcr.io
+    repository: backstage/backstage
+    tag: latest
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+  extraEnvVars:
+    - name: GITHUB_APP_ID
+      valueFrom:
+        secretKeyRef:
+          name: backstage-github-app
+          key: app-id
+          optional: true
+    - name: GITHUB_APP_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: backstage-github-app
+          key: client-id
+          optional: true
+    - name: GITHUB_APP_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: backstage-github-app
+          key: client-secret
+          optional: true
+    - name: GITHUB_APP_PRIVATE_KEY
+      valueFrom:
+        secretKeyRef:
+          name: backstage-github-app
+          key: private-key
+          optional: true
+
+  appConfig:
+    app:
+      title: "Three Horizons — Developer Portal (Local)"
+      baseUrl: http://localhost:7007
+
+    backend:
+      baseUrl: http://localhost:7007
+      listen:
+        port: 7007
+      database:
+        client: pg
+        connection:
+          host: postgresql.databases.svc.cluster.local
+          port: 5432
+          user: postgres
+          password: demo-postgres-2026
+
+    auth:
+      environment: development
+      providers:
+        guest:
+          dangerouslyAllowOutsideDevelopment: true
+        github:
+          development:
+            clientId: ${GITHUB_APP_CLIENT_ID}
+            clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+
+    integrations:
+      github:
+        - host: github.com
+          apps:
+            - appId: ${GITHUB_APP_ID}
+              clientId: ${GITHUB_APP_CLIENT_ID}
+              clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+              privateKey: ${GITHUB_APP_PRIVATE_KEY}
+
+    catalog:
+      rules:
+        - allow: [Component, System, API, Resource, Location, Template]
+      locations:
+        - type: url
+          target: https://github.com/paulanunes85/three-horizons-accelerator-v4/blob/main/golden-paths/h1-foundation/*/template.yaml
+          rules:
+            - allow: [Template]
+        - type: url
+          target: https://github.com/paulanunes85/three-horizons-accelerator-v4/blob/main/golden-paths/h2-enhancement/*/template.yaml
+          rules:
+            - allow: [Template]
+        - type: url
+          target: https://github.com/paulanunes85/three-horizons-accelerator-v4/blob/main/golden-paths/h3-innovation/*/template.yaml
+          rules:
+            - allow: [Template]
+
+    techdocs:
+      builder: local
+      generator:
+        runIn: local
+      publisher:
+        type: local
+
+  service:
+    type: NodePort
+    ports:
+      backend: 7007
+      targetPort: 7007
+      nodePort: 30700
+
+postgresql:
+  enabled: false  # Using external PostgreSQL from databases namespace
