@@ -442,7 +442,7 @@ This Architecture Guide covered:
 6. **GitOps:** ArgoCD workflow and application model
 7. **Observability:** Prometheus, Grafana, and alerting
 8. **AI/ML:** Azure AI Foundry - enterprise AI hub with multiple model providers and agent capabilities
-9. **Agents:** 11 Copilot Chat Agents for development assistance
+9. **Agents:** 13 Copilot Chat Agents for development assistance
 10. **Data Flows:** How deployments and secret access work
 11. **ADRs:** Key architecture decisions and rationale
 

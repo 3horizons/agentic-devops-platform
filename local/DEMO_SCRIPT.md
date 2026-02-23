@@ -34,11 +34,11 @@ Contextualizar a plataforma e sua arquitetura de 3 horizontes.
 
 > "O Three Horizons Accelerator é um kit de aceleração enterprise-grade criado em parceria com Microsoft, GitHub e Red Hat. Ele implementa o conceito de 3 Horizontes de Inovação aplicado a uma plataforma de engenharia moderna."
 
-> "O diferencial: **11 AI agents** especializados que operam dentro do VS Code via GitHub Copilot Chat. Cada agent tem um papel definido — deploy, arquitetura, segurança, SRE, DevOps — com boundaries claros sobre o que podem e não podem fazer."
+> "O diferencial: **13 AI agents** especializados que operam dentro do VS Code via GitHub Copilot Chat. Cada agent tem um papel definido — deploy, arquitetura, segurança, SRE, DevOps — com boundaries claros sobre o que podem e não podem fazer."
 
 ### O que mostrar
 
-1. **Estrutura do repositório** — Abrir VS Code, mostrar `.github/agents/` com os 11 agents
+1. **Estrutura do repositório** — Abrir VS Code, mostrar `.github/agents/` com os 13 agents
 2. **Golden Paths** — Navegar `golden-paths/` mostrando as 3 pastas (h1, h2, h3)
 3. **README.md** — Scroll rápido pela documentação principal
 
@@ -349,7 +349,7 @@ Abrir ArgoCD (`https://localhost:8443`):
 
 > "O que vocês viram hoje:"
 
-1. **11 AI agents** cobrindo todo o lifecycle: architect → terraform → security → devops → test → reviewer → sre → deploy → platform → docs → onboarding
+1. **13 AI agents** cobrindo todo o lifecycle: architect → terraform → security → devops → test → reviewer → sre → deploy → platform → docs → onboarding
 
 2. **22 Golden Path templates** de H1 Foundation a H3 AI Innovation — incluindo ADO para GitHub migration, Foundry Agents, RAG apps
 

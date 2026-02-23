@@ -190,7 +190,7 @@ jobs:
 
             ## Highlights
 
-            - 16 Terraform modules for Azure infrastructure
+            - 18 Terraform modules for Azure infrastructure
             - 23 AI Agents for deployment orchestration
             - 22 Golden Path templates for RHDH/Backstage
             - 28 GitHub Issue templates with T-shirt sizing

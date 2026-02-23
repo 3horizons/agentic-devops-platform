@@ -112,25 +112,29 @@ Follow the detailed **[Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md)** — 
 ```
 three-horizons-accelerator-v4/
 │
-├── .github/agents/                 # 11 Copilot Chat Agents
+├── .github/agents/                 # 13 Copilot Chat Agents
 │   ├── architect.agent.md          # System architecture, AI Foundry
+│   ├── backstage-expert.agent.md   # Backstage portal on AKS
 │   ├── deploy.agent.md             # Deployment orchestration
 │   ├── devops.agent.md             # CI/CD, GitOps, MLOps, pipelines
 │   ├── docs.agent.md               # Documentation generation
 │   ├── onboarding.agent.md         # Team onboarding guidance
 │   ├── platform.agent.md           # RHDH portal, platform services
 │   ├── reviewer.agent.md           # Code review, quality checks
+│   ├── rhdh-expert.agent.md        # RHDH portal on AKS/ARO
 │   ├── security.agent.md           # Security policies, compliance
 │   ├── sre.agent.md                # Reliability, incident response
 │   ├── terraform.agent.md          # Infrastructure as Code
 │   └── test.agent.md               # Testing, validation
 │
-├── terraform/                      # 16 Infrastructure as Code modules
+├── terraform/                      # 18 Infrastructure as Code modules
 │   ├── main.tf                     # Root module
 │   └── modules/
 │       ├── aks-cluster/            # Azure Kubernetes Service
 │       ├── ai-foundry/             # Azure AI Foundry
 │       ├── argocd/                 # ArgoCD GitOps
+│       ├── aro-cluster/            # Azure Red Hat OpenShift
+│       ├── backstage/              # Backstage Developer Portal
 │       ├── container-registry/     # ACR
 │       ├── cost-management/        # Cost analysis and budgets
 │       ├── databases/              # PostgreSQL, Redis, Cosmos
@@ -154,7 +158,7 @@ three-horizons-accelerator-v4/
 ├── argocd/                         # GitOps configurations
 ├── config/                         # Sizing profiles and regions
 ├── mcp-servers/                    # 15 MCP configurations
-├── scripts/                        # 14 automation scripts
+├── scripts/                        # 16 automation scripts
 ├── grafana/dashboards/             # Dashboards
 ├── prometheus/                     # Alerts
 └── docs/                           # Documentation
@@ -179,7 +183,7 @@ three-horizons-accelerator-v4/
 
 | Document | Description |
 |----------|-------------|
-| [Agent System](./AGENTS.md) | Copilot Chat Agents (11 agents) |
+| [Agent System](./AGENTS.md) | Copilot Chat Agents (13 agents) |
 | [MCP Servers Guide](./mcp-servers/USAGE.md) | Model Context Protocol server setup |
 | [Agent Best Practices](./docs/guides/copilot-agents-best-practices.md) | Copilot agents usage guide |
 
@@ -571,11 +575,11 @@ For questions, issues, or suggestions, open an issue on GitHub:
 
 ### v4.0.0 (December 2025)
 
-- 16 Terraform modules (including Defender, Purview, Naming, Disaster Recovery)
-- 11 Copilot Chat Agents for interactive development assistance
+- 18 Terraform modules (including Defender, Purview, Naming, Disaster Recovery)
+- 13 Copilot Chat Agents for interactive development assistance
 - 28 GitHub Issues templates
 - 22 Golden Path templates for RHDH (including ADO to GitHub migration)
-- 14 automation scripts
+- 16 automation scripts
 - 15 MCP Server configurations
 - Complete observability stack
 

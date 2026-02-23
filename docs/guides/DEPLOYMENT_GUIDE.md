@@ -932,7 +932,7 @@ ls -la
 | Directory | Contents | Purpose |
 |-----------|----------|---------|
 | `.github/` | GitHub Actions workflows, templates | CI/CD automation |
-| `.github/agents/` | Copilot Chat Agents | 11 agent definitions |
+| `.github/agents/` | Copilot Chat Agents | 13 agent definitions |
 | `argocd/` | ArgoCD configurations | GitOps setup |
 | `config/` | Sizing profiles, region configs | Platform configuration |
 | `docs/` | Documentation (you're reading it!) | Guides and references |

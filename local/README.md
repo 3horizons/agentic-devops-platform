@@ -32,7 +32,7 @@ make -C local up
 | **PostgreSQL 16** | Always | databases namespace |
 | **Redis 7** | Always | databases namespace |
 | **RHDH** (Developer Hub) | Optional | http://localhost:7007 |
-| **11 Copilot Chat Agents** | Always | VS Code Copilot Chat |
+| **13 Copilot Chat Agents** | Always | VS Code Copilot Chat |
 
 ## Architecture
 
@@ -96,7 +96,7 @@ Allocate at least **16 GB RAM** and **6 CPUs** in Docker Desktop â†’ Settings â†
 
 ## Using Copilot Chat Agents
 
-All 11 agents work with the local cluster. Open VS Code with GitHub Copilot Chat and use:
+All 13 agents work with the local cluster. Open VS Code with GitHub Copilot Chat and use:
 
 ```
 @deploy Deploy local demo

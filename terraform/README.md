@@ -18,6 +18,8 @@ terraform/
 │   ├── aks-cluster/          # Azure Kubernetes Service
 │   ├── ai-foundry/           # Azure AI services
 │   ├── argocd/               # GitOps configuration
+│   ├── aro-cluster/          # Azure Red Hat OpenShift
+│   ├── backstage/            # Backstage Developer Portal
 │   ├── container-registry/   # Azure Container Registry
 │   ├── cost-management/      # Cost optimization
 │   ├── databases/            # PostgreSQL, Redis, Cosmos DB
@@ -71,7 +73,7 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-## Module Overview (16 modules)
+## Module Overview (18 modules)
 
 | Module | Horizon | Description |
 |--------|---------|-------------|
@@ -79,6 +81,8 @@ terraform apply tfplan
 | **networking** | H1 | VNet, subnets, NSGs, private DNS |
 | **security** | H1 | Key Vault, managed identities, RBAC |
 | **aks-cluster** | H1 | AKS with workload identity |
+| **aro-cluster** | H1 | Azure Red Hat OpenShift (ARO) |
+| **backstage** | H2 | Backstage Developer Portal on AKS |
 | **container-registry** | H1 | ACR with geo-replication |
 | **databases** | H1 | PostgreSQL, Redis, Cosmos DB |
 | **defender** | H1 | Microsoft Defender for Cloud |

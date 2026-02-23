@@ -164,7 +164,7 @@ make -C local down
 - Gatekeeper/OPA (policy enforcement, audit mode)
 - PostgreSQL 16 + Redis 7 (databases)
 - RHDH (optional — requires Red Hat registry credentials)
-- All 11 Copilot Chat Agents (via VS Code)
+- All 13 Copilot Chat Agents (via VS Code)
 
 ### What's NOT Available Locally
 - Azure PaaS services (Key Vault, Managed Identity, ACR)

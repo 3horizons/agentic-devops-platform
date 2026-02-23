@@ -319,7 +319,7 @@ shellcheck scripts/*.sh
 | File | Purpose |
 | :--- | :--- |
 | `README.md` | Project overview |
-| `AGENTS.md` | **Agent System Overview** (11 Copilot Chat Agents) |
+| `AGENTS.md` | **Agent System Overview** (13 Copilot Chat Agents) |
 | `docs/guides/*.md` | Comprehensive guides |
 | `module/README.md` | Module-specific docs |
 

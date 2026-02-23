@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README files for all Terraform modules
 
 ### Changed
-- Updated agent-router.yml with all 11 Copilot Chat Agents mapped
+- Updated agent-router.yml with all 13 Copilot Chat Agents mapped
 - Fixed soft_fail settings in CI workflow
 - Updated documentation counts to reflect current state
 
@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Infrastructure (H1 Foundation)
-- 16 Terraform modules for Azure infrastructure
+- 18 Terraform modules for Azure infrastructure
   - aks-cluster: Azure Kubernetes Service with Workload Identity
   - ai-foundry: Azure AI Foundry (OpenAI, AI Search)
   - argocd: ArgoCD GitOps controller
@@ -110,8 +110,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 28 Issue templates with T-shirt sizing
 - 6 CI/CD workflows
 - 3 Copilot chat modes (architect, reviewer, sre)
-- 11 Copilot agents (onboarding, architect, platform, terraform, reviewer, devops, security, sre, test, docs, deploy)
-- 18 skills (azure-cli, azure-infrastructure, terraform-cli, kubectl-cli, helm-cli, oc-cli, argocd-cli, github-cli, mcp-cli, openshift-operations, aro-deployment, rhdh-portal, database-management, observability-stack, ai-foundry-operations, validation-scripts, deploy-orchestration, prerequisites)
+- 13 Copilot agents (onboarding, architect, platform, terraform, reviewer, devops, security, sre, test, docs, deploy)
+- 20 skills (azure-cli, azure-infrastructure, terraform-cli, kubectl-cli, helm-cli, oc-cli, argocd-cli, github-cli, mcp-cli, openshift-operations, aro-deployment, rhdh-portal, database-management, observability-stack, ai-foundry-operations, validation-scripts, deploy-orchestration, prerequisites)
 - 3 instruction files (terraform, kubernetes, python)
 - 7 prompts (create-service, review-code, generate-tests, deploy-service, deploy-platform, troubleshoot-incident, generate-docs)
 - Branch protection workflow
