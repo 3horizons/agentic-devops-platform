@@ -287,6 +287,3 @@ argocd-credentials.txt
 
 # Local demo secrets (contains GitHub App credentials)
 local/config/local.env
-
-# Official documentation PDFs (too large for Git)
-docs/official-docs/**/*.pdf
