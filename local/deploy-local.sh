@@ -305,11 +305,11 @@ if should_run_phase 5; then
     # Create GitHub App secret if configured
     if [[ "$RHDH_AUTH_MODE" == "github" && -n "$GITHUB_APP_CLIENT_ID" ]]; then
       log "Configuring GitHub App authentication..."
-      local private_key=""
+      private_key=""
       if [[ -n "$GITHUB_APP_PRIVATE_KEY_FILE" && -f "$GITHUB_APP_PRIVATE_KEY_FILE" ]]; then
         private_key=$(cat "$GITHUB_APP_PRIVATE_KEY_FILE")
       fi
-      local secret_name="backstage-github-app"
+      secret_name="backstage-github-app"
       [[ "$PORTAL_TYPE" == "rhdh" ]] && secret_name="rhdh-github-app"
       kubectl create secret generic "$secret_name" \
         --namespace "$NS_RHDH" \

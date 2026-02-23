@@ -112,12 +112,13 @@ backstage:
       publisher:
         type: local
 
-  service:
-    type: NodePort
-    ports:
-      backend: 7007
-      targetPort: 7007
-      nodePort: 30700
+service:
+  type: NodePort
+  ports:
+    backend: 7007
+    targetPort: backend
+  nodePorts:
+    backend: "30700"
 
 postgresql:
   enabled: false  # Using external PostgreSQL from databases namespace

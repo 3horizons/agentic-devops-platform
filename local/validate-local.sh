@@ -87,7 +87,7 @@ else
 fi
 
 # Prometheus
-if kubectl get svc monitoring-kube-prometheus-prometheus -n "$NS_MONITORING" &>/dev/null 2>&1 || \
+if kubectl get svc monitoring-prometheus -n "$NS_MONITORING" &>/dev/null 2>&1 || \
    kubectl get svc kube-prometheus-stack-prometheus -n "$NS_MONITORING" &>/dev/null 2>&1; then
   pass "Prometheus service exists"
 else

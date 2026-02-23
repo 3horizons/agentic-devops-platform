@@ -19,14 +19,14 @@ spec:
   service_type: nodeport
   nodeport_port: 30052
 
-  # Reduced resource limits for kind
+  # Resource limits for kind (web/task need 2Gi to avoid OOMKilled)
   web_resource_requirements:
     requests:
       cpu: 100m
       memory: 128Mi
     limits:
       cpu: 500m
-      memory: 1Gi
+      memory: 2Gi
 
   task_resource_requirements:
     requests:
@@ -34,7 +34,7 @@ spec:
       memory: 128Mi
     limits:
       cpu: 500m
-      memory: 1Gi
+      memory: 2Gi
 
   ee_resource_requirements:
     requests:
