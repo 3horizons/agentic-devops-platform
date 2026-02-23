@@ -31,6 +31,8 @@ The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-ba
 | **Terraform** | [terraform.agent.md](.github/agents/terraform.agent.md) | Infrastructure as Code, Terraform modules |
 | **Test** | [test.agent.md](.github/agents/test.agent.md) | Test generation, validation, quality assurance |
 | **Deploy** | [deploy.agent.md](.github/agents/deploy.agent.md) | Deployment orchestration, end-to-end platform deployment |
+| **Backstage Expert** | [backstage-expert.agent.md](.github/agents/backstage-expert.agent.md) | Backstage portal deployment on AKS, GitHub auth, Golden Paths, Codespaces |
+| **RHDH Expert** | [rhdh-expert.agent.md](.github/agents/rhdh-expert.agent.md) | Red Hat Developer Hub on AKS/ARO, GitHub auth, Golden Paths, Codespaces |
 
 ### How to Use
 
@@ -75,7 +77,7 @@ In VS Code with GitHub Copilot Chat, mention an agent by name:
 
 ## Skills
 
-The 18 skills in [.github/skills/](.github/skills/) provide domain-specific knowledge that agents can reference:
+The 20 skills in [.github/skills/](.github/skills/) provide domain-specific knowledge that agents can reference:
 
 | Skill | Description |
 |-------|-------------|
@@ -84,6 +86,8 @@ The 18 skills in [.github/skills/](.github/skills/) provide domain-specific know
 | `aro-deployment` | Azure Red Hat OpenShift deployment |
 | `azure-cli` | Azure CLI resource management |
 | `azure-infrastructure` | Azure infrastructure patterns |
+| `backstage-deployment` | Backstage portal deployment on AKS and locally |
+| `codespaces-golden-paths` | GitHub Codespaces devcontainer configs per Golden Path |
 | `database-management` | Database ops and health monitoring |
 | `github-cli` | GitHub CLI for repos and workflows |
 | `helm-cli` | Helm CLI for Kubernetes packages |

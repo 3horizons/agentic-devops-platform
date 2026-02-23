@@ -20,6 +20,16 @@ handoffs:
     agent: sre
     prompt: "Verify platform health after deployment."
     send: false
+  - label: "Backstage Portal Setup"
+    agent: backstage-expert
+    prompt: "Deploy and configure the Backstage developer portal on AKS."
+    send: false
+  - label: "RHDH Portal Setup"
+    agent: rhdh-expert
+    prompt: "Deploy and configure the Red Hat Developer Hub on AKS or ARO."
+    send: false
+    prompt: "Verify platform health after deployment."
+    send: false
 ---
 
 # Deploy Agent
