@@ -198,3 +198,17 @@ spec:
     displayName: Paula Silva
   memberOf:
     - platform-engineering
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: paulanunes85
+  title: Paula Silva (GitHub)
+  annotations:
+    github.com/user-login: paulanunes85
+spec:
+  profile:
+    displayName: Paula Silva
+  memberOf:
+    - platform-engineering
