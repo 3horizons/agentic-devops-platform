@@ -156,7 +156,7 @@ When user requests a deployment, follow this exact sequence:
 7. **Plan** — `terraform plan -var-file=environments/<env>.tfvars -out=deploy.tfplan`
 8. **Show Plan** — Display the plan summary, ask for confirmation
 9. **Apply** — `terraform apply deploy.tfplan` (only after confirmation)
-10. **Deploy Portal** — Hand off to `@backstage-expert` (builds custom image, deploys on AKS, registers Golden Paths, configures GitHub auth, sets up Codespaces)
+10. **Deploy Portal** — Hand off to `@platform` + `@azure-portal-deploy` (deploys RHDH on AKS, registers Golden Paths, configures auth, sets up Codespaces)
 11. **Verify** — Run `./scripts/validate-deployment.sh --environment <env>` + `@sre`
 12. **Summary** — Show deployed resources, portal URL, template count, access credentials
 
