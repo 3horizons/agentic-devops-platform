@@ -10,10 +10,10 @@ metadata:
     release: monitoring
 spec:
   namespaceSelector:
-    matchNames: [rhdh]
+    matchNames: [backstage]
   selector:
     matchLabels:
-      app.kubernetes.io/name: rhdh
+      app.kubernetes.io/name: backstage
   endpoints:
     - port: backend
       interval: 30s

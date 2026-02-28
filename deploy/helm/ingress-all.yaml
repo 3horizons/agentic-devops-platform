@@ -1,5 +1,7 @@
 # =============================================================================
-# All Ingress Resources — AKS RHDH Demo
+# All Ingress Resources — AKS RHDH Platform
+# =============================================================================
+# External IP: 20.62.35.83 (AKS LoadBalancer)
 # =============================================================================
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -9,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: prometheus.128.85.226.112.sslip.io
+    - host: prometheus.20.62.35.83.sslip.io
       http:
         paths:
           - path: /
@@ -28,7 +30,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: alertmanager.128.85.226.112.sslip.io
+    - host: alertmanager.20.62.35.83.sslip.io
       http:
         paths:
           - path: /
@@ -38,3 +40,22 @@ spec:
                 name: monitoring-kube-prometheus-alertmanager
                 port:
                   number: 9093
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: grafana.20.62.35.83.sslip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-grafana
+                port:
+                  number: 80

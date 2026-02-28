@@ -10,15 +10,15 @@ The **Three Horizons Implementation Accelerator** is a complete kit of Infrastru
 
 | Component | Quantity | Description |
 |-----------|----------|-------------|
-| **Terraform Modules** | 16 | Complete Azure infrastructure |
-| **AI Agents** | 11 | **[Copilot Chat Agents](./AGENTS.md)** (VS Code) |
+| **Terraform Modules** | 15 | Complete Azure infrastructure |
+| **AI Agents** | 17 | **[Copilot Chat Agents](./AGENTS.md)** (VS Code) |
 | **Golden Path Templates** | 22 | Self-service templates for RHDH |
-| **Issue Templates** | 28 | GitHub Issues templates |
-| **Automation Scripts** | 14 | Bootstrap and operations |
-| **MCP Servers** | 15 | MCP server configurations |
-| **Observability** | 4 | Dashboards and alerts |
+| **Issue Templates** | 27 | GitHub Issues templates |
+| **Automation Scripts** | 15 | Bootstrap and operations |
+| **MCP Servers** | 13 | MCP server configurations |
+| **Observability** | 5 | Dashboards and alerts |
 
-**Total: 120+ files | ~20,000 lines of production-ready code**
+**Total: 900+ files | ~80,000 lines of production-ready code**
 
 ---
 
@@ -63,8 +63,8 @@ The `@deploy` agent walks you through each step interactively.
 #### Option B: Automated Script (Recommended)
 ```bash
 # 1. Clone and prepare
-git clone https://github.com/YOUR_ORG/three-horizons-accelerator-v4.git
-cd three-horizons-accelerator-v4
+git clone https://github.com/3horizons/agentic-devops-platform.git
+cd agentic-devops-platform
 chmod +x scripts/*.sh
 
 # 2. Validate prerequisites
@@ -97,12 +97,13 @@ Follow the detailed **[Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md)** — 
 ## Directory Structure
 
 ```
-three-horizons-accelerator-v4/
+agentic-devops-platform/
 │
 ├── .github/agents/                 # 17 Copilot Chat Agents
 │   ├── ado-integration.agent.md     # Azure DevOps integration
 │   ├── architect.agent.md          # System architecture, AI Foundry
 │   ├── azure-portal-deploy.agent.md # Azure AKS portal deployment
+│   ├── context-architect.agent.md  # Multi-file change planning
 │   ├── deploy.agent.md             # Deployment orchestration
 │   ├── devops.agent.md             # CI/CD, GitOps, MLOps, pipelines
 │   ├── docs.agent.md               # Documentation generation
@@ -113,14 +114,15 @@ three-horizons-accelerator-v4/
 │   ├── reviewer.agent.md           # Code review, quality checks
 │   ├── security.agent.md           # Security policies, compliance
 │   ├── sre.agent.md                # Reliability, incident response
+│   ├── template-engineer.agent.md  # Golden Path template creation
 │   ├── terraform.agent.md          # Infrastructure as Code
 │   └── test.agent.md               # Testing, validation
 │
-├── terraform/                      # 18 Infrastructure as Code modules
+├── terraform/                      # 15 Infrastructure as Code modules
 │   ├── main.tf                     # Root module
 │   └── modules/
-│       ├── aks-cluster/            # Azure Kubernetes Service
 │       ├── ai-foundry/             # Azure AI Foundry
+│       ├── aks-cluster/            # Azure Kubernetes Service
 │       ├── argocd/                 # ArgoCD GitOps
 │       ├── container-registry/     # ACR
 │       ├── cost-management/        # Cost analysis and budgets
@@ -140,13 +142,32 @@ three-horizons-accelerator-v4/
 │   ├── h2-enhancement/             # 9 advanced templates (incl. ADO migration)
 │   └── h3-innovation/              # 7 AI/Agent templates
 │
-├── .github/ISSUE_TEMPLATE/         # 26 issue templates
+├── .github/chatmodes/              # 3 chat modes
+├── .github/instructions/           # 3 code-generation instructions
+├── .github/prompts/                # 7 reusable prompts
+├── .github/skills/                 # 15 operational skill sets
+├── .github/workflows/              # 9 GitHub Actions workflows
+├── .github/ISSUE_TEMPLATE/         # 27 issue templates
+│
+├── agents-templates/               # Agent specification templates
 ├── argocd/                         # GitOps configurations
 ├── config/                         # Sizing profiles and regions
-├── mcp-servers/                    # 15 MCP configurations
-├── scripts/                        # 19 automation scripts
-├── grafana/dashboards/             # Dashboards
-├── prometheus/                     # Alerts
+├── deploy/helm/                    # Helm values and configurations
+│   ├── argocd/values.yaml          # ArgoCD Helm values
+│   ├── monitoring/values.yaml      # Prometheus/Grafana Helm values
+│   ├── argocd-apps.yaml            # ArgoCD app-of-apps
+│   ├── external-secrets-config.yaml # External Secrets integration
+│   ├── ingress-all.yaml            # Ingress resources
+│   ├── service-monitors.yaml       # Prometheus ServiceMonitors
+│   └── sre-alerts.yaml             # SRE PrometheusRules
+├── images-logos/                   # Platform branding assets
+├── mcp-servers/                    # 13 MCP configurations
+├── platform/                       # Platform configurations
+├── policies/                       # Kubernetes and Terraform policies
+├── scripts/                        # 15 automation scripts
+├── tests/                          # Terraform tests
+├── grafana/dashboards/             # 3 Grafana dashboards
+├── prometheus/                     # Alerting and recording rules
 └── docs/                           # Documentation
 ```
 
@@ -172,6 +193,7 @@ three-horizons-accelerator-v4/
 | [Agent System](./AGENTS.md) | Copilot Chat Agents (17 agents) |
 | [MCP Servers Guide](./mcp-servers/USAGE.md) | Model Context Protocol server setup |
 | [Agent Best Practices](./docs/guides/copilot-agents-best-practices.md) | Copilot agents usage guide |
+| [Agent Complete Guide](./docs/guides/copilot-agents-complete-guide.md) | Comprehensive Copilot agents guide |
 
 ### Reference
 
@@ -361,7 +383,7 @@ Configured to send to:
 
 1. **Platform Overview** - Infrastructure health
 2. **Golden Path Application** - RED/USE metrics
-3. **AI Agent Metrics** - Agent observability
+3. **Cost Management** - Cost analysis and optimization
 
 ### Prometheus Alerts
 
@@ -524,7 +546,7 @@ After reviewing this README:
 
 For questions, issues, or suggestions, open an issue on GitHub:
 
-- **GitHub Issues:** [Create Issue](https://github.com/paulanunes85/three-horizons-accelerator-v4/issues)
+- **GitHub Issues:** [Create Issue](https://github.com/3horizons/agentic-devops-platform/issues)
 
 ---
 
@@ -546,11 +568,11 @@ For questions, issues, or suggestions, open an issue on GitHub:
 
 - 15 Terraform modules (including Defender, Purview, Naming, Disaster Recovery)
 - 17 Copilot Chat Agents for interactive development assistance
-- 26 GitHub Issues templates
+- 27 GitHub Issues templates
 - 22 Golden Path templates for RHDH (including ADO to GitHub migration)
-- 19 automation scripts
-- 15 MCP Server configurations
-- Complete observability stack
+- 15 automation scripts
+- 13 MCP Server configurations
+- Complete observability stack (3 Grafana dashboards, 2 Prometheus rule sets)
 
 ---
 

@@ -70,14 +70,14 @@ spec:
     - name: h2-enhancement
       rules:
         - alert: RHDHDown
-          expr: up{job=~".*rhdh.*"} == 0
+          expr: up{job=~".*rhdh.*|.*backstage.*"} == 0
           for: 5m
           labels:
             severity: critical
             horizon: h2
           annotations:
             summary: "RHDH developer portal is down"
-            runbook: "Check rhdh pod: kubectl logs -n rhdh -l app.kubernetes.io/name=rhdh"
+            runbook: "Check backstage pod: kubectl logs -n backstage -l app.kubernetes.io/name=backstage"
 
         - alert: ArgoCDSyncFailed
           expr: argocd_app_info{sync_status="OutOfSync"} == 1

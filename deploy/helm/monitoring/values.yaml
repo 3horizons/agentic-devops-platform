@@ -71,7 +71,7 @@ prometheus:
           - role: endpoints
             namespaces:
               names:
-                - rhdh
+                - backstage
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             regex: "true"

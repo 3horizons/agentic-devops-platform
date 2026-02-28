@@ -54,7 +54,7 @@ This is the Three Horizons Accelerator v4.0.0 - an enterprise-grade platform acc
 |-----------|----------|
 | Terraform modules | `terraform/modules/` |
 | Environment configs | `terraform/environments/` |
-| Kubernetes manifests | `deploy/kubernetes/` |
+| Kubernetes manifests | `deploy/helm/` |
 | Helm values | `deploy/helm/` |
 | Golden Path templates | `golden-paths/` |
 | Agent specifications | `.github/agents/` |

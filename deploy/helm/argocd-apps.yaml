@@ -14,12 +14,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/paulanunes85/three-horizons-accelerator
-    targetRevision: demo
+    repoURL: https://github.com/3horizons/agentic-devops-platform
+    targetRevision: rhdevhub-demo
     path: deploy/helm
   destination:
     server: https://kubernetes.default.svc
-    namespace: rhdh
+    namespace: backstage
   syncPolicy:
     automated:
       prune: false
@@ -36,8 +36,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/paulanunes85/three-horizons-accelerator
-    targetRevision: demo
+    repoURL: https://github.com/3horizons/agentic-devops-platform
+    targetRevision: rhdevhub-demo
     path: prometheus
   destination:
     server: https://kubernetes.default.svc
@@ -58,8 +58,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/paulanunes85/three-horizons-accelerator
-    targetRevision: demo
+    repoURL: https://github.com/3horizons/agentic-devops-platform
+    targetRevision: rhdevhub-demo
     path: argocd
   destination:
     server: https://kubernetes.default.svc
