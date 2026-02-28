@@ -32,7 +32,7 @@
   <rect x="60" y="300" width="145" height="35" rx="6" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>
   <text x="132" y="322" text-anchor="middle" font-size="10" fill="#fff">ArgoCD (GitOps)</text>
   <rect x="215" y="300" width="145" height="35" rx="6" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>
-  <text x="287" y="322" text-anchor="middle" font-size="10" fill="#fff">Backstage (Portal)</text>
+  <text x="287" y="322" text-anchor="middle" font-size="10" fill="#fff">RHDH (Portal)</text>
   <rect x="370" y="300" width="145" height="35" rx="6" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>
   <text x="442" y="322" text-anchor="middle" font-size="10" fill="#fff">Prometheus/Grafana</text>
   <rect x="525" y="300" width="145" height="35" rx="6" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>

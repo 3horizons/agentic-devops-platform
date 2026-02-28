@@ -238,9 +238,9 @@ module "security" {
   private_dns_zone_id = module.networking.private_dns_zone_ids.keyvault
 
   workload_identities = {
-    "backstage" = {
-      namespace                   = "backstage"
-      service_account             = "backstage"
+    "rhdh" = {
+      namespace                   = "rhdh"
+      service_account             = "rhdh"
       key_vault_role              = "Key Vault Secrets User"
       additional_role_assignments = []
     }
@@ -356,7 +356,7 @@ module "databases" {
     backup_retention_days = var.environment == "prod" ? 35 : 7
     geo_redundant_backup  = var.environment == "prod"
     high_availability     = local.config.enable_ha
-    databases             = ["backstage"]
+    databases             = ["rhdh"]
   }
 
   redis_config = {

@@ -7,7 +7,7 @@
 # Terraform infrastructure
 /terraform/                     @platform-team @infra-team
 /terraform/modules/aks/         @platform-team @infra-team
-/terraform/modules/backstage/        @platform-team @infra-team
+/terraform/modules/rhdh/             @platform-team @infra-team
 /terraform/modules/networking/  @platform-team @infra-team
 /terraform/modules/security/    @platform-team @security-team
 

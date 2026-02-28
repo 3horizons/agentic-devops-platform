@@ -119,7 +119,7 @@ Options:
 
 Horizons:
     h1  Foundation   - AKS, networking, security, CI/CD
-    h2  Enhancement  - ArgoCD, Backstage, GitOps, observability
+    h2  Enhancement  - ArgoCD, RHDH, GitOps, observability
     h3  Innovation   - AI Foundry, agents, MLOps
 
 Examples:
@@ -342,7 +342,7 @@ deploy_h2_enhancement() {
     if [[ "$DRY_RUN" == "true" ]]; then
         log INFO "[DRY-RUN] Would deploy H2 Enhancement components:"
         log INFO "  - ArgoCD"
-        log INFO "  - Backstage (Developer Portal)"
+        log INFO "  - RHDH (Developer Portal)"
         log INFO "  - Observability stack (Prometheus, Grafana)"
         log INFO "  - Managed databases"
         log INFO "  - GitHub runners"
@@ -376,10 +376,10 @@ deploy_h2_enhancement() {
         -var="location=${AZURE_REGION}" \
         -var="environment=${ENVIRONMENT}"
     
-    # Deploy Backstage
-    log INFO "Deploying Backstage developer portal..."
-    # Backstage is deployed via ArgoCD app-of-apps (Wave 4)
-    log INFO "Backstage will be deployed automatically via ArgoCD"
+    # Deploy RHDH
+    log INFO "Deploying RHDH developer portal..."
+    # RHDH is deployed via ArgoCD app-of-apps (Wave 4)
+    log INFO "RHDH will be deployed automatically via ArgoCD"
     
     # Deploy GitHub runners
     log INFO "Deploying GitHub self-hosted runners..."
@@ -460,16 +460,16 @@ register_golden_paths() {
         return 0
     fi
     
-    # Get Backstage URL
-    local backstage_url=$(kubectl get ingress -n backstage backstage -o jsonpath='{.spec.rules[0].host}')
+    # Get RHDH URL
+    local rhdh_url=$(kubectl get ingress -n rhdh rhdh -o jsonpath='{.spec.rules[0].host}')
     
-    log INFO "Registering Golden Path templates in Backstage..."
+    log INFO "Registering Golden Path templates in RHDH..."
     
     # Register H1 templates
     for template in "${ACCELERATOR_ROOT}/golden-paths/h1-foundation/"*/template.yaml; do
         local name=$(basename $(dirname "$template"))
         log INFO "Registering H1 template: $name"
-        # Backstage API call to register template
+        # RHDH API call to register template
     done
     
     # Register H2 templates
@@ -530,12 +530,12 @@ print_summary() {
     if [[ "$DRY_RUN" != "true" ]]; then
         # Get URLs
         local argocd_url=$(kubectl get ingress -n argocd argocd-server -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "pending")
-        local backstage_url=$(kubectl get ingress -n backstage backstage -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "pending")
+        local rhdh_url=$(kubectl get ingress -n rhdh rhdh -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "pending")
         local grafana_url=$(kubectl get ingress -n monitoring grafana -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "pending")
         
         echo "Access URLs:"
         echo "  ArgoCD:    https://${argocd_url}"
-        echo "  Backstage: https://${backstage_url}"
+        echo "  RHDH:      https://${rhdh_url}"
         echo "  Grafana:  https://${grafana_url}"
         echo ""
         echo "Deployment log: $DEPLOYMENT_LOG"
@@ -543,7 +543,7 @@ print_summary() {
     
     echo ""
     echo "Next steps:"
-    echo "  1. Configure GitHub App for Backstage"
+    echo "  1. Configure GitHub App for RHDH"
     echo "  2. Import existing repositories to catalog"
     echo "  3. Create first application using Golden Paths"
     echo "  4. Configure alerts in Grafana"
@@ -567,7 +567,7 @@ destroy_platform() {
     local modules=(
         "ai-foundry"
         "github-runners"
-        "backstage"
+        "rhdh"
         "databases"
         "observability"
         "argocd"

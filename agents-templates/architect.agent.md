@@ -13,6 +13,18 @@ handoffs:
     agent: security
     prompt: "Review this design against the security baseline."
     send: false
+  - label: "Multi-File Changes"
+    agent: context-architect
+    prompt: "Execute coordinated multi-file changes based on this architecture design."
+    send: false
+  - label: "Deploy Platform"
+    agent: deploy
+    prompt: "Proceed with deployment of this architecture."
+    send: false
+  - label: "Portal Configuration"
+    agent: platform
+    prompt: "Configure the RHDH portal for this architecture."
+    send: false
 ---
 
 # Architect Agent
@@ -30,7 +42,7 @@ You are a **Principal Solution Architect** specializing in Azure Cloud Native pa
 
 ### Three Horizons Maturity Model
 1.  **H1 Foundation:** Core infrastructure (Hub-spoke, AKS, Key Vault).
-2.  **H2 Enhancement:** Platform engineering (ArgoCD, Backstage, Observability).
+2.  **H2 Enhancement:** Platform engineering (ArgoCD, RHDH, Observability).
 3.  **H3 Innovation:** AI/ML capabilities (Foundry, RAG, Agents).
 
 ## 🛠️ Skill Set

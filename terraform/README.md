@@ -18,7 +18,6 @@ terraform/
 │   ├── aks-cluster/          # Azure Kubernetes Service
 │   ├── ai-foundry/           # Azure AI services
 │   ├── argocd/               # GitOps configuration
-│   ├── backstage/            # Backstage Developer Portal
 │   ├── container-registry/   # Azure Container Registry
 │   ├── cost-management/      # Cost optimization
 │   ├── databases/            # PostgreSQL, Redis, Cosmos DB
@@ -71,7 +70,7 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-## Module Overview (16 modules)
+## Module Overview (15 modules)
 
 | Module | Horizon | Description |
 |--------|---------|-------------|
@@ -79,7 +78,6 @@ terraform apply tfplan
 | **networking** | H1 | VNet, subnets, NSGs, private DNS |
 | **security** | H1 | Key Vault, managed identities, RBAC |
 | **aks-cluster** | H1 | AKS with workload identity |
-| **backstage** | H2 | Backstage Developer Portal on AKS |
 | **container-registry** | H1 | ACR with geo-replication |
 | **databases** | H1 | PostgreSQL, Redis, Cosmos DB |
 | **defender** | H1 | Microsoft Defender for Cloud |
@@ -122,7 +120,7 @@ enable_github_runners = true   # Self-hosted runners
 ## Deployment Order
 
 1. **Foundation** (H1): networking → security → aks-cluster → databases
-2. **Enhancement** (H2): argocd → observability → backstage
+2. **Enhancement** (H2): argocd → observability
 3. **Innovation** (H3): ai-foundry → purview
 
 ## Related Documentation

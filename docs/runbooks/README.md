@@ -70,7 +70,7 @@ kubectl get events -A --sort-by='.lastTimestamp' | tail -20
 | ArgoCD | https://argocd.YOUR_DOMAIN |
 | Grafana | https://grafana.YOUR_DOMAIN |
 | Alertmanager | https://alertmanager.YOUR_DOMAIN |
-| Backstage | https://backstage.YOUR_DOMAIN |
+| RHDH | https://rhdh.YOUR_DOMAIN |
 
 ### Emergency Contacts
 

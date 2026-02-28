@@ -2,7 +2,7 @@
 # THREE HORIZONS ACCELERATOR - H1 DOCUMENTATION SITE GOLDEN PATH TEMPLATE
 # =============================================================================
 #
-# Backstage Software Template for creating documentation sites.
+# RHDH Software Template for creating documentation sites.
 # Integrates with TechDocs, GitHub Pages, and static site generators.
 #
 # Horizon: H1 - Foundation
@@ -17,7 +17,7 @@ metadata:
   title: "H1: Create Documentation Site"
   description: |
     Create a documentation site using your preferred static site generator.
-    Automatically integrates with Backstage TechDocs for unified documentation.
+    Automatically integrates with RHDH TechDocs for unified documentation.
   tags:
     - h1-foundation
     - documentation
@@ -217,7 +217,7 @@ spec:
       properties:
         enableTechDocs:
           title: Enable TechDocs Integration
-          description: Publish to Backstage TechDocs
+          description: Publish to RHDH TechDocs
           type: boolean
           default: true
 

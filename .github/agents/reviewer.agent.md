@@ -10,6 +10,14 @@ handoffs:
     agent: security
     prompt: "Perform a deeper security analysis on the flagged issues."
     send: false
+  - label: "Test Coverage"
+    agent: test
+    prompt: "Generate tests covering the reviewed code."
+    send: false
+  - label: "Multi-File Fixes"
+    agent: context-architect
+    prompt: "Apply review fixes across multiple related files."
+    send: false
 ---
 
 # Reviewer Agent

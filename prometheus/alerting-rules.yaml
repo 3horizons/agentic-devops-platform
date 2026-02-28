@@ -394,37 +394,37 @@ groups:
           description: "ArgoCD application {{ $labels.name }} sync has failed."
 
       # -----------------------------------------------------------------------
-      # Backstage
+      # RHDH
       # -----------------------------------------------------------------------
-      - alert: BackstageNotAvailable
+      - alert: RHDHNotAvailable
         expr: |
-          up{job="backstage"} == 0
+          up{job="rhdh"} == 0
         for: 5m
         labels:
           severity: critical
           horizon: h2
-          component: backstage
+          component: rhdh
         annotations:
-          summary: "Backstage developer portal not available"
-          description: "Backstage has been down for 5 minutes."
+          summary: "RHDH developer portal not available"
+          description: "RHDH has been down for 5 minutes."
 
-      - alert: BackstageHighLatency
+      - alert: RHDHHighLatency
         expr: |
           histogram_quantile(0.95,
-            sum(rate(backstage_request_duration_seconds_bucket[5m])) by (le)
+            sum(rate(rhdh_request_duration_seconds_bucket[5m])) by (le)
           ) > 5
         for: 5m
         labels:
           severity: warning
           horizon: h2
-          component: backstage
+          component: rhdh
         annotations:
-          summary: "Backstage high latency"
-          description: "Backstage P95 request latency is above 5 seconds."
+          summary: "RHDH high latency"
+          description: "RHDH P95 request latency is above 5 seconds."
 
       - alert: GoldenPathCreationFailure
         expr: |
-          sum(rate(backstage_scaffolder_task_count{status="failed"}[1h])) > 0
+          sum(rate(rhdh_scaffolder_task_count{status="failed"}[1h])) > 0
         for: 5m
         labels:
           severity: warning

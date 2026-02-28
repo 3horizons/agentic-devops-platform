@@ -10,13 +10,13 @@ Configures GitHub Codespaces dev environments for each Golden Path template type
 |--------|--------|
 | **Purpose** | Auto-create Codespaces with SDKs, tools, and configs per template |
 | **Trigger** | Developer scaffolds a Golden Path → repo created → Codespace ready |
-| **Used by** | `@backstage-expert`, `@devops` |
+| **Used by** | `@platform`, `@devops` |
 
 ---
 
 ## 1. How It Works
 
-1. Developer selects a Golden Path template in the portal Backstage
+1. Developer selects a Golden Path template in the RHDH portal
 2. Scaffolder creates a new repo with skeleton files
 3. Skeleton includes `.devcontainer/devcontainer.json` configured for that template type
 4. Developer clicks "Open in Codespaces" → fully configured environment
@@ -222,7 +222,7 @@ skeleton/
 ├── .github/
 │   └── workflows/
 │       └── ci.yaml          # CI pipeline
-├── catalog-info.yaml        # Backstage catalog entry
+├── catalog-info.yaml        # RHDH catalog entry
 ├── README.md                # With "Open in Codespaces" button
 └── ...                      # Template-specific files
 ```

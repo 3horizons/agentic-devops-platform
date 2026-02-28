@@ -17,7 +17,6 @@ This directory contains skills that extend GitHub Copilot agent capabilities. Sk
 | [database-management](./database-management/) | Database operations | @database, @sre |
 | [observability-stack](./observability-stack/) | Monitoring operations | @observability, @sre |
 | [ai-foundry-operations](./ai-foundry-operations/) | Azure AI operations | @ai-foundry |
-| [backstage-deployment](./backstage-deployment/) | Backstage portal operations | @backstage-expert |
 | [mcp-cli](./mcp-cli/) | MCP server reference | All agents |
 | [prerequisites](./prerequisites/) | CLI tool validation | All agents |
 

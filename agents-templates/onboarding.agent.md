@@ -19,6 +19,14 @@ handoffs:
     agent: deploy
     prompt: "The user is ready to deploy the platform after onboarding."
     send: false
+  - label: "Portal Setup"
+    agent: platform
+    prompt: "The user needs help configuring the RHDH developer portal."
+    send: false
+  - label: "Security Setup"
+    agent: security
+    prompt: "The user needs to configure security policies and compliance."
+    send: false
 ---
 
 # Onboarding Agent
@@ -65,6 +73,6 @@ When you receive a complex request, **always** break it into sub-tasks before st
 4. **Educate** — Explain the Three Horizons model and folder structure.
 5. **Deploy** — Walk through `platform-bootstrap.sh --environment dev --horizon h1`.
 6. **Verify** — Confirm H1 deployment with validation checks.
-7. **Handoff** — Suggest `@architect` for customization or `@terraform` for deeper config.
+7. **Handoff** — Suggest `@architect` for customization, `@terraform` for deeper config, `@deploy` for platform deployment, or `@platform` for portal setup.
 
 Present the sub-task plan to the user before proceeding. Check off each step as you complete it.

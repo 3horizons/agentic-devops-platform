@@ -111,13 +111,13 @@ Add this section to every agent file after the "Capabilities" or "Core Responsib
 ## Boundaries
 
 - ✅ **ALWAYS**:
-  - Read and analyze Backstage configurations
+  - Read and analyze RHDH configurations
   - Validate templates against official documentation
   - Generate configuration snippets following best practices
   - Check health status of platform components
 
 - ⚠️ **ASK FIRST**:
-  - Modify Backstage Helm values
+  - Modify RHDH Helm values
   - Update Golden Path templates
   - Change authentication providers
   - Modify plugin configurations
@@ -681,7 +681,7 @@ This repository uses GitHub Copilot custom agents for DevOps automation. Each ag
 | Agent | Purpose | Tools | Invoke With |
 |-------|---------|-------|-------------|
 | `@architect` | Solution design, WAF review | read, search | Architecture questions |
-| `@platform` | Backstage, Golden Paths, IDP | read, search, edit | Platform configuration |
+| `@platform` | RHDH, Golden Paths, IDP | read, search, edit | Platform configuration |
 | `@terraform` | Azure IaC management | read, search, edit, execute | Terraform tasks |
 | `@devops` | CI/CD, K8s, ArgoCD | read, search, edit, execute | Pipeline tasks |
 | `@security` | Compliance, vulnerabilities | read, search | Security review |

@@ -113,7 +113,7 @@ Creates GitHub Actions workflow library with:
 
 ## Usage
 
-Select any template from the Backstage portal under "Create" → "Choose a Template" → "H2 Enhancement".
+Select any template from the RHDH portal under "Create" → "Choose a Template" → "H2 Enhancement".
 
 ## Related Documentation
 

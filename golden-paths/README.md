@@ -2,7 +2,7 @@
 
 > **A solution created in partnership with Microsoft, GitHub, and Red Hat**
 
-This directory contains self-service templates for Backstage that enable developers to quickly scaffold new projects following platform standards.
+This directory contains self-service templates for RHDH that enable developers to quickly scaffold new projects following platform standards.
 
 ## Directory Structure
 
@@ -86,9 +86,9 @@ Each template contains:
 
 ```
 template-name/
-├── template.yaml          # Backstage scaffolder template
+├── template.yaml          # RHDH scaffolder template
 ├── skeleton/              # Template files
-│   ├── catalog-info.yaml  # Backstage catalog entry
+│   ├── catalog-info.yaml  # RHDH catalog entry
 │   ├── .github/           # GitHub workflows
 │   └── src/               # Application source
 └── README.md              # Template documentation
@@ -96,9 +96,9 @@ template-name/
 
 ## Using Templates
 
-### Via Backstage Portal
+### Via RHDH Portal
 
-1. Navigate to the Backstage portal
+1. Navigate to the RHDH portal
 2. Click "Create" → "Choose a Template"
 3. Select the desired template
 4. Fill in the parameters
@@ -228,15 +228,15 @@ yamllint golden-paths/
 ### Test Template Locally
 
 ```bash
-# Use Backstage development server
-cd backstage
-yarn dev
+# Register template in RHDH portal and test via /create
+# Or use the Backstage CLI for local validation
+npx @backstage/cli scaffold --template golden-paths/h2-enhancement/my-template
 
-# Navigate to /create and test template
+# Navigate to RHDH portal /create and test template
 ```
 
 ## Related Documentation
 
 - [Platform Agent](../.github/agents/platform.agent.md)
 - [DevOps Agent](../.github/agents/devops.agent.md)
-- [Backstage Scaffolder](https://backstage.io/docs/features/software-templates/)
+- [RHDH Scaffolder](https://backstage.io/docs/features/software-templates/)

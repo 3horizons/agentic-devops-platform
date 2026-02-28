@@ -4,16 +4,16 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: backstage-monitor
+  name: rhdh-monitor
   namespace: monitoring
   labels:
     release: monitoring
 spec:
   namespaceSelector:
-    matchNames: [backstage]
+    matchNames: [rhdh]
   selector:
     matchLabels:
-      app.kubernetes.io/name: backstage
+      app.kubernetes.io/name: rhdh
   endpoints:
     - port: backend
       interval: 30s

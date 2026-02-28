@@ -288,13 +288,13 @@ groups:
       # -----------------------------------------------------------------------
       - record: goldenpath:templates:created_1h
         expr: |
-          sum(increase(backstage_scaffolder_task_count{status="completed"}[1h])) by (template_name)
+          sum(increase(rhdh_scaffolder_task_count{status="completed"}[1h])) by (template_name)
 
       - record: goldenpath:templates:success_rate
         expr: |
-          sum(rate(backstage_scaffolder_task_count{status="completed"}[24h])) by (template_name)
+          sum(rate(rhdh_scaffolder_task_count{status="completed"}[24h])) by (template_name)
           /
-          sum(rate(backstage_scaffolder_task_count[24h])) by (template_name)
+          sum(rate(rhdh_scaffolder_task_count[24h])) by (template_name)
 
   # ===========================================================================
   # KUBERNETES WORKLOAD METRICS

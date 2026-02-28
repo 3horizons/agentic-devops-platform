@@ -60,7 +60,7 @@
   </g>
   <text x="130" y="285" text-anchor="middle" font-size="13" font-weight="600" fill="#2c3e50">ArgoCD</text>
   <text x="130" y="305" text-anchor="middle" font-size="12" fill="#7f8c8d">GitOps</text>
-  <text x="310" y="285" text-anchor="middle" font-size="13" font-weight="600" fill="#2c3e50">Backstage</text>
+  <text x="310" y="285" text-anchor="middle" font-size="13" font-weight="600" fill="#2c3e50">RHDH</text>
   <text x="310" y="305" text-anchor="middle" font-size="12" fill="#7f8c8d">Portal</text>
   <text x="490" y="285" text-anchor="middle" font-size="13" font-weight="600" fill="#2c3e50">Observability</text>
   <text x="490" y="305" text-anchor="middle" font-size="12" fill="#7f8c8d">Stack</text>

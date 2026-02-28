@@ -65,7 +65,7 @@ Creates a full-stack web application with:
 
 ## Usage
 
-Select any template from the Backstage portal under "Create" → "Choose a Template" → "H1 Foundation".
+Select any template from the RHDH portal under "Create" → "Choose a Template" → "H1 Foundation".
 
 ## Related Documentation
 

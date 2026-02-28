@@ -17,10 +17,6 @@ handoffs:
     agent: sre
     prompt: "Verify platform health after deployment."
     send: false
-  - label: "Backstage Portal Setup"
-    agent: backstage-expert
-    prompt: "Deploy and configure the Backstage developer portal on AKS."
-    send: false
   - label: "Azure Infrastructure"
     agent: azure-portal-deploy
     prompt: "Provision Azure AKS, Key Vault, PostgreSQL for portal deployment."
@@ -36,6 +32,22 @@ handoffs:
   - label: "Hybrid Scenarios"
     agent: hybrid-scenarios
     prompt: "Design and implement hybrid GitHub + ADO scenario."
+    send: false
+  - label: "Multi-File Changes"
+    agent: context-architect
+    prompt: "Plan and execute coordinated multi-file codebase changes needed for deployment."
+    send: false
+  - label: "Template Issues"
+    agent: template-engineer
+    prompt: "Fix or create Golden Path templates for service scaffolding."
+    send: false
+  - label: "Documentation"
+    agent: docs
+    prompt: "Update deployment documentation with current status and procedures."
+    send: false
+  - label: "DevOps Pipeline"
+    agent: devops
+    prompt: "Configure CI/CD pipeline for deployment automation."
     send: false
 ---
 
@@ -128,7 +140,7 @@ When user requests a deployment, follow this exact sequence:
 
 1. **Portal Setup** — Run `./scripts/setup-portal.sh` wizard to collect:
    - Portal name (client branding)
-   - Portal type: **Backstage** (AKS)
+   - Portal type: **RHDH** (AKS)
    - Azure subscription + region (Central US or East US)
    - GitHub organization + App credentials
    - Template repository URL
@@ -140,13 +152,20 @@ When user requests a deployment, follow this exact sequence:
 7. **Plan** — `terraform plan -var-file=environments/<env>.tfvars -out=deploy.tfplan`
 8. **Show Plan** — Display the plan summary, ask for confirmation
 9. **Apply** — `terraform apply deploy.tfplan` (only after confirmation)
-10. **Deploy Portal** — Hand off to `@backstage-expert` (builds custom image, deploys on AKS, registers Golden Paths, configures GitHub auth, sets up Codespaces)
+10. **Deploy Portal** — Hand off to `@platform` (builds custom image, deploys on AKS, registers Golden Paths, configures GitHub auth, sets up Codespaces)
 11. **Verify** — Run `./scripts/validate-deployment.sh --environment <env>` + `@sre`
 12. **Summary** — Show deployed resources, portal URL, template count, access credentials
 
 **Handoff points:**
 - Step 1 → `setup-portal.sh` wizard for interactive data collection
+- Step 4 → `@azure-portal-deploy` for Azure provisioning
+- Step 5 → `@github-integration` or `@ado-integration` for SCM setup
+- Step 6 → `@hybrid-scenarios` for dual-platform configuration
+- Step 8 → `@terraform` for infrastructure debugging
 - Step 9 → `@security` for review (if production)
-- Step 10 → `@backstage-expert` for portal deployment
+- Step 10 → `@platform` for RHDH portal deployment
 - Step 11 → `@sre` for advanced verification
-- On TF error → `@terraform` for debugging
+- Multi-file → `@context-architect` for coordinated codebase changes
+- Templates → `@template-engineer` for Golden Path customization
+- Docs → `@docs` for deployment documentation
+- Pipeline → `@devops` for CI/CD automation

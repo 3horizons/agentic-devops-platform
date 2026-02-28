@@ -2,7 +2,7 @@
 # THREE HORIZONS ACCELERATOR - H2 GITOPS DEPLOYMENT GOLDEN PATH TEMPLATE
 # =============================================================================
 #
-# Backstage Software Template for creating GitOps deployment configurations.
+# RHDH Software Template for creating GitOps deployment configurations.
 # Generates ArgoCD applications with Kustomize/Helm and multi-environment support.
 #
 # Horizon: H2 - Enhancement

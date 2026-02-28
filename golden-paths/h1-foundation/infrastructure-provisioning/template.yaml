@@ -2,7 +2,7 @@
 # THREE HORIZONS ACCELERATOR - H1 INFRASTRUCTURE PROVISIONING GOLDEN PATH
 # =============================================================================
 #
-# Backstage Software Template for provisioning Azure infrastructure.
+# RHDH Software Template for provisioning Azure infrastructure.
 # Supports Terraform and Bicep with GitOps-driven infrastructure.
 #
 # Horizon: H1 - Foundation

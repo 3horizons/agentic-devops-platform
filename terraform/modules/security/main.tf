@@ -195,7 +195,7 @@ resource "azuread_application" "github_sso" {
   web {
     redirect_uris = [
       "https://argocd.${var.customer_name}.com/api/dex/callback",
-      "https://backstage.${var.customer_name}.com/api/auth/microsoft/handler/frame"
+      "https://rhdh.${var.customer_name}.com/api/auth/microsoft/handler/frame"
     ]
 
     implicit_grant {

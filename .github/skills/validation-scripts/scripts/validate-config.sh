@@ -535,7 +535,7 @@ validate_teams() {
         fi
     else
         check_warn "teams.yaml not found (optional)"
-        echo "  Teams can be added later via Backstage"
+        echo "  Teams can be added later via RHDH"
     fi
 }
 

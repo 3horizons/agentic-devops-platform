@@ -4,7 +4,7 @@
 # =============================================================================
 #
 # Creates and configures GitHub Apps and OAuth Apps for platform integrations
-# Supports Backstage, ArgoCD, and custom integrations
+# Supports RHDH, ArgoCD, and custom integrations
 #
 # Usage: ./scripts/setup-github-app.sh [options]
 #
@@ -23,7 +23,7 @@ NC='\033[0m'
 # Defaults
 DRY_RUN=false
 APP_TYPE="github-app"
-TARGET="backstage"
+TARGET="rhdh"
 
 # Logging
 log_info()    { echo -e "${BLUE}[INFO]${NC} $1"; }
@@ -46,17 +46,17 @@ OPTIONS:
     --callback-url      OAuth callback URL (required)
     --webhook-url       Webhook URL (optional)
     --type              App type: github-app, oauth-app (default: github-app)
-    --target            Target integration: backstage, argocd, custom (default: backstage)
+    --target            Target integration: rhdh, argocd, custom (default: rhdh)
     --keyvault          Azure Key Vault name to store secrets
     --dry-run           Show what would be done
     --help              Show this help message
 
 EXAMPLES:
-    # Create GitHub App for Backstage
-    $(basename "$0") --github-org myorg --app-name myorg-backstage \\
-        --homepage-url https://backstage.example.com \\
-        --callback-url https://backstage.example.com/api/auth/github/handler/frame \\
-        --target backstage
+    # Create GitHub App for RHDH
+    $(basename "$0") --github-org myorg --app-name myorg-rhdh \\
+        --homepage-url https://rhdh.example.com \\
+        --callback-url https://rhdh.example.com/api/auth/github/handler/frame \\
+        --target rhdh
 
     # Create OAuth App for ArgoCD
     $(basename "$0") --github-org myorg --app-name myorg-argocd \\
@@ -171,7 +171,7 @@ create_github_app_manifest() {
     # Permissions based on target
     local permissions
     case $TARGET in
-        backstage)
+        rhdh)
             permissions='{
                 "contents": "read",
                 "metadata": "read",
@@ -247,7 +247,7 @@ create_github_app() {
     echo "3. Set permissions based on target ($TARGET):"
     echo "   - Repository: Contents (Read)"
     echo "   - Repository: Metadata (Read)"
-    if [[ "$TARGET" == "backstage" ]]; then
+    if [[ "$TARGET" == "rhdh" ]]; then
         echo "   - Repository: Pull requests (Write)"
         echo "   - Repository: Issues (Write)"
         echo "   - Repository: Workflows (Write)"
@@ -351,7 +351,7 @@ generate_k8s_secret() {
     
     local namespace
     case $TARGET in
-        backstage) namespace="backstage" ;;
+        rhdh) namespace="rhdh" ;;
         argocd) namespace="argocd" ;;
         *) namespace="default" ;;
     esac
@@ -395,8 +395,8 @@ print_summary() {
     [[ -n "${WEBHOOK_URL:-}" ]] && echo "  Webhook:      ${WEBHOOK_URL}"
     echo ""
     
-    if [[ "$TARGET" == "backstage" ]]; then
-        echo "Backstage app-config.yaml configuration:"
+    if [[ "$TARGET" == "rhdh" ]]; then
+        echo "RHDH app-config.yaml configuration:"
         cat << EOF
 integrations:
   github:

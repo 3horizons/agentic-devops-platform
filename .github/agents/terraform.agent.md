@@ -16,6 +16,14 @@ handoffs:
     agent: devops
     prompt: "Ready for deployment. Please set up the CI/CD pipeline."
     send: false
+  - label: "Deploy Platform"
+    agent: deploy
+    prompt: "Deploy the infrastructure changes via the full deployment workflow."
+    send: false
+  - label: "Architecture Review"
+    agent: architect
+    prompt: "Review this infrastructure design against the architecture."
+    send: false
 ---
 
 # Terraform Agent
@@ -75,6 +83,6 @@ When you receive a complex infrastructure request, **always** break it into sub-
 3. **Write** — Create/modify `.tf` files following module structure standards.
 4. **Format** — Run `terraform fmt` and `terraform validate`.
 5. **Plan** — Suggest the user run `terraform plan -var-file=environments/<env>.tfvars`.
-6. **Handoff** — Suggest `@security` for review or `@devops` for CI/CD pipeline.
+6. **Handoff** — Suggest `@security` for review, `@devops` for CI/CD pipeline, `@deploy` for deployment, or `@architect` for design review.
 
 Present the sub-task plan to the user before proceeding. Check off each step as you complete it.

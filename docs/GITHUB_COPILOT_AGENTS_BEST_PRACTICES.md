@@ -1596,8 +1596,8 @@ The Three Horizons Accelerator v4 is an enterprise platform accelerator featurin
 - **Kubernetes** (AKS)
 - **Terraform** for IaC
 - **ArgoCD** for GitOps
-- **Backstage** for IDP
-- **30 custom agents** for DevOps automation
+- **RHDH** for IDP
+- **17 custom agents** for DevOps automation
 
 ### Current Structure
 
@@ -1607,7 +1607,7 @@ The Three Horizons Accelerator v4 is an enterprise platform accelerator featurin
 | Agent | Current Use |
 |-------|-------------|
 | `@terraform` | Create/modify Azure IaC modules |
-| `@platform` | Configure Backstage and Golden Paths |
+| `@platform` | Configure RHDH and Golden Paths |
 | `@security` | Review configurations for compliance |
 | `@sre` | Troubleshoot deployments, monitor SLOs |
 | `@devops` | CI/CD workflows, ArgoCD applications |
@@ -2041,12 +2041,12 @@ az acr repository show-tags -n <acr> --repository <repo> --orderby time_desc
 | 7 | kubectl-cli | OpenShift CLI | aro-operations.sh | @aro-platform |
 | 8 | validation-scripts | All validation scripts | 5 scripts from /scripts/ | @validation |
 | 9 | Azure-infrastructure | Azure IaC patterns | - | @infrastructure, @Terraform |
-| 10 | backstage-deployment | ARO provisioning | deploy-aro.sh | @aro-platform |
+| 10 | rhdh-deployment | ARO provisioning | deploy-aro.sh | @aro-platform |
 | 11 | observability-stack | OpenShift admin | oc-admin.sh | @aro-platform |
 | 12 | database-management | DB operations | db-health.sh | @database |
 | 13 | observability-stack | Prometheus/Grafana | prometheus-query.sh | @observability, @sre |
 | 14 | ai-foundry-operations | Azure AI operations | model-deploy.sh | @ai-foundry |
-| 15 | Backstage-portal | Backstage/Backstage ops | catalog-sync.sh | @Backstage-portal |
+| 15 | RHDH-portal | RHDH ops | catalog-sync.sh | @RHDH-portal |
 | 16 | mcp-cli | MCP server reference | - | All agents |
 | 17 | prerequisites | CLI validation | validate-cli-prerequisites.sh | All agents |
 
@@ -2104,12 +2104,12 @@ states:
 
   PHASE_2_ENHANCE:
     description: Platform enhancement
-    agents: [gitops, observability, backstage-portal, golden-paths, github-runners]
+    agents: [gitops, observability, rhdh-portal, golden-paths, github-runners]
     parallel_groups:
       - [gitops]
       - [observability, github-runners]  # After gitops
-      - [backstage-portal]  # After gitops + database
-      - [golden-paths]  # After backstage-portal
+      - [rhdh-portal]  # After gitops + database
+      - [golden-paths]  # After rhdh-portal
     allowed_transitions: [PHASE_2_VALIDATE, ROLLBACK]
     timeout_minutes: 70
 
@@ -2120,7 +2120,7 @@ states:
       - argocd_operational
       - prometheus_scraping
       - grafana_accessible
-      - backstage_portal_accessible
+      - rhdh_portal_accessible
       - templates_registered
     allowed_transitions: [PHASE_3_INIT, PHASE_2_ENHANCE, IDLE]
 
@@ -2214,8 +2214,8 @@ gates:
       command: curl -s http://prometheus:9090/-/ready
       expected_exit_code: 0
 
-    - name: backstage_accessible
-      command: curl -s -o /dev/null -w "%{http_code}" https://backstage.${DOMAIN}/
+    - name: rhdh_accessible
+      command: curl -s -o /dev/null -w "%{http_code}" https://rhdh.${DOMAIN}/
       expected_output: "200"
 
   phase_3_exit:
@@ -2264,7 +2264,7 @@ properties:
 ### Complete Handoff Matrix
 
 ```yaml
-# All 23 agents handoff configuration
+# All agents handoff configuration (aspirational — 23 proposed roles)
 
 agents:
   # H1 Foundation
@@ -2306,9 +2306,9 @@ agents:
 
   database:
     handoffs:
-      - label: "Configure Backstage"
-        agent: backstage-portal
-        prompt: "Configure Backstage using the provisioned PostgreSQL."
+      - label: "Configure RHDH"
+        agent: rhdh-portal
+        prompt: "Configure RHDH using the provisioned PostgreSQL."
         context: [postgresql_fqdn, postgresql_admin_login]
 
   container-registry:
@@ -2325,9 +2325,9 @@ agents:
         agent: observability
         prompt: "Deploy Prometheus/Grafana stack via ArgoCD."
         context: [argocd_server_url, argocd_token]
-      - label: "Setup Backstage"
-        agent: backstage-portal
-        prompt: "Deploy Backstage via ArgoCD ApplicationSet."
+      - label: "Setup RHDH"
+        agent: rhdh-portal
+        prompt: "Deploy RHDH via ArgoCD ApplicationSet."
         context: [argocd_server_url]
       - label: "Validate GitOps"
         agent: validation
@@ -2340,12 +2340,12 @@ agents:
         prompt: "Configure SRE automation with Prometheus metrics."
         context: [prometheus_url, grafana_url]
 
-  backstage-portal:
+  rhdh-portal:
     handoffs:
       - label: "Register Templates"
         agent: golden-paths
-        prompt: "Register all Golden Path templates in Backstage catalog."
-        context: [backstage_url, catalog_api_token]
+        prompt: "Register all Golden Path templates in RHDH catalog."
+        context: [rhdh_url, catalog_api_token]
 
   golden-paths:
     handoffs:
@@ -2400,7 +2400,7 @@ agents:
 
 ---
 
-## PART D: Three-Tier Boundaries for All 23 Agents
+## PART D: Three-Tier Boundaries for All Agents
 
 ### Boundaries Template
 
@@ -2419,7 +2419,7 @@ Every agent MUST include this section:
   - [Destructive, irreversible, or security-violating actions]
 ```
 
-### Complete Boundaries for All 23 Agents
+### Complete Boundaries for All Agents
 
 #### H1 Foundation Agents
 
@@ -2663,7 +2663,7 @@ Every agent MUST include this section:
   - Expose Grafana publicly without auth
 ```
 
-**11. Backstage Portal Agent**
+**11. RHDH Portal Agent**
 
 ```markdown
 ## Boundaries
@@ -2948,27 +2948,27 @@ Every agent MUST include this section:
 | `validate-agents.sh` | `/scripts/` | validation-scripts | Map to skill |
 | `platform-bootstrap.sh` | `/scripts/` | Azure-infrastructure | Map to skill |
 | `bootstrap.sh` | `/scripts/` | Azure-infrastructure | Map to skill |
-| `deploy-aro.sh` | `/scripts/` | backstage-deployment | Map to skill |
+| `deploy-aro.sh` | `/scripts/` | rhdh-deployment | Map to skill |
 | `setup-github-app.sh` | `/scripts/` | GitHub-cli | Map to skill |
 | `setup-identity-federation.sh` | `/scripts/` | Azure-cli | Map to skill |
 | `setup-branch-protection.sh` | `/scripts/` | GitHub-cli | Map to skill |
 | `setup-pre-commit.sh` | `/scripts/` | prerequisites | Map to skill |
-| `onboard-team.sh` | `/scripts/` | Backstage-portal | Map to skill |
+| `onboard-team.sh` | `/scripts/` | RHDH-portal | Map to skill |
 | `ado-to-github-migration.sh` | `/scripts/migration/` | GitHub-cli | Map to skill |
 
 ### Integration Commands
 
 ```bash
 # Create skills directory structure
-mkdir -p .github/skills/{terraform-cli,kubectl-cli,azure-cli,argocd-cli,helm-cli,github-cli,kubectl-cli,validation-scripts,azure-infrastructure,backstage-deployment,observability-stack,database-management,observability-stack,ai-foundry-operations,backstage-portal,mcp-cli,prerequisites}/{scripts,references}
+mkdir -p .github/skills/{terraform-cli,kubectl-cli,azure-cli,argocd-cli,helm-cli,github-cli,kubectl-cli,validation-scripts,azure-infrastructure,rhdh-deployment,observability-stack,database-management,observability-stack,ai-foundry-operations,rhdh-portal,mcp-cli,prerequisites}/{scripts,references}
 
 # Copy existing scripts to appropriate skills
 cp scripts/validate-*.sh .github/skills/validation-scripts/scripts/
-cp scripts/deploy-aro.sh .github/skills/backstage-deployment/scripts/
+cp scripts/deploy-aro.sh .github/skills/rhdh-deployment/scripts/
 cp scripts/setup-github-app.sh .github/skills/github-cli/scripts/
 cp scripts/setup-identity-federation.sh .github/skills/azure-cli/scripts/
 cp scripts/validate-cli-prerequisites.sh .github/skills/prerequisites/scripts/
-cp scripts/onboard-team.sh .github/skills/backstage-portal/scripts/
+cp scripts/onboard-team.sh .github/skills/rhdh-portal/scripts/
 cp scripts/platform-bootstrap.sh .github/skills/azure-infrastructure/scripts/
 ```
 
@@ -3005,7 +3005,7 @@ The project already has a well-structured `.github/copilot-instructions.md` (114
 | Security Requirements | ✅ Complete | 5 key requirements |
 | Naming Conventions | ✅ Complete | Pattern defined |
 | Common Tasks | ✅ Complete | Commands documented |
-| Agent System | ⚠️ Partial | Update with 23 agents + skills |
+| Agent System | ✅ Complete | 17 agents + 15 skills |
 | Golden Paths | ⚠️ Partial | Add template registration |
 
 **Recommended Updates to copilot-instructions.md:**

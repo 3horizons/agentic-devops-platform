@@ -77,7 +77,7 @@ Each environment overlay can customize:
 
 ## Monitoring
 
-- ArgoCD sync status in Backstage
+- ArgoCD sync status in RHDH
 - Deployment health checks
 - Git commit tracking
 

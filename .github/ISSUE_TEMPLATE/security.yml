@@ -98,7 +98,7 @@ body:
         - label: "AKS Cluster Identity"
           required: true
         - label: "ArgoCD Identity"
-        - label: "RHDH/Backstage Identity"
+        - label: "RHDH Identity"
         - label: "GitHub Actions Identity (Workload Federation)"
         - label: "Application Gateway Identity"
 

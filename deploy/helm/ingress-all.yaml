@@ -1,5 +1,5 @@
 # =============================================================================
-# All Ingress Resources — AKS Backstage Demo
+# All Ingress Resources — AKS RHDH Demo
 # =============================================================================
 apiVersion: networking.k8s.io/v1
 kind: Ingress

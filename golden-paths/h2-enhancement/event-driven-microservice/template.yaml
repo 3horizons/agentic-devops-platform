@@ -2,7 +2,7 @@
 # THREE HORIZONS ACCELERATOR - H2 EVENT-DRIVEN MICROSERVICE GOLDEN PATH TEMPLATE
 # =============================================================================
 #
-# Backstage Software Template for creating event-driven microservices.
+# RHDH Software Template for creating event-driven microservices.
 # Supports Azure Service Bus, Event Hubs (Kafka), and Event Grid patterns.
 #
 # Horizon: H2 - Enhancement

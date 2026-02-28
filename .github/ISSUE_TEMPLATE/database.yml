@@ -154,7 +154,7 @@ body:
         
         - **Prerequisites**: Infrastructure → `infrastructure.yml`
         - **Prerequisites**: Security (Key Vault) → `security.yml`
-        - **Next**: Backstage Portal (needs database) → `backstage-portal.yml`
+        - **Next**: RHDH Portal (needs database) → `rhdh-portal.yml`
 
   - type: checkboxes
     id: confirmation

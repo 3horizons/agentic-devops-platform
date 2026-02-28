@@ -85,8 +85,8 @@ jobs:
               AGENT="h2-enhancement/observability-agent"
               HORIZON="H2"
               ;;
-            "agent:backstage"|"agent:backstage-portal")
-              AGENT="h2-enhancement/backstage-portal-agent"
+            "agent:rhdh"|"agent:rhdh-portal")
+              AGENT="h2-enhancement/rhdh-portal-agent"
               HORIZON="H2"
               ;;
             "agent:github-runners")

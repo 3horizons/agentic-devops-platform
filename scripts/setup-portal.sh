@@ -3,7 +3,7 @@
 # paulasilvatech - Portal Setup Wizard
 # =============================================================================
 # Interactive wizard that collects all configuration needed to deploy
-# a developer portal (Backstage) on Azure or locally.
+# a developer portal (RHDH) on Azure or locally.
 #
 # Usage:
 #   ./scripts/setup-portal.sh                  # Interactive mode
@@ -118,10 +118,10 @@ step1_portal() {
   fi
   ok "Portal name: $PORTAL_NAME"
 
-  PORTAL_TYPE="backstage"
-  ok "Portal type: Backstage"
+  PORTAL_TYPE="rhdh"
+  ok "Portal type: RHDH"
   PLATFORM_TYPE="aks"
-  info "Backstage always deploys on AKS"
+  info "RHDH always deploys on AKS"
 }
 
 # =============================================================================

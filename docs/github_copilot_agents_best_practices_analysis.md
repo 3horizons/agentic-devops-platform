@@ -91,7 +91,7 @@ The repository contains specialized agents following the \'one agent, one job\' 
   ----------------------------------------------------------------------------------------------------
   **Agent**               **Purpose**               **Tools/Skills**
   ----------------------- ------------------------- --------------------------------------------------
-  platform                Golden Paths, Backstage, IDP   backstage-portal, helm-cli, kubectl-cli
+  platform                Golden Paths, RHDH, IDP   rhdh-portal, helm-cli, kubectl-cli
 
   terraform               Azure IaC specialist      terraform-cli, azure-cli, validation-scripts
 

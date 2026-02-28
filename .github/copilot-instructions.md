@@ -5,7 +5,7 @@
 This is the Three Horizons Accelerator v4.0.0 - an enterprise-grade platform accelerator for Azure with AI capabilities. The platform is organized into three horizons:
 
 - **H1 Foundation**: Core infrastructure (AKS, networking, security, databases)
-- **H2 Enhancement**: Platform services (ArgoCD, Backstage, observability, Golden Paths)
+- **H2 Enhancement**: Platform services (ArgoCD, RHDH, observability, Golden Paths)
 - **H3 Innovation**: AI capabilities (AI Foundry, agents, MLOps)
 
 ## Technology Stack
@@ -13,7 +13,7 @@ This is the Three Horizons Accelerator v4.0.0 - an enterprise-grade platform acc
 - **Infrastructure**: Terraform for Azure (AKS, networking, databases)
 - **Container Platform**: Azure Kubernetes Service (AKS)
 - **GitOps**: ArgoCD for continuous deployment
-- **IDP**: Red Hat Developer Hub (Backstage-based)
+- **IDP**: Red Hat Developer Hub (RHDH)
 - **Observability**: Prometheus, Grafana, Alertmanager, Loki
 - **AI**: Azure AI Foundry, OpenAI models
 
@@ -116,7 +116,7 @@ terraform apply -var-file=environments/dev.tfvars
 
 ## Agent System
 
-The platform uses 16 Copilot Chat Agents in `.github/agents/` for interactive development assistance, plus 16 skills for specialized CLI operations.
+The platform uses 17 Copilot Chat Agents in `.github/agents/` for interactive development assistance, plus 15 skills for specialized CLI operations.
 
 ### Agent Organization
 - **@deploy**: Deployment orchestration, end-to-end platform deployment
@@ -124,18 +124,29 @@ The platform uses 16 Copilot Chat Agents in `.github/agents/` for interactive de
 - **@devops**: CI/CD, GitOps, MLOps, Golden Paths, pipelines
 - **@docs**: Documentation generation and maintenance
 - **@onboarding**: New team member onboarding and guidance
-- **@platform**: Backstage portal, platform services, developer experience
+- **@platform**: RHDH portal, platform services, developer experience
 - **@reviewer**: Code review, PR analysis, quality checks
 - **@security**: Security policies, scanning, compliance
 - **@sre**: Reliability engineering, incident response, monitoring
 - **@terraform**: Infrastructure as Code, Terraform modules
 - **@test**: Test generation, validation, quality assurance
+- **@azure-portal-deploy**: Azure AKS provisioning, Key Vault, PostgreSQL, ACR, Helm
+- **@github-integration**: GitHub App, org discovery, GHAS, Actions, Packages, supply chain
+- **@ado-integration**: Azure DevOps PAT, repos, pipelines, boards, Copilot Standalone
+- **@hybrid-scenarios**: GitHub + ADO coexistence scenarios A/B/C, dual auth, hybrid templates
+- **@template-engineer**: Software Template expert for RHDH, Golden Path creation, devcontainer configs
+- **@context-architect**: Multi-file change planning/execution, dependency tracing, codebase context mapping
 
 ### Skills Available
 Agents can use skills from `.github/skills/` including: terraform-cli, kubectl-cli, azure-cli, argocd-cli, helm-cli, github-cli, validation-scripts, and more.
 
 ### Agent Handoffs
-Agents support handoffs for workflow orchestration. Example: @terraform -> @devops -> @security -> @test
+Agents support handoffs for workflow orchestration. Key orchestration flows:
+- **Deployment:** @onboarding -> @architect -> @terraform -> @deploy -> @sre
+- **Security:** @reviewer -> @security -> @devops (remediate) -> @test
+- **Templates:** @platform -> @template-engineer -> @devops -> @security
+- **Multi-file:** Any agent -> @context-architect -> @test -> @docs
+- **Hybrid:** @github-integration + @ado-integration -> @hybrid-scenarios -> @deploy
 
 When generating code for agents:
 - Follow the agent specification format in `.github/agents/`
@@ -147,7 +158,7 @@ When generating code for agents:
 ## Golden Paths
 
 When creating or modifying Golden Path templates:
-- Follow Backstage template format
+- Follow RHDH Software Template format
 - Include skeleton files
 - Add comprehensive documentation
 - Test scaffolding locally before registering

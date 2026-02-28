@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Infrastructure (H1 Foundation)
-- 18 Terraform modules for Azure infrastructure
+- 15 Terraform modules for Azure infrastructure
   - aks-cluster: Azure Kubernetes Service with Workload Identity
   - ai-foundry: Azure AI Foundry (OpenAI, AI Search)
   - argocd: ArgoCD GitOps controller
@@ -42,7 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - networking: VNet, subnets, NSGs, private DNS
   - observability: Prometheus, Grafana, Loki, Alertmanager
   - purview: Microsoft Purview governance
-  - backstage: Backstage Developer Portal
   - security: Key Vault, managed identities, RBAC
 
 #### AI Agents (23 total)
@@ -59,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - gitops-agent
   - golden-paths-agent
   - observability-agent
-  - backstage-portal-agent
+  - rhdh-portal-agent
   - github-runners-agent
 
 - H3 Innovation (4 agents)
@@ -106,11 +105,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - sre-agent-integration
 
 #### GitHub Configuration
-- 28 Issue templates with T-shirt sizing
+- 26 Issue templates with T-shirt sizing
 - 6 CI/CD workflows
 - 3 Copilot chat modes (architect, reviewer, sre)
-- 16 Copilot agents (onboarding, architect, platform, terraform, reviewer, devops, security, sre, test, docs, deploy)
-- 16 skills (azure-cli, azure-infrastructure, terraform-cli, kubectl-cli, helm-cli, argocd-cli, github-cli, mcp-cli, database-management, observability-stack, ai-foundry-operations, validation-scripts, deploy-orchestration, prerequisites, backstage-deployment, codespaces-golden-paths)
+- 17 Copilot agents (onboarding, architect, platform, terraform, reviewer, devops, security, sre, test, docs, deploy, azure-portal-deploy, github-integration, ado-integration, hybrid-scenarios, template-engineer, context-architect)
+- 15 skills (azure-cli, azure-infrastructure, terraform-cli, kubectl-cli, helm-cli, argocd-cli, github-cli, mcp-cli, database-management, observability-stack, ai-foundry-operations, validation-scripts, deploy-orchestration, prerequisites, codespaces-golden-paths)
 - 3 instruction files (terraform, kubernetes, python)
 - 7 prompts (create-service, review-code, generate-tests, deploy-service, deploy-platform, troubleshoot-incident, generate-docs)
 - Branch protection workflow
@@ -152,7 +151,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial Three Horizons architecture
 - Basic Terraform modules
 - ArgoCD integration
-- Backstage portal setup
+- RHDH portal setup
 
 ### Changed
 - Migrated from Azure DevOps to GitHub

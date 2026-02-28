@@ -453,7 +453,7 @@ spec:
     # Step 6: Register in Catalog
     # -------------------------------------------------------------------------
     - id: register-catalog
-      name: Register in Backstage Catalog
+      name: Register in RHDH Catalog
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps['create-repo'].output.repoContentsUrl }}
@@ -469,6 +469,6 @@ spec:
         url: ${{ steps['create-repo'].output.remoteUrl }}
         icon: github
         
-      - title: Backstage Catalog
+      - title: RHDH Catalog
         url: ${{ steps['register-catalog'].output.entityRef }}
         icon: catalog

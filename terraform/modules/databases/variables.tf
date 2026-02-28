@@ -57,7 +57,7 @@ variable "postgresql_config" {
     backup_retention_days = 7
     geo_redundant_backup  = false
     high_availability     = false
-    databases             = ["backstage"]
+    databases             = ["rhdh"]
   }
 }
 

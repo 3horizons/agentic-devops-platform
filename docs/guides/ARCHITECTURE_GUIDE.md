@@ -108,7 +108,7 @@ The Three Horizons model organizes the platform into three layers with different
 | **Grafana** | Grafana | Dashboards | Recommended |
 | **Alertmanager** | CNCF Alertmanager | Alert routing | Recommended |
 | **Gatekeeper** | OPA Gatekeeper | Policy enforcement | Recommended |
-| **Backstage** | Backstage | Developer portal | Optional |
+| **RHDH** | Red Hat Developer Hub | Developer portal | Optional |
 | **GitHub Runners** | Self-hosted runners | CI/CD execution | Optional |
 
 #### H3: Innovation Components
@@ -142,7 +142,7 @@ The Three Horizons model organizes the platform into three layers with different
 | **Zero Trust** | Never trust, always verify | Private endpoints, workload identity, network policies |
 | **Immutable Infrastructure** | Don't modify running systems; replace them | Rolling updates, blue-green deployments |
 | **Observable** | Everything can be measured and monitored | Prometheus metrics, Grafana dashboards, alerts |
-| **Self-Service** | Developers can deploy without ops intervention | Golden Path templates, Backstage portal |
+| **Self-Service** | Developers can deploy without ops intervention | Golden Path templates, RHDH portal |
 | **Policy as Code** | Security policies are defined in code | Gatekeeper/OPA constraints |
 | **Cost Awareness** | Monitor and optimize costs continuously | Azure Cost Management, budgets, alerts |
 

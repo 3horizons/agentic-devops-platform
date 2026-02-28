@@ -17,7 +17,7 @@
   <!-- H3 -->
   <rect x="20" y="263" width="560" height="55" rx="8" fill="#fdedec" stroke="#e74c3c" filter="url(#ds)"/>
   <text x="35" y="283" font-size="11" font-weight="700" fill="#e74c3c">H3 — INNOVATION (Advanced Capabilities)</text>
-  <text x="35" y="303" font-size="9" fill="#555" font-family="monospace">ai-foundry/ · backstage/</text>
+  <text x="35" y="303" font-size="9" fill="#555" font-family="monospace">ai-foundry/ · rhdh/</text>
   <!-- Cross-cutting -->
   <rect x="20" y="328" width="560" height="55" rx="8" fill="#f5eef8" stroke="#9b59b6" filter="url(#ds)"/>
   <text x="35" y="348" font-size="11" font-weight="700" fill="#8e44ad">CROSS-CUTTING (Platform Support)</text>

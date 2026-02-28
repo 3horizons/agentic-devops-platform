@@ -81,7 +81,7 @@ body:
       options:
         - label: "H1 - Foundation (AKS, Networking, Security, ACR, Databases)"
           required: true
-        - label: "H2 - Enhancement (ArgoCD, Backstage, Observability, Golden Paths)"
+        - label: "H2 - Enhancement (ArgoCD, RHDH, Observability, Golden Paths)"
         - label: "H3 - Innovation (AI Foundry, SRE Agent, MLOps)"
 
   - type: checkboxes

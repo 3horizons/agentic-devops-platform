@@ -1,8 +1,12 @@
 ---
 name: deploy
 description: Deployment orchestrator — guides end-to-end platform deployment across all three horizons.
-tools:vscode/getProjectSetupInfo, vscode/installExtension, vscode/memory, vscode/newWorkspace, vscode/openIntegratedBrowser, vscode/runCommand, vscode/vscodeAPI, vscode/extensions, vscode/askQuestions, execute/runNotebookCell, execute/testFailure, execute/getTerminalOutput, execute/awaitTerminal, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, execute/runTests, read/getNotebookSummary, read/problems, read/readFile, read/readNotebookCellOutput, read/terminalSelection, read/terminalLastCommand, agent/askQuestions, agent/runSubagent, edit/createDirectory, edit/createFile, edit/createJupyterNotebook, edit/editFiles, edit/editNotebook, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/searchResults, search/textSearch, search/searchSubagent, search/usages, web/fetch, web/githubRepo, todo
-[vscode/getProjectSetupInfo, vscode/installExtension, vscode/memory, vscode/newWorkspace, vscode/openIntegratedBrowser, vscode/runCommand, vscode/vscodeAPI, vscode/extensions, vscode/askQuestions, execute/runNotebookCell, execute/testFailure, execute/getTerminalOutput, execute/awaitTerminal, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, execute/runTests, read/getNotebookSummary, read/problems, read/readFile, read/readNotebookCellOutput, read/terminalSelection, read/terminalLastCommand, agent/askQuestions, agent/runSubagent, edit/createDirectory, edit/createFile, edit/createJupyterNotebook, edit/editFiles, edit/editNotebook, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/searchResults, search/textSearch, search/searchSubagent, search/usages, web/fetch, web/githubRepo, todo]
+tools:
+  - search/codebase
+  - edit/editFiles
+  - execute/runInTerminal
+  - read/problems
+  - agent/runSubagent
 user-invokable: true
 handoffs:
   - label: "Security Review"
@@ -16,10 +20,6 @@ handoffs:
   - label: "Post-Deploy Verification"
     agent: sre
     prompt: "Verify platform health after deployment."
-    send: false
-  - label: "Backstage Portal Setup"
-    agent: backstage-expert
-    prompt: "Deploy and configure the Backstage developer portal on AKS."
     send: false
   - label: "Azure Infrastructure"
     agent: azure-portal-deploy
@@ -36,6 +36,22 @@ handoffs:
   - label: "Hybrid Scenarios"
     agent: hybrid-scenarios
     prompt: "Design and implement hybrid GitHub + ADO scenario."
+    send: false
+  - label: "Multi-File Changes"
+    agent: context-architect
+    prompt: "Plan and execute coordinated multi-file codebase changes needed for deployment."
+    send: false
+  - label: "Template Issues"
+    agent: template-engineer
+    prompt: "Fix or create Golden Path templates for service scaffolding."
+    send: false
+  - label: "Documentation"
+    agent: docs
+    prompt: "Update deployment documentation with current status and procedures."
+    send: false
+  - label: "DevOps Pipeline"
+    agent: devops
+    prompt: "Configure CI/CD pipeline for deployment automation."
     send: false
 ---
 
@@ -146,7 +162,14 @@ When user requests a deployment, follow this exact sequence:
 
 **Handoff points:**
 - Step 1 → `setup-portal.sh` wizard for interactive data collection
+- Step 4 → `@azure-portal-deploy` for Azure provisioning
+- Step 5 → `@github-integration` or `@ado-integration` for SCM setup
+- Step 6 → `@hybrid-scenarios` for dual-platform configuration
+- Step 8 → `@terraform` for infrastructure debugging
 - Step 9 → `@security` for review (if production)
-- Step 10 → `@backstage-expert` for portal deployment
+- Step 10 → `@platform` for RHDH portal deployment
 - Step 11 → `@sre` for advanced verification
-- On TF error → `@terraform` for debugging
+- Multi-file → `@context-architect` for coordinated codebase changes
+- Templates → `@template-engineer` for Golden Path customization
+- Docs → `@docs` for deployment documentation
+- Pipeline → `@devops` for CI/CD automation

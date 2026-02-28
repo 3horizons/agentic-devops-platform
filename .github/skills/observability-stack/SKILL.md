@@ -149,7 +149,7 @@ curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | selec
 4. Use recording rules for expensive queries
 5. Enable persistent storage for Prometheus and Grafana
 6. Configure Entra ID SSO for Grafana
-7. Monitor ArgoCD and Backstage scrape targets
+7. Monitor ArgoCD and RHDH scrape targets
 
 ## Output Format
 1. Command executed

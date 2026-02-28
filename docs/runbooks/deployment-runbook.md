@@ -183,7 +183,7 @@ argocd account update-password
 ### 3. Register Golden Paths
 
 ```bash
-# Apply golden paths to Backstage
+# Apply golden paths to RHDH
 kubectl apply -f golden-paths/
 ```
 

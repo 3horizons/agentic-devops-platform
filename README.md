@@ -12,7 +12,7 @@ The **Three Horizons Implementation Accelerator** is a complete kit of Infrastru
 |-----------|----------|-------------|
 | **Terraform Modules** | 16 | Complete Azure infrastructure |
 | **AI Agents** | 11 | **[Copilot Chat Agents](./AGENTS.md)** (VS Code) |
-| **Golden Path Templates** | 22 | Self-service templates for Backstage |
+| **Golden Path Templates** | 22 | Self-service templates for RHDH |
 | **Issue Templates** | 28 | GitHub Issues templates |
 | **Automation Scripts** | 14 | Bootstrap and operations |
 | **MCP Servers** | 15 | MCP server configurations |
@@ -103,14 +103,13 @@ three-horizons-accelerator-v4/
 │   ├── ado-integration.agent.md     # Azure DevOps integration
 │   ├── architect.agent.md          # System architecture, AI Foundry
 │   ├── azure-portal-deploy.agent.md # Azure AKS portal deployment
-│   ├── backstage-expert.agent.md   # Backstage portal on AKS
 │   ├── deploy.agent.md             # Deployment orchestration
 │   ├── devops.agent.md             # CI/CD, GitOps, MLOps, pipelines
 │   ├── docs.agent.md               # Documentation generation
 │   ├── github-integration.agent.md  # GitHub platform integration
 │   ├── hybrid-scenarios.agent.md    # GitHub + ADO hybrid scenarios
 │   ├── onboarding.agent.md         # Team onboarding guidance
-│   ├── platform.agent.md           # Backstage portal, platform services
+│   ├── platform.agent.md           # RHDH portal, platform services
 │   ├── reviewer.agent.md           # Code review, quality checks
 │   ├── security.agent.md           # Security policies, compliance
 │   ├── sre.agent.md                # Reliability, incident response
@@ -123,7 +122,6 @@ three-horizons-accelerator-v4/
 │       ├── aks-cluster/            # Azure Kubernetes Service
 │       ├── ai-foundry/             # Azure AI Foundry
 │       ├── argocd/                 # ArgoCD GitOps
-│       ├── backstage/              # Backstage Developer Portal
 │       ├── container-registry/     # ACR
 │       ├── cost-management/        # Cost analysis and budgets
 │       ├── databases/              # PostgreSQL, Redis, Cosmos
@@ -137,16 +135,16 @@ three-horizons-accelerator-v4/
 │       ├── purview/                # Microsoft Purview
 │       └── security/               # Key Vault, Identities
 │
-├── golden-paths/                   # 22 Backstage templates
+├── golden-paths/                   # 22 RHDH Software Templates
 │   ├── h1-foundation/              # 6 basic templates
 │   ├── h2-enhancement/             # 9 advanced templates (incl. ADO migration)
 │   └── h3-innovation/              # 7 AI/Agent templates
 │
-├── .github/ISSUE_TEMPLATE/         # 28 issue templates
+├── .github/ISSUE_TEMPLATE/         # 26 issue templates
 ├── argocd/                         # GitOps configurations
 ├── config/                         # Sizing profiles and regions
 ├── mcp-servers/                    # 15 MCP configurations
-├── scripts/                        # 16 automation scripts
+├── scripts/                        # 19 automation scripts
 ├── grafana/dashboards/             # Dashboards
 ├── prometheus/                     # Alerts
 └── docs/                           # Documentation
@@ -208,7 +206,7 @@ terraform apply tfplan
 - Managed Identities
 - NSGs and Private Endpoints
 
-### Step 2: Deploy ArgoCD and Backstage (H2)
+### Step 2: Deploy ArgoCD and RHDH (H2)
 
 ```bash
 # After H1 is complete, apply H2
@@ -243,7 +241,7 @@ terraform apply -var-file=environments/dev.tfvars -var="enable_h3=true"
 
 ## Golden Paths
 
-### Register Templates in Backstage
+### Register Templates in RHDH
 
 ```bash
 # Register all templates
@@ -253,9 +251,9 @@ terraform apply -var-file=environments/dev.tfvars -var="enable_h3=true"
 kubectl apply -f golden-paths/h1-foundation/basic-cicd/template.yaml
 ```
 
-### Create Application via Backstage
+### Create Application via RHDH
 
-1. Access the portal: `https://backstage.your-domain.com`
+1. Access the portal: `https://rhdh.your-domain.com`
 2. Navigate to **Create** → **Choose Template**
 3. Select the template (e.g., "H2: Create Microservice")
 4. Fill in the parameters:
@@ -546,11 +544,11 @@ For questions, issues, or suggestions, open an issue on GitHub:
 
 ### v4.0.0 (December 2025)
 
-- 18 Terraform modules (including Defender, Purview, Naming, Disaster Recovery)
+- 15 Terraform modules (including Defender, Purview, Naming, Disaster Recovery)
 - 17 Copilot Chat Agents for interactive development assistance
-- 28 GitHub Issues templates
-- 22 Golden Path templates for Backstage (including ADO to GitHub migration)
-- 16 automation scripts
+- 26 GitHub Issues templates
+- 22 Golden Path templates for RHDH (including ADO to GitHub migration)
+- 19 automation scripts
 - 15 MCP Server configurations
 - Complete observability stack
 

@@ -81,7 +81,7 @@ H3 templates typically require:
 
 ## Usage
 
-Select any template from the Backstage portal under "Create" → "Choose a Template" → "H3 Innovation".
+Select any template from the RHDH portal under "Create" → "Choose a Template" → "H3 Innovation".
 
 Ensure H3 infrastructure (AI Foundry) is deployed before using these templates.
 

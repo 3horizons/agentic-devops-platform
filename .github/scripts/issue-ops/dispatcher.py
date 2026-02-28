@@ -10,7 +10,7 @@ import subprocess
 # ==============================================================================
 COMMAND_MAP = {
     "/onboard": {
-        "script": ".github/skills/backstage-deployment/scripts/onboard-team.sh",
+        "script": "scripts/onboard-team.sh",
         "description": "Onboard a new team",
         "required_args": ["team_name"]
     },

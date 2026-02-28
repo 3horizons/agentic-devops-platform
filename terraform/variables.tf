@@ -196,7 +196,7 @@ variable "argocd_admin_password" {
 }
 
 variable "github_app_id" {
-  description = "GitHub App ID for ArgoCD/Backstage authentication"
+  description = "GitHub App ID for ArgoCD/RHDH authentication"
   type        = string
   default     = ""
   sensitive   = true

@@ -12,6 +12,14 @@ handoffs:
     agent: reviewer
     prompt: "I have written the tests. Please review the implementation code."
     send: false
+  - label: "DevOps Pipeline"
+    agent: devops
+    prompt: "Integrate these tests into the CI/CD pipeline."
+    send: false
+  - label: "Security Testing"
+    agent: security
+    prompt: "Review tests for security coverage and add security-focused tests."
+    send: false
 ---
 
 # Test Agent
@@ -52,6 +60,6 @@ When you receive a complex testing request, **always** break it into sub-tasks b
 4. **Mock** — Set up mocks/stubs for external dependencies.
 5. **Run** — Execute tests and verify all pass.
 6. **Coverage** — Report coverage percentage and uncovered areas.
-7. **Handoff** — Suggest `@reviewer` for code review of the implementation.
+7. **Handoff** — Suggest `@reviewer` for code review, `@devops` for CI pipeline integration, or `@security` for security test coverage.
 
 Present the sub-task plan to the user before proceeding. Check off each step as you complete it.

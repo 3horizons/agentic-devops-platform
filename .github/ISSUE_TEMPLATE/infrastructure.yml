@@ -197,7 +197,7 @@ body:
         - **Security**: Deploy Defender & Purview → `security.yml`
         - **GitOps**: Configure ArgoCD → `gitops.yml`
         - **Observability**: Setup monitoring → `observability.yml`
-        - **Backstage Portal**: Deploy developer portal → `backstage-portal.yml`
+        - **RHDH Portal**: Deploy developer portal → `rhdh-portal.yml`
 
   - type: checkboxes
     id: confirmation

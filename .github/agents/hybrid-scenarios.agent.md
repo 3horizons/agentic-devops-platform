@@ -16,9 +16,17 @@ handoffs:
     agent: ado-integration
     prompt: "Configure Azure DevOps PAT and discovery for hybrid scenario."
     send: false
-  - label: "Backstage Config"
-    agent: backstage-expert
-    prompt: "Apply hybrid configuration to Backstage portal."
+  - label: "Deploy Platform"
+    agent: deploy
+    prompt: "Deploy the hybrid platform configuration."
+    send: false
+  - label: "Template Setup"
+    agent: template-engineer
+    prompt: "Create cross-platform Golden Path templates for hybrid scenario."
+    send: false
+  - label: "Security Review"
+    agent: security
+    prompt: "Review dual-auth and cross-platform security configuration."
     send: false
 ---
 

@@ -1,14 +1,14 @@
-name: "🚀 H2: Developer Portal (Backstage)"
-description: "Deploy Backstage developer portal on AKS"
-title: "[Backstage] Deploy developer portal"
-labels: ["h2-enhancement", "backstage", "copilot-agent"]
+name: "🚀 H2: Developer Portal (RHDH)"
+description: "Deploy RHDH developer portal on AKS"
+title: "[RHDH] Deploy developer portal"
+labels: ["h2-enhancement", "rhdh", "copilot-agent"]
 assignees: []
 body:
   - type: markdown
     attributes:
       value: |
-        ## Backstage Developer Portal Deployment
-        This issue triggers the **backstage-expert** agent for IDP setup.
+        ## RHDH Developer Portal Deployment
+        This issue triggers the **platform** agent for IDP setup.
 
   - type: dropdown
     id: platform
@@ -34,17 +34,17 @@ body:
     attributes:
       label: "T-Shirt Size"
       options:
-        - "small - Basic Backstage, 2 replicas"
-        - "medium - Backstage with plugins, 3 replicas"
-        - "large - Backstage HA, all plugins"
-        - "xlarge - Backstage HA, custom plugins, multi-cluster"
+        - "small - Basic RHDH, 2 replicas"
+        - "medium - RHDH with plugins, 3 replicas"
+        - "large - RHDH HA, all plugins"
+        - "xlarge - RHDH HA, custom plugins, multi-cluster"
     validations:
       required: true
 
   - type: checkboxes
-    id: backstage_plugins
+    id: rhdh_plugins
     attributes:
-      label: "Backstage Plugins to Enable"
+      label: "RHDH Plugins to Enable"
       options:
         - label: "GitHub Integration"
           required: true

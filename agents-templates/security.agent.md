@@ -10,6 +10,18 @@ handoffs:
     agent: devops
     prompt: "Implement the security fixes identified in this review."
     send: false
+  - label: "Infrastructure Fixes"
+    agent: terraform
+    prompt: "Apply infrastructure security fixes in Terraform modules."
+    send: false
+  - label: "Incident Response"
+    agent: sre
+    prompt: "Respond to this security incident with observability and runbook."
+    send: false
+  - label: "Multi-File Remediation"
+    agent: context-architect
+    prompt: "Apply security fixes across multiple affected files."
+    send: false
 ---
 
 # Security Agent
@@ -55,6 +67,6 @@ When you receive a complex security request, **always** break it into sub-tasks 
 4. **Network** — Validate NSGs, private endpoints, and encryption in transit.
 5. **Compliance** — Check against CIS Benchmarks, OWASP Top 10, and tagging standards.
 6. **Report** — List findings by severity with remediation steps.
-7. **Handoff** — Suggest `@devops` to implement the fixes.
+7. **Handoff** — Suggest `@devops` to implement fixes, `@terraform` for infrastructure remediation, `@sre` for incident response, or `@context-architect` for multi-file fixes.
 
 Present the sub-task plan to the user before proceeding. Check off each step as you complete it.

@@ -41,7 +41,7 @@ body:
         ├─────────────────────────────────────────────────────────────┤
         │ ☐ ArgoCD (GitOps)                                           │
         │ ☐ GitHub Runners                                            │
-        │ ☐ Backstage Portal                                               │
+        │ ☐ RHDH Portal                                                    │
         │ ☐ Observability (Prometheus, Grafana)                       │
         │ ☐ Golden Paths                                              │
         └─────────────────────────────────────────────────────────────┘
@@ -72,7 +72,7 @@ body:
         | H1 | purview | `modules/purview/` | - | `purview-governance.yml` |
         | H2 | gitops | `modules/argocd/` | `bootstrap.sh` | `gitops.yml` |
         | H2 | github-runners | `modules/github-runners/` | - | `github-runners.yml` |
-        | H2 | backstage-portal | `modules/backstage/` | `setup-github-app.sh` | `backstage-portal.yml` |
+        | H2 | rhdh-portal | `modules/rhdh/` | `setup-github-app.sh` | `rhdh-portal.yml` |
         | H2 | observability | `modules/observability/` | - | `observability.yml` |
         | H2 | golden-paths | - | `onboard-team.sh` | `golden-paths.yml` |
         | H3 | ai-foundry | `modules/ai-foundry/` | - | `ai-foundry.yml` |
@@ -147,7 +147,7 @@ body:
       options:
         - label: "H1: Foundation (AKS, ACR, databases, security)"
           required: true
-        - label: "H2: Enhancement (GitOps, Backstage, observability)"
+        - label: "H2: Enhancement (GitOps, RHDH, observability)"
           required: true
         - label: "H3: Innovation (AI Foundry, MLOps)"
 
@@ -198,11 +198,11 @@ body:
         cd ..
         ./scripts/bootstrap.sh standard
         
-        # 7. Setup GitHub App for Backstage
+        # 7. Setup GitHub App for RHDH
         ./scripts/setup-github-app.sh \
           --github-org $GITHUB_ORG \
-          --app-name $PROJECT-backstage \
-          --target backstage
+          --app-name $PROJECT-rhdh \
+          --target rhdh
         ```
         
         ## 🔗 Individual Issue Templates
@@ -217,7 +217,7 @@ body:
         | H1 | `container-registry.yml` | ACR setup |
         | H1 | `database.yml` | PostgreSQL, Redis |
         | H2 | `gitops.yml` | ArgoCD |
-        | H2 | `backstage-portal.yml` | Developer Portal |
+        | H2 | `rhdh-portal.yml` | Developer Portal |
         | H2 | `observability.yml` | Monitoring |
         | H3 | `ai-foundry.yml` | AI platform |
 

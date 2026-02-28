@@ -12,6 +12,14 @@ handoffs:
     agent: architect
     prompt: "Review this ADR for technical accuracy."
     send: false
+  - label: "Multi-File Doc Updates"
+    agent: context-architect
+    prompt: "Coordinate documentation updates across multiple files."
+    send: false
+  - label: "Portal Documentation"
+    agent: platform
+    prompt: "Update RHDH portal documentation and TechDocs."
+    send: false
 ---
 
 # Docs Agent
@@ -52,6 +60,6 @@ When you receive a complex request, **always** break it into sub-tasks before st
 3. **Write** — Draft the content following Markdown best practices.
 4. **Diagram** — Add or update Mermaid diagrams where visual aids help.
 5. **Validate** — Check all links, cross-references, and formatting.
-6. **Handoff** — Suggest `@architect` for technical accuracy review.
+6. **Handoff** — Suggest `@architect` for technical accuracy review, `@context-architect` for multi-file doc updates, or `@platform` for portal TechDocs.
 
 Present the sub-task plan to the user before proceeding. Check off each step as you complete it.

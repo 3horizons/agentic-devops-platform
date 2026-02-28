@@ -118,7 +118,7 @@ kubectl port-forward svc/prometheus-grafana -n observability 3000:80
 |-------------|------|----------------|----------|
 | dev | express | $50-100/month | Minimal: AKS + ACR + ArgoCD + Observability |
 | staging | standard | $500-1000/month | Production-like: + Databases + ESO + Defender + AI |
-| prod | enterprise | $3000+/month | Full HA: + DR + Purview + Runners + Backstage + Cost Mgmt |
+| prod | enterprise | $3000+/month | Full HA: + DR + Purview + Runners + RHDH + Cost Mgmt |
 
 ## Deployment Modes
 

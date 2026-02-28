@@ -41,7 +41,7 @@ module "databases" {
     backup_retention_days  = 35
     geo_redundant_backup   = true
     high_availability      = true
-    databases              = ["backstage", "argocd", "app"]
+    databases              = ["rhdh", "argocd", "app"]
   }
 
   redis_config = {

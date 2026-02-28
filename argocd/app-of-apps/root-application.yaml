@@ -9,7 +9,7 @@
 #   Wave 1: Core infrastructure (cert-manager, external-dns)
 #   Wave 2: Ingress (nginx-ingress)
 #   Wave 3: Observability (prometheus, grafana, jaeger)
-#   Wave 4: Platform (Backstage, databases)
+#   Wave 4: Platform (RHDH, databases)
 #   Wave 5: Security (policies, gatekeeper)
 #   Wave 6: Team namespaces
 #
@@ -563,13 +563,13 @@ spec:
 
 ---
 # =============================================================================
-# WAVE 4: BACKSTAGE (Developer Portal)
+# WAVE 4: RHDH (Developer Portal)
 # =============================================================================
 
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: backstage
+  name: rhdh
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "4"
@@ -581,11 +581,11 @@ spec:
   source:
     repoURL: https://github.com/${GITHUB_ORG}/gitops-config.git
     targetRevision: main
-    path: platform/backstage
+    path: platform/rhdh
     
   destination:
     server: https://kubernetes.default.svc
-    namespace: backstage
+    namespace: rhdh
     
   syncPolicy:
     automated:

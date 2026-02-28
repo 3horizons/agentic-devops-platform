@@ -15,6 +15,14 @@ handoffs:
     agent: security
     prompt: "Investigate the potential security implications of this incident."
     send: false
+  - label: "Redeploy Platform"
+    agent: deploy
+    prompt: "Redeploy the platform to recover from this incident."
+    send: false
+  - label: "Infrastructure Recovery"
+    agent: terraform
+    prompt: "Recover or recreate infrastructure components."
+    send: false
 ---
 
 # SRE Agent
@@ -62,6 +70,6 @@ When you receive a complex incident or reliability request, **always** break it 
 4. **Investigate** — Gather evidence via `kubectl logs`, `events`, and `top`.
 5. **Mitigate** — Propose immediate fix (restart, scale, rollback).
 6. **Root Cause** — Identify the underlying issue and propose permanent fix.
-7. **Handoff** — Suggest `@devops` to deploy the fix or `@security` if security-related.
+7. **Handoff** — Suggest `@devops` to deploy the fix, `@security` if security-related, `@deploy` for redeployment, or `@terraform` for infrastructure recovery.
 
 Present the sub-task plan to the user before proceeding. Check off each step as you complete it.

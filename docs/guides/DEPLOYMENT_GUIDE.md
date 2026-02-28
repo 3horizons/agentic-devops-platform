@@ -150,7 +150,7 @@ The platform is organized into three "horizons" (layers), each building on the p
 | Component | What It Does | Why We Need It |
 | :--- | :--- | :--- |
 | **ArgoCD** | GitOps continuous deployment | Automatically deploys changes from Git |
-| **Backstage Portal** | Developer self-service portal | Developers create services easily |
+| **RHDH Portal** | Developer self-service portal | Developers create services easily |
 | **External Secrets** | Syncs secrets from Key Vault | Kubernetes gets secrets automatically |
 | **Prometheus + Grafana** | Monitoring and dashboards | See what's happening in the platform |
 | **Gatekeeper** | Policy enforcement | Prevents misconfigurations |
@@ -1062,7 +1062,7 @@ github_repo = "three-horizons-accelerator-v4"
 # H1 Foundation: Core infrastructure (always required)
 enable_h1 = true
 
-# H2 Enhancement: ArgoCD, Observability, Backstage (recommended)
+# H2 Enhancement: ArgoCD, Observability, RHDH (recommended)
 enable_h2 = true
 
 # H3 Innovation: AI Foundry, Azure OpenAI (optional)
@@ -2528,7 +2528,7 @@ The platform includes AI agents that can assist you at every deployment step:
 | Terraform configuration | `@terraform` | "Validate my `dev.tfvars` against the AKS module variables" |
 | Terraform troubleshooting | `@terraform` | "My `terraform plan` shows unexpected changes, help me understand" |
 | ArgoCD setup & sync | `@devops` | "ArgoCD app is OutOfSync, help me debug" |
-| Backstage portal setup | `@platform` | "Help me register Golden Path templates in the catalog" |
+| RHDH portal setup | `@platform` | "Help me register Golden Path templates in the catalog" |
 | Security validation | `@security` | "Review my Terraform plan for security misconfigurations" |
 | Post-deploy verification | `@sre` | "Verify all pods are healthy after H1 deployment" |
 | Architecture questions | `@architect` | "Explain the networking design between H1 and H2" |

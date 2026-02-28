@@ -17,7 +17,7 @@ body:
       label: "Application Type"
       description: "What type of GitHub application?"
       options:
-        - "GitHub App (for RHDH/Backstage)"
+        - "GitHub App (for RHDH)"
         - "OAuth App (for ArgoCD SSO)"
         - "OAuth App (for RHDH SSO)"
         - "Both GitHub App + OAuth App"

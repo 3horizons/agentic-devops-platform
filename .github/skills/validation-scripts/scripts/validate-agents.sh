@@ -86,7 +86,7 @@ declare -A EXPECTED_AGENTS=(
     # H2 Enhancement
     ["h2-enhancement/gitops-agent.md"]="GitOps Agent"
     ["h2-enhancement/observability-agent.md"]="Observability Agent"
-    ["h2-enhancement/backstage-portal-agent.md"]="Backstage Portal Agent"
+    ["h2-enhancement/rhdh-portal-agent.md"]="RHDH Portal Agent"
     ["h2-enhancement/golden-paths-agent.md"]="Golden Paths Agent"
     ["h2-enhancement/github-runners-agent.md"]="GitHub Runners Agent"
     # H3 Innovation

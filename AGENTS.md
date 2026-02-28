@@ -2,18 +2,18 @@
 
 ## Overview
 
-The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-based AI assistant system that operates directly within VS Code / GitHub Copilot Chat. The platform includes 16 specialized agents for interactive development assistance.
+The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-based AI assistant system that operates directly within VS Code / GitHub Copilot Chat. The platform includes 17 specialized agents for interactive development assistance.
 
 ## Architecture
 
 ```text
 .github/
-├── agents/          # 16 role-based chat agents (.agent.md)
+├── agents/          # 17 role-based chat agents (.agent.md)
 ├── chatmodes/       # 3 chat modes (.chatmode.md)
 ├── instructions/    # 3 code-generation instructions (.instructions.md)
-├── prompts/         # 8 reusable prompts (.prompt.md)
-├── skills/          # 16 operational skill sets
-└── ISSUE_TEMPLATE/  # 28 issue templates
+├── prompts/         # 7 reusable prompts (.prompt.md)
+├── skills/          # 15 operational skill sets
+└── ISSUE_TEMPLATE/  # 26 issue templates
 ```
 
 ## Chat Agents
@@ -24,18 +24,19 @@ The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-ba
 | **DevOps** | [devops.agent.md](.github/agents/devops.agent.md) | CI/CD, GitOps, MLOps, Golden Paths, pipelines |
 | **Docs** | [docs.agent.md](.github/agents/docs.agent.md) | Documentation generation and maintenance |
 | **Onboarding** | [onboarding.agent.md](.github/agents/onboarding.agent.md) | New team member onboarding and guidance |
-| **Platform** | [platform.agent.md](.github/agents/platform.agent.md) | Backstage portal, platform services, developer experience |
+| **Platform** | [platform.agent.md](.github/agents/platform.agent.md) | RHDH portal, platform services, developer experience |
 | **Reviewer** | [reviewer.agent.md](.github/agents/reviewer.agent.md) | Code review, PR analysis, quality checks |
 | **Security** | [security.agent.md](.github/agents/security.agent.md) | Security policies, scanning, compliance |
 | **SRE** | [sre.agent.md](.github/agents/sre.agent.md) | Reliability engineering, incident response, monitoring |
 | **Terraform** | [terraform.agent.md](.github/agents/terraform.agent.md) | Infrastructure as Code, Terraform modules |
 | **Test** | [test.agent.md](.github/agents/test.agent.md) | Test generation, validation, quality assurance |
 | **Deploy** | [deploy.agent.md](.github/agents/deploy.agent.md) | Deployment orchestration, end-to-end platform deployment |
-| **Backstage Expert** | [backstage-expert.agent.md](.github/agents/backstage-expert.agent.md) | Backstage portal deployment on AKS, GitHub auth, Golden Paths, Codespaces |
 | **Azure Portal Deploy** | [azure-portal-deploy.agent.md](.github/agents/azure-portal-deploy.agent.md) | Azure AKS provisioning, Key Vault, PostgreSQL, ACR, Helm |
 | **GitHub Integration** | [github-integration.agent.md](.github/agents/github-integration.agent.md) | GitHub App, org discovery, GHAS, Actions, Packages, supply chain |
 | **ADO Integration** | [ado-integration.agent.md](.github/agents/ado-integration.agent.md) | Azure DevOps PAT, repos, pipelines, boards, Copilot Standalone |
 | **Hybrid Scenarios** | [hybrid-scenarios.agent.md](.github/agents/hybrid-scenarios.agent.md) | GitHub + ADO coexistence scenarios A/B/C, dual auth, hybrid templates |
+| **Template Engineer** | [template-engineer.agent.md](.github/agents/template-engineer.agent.md) | Software Template expert for RHDH, Golden Path creation, devcontainer configs |
+| **Context Architect** | [context-architect.agent.md](.github/agents/context-architect.agent.md) | Multi-file change planning/execution, dependency tracing, codebase context mapping |
 
 ### How to Use
 
@@ -80,7 +81,7 @@ In VS Code with GitHub Copilot Chat, mention an agent by name:
 
 ## Skills
 
-The 16 skills in [.github/skills/](.github/skills/) provide domain-specific knowledge that agents can reference:
+The 15 skills in [.github/skills/](.github/skills/) provide domain-specific knowledge that agents can reference:
 
 | Skill | Description |
 |-------|-------------|
@@ -88,7 +89,6 @@ The 16 skills in [.github/skills/](.github/skills/) provide domain-specific know
 | `argocd-cli` | ArgoCD CLI for GitOps workflows |
 | `azure-cli` | Azure CLI resource management |
 | `azure-infrastructure` | Azure infrastructure patterns |
-| `backstage-deployment` | Backstage portal deployment on AKS and locally |
 | `codespaces-golden-paths` | GitHub Codespaces devcontainer configs per Golden Path |
 | `database-management` | Database ops and health monitoring |
 | `github-cli` | GitHub CLI for repos and workflows |
@@ -100,6 +100,60 @@ The 16 skills in [.github/skills/](.github/skills/) provide domain-specific know
 | `terraform-cli` | Terraform CLI for Azure infra |
 | `validation-scripts` | Validation scripts for deployments |
 | `deploy-orchestration` | End-to-end platform deployment orchestration |
+
+## Agent Orchestration & Handoffs
+
+All 17 agents are interconnected via YAML `handoffs:` in their frontmatter. Key orchestration flows:
+
+### Deployment Flow
+```
+@onboarding → @architect → @terraform → @deploy → @sre
+                                           ↓
+                              @azure-portal-deploy
+                              @github-integration
+                              @ado-integration
+```
+
+### Security Flow
+```
+@reviewer → @security → @devops (remediate) → @test
+                ↓
+           @terraform (IaC fixes)
+           @sre (incident response)
+           @context-architect (multi-file fixes)
+```
+
+### Template Flow
+```
+@platform → @template-engineer → @devops (CI/CD) → @security (review)
+                    ↓
+              @github-integration
+              @ado-integration
+              @hybrid-scenarios
+```
+
+### Multi-File Change Flow
+```
+Any agent → @context-architect → @test → @docs
+                    ↓
+              @terraform (IaC)
+              @devops (pipelines)
+              @security (review)
+              @deploy (deployment)
+```
+
+### Hybrid Integration Flow
+```
+@github-integration + @ado-integration → @hybrid-scenarios → @deploy
+```
+
+### Entry Points (user-invoked)
+| Agent | When to use |
+|-------|-------------|
+| `@onboarding` | First time setup, getting started |
+| `@deploy` | Full platform deployment |
+| `@architect` | Design decisions, ADRs |
+| `@context-architect` | Multi-file codebase changes |
 
 ## Related Documentation
 
