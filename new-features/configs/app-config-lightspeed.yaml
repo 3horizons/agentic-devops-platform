@@ -1,0 +1,197 @@
+app:
+  title: Red Hat Developer Hub
+  baseUrl: https://rhdh.example.com
+
+backend:
+  baseUrl: https://rhdh.example.com
+  listen:
+    port: 7007
+  csp:
+    connect-src: ["'self'", 'https:', 'ws://localhost:8080', 'http://localhost:8080']
+  cors:
+    origin: https://rhdh.example.com
+    credentials: true
+
+auth:
+  providers:
+    oidc:
+      development:
+        metadataUrl: '${OIDC_ISSUER}/.well-known/openid-configuration'
+        clientId: '${OIDC_CLIENT_ID}'
+        clientSecret: '${OIDC_CLIENT_SECRET}'
+        authorizationUrl: '${OIDC_ISSUER}/protocol/openid-connect/auth'
+        tokenUrl: '${OIDC_ISSUER}/protocol/openid-connect/token'
+        userInfoUrl: '${OIDC_ISSUER}/protocol/openid-connect/userinfo'
+        scope: openid profile email
+        prompt: login
+
+catalog:
+  import:
+    esModuleShapePackages:
+      - '@backstage/plugin-catalog'
+
+integrations:
+  github:
+    - host: github.com
+      token: '${GITHUB_TOKEN}'
+
+# MCP Plugin Configuration
+mcp:
+  filesystem:
+    enabled: true
+    rootPath: /workspace
+    allowedPaths:
+      - /workspace/**
+      - /tmp/**
+    readOnly: false
+
+  git:
+    enabled: true
+    allowedRepositories:
+      - 'https://github.com/**'
+
+  kubernetes:
+    enabled: true
+    kubeConfig: /etc/kubeconfig/config
+    allowedNamespaces:
+      - '*'
+
+  github:
+    enabled: true
+    token: '${GITHUB_TOKEN}'
+    baseUrl: 'https://api.github.com'
+
+# Lightspeed Configuration
+lightspeed:
+  chat:
+    # LCS (Lightspeed Chat Service) endpoint
+    endpoint: 'http://lcs-service:8080'
+    authType: oidc
+
+    # Chat UI settings
+    conversationHistoryLimit: 50
+    streaming: true
+    autoScroll: true
+    typingIndicator: true
+
+    # RAG (Retrieval-Augmented Generation)
+    rag:
+      enabled: true
+      endpoint: 'http://rag-engine-service:8090'
+      documentRefreshIntervalMinutes: 60
+      chunkSize: 1024
+      overlapSize: 128
+      topK: 5
+
+    # Model inference settings
+    inference:
+      temperature: 0.7
+      topP: 0.9
+      topK: 40
+      maxTokens: 2048
+      repetitionPenalty: 1.1
+
+    # Rate limiting
+    rateLimit:
+      enabled: true
+      requestsPerMinute: 30
+      tokensPerMinute: 100000
+
+    # Conversation settings
+    conversations:
+      storageBackend: postgresql
+      retentionDays: 90
+      maxConcurrentSessions: 100
+      sessionTimeoutMinutes: 30
+      persistHistory: true
+
+    # Caching
+    cache:
+      enabled: true
+      ttlSeconds: 3600
+      maxSizeBytes: 1073741824  # 1GB
+
+    # Monitoring
+    monitoring:
+      enabled: true
+      metricsPort: 9090
+      prometheusEnabled: true
+      jaegerTracingEnabled: true
+
+  # BYOM (Bring Your Own Model) Provider
+  byom:
+    provider: '${BYOM_PROVIDER}'  # azure-openai, ollama, vllm
+
+    azureOpenAI:
+      apiKey: '${AZURE_OPENAI_API_KEY}'
+      endpoint: '${AZURE_OPENAI_ENDPOINT}'
+      deployment: '${AZURE_OPENAI_DEPLOYMENT}'
+      apiVersion: '2024-08-01-preview'
+
+    ollama:
+      baseUrl: '${OLLAMA_BASE_URL}'
+      model: '${OLLAMA_MODEL}'
+      keepAliveMinutes: 5
+
+    vllm:
+      baseUrl: '${VLLM_BASE_URL}'
+      model: '${VLLM_MODEL}'
+      gpuMemoryUtilization: 0.9
+      tensorParallelSize: 1
+
+# Logger Configuration
+logger:
+  level: debug
+  format: json
+
+# Database Configuration
+database:
+  client: pg
+  connection:
+    host: '${DB_HOST}'
+    port: 5432
+    user: '${DB_USER}'
+    password: '${DB_PASSWORD}'
+    database: '${DB_NAME}'
+    ssl: true
+
+# Storage Configuration
+storage:
+  type: s3
+  s3:
+    bucket: rhdh-artifacts
+    region: us-east-1
+    credentials: aws
+
+# Feature Flags
+featureFlags:
+  dynamicPluginsEnabled: true
+  rbacEnabled: true
+  lightspeedEnabled: true
+  conversationHistoryEnabled: true
+  ragEnabled: true
+
+# RBAC Configuration with AI Features
+rbac:
+  policyFile: /etc/config/permission-policies-ai.csv
+  cache:
+    enabled: true
+    ttlSeconds: 3600
+
+  aiFeatures:
+    lightspeedChat: true
+    conversationHistory: true
+    mcpTools: true
+
+# Metrics Configuration
+prometheus:
+  enabled: true
+  port: 9090
+  path: /metrics
+
+  # Lightspeed-specific metrics
+  lightspeedMetrics:
+    enabled: true
+    recordResponseTime: true
+    recordTokenCount: true
+    recordUserSatisfaction: true

@@ -1,0 +1,319 @@
+{
+  "hero": {
+    "title": "Three Horizons",
+    "subtitle": "Your comprehensive platform for managing microservices, APIs, and developer resources",
+    "backgroundImage": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+  },
+  "sections": [
+    {
+      "id": "quick-access",
+      "title": "Quick Access",
+      "isExpanded": true,
+      "type": "links",
+      "links": [
+        {
+          "id": "getting-started",
+          "title": "Getting Started",
+          "description": "Learn how to use Three Horizons and get up to speed quickly",
+          "url": "/docs/getting-started",
+          "icon": "help",
+          "tags": ["documentation", "getting-started"],
+          "isExternal": false
+        },
+        {
+          "id": "software-catalog",
+          "title": "Software Catalog",
+          "description": "Browse all registered components, services, and APIs",
+          "url": "/catalog",
+          "icon": "storage",
+          "tags": ["catalog", "discovery"],
+          "isExternal": false
+        },
+        {
+          "id": "create-component",
+          "title": "Create Component",
+          "description": "Use templates to scaffold new services and components",
+          "url": "/create",
+          "icon": "add",
+          "tags": ["templates", "scaffolder"],
+          "isExternal": false
+        },
+        {
+          "id": "lightspeed-ai",
+          "title": "Lightspeed AI Assistant",
+          "description": "Get intelligent development assistance powered by AI",
+          "url": "/lightspeed",
+          "icon": "auto_awesome",
+          "tags": ["ai", "assistant"],
+          "isExternal": false
+        },
+        {
+          "id": "documentation",
+          "title": "Documentation",
+          "description": "Read comprehensive platform documentation and guides",
+          "url": "/docs",
+          "icon": "description",
+          "tags": ["docs", "guides"],
+          "isExternal": false
+        },
+        {
+          "id": "github-integration",
+          "title": "GitHub Integration",
+          "description": "Connect and manage your GitHub repositories",
+          "url": "/settings/integrations",
+          "icon": "github",
+          "tags": ["integrations", "github"],
+          "isExternal": false
+        }
+      ]
+    },
+    {
+      "id": "ai-tools",
+      "title": "AI & Developer Tools",
+      "isExpanded": true,
+      "type": "links",
+      "description": "Advanced tools for modern development",
+      "links": [
+        {
+          "id": "lightspeed",
+          "title": "Developer Lightspeed",
+          "description": "AI-powered development assistant with code generation and analysis",
+          "url": "/lightspeed",
+          "icon": "auto_awesome",
+          "tags": ["ai", "code-generation"],
+          "isExternal": false,
+          "badge": "NEW"
+        },
+        {
+          "id": "mcp-servers",
+          "title": "MCP Servers",
+          "description": "Model Context Protocol servers for enhanced AI capabilities",
+          "url": "/mcp",
+          "icon": "extension",
+          "tags": ["mcp", "integrations"],
+          "isExternal": false
+        },
+        {
+          "id": "developer-insights",
+          "title": "Developer Insights",
+          "description": "Analytics and metrics for your components and services",
+          "url": "/insights",
+          "icon": "analytics",
+          "tags": ["analytics", "metrics"],
+          "isExternal": false
+        },
+        {
+          "id": "code-quality",
+          "title": "Code Quality Analysis",
+          "description": "Automated code quality checks and suggestions",
+          "url": "/code-quality",
+          "icon": "verified_user",
+          "tags": ["quality", "analysis"],
+          "isExternal": false
+        }
+      ]
+    },
+    {
+      "id": "featured-templates",
+      "title": "Featured Templates",
+      "isExpanded": true,
+      "type": "templates",
+      "description": "Quick-start templates for common use cases",
+      "templates": [
+        {
+          "id": "microservice-template",
+          "title": "Microservice Template",
+          "description": "Create a new microservice with standard structure and CI/CD",
+          "url": "/create?template=microservice",
+          "icon": "containerIcon",
+          "tags": ["microservice", "backend"],
+          "complexity": "intermediate"
+        },
+        {
+          "id": "rest-api-template",
+          "title": "REST API Template",
+          "description": "Build a RESTful API with authentication and validation",
+          "url": "/create?template=rest-api",
+          "icon": "apiIcon",
+          "tags": ["api", "backend"],
+          "complexity": "beginner"
+        },
+        {
+          "id": "frontend-app-template",
+          "title": "Frontend Application Template",
+          "description": "Start a React-based frontend application",
+          "url": "/create?template=frontend-app",
+          "icon": "reactIcon",
+          "tags": ["frontend", "react"],
+          "complexity": "beginner"
+        },
+        {
+          "id": "shared-library-template",
+          "title": "Shared Library Template",
+          "description": "Create a reusable shared library for your organization",
+          "url": "/create?template=shared-library",
+          "icon": "libraryIcon",
+          "tags": ["library", "shared"],
+          "complexity": "intermediate"
+        }
+      ]
+    },
+    {
+      "id": "documentation",
+      "title": "Resources & Documentation",
+      "isExpanded": false,
+      "type": "documentation",
+      "columns": [
+        {
+          "title": "Getting Started",
+          "links": [
+            {
+              "title": "Introduction to Three Horizons",
+              "url": "/docs/intro",
+              "icon": "book"
+            },
+            {
+              "title": "Installation Guide",
+              "url": "/docs/installation",
+              "icon": "book"
+            },
+            {
+              "title": "Quick Start Tutorial",
+              "url": "/docs/quick-start",
+              "icon": "book"
+            },
+            {
+              "title": "Architecture Overview",
+              "url": "/docs/architecture",
+              "icon": "book"
+            }
+          ]
+        },
+        {
+          "title": "Development",
+          "links": [
+            {
+              "title": "Plugin Development",
+              "url": "/docs/plugins",
+              "icon": "book"
+            },
+            {
+              "title": "API Reference",
+              "url": "/docs/api-reference",
+              "icon": "book"
+            },
+            {
+              "title": "Creating Templates",
+              "url": "/docs/templates",
+              "icon": "book"
+            },
+            {
+              "title": "Custom Components",
+              "url": "/docs/custom-components",
+              "icon": "book"
+            }
+          ]
+        },
+        {
+          "title": "Deployment",
+          "links": [
+            {
+              "title": "Deployment Options",
+              "url": "/docs/deployment",
+              "icon": "book"
+            },
+            {
+              "title": "Kubernetes Setup",
+              "url": "/docs/kubernetes",
+              "icon": "book"
+            },
+            {
+              "title": "Configuration Guide",
+              "url": "/docs/configuration",
+              "icon": "book"
+            },
+            {
+              "title": "Scaling & Performance",
+              "url": "/docs/scaling",
+              "icon": "book"
+            }
+          ]
+        },
+        {
+          "title": "Community",
+          "links": [
+            {
+              "title": "GitHub Repository",
+              "url": "https://github.com/three-horizons",
+              "icon": "github",
+              "isExternal": true
+            },
+            {
+              "title": "Contributing Guide",
+              "url": "/docs/contributing",
+              "icon": "book"
+            },
+            {
+              "title": "Support & FAQ",
+              "url": "/docs/support",
+              "icon": "book"
+            },
+            {
+              "title": "Roadmap",
+              "url": "/docs/roadmap",
+              "icon": "book"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "catalog-insights",
+      "title": "Platform Overview",
+      "isExpanded": false,
+      "type": "statistics",
+      "stats": [
+        {
+          "label": "Registered Components",
+          "value": "{{ catalogStats.componentCount }}",
+          "icon": "storage"
+        },
+        {
+          "label": "Active Services",
+          "value": "{{ catalogStats.serviceCount }}",
+          "icon": "cloud"
+        },
+        {
+          "label": "Available APIs",
+          "value": "{{ catalogStats.apiCount }}",
+          "icon": "api"
+        },
+        {
+          "label": "Documentation Pages",
+          "value": "{{ catalogStats.docsCount }}",
+          "icon": "description"
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "text": "Three Horizons — Your platform for modern software development",
+    "links": [
+      {
+        "title": "Privacy Policy",
+        "url": "/legal/privacy",
+        "isExternal": false
+      },
+      {
+        "title": "Terms of Service",
+        "url": "/legal/terms",
+        "isExternal": false
+      },
+      {
+        "title": "Support",
+        "url": "/docs/support",
+        "isExternal": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,106 @@
+# =============================================================================
+# RHDH Three Horizons — Helm Values for Azure Deployment
+# Target: devhub.135.18.141.224.nip.io
+# helm install rhdh redhat-developer/backstage -f helm-values.yaml
+# =============================================================================
+
+global:
+  clusterRouterBase: 135.18.141.224.nip.io
+  # Dynamic plugins from external ConfigMap
+  dynamic:
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins: []  # Loaded from dynamic-plugins.yaml ConfigMap
+
+# ── Upstream Backstage Configuration ──────────────────────────────────────
+upstream:
+  backstage:
+    image:
+      registry: registry.redhat.io
+      repository: rhdh/rhdh-hub-rhel9
+      tag: '1.4'
+
+    replicas: 1
+
+    # App config from ConfigMap
+    extraAppConfig:
+      - filename: app-config-rhdh.yaml
+        configMapRef: rhdh-app-config
+
+    # Environment variables from Secrets
+    extraEnvVarsSecrets:
+      - rhdh-secrets
+
+    # Volume mounts for homepage data + RBAC policy
+    extraVolumeMounts:
+      - name: homepage-data
+        mountPath: /opt/app-root/src/homepage-data
+        readOnly: true
+      - name: rbac-policy
+        mountPath: /opt/app-root/src/rbac-policy.csv
+        subPath: rbac-policy.csv
+        readOnly: true
+      - name: dynamic-plugins-config
+        mountPath: /opt/app-root/src/dynamic-plugins.yaml
+        subPath: dynamic-plugins.yaml
+        readOnly: true
+
+    extraVolumes:
+      - name: homepage-data
+        configMap:
+          name: rhdh-homepage-data
+      - name: rbac-policy
+        configMap:
+          name: rhdh-rbac-policy
+      - name: dynamic-plugins-config
+        configMap:
+          name: rhdh-dynamic-plugins
+
+    # Resource allocation
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+
+    # Readiness + Liveness
+    readinessProbe:
+      httpGet:
+        path: /healthcheck
+        port: 7007
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    livenessProbe:
+      httpGet:
+        path: /healthcheck
+        port: 7007
+      initialDelaySeconds: 60
+      periodSeconds: 15
+
+  # ── Ingress ─────────────────────────────────────────────────────────────
+  ingress:
+    enabled: true
+    className: nginx
+    host: devhub.135.18.141.224.nip.io
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+      nginx.ingress.kubernetes.io/proxy-body-size: '20m'
+      nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+    tls:
+      - secretName: rhdh-tls
+        hosts:
+          - devhub.135.18.141.224.nip.io
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────
+  postgresql:
+    enabled: true
+    auth:
+      secretKeys:
+        adminPasswordKey: POSTGRES_ADMIN_PASSWORD
+        userPasswordKey: POSTGRES_PASSWORD
+    primary:
+      persistence:
+        enabled: true
+        size: 10Gi

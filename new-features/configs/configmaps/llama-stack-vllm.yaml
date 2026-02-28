@@ -1,0 +1,230 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-stack-vllm-config
+  namespace: lightspeed
+data:
+  config.yaml: |
+    # Llama Stack Configuration for vLLM
+
+    model_server:
+      type: vllm
+      config:
+        base_url: 'http://vllm:8000'
+        model: meta-llama/Llama-2-13b-hf
+        tensor_parallel_size: 1
+        gpu_memory_utilization: 0.9
+
+    # Model Aliases for Different Use Cases
+    models:
+      - name: fast
+        type: vllm
+        config:
+          model_id: meta-llama/Llama-2-7b-hf
+          tensor_parallel_size: 1
+          gpu_memory_utilization: 0.8
+
+      - name: default
+        type: vllm
+        config:
+          model_id: meta-llama/Llama-2-13b-hf
+          tensor_parallel_size: 1
+          gpu_memory_utilization: 0.9
+
+      - name: high-quality
+        type: vllm
+        config:
+          model_id: meta-llama/Llama-2-70b-hf
+          tensor_parallel_size: 4
+          gpu_memory_utilization: 0.9
+
+      - name: code
+        type: vllm
+        config:
+          model_id: codellama/CodeLlama-13b-hf
+          tensor_parallel_size: 1
+          gpu_memory_utilization: 0.9
+
+    # Optimization Settings
+    optimization:
+      use_flash_attn: true
+      use_tensor_parallel: true
+      tensor_parallel_size: 1  # For 13B model on 1x GPU
+      pipeline_parallel_size: 1
+      use_quantization: false
+      quantization_type: null  # bfloat16, int8, int4, awq, gptq
+      use_speculative_decoding: false
+
+    # Batch Settings
+    batch_settings:
+      max_batch_total_tokens: 65536
+      max_num_seqs: 256
+      max_seq_len: 4096
+      max_model_len: 4096
+      default_batch_size: 32
+
+    # Request Timeout
+    timeout:
+      request_timeout_ms: 120000  # 2 minutes
+      connection_timeout_ms: 10000
+      read_timeout_ms: 120000
+
+    # Generation Settings
+    generation_config:
+      temperature: 0.7
+      top_p: 0.9
+      top_k: 40
+      frequency_penalty: 0.0
+      presence_penalty: 0.0
+      max_tokens: 2048
+      use_beam_search: false
+      beam_width: 1
+      repetition_penalty: 1.1
+
+    # Caching
+    cache:
+      type: vllm_kv_cache
+      # vLLM manages KV cache automatically
+      block_size: 16
+      num_gpu_blocks: null  # Auto-calculate
+      num_cpu_blocks: 512
+
+    # Logging
+    logging:
+      level: INFO
+      format: json
+      output: stdout
+      log_requests: false
+      log_responses: false
+
+    # Monitoring
+    monitoring:
+      enabled: true
+      metrics_enabled: true
+      metrics_port: 9090
+      metrics_path: /metrics
+      prometheus_enabled: true
+
+    # GPU Configuration
+    gpu:
+      device: cuda
+      device_ids: [0, 1, 2, 3]  # For multi-GPU (4x A100)
+      cuda_graphs: true
+      enforce_eager: false  # Use CUDA graphs for better performance
+      seed: 0
+
+    # Retry Policy
+    retry_config:
+      max_retries: 3
+      initial_delay_ms: 100
+      max_delay_ms: 5000
+      exponential_base: 2
+
+    # Rate Limiting
+    rate_limit:
+      requests_per_second: 100
+      tokens_per_minute: 500000
+      max_waiting_duration: 10
+
+    # Connection Pool
+    connection_pool:
+      min_connections: 5
+      max_connections: 50
+      connection_timeout: 30
+      idle_timeout: 600
+
+    # vLLM-Specific Settings
+    vllm:
+      # Engine config
+      engine_use_ray: false
+      worker_use_ray: false
+      dtype: auto  # float16, float32, bfloat16, auto
+      load_format: auto  # Weights loading format
+
+      # Parallel settings
+      distributed_executor_backend: ray  # ray or mp (multiprocessing)
+      max_parallel_loading_workers: 4
+
+      # Attention optimization
+      attention_backend: auto  # flash_attn, xformers, or torch
+      block_size: 16
+
+      # Token allocation strategy
+      chunked_prefill_enabled: true
+      enable_prefix_caching: false
+      enable_lora: false
+
+      # Dynamic quantization
+      enable_quant_scalar_scaling: true
+
+    # Fallback Configuration
+    fallback:
+      enabled: true
+      provider: ollama
+      config:
+        base_url: http://ollama:11434
+        model: llama2:13b
+
+    # Security
+    security:
+      validate_ssl: true
+      allowed_hosts:
+        - vllm
+        - vllm-service
+        - localhost
+
+    # Performance Optimization
+    optimization:
+      enable_scheduler_v2: true
+      enable_time_profiling: false
+      use_precomputed_kv_cache: false
+
+    # Health Check
+    health_check:
+      enabled: true
+      interval_seconds: 60
+      timeout_seconds: 30
+      retries: 3
+
+    # Cost Tracking
+    cost:
+      track_tokens: true
+      cost_per_1k_input_tokens: 0.0  # Self-hosted
+      cost_per_1k_output_tokens: 0.0
+
+    # Features
+    features:
+      streaming: true
+      vision: false
+      function_calling: false
+      json_mode: false
+      token_counting: true
+
+    # Startup Configuration
+    startup:
+      warm_up_enabled: true
+      warm_up_queries: 5
+      warm_up_timeout_seconds: 120
+
+    # Multi-GPU Configuration (for 70B models)
+    multi_gpu:
+      tensor_parallel_size: 4  # 4x H100 GPUs
+      pipeline_parallel_size: 1
+      distributed_executor_backend: ray
+
+    # Ray Configuration (for distributed execution)
+    ray:
+      object_store_memory: null  # Auto
+      num_cpus: null  # Auto
+      num_gpus: 4
+      dashboard_host: 127.0.0.1
+      dashboard_port: 8265
+
+    # Tokenizer Settings
+    tokenizer:
+      tokenizer_mode: auto
+      trust_remote_code: false
+      revision: null
+
+    # Maximum Model Length Override
+    max_model_len: 4096  # Can be adjusted per model

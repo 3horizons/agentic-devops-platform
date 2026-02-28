@@ -1,0 +1,180 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-stack-ollama-config
+  namespace: lightspeed
+data:
+  config.yaml: |
+    # Llama Stack Configuration for Ollama
+
+    model_server:
+      type: ollama
+      config:
+        base_url: 'http://ollama:11434'
+        model: llama2:13b
+        stream: true
+        keep_alive: 5m
+
+    # Model Aliases for Different Use Cases
+    models:
+      - name: fast
+        type: ollama
+        config:
+          model: mistral:latest
+          temperature: 0.7
+          top_p: 0.9
+
+      - name: default
+        type: ollama
+        config:
+          model: llama2:13b
+          temperature: 0.7
+          top_p: 0.9
+
+      - name: high-quality
+        type: ollama
+        config:
+          model: llama2:70b
+          temperature: 0.5
+          top_p: 0.8
+
+      - name: code
+        type: ollama
+        config:
+          model: codellama:latest
+          temperature: 0.2
+          top_p: 0.9
+
+    # Request Timeout (Ollama inference can be slow)
+    timeout:
+      request_timeout_ms: 300000  # 5 minutes
+      connection_timeout_ms: 10000
+      read_timeout_ms: 300000
+
+    # Temperature Settings (creativity vs determinism)
+    generation_config:
+      temperature: 0.7
+      top_p: 0.9
+      top_k: 40
+      num_predict: 2048
+      repeat_penalty: 1.1
+      repeat_last_n: 64
+
+    # Memory Settings
+    memory:
+      keep_alive: 5m  # Keep model in memory for 5 minutes
+      context_size: 4096
+      num_gqa: 0  # Auto-detect
+
+    # Caching
+    cache:
+      type: local
+      max_size: 5368709120  # 5GB
+      compression: true
+
+    # Logging
+    logging:
+      level: INFO
+      format: json
+      output: stdout
+
+    # Monitoring
+    monitoring:
+      enabled: true
+      metrics_enabled: true
+      log_requests: false
+      log_responses: false
+
+    # Ollama-Specific Settings
+    ollama:
+      embeddings_model: all-MiniLM-L6-v2
+      embedding_batch_size: 32
+      num_gpu_layers: 0  # Auto-detect (0 = CPU only, -1 = all on GPU)
+      num_threads: 0  # Auto-detect (number of CPU cores)
+      num_parallel: 1  # Number of parallel requests
+      verbose: false
+
+    # Pull Models Configuration
+    pull_models:
+      enabled: true
+      on_startup: true
+      models:
+        - llama2:13b
+        - mistral:latest
+        - codellama:latest
+      timeout_minutes: 30
+      retry_attempts: 3
+
+    # Retry Policy
+    retry_config:
+      max_retries: 3
+      initial_delay_ms: 500
+      max_delay_ms: 5000
+      exponential_base: 2
+
+    # Rate Limiting
+    rate_limit:
+      requests_per_second: 10
+      tokens_per_minute: 50000
+      # Per-model limits (override global)
+      per_model:
+        'llama2:13b':
+          requests_per_second: 5
+          tokens_per_minute: 25000
+
+    # Connection Pool
+    connection_pool:
+      min_connections: 1
+      max_connections: 10
+      connection_timeout: 30
+      idle_timeout: 600
+
+    # Fallback Configuration
+    fallback:
+      enabled: false
+      provider: null
+      # Can fall back to Azure OpenAI or vLLM if configured
+
+    # Security
+    security:
+      validate_ssl: false  # Ollama typically runs on localhost
+      allowed_hosts:
+        - localhost
+        - ollama
+        - ollama-service
+
+    # Performance Optimization
+    optimization:
+      use_mmap: true  # Memory map model files
+      use_mlocking: false  # Lock model in RAM
+      use_stream: true
+      stream_chunk_size: 1024
+
+    # Health Check
+    health_check:
+      enabled: true
+      interval_seconds: 60
+      timeout_seconds: 30
+      retries: 3
+
+    # Cost Tracking
+    cost:
+      track_tokens: true
+      # Ollama is free/self-hosted
+      cost_per_1k_input_tokens: 0.0
+      cost_per_1k_output_tokens: 0.0
+
+    # Features
+    features:
+      streaming: true
+      vision: false
+      function_calling: false
+      json_mode: false
+
+    # Model Warm-up
+    warmup:
+      enabled: true
+      queries:
+        - "Hello"
+        - "What is AI?"
+      timeout_seconds: 120

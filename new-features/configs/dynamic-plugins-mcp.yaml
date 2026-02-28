@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhdh-dynamic-plugins
+  namespace: rhdh
+data:
+  dynamic-plugins.yaml: |
+    # RHDH Dynamic Plugins Configuration
+    # All plugins load at runtime without code changes or rebuild
+    # Enable/disable by setting 'disabled: true/false'
+
+    plugins:
+      # Filesystem MCP - Read/write files, directory traversal
+      - package: '@backstage/plugin-mcp-filesystem'
+        disabled: false
+        config:
+          mcp:
+            filesystem:
+              rootPath: /workspace
+              allowedPaths:
+                - /workspace/**
+                - /tmp/**
+              readOnly: false
+
+      # Git MCP - Clone, pull, diff, commit operations
+      - package: '@backstage/plugin-mcp-git'
+        disabled: false
+        config:
+          mcp:
+            git:
+              allowedRepositories:
+                - 'https://github.com/**'
+              timeout: 30000
+              defaultBranch: main
+
+      # Kubernetes MCP - kubectl commands, pod inspection, logs
+      - package: '@backstage/plugin-mcp-kubernetes'
+        disabled: false
+        config:
+          mcp:
+            kubernetes:
+              kubeConfig: /etc/kubeconfig/config
+              allowedNamespaces:
+                - '*'
+              allowedClusters:
+                - '*'
+              timeout: 30000
+
+      # GitHub MCP - Repository operations, PR creation, issues
+      - package: '@backstage/plugin-mcp-github'
+        disabled: false
+        config:
+          mcp:
+            github:
+              token: '${GITHUB_TOKEN}'
+              baseUrl: 'https://api.github.com'
+              allowedOrganizations:
+                - '*'
+              timeout: 30000
+
+    # Global plugin settings
+    settings:
+      development: false
+      cacheEnabled: true
+      cacheTTL: 3600
+      logLevel: debug

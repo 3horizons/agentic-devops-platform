@@ -1,0 +1,160 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-stack-azure-openai-config
+  namespace: lightspeed
+data:
+  config.yaml: |
+    # Llama Stack Configuration for Azure OpenAI
+
+    model_server:
+      type: azure_openai
+      config:
+        api_key: '${AZURE_OPENAI_API_KEY}'
+        api_version: '2024-08-01-preview'
+        azure_endpoint: '${AZURE_OPENAI_ENDPOINT}'
+        deployment_name: gpt-4-turbo
+        model_name: gpt-4-turbo
+
+    # Model Aliases for Different Use Cases
+    models:
+      - name: default
+        type: azure_openai
+        config:
+          deployment_name: gpt-4-turbo
+          model: gpt-4-turbo
+          max_tokens: 2048
+
+      - name: fast
+        type: azure_openai
+        config:
+          deployment_name: gpt-3.5-turbo
+          model: gpt-3.5-turbo
+          max_tokens: 1024
+
+      - name: smart
+        type: azure_openai
+        config:
+          deployment_name: gpt-4-turbo
+          model: gpt-4-turbo
+          max_tokens: 4096
+
+      - name: embeddings
+        type: azure_openai
+        config:
+          deployment_name: text-embedding-ada-002
+          model: text-embedding-ada-002
+
+    # Request Batching
+    batch_config:
+      enabled: true
+      max_batch_size: 10
+      timeout_ms: 5000
+      dynamic_batching: true
+
+    # Rate Limiting
+    rate_limit:
+      requests_per_second: 100
+      tokens_per_minute: 100000
+      requests_per_day: 1000000
+
+    # Retry Policy
+    retry_config:
+      max_retries: 3
+      initial_delay_ms: 100
+      max_delay_ms: 10000
+      exponential_base: 2
+      jitter: true
+
+    # Timeout Configuration
+    timeout:
+      request_timeout_ms: 120000
+      connection_timeout_ms: 10000
+      read_timeout_ms: 120000
+
+    # Inference Settings
+    inference:
+      temperature: 0.7
+      top_p: 0.9
+      top_k: 40
+      frequency_penalty: 0.0
+      presence_penalty: 0.0
+      max_tokens: 2048
+      stop_sequences: []
+
+    # Caching
+    cache:
+      type: redis
+      url: redis://redis:6379
+      ttl_seconds: 3600
+      max_entries: 10000
+      compression: true
+
+    # Logging
+    logging:
+      level: DEBUG
+      format: json
+      output: stdout
+      log_requests: true
+      log_responses: true
+      log_errors: true
+
+    # Monitoring
+    monitoring:
+      enabled: true
+      metrics_enabled: true
+      tracing_enabled: true
+      traces_sample_rate: 0.1
+
+    # Connection Pool
+    connection_pool:
+      min_connections: 5
+      max_connections: 50
+      connection_timeout: 30
+      idle_timeout: 600
+
+    # Azure-Specific Settings
+    azure:
+      use_managed_identity: false
+      tenant_id: '${AZURE_TENANT_ID}'
+      client_id: '${AZURE_CLIENT_ID}'
+      client_secret: '${AZURE_CLIENT_SECRET}'
+      subscription_id: '${AZURE_SUBSCRIPTION_ID}'
+
+    # Fallback Configuration
+    fallback:
+      enabled: false
+      provider: ollama
+      config:
+        base_url: http://ollama:11434
+        model: llama2:13b
+
+    # Security
+    security:
+      validate_ssl: true
+      use_https: true
+      cipher_suites:
+        - TLS_AES_256_GCM_SHA384
+        - TLS_CHACHA20_POLY1305_SHA256
+
+    # Cost Optimization
+    cost:
+      track_tokens: true
+      cost_per_1k_input_tokens: 0.03
+      cost_per_1k_output_tokens: 0.06
+      budget_limit_per_day: 100
+
+    # Features
+    features:
+      streaming: true
+      vision: true
+      function_calling: true
+      json_mode: true
+      seed: null
+
+    # Health Check
+    health_check:
+      enabled: true
+      interval_seconds: 60
+      timeout_seconds: 30
+      retries: 3

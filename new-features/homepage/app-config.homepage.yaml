@@ -1,0 +1,331 @@
+# app-config.homepage.yaml
+# RHDH Three Horizons — Homepage & GitHub Auth Configuration
+# This configuration enables the custom homepage with GitHub-only authentication
+# Optimized for Red Hat Developer Hub deployment
+
+app:
+  title: Three Horizons
+  baseUrl: ${RHDH_BASE_URL}
+  analytics:
+    ga4:
+      measurementId: ${GA4_MEASUREMENT_ID:null}
+
+# GitHub-only authentication for RHDH
+auth:
+  environment: production
+  providers:
+    github:
+      production:
+        clientId: ${GITHUB_CLIENT_ID}
+        clientSecret: ${GITHUB_CLIENT_SECRET}
+        enterpriseInstanceUrl: ${GITHUB_ENTERPRISE_URL:''}
+        allowedOrganizations: ${ALLOWED_GITHUB_ORGS}
+
+# Sign-in page - GitHub only
+signInPage: github
+
+# Backend configuration
+backend:
+  baseUrl: ${RHDH_BASE_URL}
+  listen:
+    port: 7007
+    host: 0.0.0.0
+  csp:
+    connect-src:
+      - 'self'
+      - 'http://localhost:7007'
+      - 'https://github.com'
+      - 'https://api.github.com'
+      - 'https://raw.githubusercontent.com'
+  auth:
+    keys:
+      - secret: ${BACKEND_SECRET:insecure-secret}
+  cors:
+    origin: ${RHDH_BASE_URL}
+    credentials: true
+
+# Frontend configuration
+frontend:
+  baseUrl: ${RHDH_BASE_URL}
+  app:
+    baseUrl: /
+  favicon: data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="75" font-size="75" font-weight="bold" fill="%23667eea">H</text></svg>
+
+# Catalog configuration with GitHub integration
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    default:
+      - location: https://github.com/${GITHUB_ORG}/platform-catalog/blob/main/all.yaml
+        type: url
+  rules:
+    - allow:
+        - Component
+        - API
+        - Resource
+        - System
+        - Domain
+        - User
+        - Group
+        - Location
+        - Template
+  providers:
+    github:
+      providerId: production
+      organization: ${GITHUB_ORG}
+      catalogPath: /catalog-info.yaml
+      filters:
+        branch: main
+        repository: '^(three-horizons|platform-.*|services-.*)'
+      schedule:
+        frequency:
+          minutes: 30
+        timeout:
+          minutes: 10
+      host: ${GITHUB_HOST:github.com}
+  locations:
+    - type: github-discovery
+      target:
+        - url: https://${GITHUB_HOST:github.com}/${GITHUB_ORG}
+          rules:
+            - allow:
+                - Component
+                - API
+                - System
+                - Group
+                - Template
+            - allow:
+                - Location
+              if:
+                matchingPattern: '^https:\/\/(${GITHUB_HOST:github.com})\/.*\/catalog-info\.yaml$'
+
+# RHDH-specific plugin configuration
+plugins:
+  '@redhat-developer/rhdh-homepage':
+    dynamicLoading: true
+    mountPoints:
+      - module: ThreeHorizonsHomePage
+        importName: ThreeHorizonsHomePage
+        disabled: false
+
+  '@backstage/plugin-home':
+    dynamicLoading: true
+
+  '@backstage/plugin-search':
+    dynamicLoading: true
+    backend:
+      enabled: true
+
+  '@backstage/plugin-catalog':
+    dynamicLoading: true
+
+  '@backstage/plugin-github-actions':
+    dynamicLoading: true
+    gitHubUrl: ${GITHUB_URL:https://github.com}
+
+  # Lightspeed AI assistant plugin
+  '@redhat-developer/rhdh-plugin-lightspeed':
+    enabled: true
+    dynamicLoading: true
+    lightspeedUrl: ${LIGHTSPEED_BASE_URL}
+    lightspeedAuthToken: ${LIGHTSPEED_AUTH_TOKEN}
+
+  '@janus-idp/backstage-plugin-rbac':
+    dynamicLoading: true
+    rbac:
+      admin:
+        users:
+          - name: ${ADMIN_USER:admin}
+      rules:
+        - role: default
+          permission: policy/read
+          policy: 'p, default, policy, read, allow'
+        - role: default
+          permission: catalog-entity/read
+          policy: 'p, default, catalog-entity, read, allow'
+
+# Proxy endpoints
+proxy:
+  '/github/api':
+    target: https://api.github.com
+    allowedMethods: ['GET']
+    auth: github
+    changeOrigin: true
+    pathRewrite:
+      '^/github/api': ''
+
+  '/developer-hub/api':
+    target: http://localhost:8080
+    allowedMethods: ['GET', 'POST']
+    changeOrigin: true
+    pathRewrite:
+      '^/developer-hub/api': '/api'
+
+# Homepage plugin configuration
+homepage:
+  # Enable the custom homepage
+  enabled: true
+  defaultPath: /
+
+  # Data source configuration
+  dataProvider:
+    type: configmap
+    configMap:
+      name: rhdh-homepage-data
+      namespace: ${RHDH_NAMESPACE:rhdh}
+      key: homepage-data.json
+
+  # Search bar configuration
+  searchBar:
+    enabled: true
+    placeholder: Search components, APIs, and documentation
+    searchScope:
+      - component
+      - api
+      - template
+      - documentation
+
+  # Quick access links section
+  quickAccessLinks:
+    enabled: true
+    expandedByDefault: true
+    links:
+      - title: Getting Started
+        description: Begin your journey with Three Horizons
+        url: /docs/getting-started
+        icon: help
+        isExternal: false
+      - title: Software Catalog
+        description: Discover all registered components and services
+        url: /catalog
+        icon: storage
+        isExternal: false
+      - title: Create Component
+        description: Use templates to scaffold new services
+        url: /create
+        icon: add
+        isExternal: false
+      - title: Lightspeed AI Assistant
+        description: Get intelligent development assistance
+        url: /lightspeed
+        icon: auto_awesome
+        isExternal: false
+      - title: Documentation
+        description: View platform documentation and guides
+        url: /docs
+        icon: description
+        isExternal: false
+      - title: GitHub Integration
+        description: Connect and manage your repositories
+        url: /settings/integrations
+        icon: github
+        isExternal: false
+
+  # AI Tools section
+  aiTools:
+    enabled: true
+    title: AI & Developer Tools
+    expandedByDefault: true
+    links:
+      - title: Developer Lightspeed
+        description: AI-powered development assistant with code generation and analysis
+        url: /lightspeed
+        icon: auto_awesome
+        isExternal: false
+      - title: MCP Servers
+        description: Model Context Protocol servers for enhanced capabilities
+        url: /mcp
+        icon: extension
+        isExternal: false
+      - title: Developer Insights
+        description: Analytics and metrics for your components
+        url: /insights
+        icon: analytics
+        isExternal: false
+
+  # Featured templates
+  featuredTemplates:
+    enabled: true
+    count: 4
+    refresh:
+      minutes: 30
+    filters:
+      - tag: featured
+      - tag: recommended
+
+  # Starred entities
+  starredEntities:
+    enabled: true
+    count: 6
+    refresh:
+      minutes: 15
+
+  # Recently viewed entities
+  recentEntities:
+    enabled: true
+    count: 5
+    refresh:
+      minutes: 5
+
+  # Catalog statistics
+  catalogStats:
+    enabled: true
+    refresh:
+      minutes: 60
+
+# Organization configuration
+organization:
+  name: Three Horizons
+
+# RBAC (Role-Based Access Control) default policies
+permission:
+  enabled: true
+  rbac:
+    admin:
+      users:
+        - name: ${ADMIN_USER:admin}
+      groups: []
+    rules:
+      - entityRef: role:default/guest
+        permission: policy/read
+        action: read
+        effect: allow
+      - entityRef: role:default/guest
+        permission: catalog-entity/read
+        action: read
+        effect: allow
+      - entityRef: role:default/developer
+        permission: catalog-entity/create
+        action: create
+        effect: allow
+      - entityRef: role:default/developer
+        permission: scaffolder/action/execute
+        action: execute
+        effect: allow
+
+# Logging configuration
+logger:
+  level: info
+  transports:
+    - type: stream
+      format: coloredWithTimestamps
+
+# Scaffolder (Software Templates) configuration
+scaffolder:
+  defaultAuthor:
+    name: Open Horizons Scaffolder
+    email: scaffolder@three-horizons.local
+  defaultCommitAction: commit
+
+# Search backend configuration
+search:
+  backend:
+    baseUrl: ${RHDH_BASE_URL}
+    maxPageSize: 25
+    implementation: pg
+    connection:
+      host: ${SEARCH_DB_HOST:localhost}
+      port: ${SEARCH_DB_PORT:5432}
+      database: ${SEARCH_DB_NAME:search}
+      user: ${SEARCH_DB_USER:search}
+      password: ${SEARCH_DB_PASSWORD}

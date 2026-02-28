@@ -1,0 +1,200 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lcs-config
+  namespace: lightspeed
+data:
+  config.yaml: |
+    # Lightspeed Chat Service Configuration
+
+    server:
+      host: 0.0.0.0
+      port: 8080
+      workers: 4
+      timeout: 120
+      accessLog: true
+      debugMode: false
+
+    # OIDC Authentication
+    oidc:
+      enabled: true
+      issuer: '${OIDC_ISSUER}'
+      clientId: '${OIDC_CLIENT_ID}'
+      clientSecret: '${OIDC_CLIENT_SECRET}'
+      scopes:
+        - openid
+        - profile
+        - email
+      discoveryUrl: '${OIDC_ISSUER}/.well-known/openid-configuration'
+
+    # Session Management
+    session:
+      type: postgresql
+      ttlSeconds: 1800  # 30 minutes
+      maxSessions: 1000
+      persistToDB: true
+      secureCookie: true
+      sameSite: Lax
+
+    # Llama Stack Integration
+    llamaStack:
+      url: 'http://llama-stack:8000'
+      timeout: 120
+      retryAttempts: 3
+      retryDelaySeconds: 2
+
+    # RAG Engine Integration
+    rag:
+      enabled: true
+      url: 'http://rag-engine-service:8090'
+      timeout: 30
+      chunkSize: 1024
+      chunkOverlap: 128
+      topK: 5
+      confidenceThreshold: 0.5
+
+    # Conversation History
+    history:
+      enabled: true
+      storageType: postgresql
+      database: lightspeed_conversations
+      maxHistoryLength: 50
+      retentionDays: 90
+      cleanupSchedule: '0 2 * * *'  # 2 AM daily
+
+    # Streaming Configuration
+    streaming:
+      enabled: true
+      keepAliveInterval: 30
+      maxChunkSize: 1024
+      compressionEnabled: false
+
+    # Rate Limiting
+    rateLimit:
+      enabled: true
+      requestsPerMinute: 30
+      tokensPerMinute: 100000
+      burstsAllowed: 5
+      windowSizeSeconds: 60
+
+    # Cache Configuration
+    cache:
+      type: redis
+      url: 'redis://redis:6379'
+      ttl: 3600
+      maxSize: 1073741824  # 1GB
+      compressionEnabled: true
+
+    # Inference Settings
+    inference:
+      temperature: 0.7
+      topP: 0.9
+      topK: 40
+      maxTokens: 2048
+      repetitionPenalty: 1.1
+      frequencyPenalty: 0.0
+      presencePenalty: 0.0
+
+    # Context Settings
+    context:
+      maxContextLength: 4096
+      contextWindow: 2048
+      systemPrompt: |
+        You are Red Hat Developer Hub's Lightspeed AI assistant.
+        Help developers with:
+        - Code review and suggestions
+        - Documentation queries
+        - Troubleshooting and debugging
+        - Architecture and design patterns
+        - Best practices and standards
+        Be concise, helpful, and provide references to official docs when relevant.
+
+    # Monitoring and Logging
+    monitoring:
+      enabled: true
+      metricsPort: 9090
+      metricsPath: /metrics
+      prometheusEnabled: true
+      jaegerTracingEnabled: true
+      jaegerEndpoint: 'http://jaeger:6831'
+      logLevel: DEBUG
+      logFormat: json
+
+    # Security
+    security:
+      corsEnabled: true
+      corsOrigins:
+        - 'https://rhdh.example.com'
+      csrfProtection: true
+      xssProtection: true
+      contentSecurityPolicy: true
+      hsts: true
+      hstsMaxAge: 31536000
+
+    # Database
+    database:
+      type: postgresql
+      host: '${DB_HOST}'
+      port: 5432
+      user: '${DB_USER}'
+      password: '${DB_PASSWORD}'
+      database: lightspeed_lcs
+      ssl: true
+      poolSize: 20
+      connectionTimeout: 30
+
+    # Feature Flags
+    features:
+      conversationHistoryEnabled: true
+      ragEnabled: true
+      streamingEnabled: true
+      rateLimitingEnabled: true
+      cachingEnabled: true
+      monitoringEnabled: true
+
+    # Integration Settings
+    integrations:
+      github:
+        enabled: true
+        token: '${GITHUB_TOKEN}'
+        baseUrl: 'https://api.github.com'
+
+      jira:
+        enabled: false
+        baseUrl: 'https://jira.example.com'
+        username: '${JIRA_USER}'
+        apiToken: '${JIRA_API_TOKEN}'
+
+      confluence:
+        enabled: false
+        baseUrl: 'https://confluence.example.com'
+        username: '${CONFLUENCE_USER}'
+        apiToken: '${CONFLUENCE_API_TOKEN}'
+
+      slack:
+        enabled: false
+        botToken: '${SLACK_BOT_TOKEN}'
+        appToken: '${SLACK_APP_TOKEN}'
+
+    # Error Handling
+    errorHandling:
+      logErrors: true
+      includeStackTrace: false
+      notifyOnError: true
+      notificationWebhook: '${ERROR_WEBHOOK_URL}'
+
+    # Health Check
+    healthCheck:
+      enabled: true
+      path: /health
+      readyPath: /ready
+      interval: 30
+      timeout: 5
+
+    # Startup Configuration
+    startup:
+      validateLlamaStackConnection: true
+      validateRagConnection: true
+      validateDatabaseConnection: true
+      abortOnValidationFailure: false
+      warmupQueries: 5

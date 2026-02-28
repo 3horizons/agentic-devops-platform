@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhdh-dynamic-plugins-lightspeed
+  namespace: rhdh
+data:
+  dynamic-plugins.yaml: |
+    # RHDH Dynamic Plugins with Lightspeed
+    # Includes MCP plugins + Lightspeed integration plugins
+
+    plugins:
+      # Filesystem MCP
+      - package: '@backstage/plugin-mcp-filesystem'
+        disabled: false
+        config:
+          mcp:
+            filesystem:
+              rootPath: /workspace
+              allowedPaths:
+                - /workspace/**
+                - /tmp/**
+              readOnly: false
+
+      # Git MCP
+      - package: '@backstage/plugin-mcp-git'
+        disabled: false
+        config:
+          mcp:
+            git:
+              allowedRepositories:
+                - 'https://github.com/**'
+              timeout: 30000
+
+      # Kubernetes MCP
+      - package: '@backstage/plugin-mcp-kubernetes'
+        disabled: false
+        config:
+          mcp:
+            kubernetes:
+              kubeConfig: /etc/kubeconfig/config
+              allowedNamespaces:
+                - '*'
+              allowedClusters:
+                - '*'
+
+      # GitHub MCP
+      - package: '@backstage/plugin-mcp-github'
+        disabled: false
+        config:
+          mcp:
+            github:
+              token: '${GITHUB_TOKEN}'
+              baseUrl: 'https://api.github.com'
+              allowedOrganizations:
+                - '*'
+
+      # Lightspeed Chat Plugin - AI assistant for developers
+      - package: '@redhat/backstage-plugin-lightspeed-chat'
+        disabled: false
+        config:
+          lightspeed:
+            chat:
+              endpoint: 'http://lcs-service:8080'
+              authType: oidc
+              conversationHistoryLimit: 50
+              streaming: true
+
+      # Lightspeed Conversations Plugin - Manage chat history
+      - package: '@redhat/backstage-plugin-lightspeed-conversations'
+        disabled: false
+        config:
+          lightspeed:
+            conversations:
+              storageBackend: postgresql
+              retentionDays: 90
+
+      # Lightspeed RAG Plugin - Context-aware responses
+      - package: '@redhat/backstage-plugin-lightspeed-rag'
+        disabled: false
+        config:
+          lightspeed:
+            rag:
+              endpoint: 'http://rag-engine-service:8090'
+              documentRefreshIntervalMinutes: 60
+
+    # Global plugin settings
+    settings:
+      development: false
+      cacheEnabled: true
+      cacheTTL: 3600
+      logLevel: debug

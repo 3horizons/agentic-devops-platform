@@ -1,0 +1,345 @@
+# Red Hat Developer Hub Helm Chart Values - Lightspeed Stack
+
+nameOverride: rhdh
+fullnameOverride: rhdh
+
+# Image Configuration
+image:
+  repository: quay.io/rhdh/rhdh
+  tag: "1.2.0"
+  pullPolicy: IfNotPresent
+
+# Replication
+replicaCount: 1
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 7007
+  targetPort: 7007
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: rhdh.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: rhdh-tls
+      hosts:
+        - rhdh.example.com
+
+# Resources
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "1000m"
+  limits:
+    memory: "4Gi"
+    cpu: "2000m"
+
+# Security Context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 1001
+
+# Database Configuration
+postgresql:
+  enabled: true
+  auth:
+    username: rhdh
+    password: changeme
+    database: rhdh
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClassName: default
+
+# OIDC Configuration
+oidc:
+  issuer: "https://keycloak.example.com/auth/realms/rhdh"
+  clientId: "rhdh"
+  clientSecret: ""
+
+# RBAC Configuration
+rbac:
+  enabled: true
+  policyFile: /etc/config/permission-policies-ai.csv
+
+# Dynamic Plugins Configuration
+dynamicPlugins:
+  enabled: true
+  configFile: /etc/config/dynamic-plugins.yaml
+
+# MCP Plugins (all enabled for Lightspeed integration)
+mcp:
+  filesystem:
+    enabled: true
+    rootPath: /workspace
+    readOnly: false
+
+  git:
+    enabled: true
+    allowedRepositories:
+      - "https://github.com/**"
+
+  kubernetes:
+    enabled: true
+    kubeConfig: /etc/kubeconfig/config
+
+  github:
+    enabled: true
+    baseUrl: "https://api.github.com"
+
+# Lightspeed Configuration
+lightspeed:
+  enabled: true
+
+  # LCS (Lightspeed Chat Service)
+  lcs:
+    enabled: true
+    endpoint: "http://lcs-service:8080"
+    authType: oidc
+
+    # Conversation settings
+    conversationHistoryLimit: 50
+    conversationRetentionDays: 90
+
+    # Streaming
+    streaming: true
+    keepAliveInterval: 30
+
+    # Rate limiting
+    rateLimit:
+      requestsPerMinute: 30
+      tokensPerMinute: 100000
+
+    # Inference
+    inference:
+      temperature: 0.7
+      topP: 0.9
+      maxTokens: 2048
+
+  # Llama Stack (Model orchestration)
+  llamaStack:
+    enabled: true
+    endpoint: "http://llama-stack:8000"
+
+    # BYOM Provider selection
+    byom:
+      provider: azure-openai  # Options: azure-openai, ollama, vllm
+
+      # Azure OpenAI configuration
+      azureOpenAI:
+        apiKey: ""  # Set via secret
+        endpoint: ""  # Set via secret
+        deployment: "gpt-4-turbo"
+        apiVersion: "2024-08-01-preview"
+
+      # Ollama configuration
+      ollama:
+        baseUrl: "http://ollama:11434"
+        model: "llama2:13b"
+
+      # vLLM configuration
+      vllm:
+        baseUrl: "http://vllm:8000"
+        model: "meta-llama/Llama-2-13b-hf"
+        tensorParallelSize: 1
+
+  # RAG Engine (Retrieval-Augmented Generation)
+  rag:
+    enabled: true
+    endpoint: "http://rag-engine-service:8090"
+
+    # Vector database
+    vectorDb:
+      type: milvus  # Options: milvus, weaviate
+
+      # Milvus configuration
+      milvus:
+        host: milvus-service
+        port: 19530
+        database: default
+        collection: rhdh_documents
+
+      # Weaviate configuration
+      weaviate:
+        host: weaviate-service
+        port: 8080
+        scheme: http
+
+    # RAG settings
+    chunkSize: 1024
+    chunkOverlap: 128
+    topK: 5
+    documentRefreshIntervalMinutes: 60
+    confidenceThreshold: 0.5
+
+# Caching
+cache:
+  enabled: true
+  type: redis
+  ttl: 3600
+  maxSize: 1073741824  # 1GB
+
+# Storage Configuration
+storage:
+  enabled: true
+  type: s3
+  s3:
+    bucket: rhdh-artifacts
+    region: us-east-1
+
+# Monitoring
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    port: 9090
+  jaeger:
+    enabled: true
+    endpoint: "http://jaeger:6831"
+
+# Feature Flags
+featureFlags:
+  dynamicPluginsEnabled: true
+  rbacEnabled: true
+  lightspeedEnabled: true
+  conversationHistoryEnabled: true
+  ragEnabled: true
+  streamingEnabled: true
+
+# Environment Variables
+env:
+  - name: NODE_ENV
+    value: production
+  - name: LOG_LEVEL
+    value: debug
+  - name: BYOM_PROVIDER
+    value: azure-openai
+  - name: AZURE_OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: llama-stack-byom
+        key: AZURE_OPENAI_API_KEY
+        optional: true
+  - name: AZURE_OPENAI_ENDPOINT
+    valueFrom:
+      secretKeyRef:
+        name: llama-stack-byom
+        key: AZURE_OPENAI_ENDPOINT
+        optional: true
+  - name: GITHUB_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: mcp-github-token
+        key: token
+  - name: OIDC_ISSUER
+    valueFrom:
+      secretKeyRef:
+        name: rhdh-oidc
+        key: issuer
+  - name: OIDC_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: rhdh-oidc
+        key: clientId
+  - name: OIDC_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: rhdh-oidc
+        key: clientSecret
+
+# Volume Mounts
+volumeMounts:
+  - name: config
+    mountPath: /etc/config
+  - name: kubeconfig
+    mountPath: /etc/kubeconfig
+    readOnly: true
+
+# Volumes
+volumes:
+  - name: config
+    configMap:
+      name: rhdh-dynamic-plugins
+  - name: kubeconfig
+    secret:
+      secretName: kubeconfig
+      optional: true
+
+# Health Checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 7007
+  initialDelaySeconds: 60
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /.well-known/openid-configuration
+    port: 7007
+  initialDelaySeconds: 30
+  periodSeconds: 5
+
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+# Autoscaling
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+# Service Account
+serviceAccount:
+  create: true
+  name: ""
+
+# App Config
+appConfig: |
+  app:
+    title: Red Hat Developer Hub
+    baseUrl: https://rhdh.example.com
+
+  backend:
+    baseUrl: https://rhdh.example.com
+    listen:
+      port: 7007
+
+  auth:
+    providers:
+      oidc:
+        development:
+          metadataUrl: '${OIDC_ISSUER}/.well-known/openid-configuration'
+          clientId: '${OIDC_CLIENT_ID}'
+          clientSecret: '${OIDC_CLIENT_SECRET}'
+
+  integrations:
+    github:
+      - host: github.com
+        token: '${GITHUB_TOKEN}'
+
+  lightspeed:
+    chat:
+      endpoint: 'http://lcs-service:8080'
+      authType: oidc
+
+  rbac:
+    enabled: true
+    policyFile: /etc/config/permission-policies-ai.csv
+
+# Termination Grace Period
+terminationGracePeriodSeconds: 30

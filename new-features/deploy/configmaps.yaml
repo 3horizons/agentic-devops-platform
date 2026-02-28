@@ -1,0 +1,221 @@
+# =============================================================================
+# RHDH Three Horizons — Kubernetes ConfigMaps
+# Apply: kubectl apply -f configmaps.yaml -n rhdh
+# =============================================================================
+
+---
+# ── 1. App Config ConfigMap ───────────────────────────────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhdh-app-config
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: rhdh
+    app.kubernetes.io/part-of: three-horizons
+data:
+  app-config-rhdh.yaml: |
+    # Contents from app-config-rhdh.yaml — see separate file
+    # This ConfigMap is populated via:
+    #   kubectl create configmap rhdh-app-config \
+    #     --from-file=app-config-rhdh.yaml=./app-config-rhdh.yaml \
+    #     -n rhdh --dry-run=client -o yaml | kubectl apply -f -
+
+---
+# ── 2. Homepage Data ConfigMap ────────────────────────────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhdh-homepage-data
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: rhdh
+    app.kubernetes.io/part-of: three-horizons
+data:
+  homepage-data.json: |
+    {
+      "title": "Three Horizons — Developer Hub",
+      "subtitle": "Your central platform for building, deploying, and managing cloud-native applications",
+      "branding": {
+        "logoUrl": "https://img.icons8.com/color/96/microsoft.png",
+        "primaryColor": "#00A4EF",
+        "colors": {
+          "blue": "#00A4EF",
+          "green": "#7FBA00",
+          "yellow": "#FFB900",
+          "red": "#F25022"
+        }
+      },
+      "quickAccess": [
+        {
+          "title": "Getting Started",
+          "icon": "help",
+          "links": [
+            { "label": "Platform Overview", "url": "/docs/default/component/platform-overview", "icon": "description" },
+            { "label": "Onboarding Guide", "url": "/docs/default/component/onboarding", "icon": "school" },
+            { "label": "Create Your First Service", "url": "/create", "icon": "add_circle" },
+            { "label": "Connect GitHub", "url": "/settings", "icon": "link" }
+          ]
+        },
+        {
+          "title": "Development",
+          "icon": "code",
+          "links": [
+            { "label": "Software Catalog", "url": "/catalog", "icon": "storage" },
+            { "label": "API Explorer", "url": "/api-docs", "icon": "api" },
+            { "label": "Tech Docs", "url": "/docs", "icon": "menu_book" },
+            { "label": "GitHub Actions", "url": "/catalog?filters[kind]=Component&filters[type]=service", "icon": "play_circle" }
+          ]
+        },
+        {
+          "title": "AI & Automation",
+          "icon": "auto_awesome",
+          "links": [
+            { "label": "Developer Lightspeed", "url": "/lightspeed", "icon": "smart_toy" },
+            { "label": "GitHub Copilot Setup", "url": "/docs/default/component/copilot-setup", "icon": "psychology" },
+            { "label": "MCP Server Registry", "url": "/docs/default/component/mcp-registry", "icon": "hub" },
+            { "label": "Azure AI Foundry", "url": "/docs/default/component/ai-foundry", "icon": "cloud" }
+          ]
+        },
+        {
+          "title": "Operations",
+          "icon": "monitor_heart",
+          "links": [
+            { "label": "Kubernetes Topology", "url": "/topology", "icon": "account_tree" },
+            { "label": "CI/CD Pipelines", "url": "/catalog?filters[kind]=Component&filters[lifecycle]=production", "icon": "rocket_launch" },
+            { "label": "Service Health", "url": "/catalog?filters[kind]=Component&filters[type]=service", "icon": "favorite" },
+            { "label": "RBAC Administration", "url": "/rbac", "icon": "admin_panel_settings" }
+          ]
+        }
+      ],
+      "featuredTemplates": [
+        {
+          "title": "Node.js Microservice",
+          "description": "Production-ready Node.js service with Express, TypeScript, Docker, and GitHub Actions CI/CD",
+          "tags": ["nodejs", "typescript", "docker", "github-actions"],
+          "icon": "javascript",
+          "templateRef": "template:default/nodejs-microservice"
+        },
+        {
+          "title": "Python FastAPI Service",
+          "description": "FastAPI microservice with async support, OpenAPI docs, and Azure deployment pipeline",
+          "tags": ["python", "fastapi", "azure", "openapi"],
+          "icon": "python",
+          "templateRef": "template:default/python-fastapi"
+        },
+        {
+          "title": "React Frontend App",
+          "description": "Modern React application with TypeScript, Vite, Tailwind CSS, and automated testing",
+          "tags": ["react", "typescript", "vite", "tailwind"],
+          "icon": "web",
+          "templateRef": "template:default/react-frontend"
+        },
+        {
+          "title": ".NET Web API",
+          "description": "ASP.NET Core Web API with Entity Framework, Azure SQL, and integrated monitoring",
+          "tags": ["dotnet", "csharp", "azure-sql", "monitoring"],
+          "icon": "api",
+          "templateRef": "template:default/dotnet-webapi"
+        },
+        {
+          "title": "Spring Boot Service",
+          "description": "Java Spring Boot microservice with Maven, JPA, and Kubernetes-ready configuration",
+          "tags": ["java", "spring-boot", "kubernetes", "maven"],
+          "icon": "coffee",
+          "templateRef": "template:default/spring-boot"
+        },
+        {
+          "title": "Go Microservice",
+          "description": "Lightweight Go service with Chi router, Docker multi-stage build, and health checks",
+          "tags": ["go", "docker", "kubernetes", "chi"],
+          "icon": "speed",
+          "templateRef": "template:default/go-microservice"
+        }
+      ],
+      "horizons": [
+        {
+          "id": "h1",
+          "title": "Horizon 1 — Foundation",
+          "subtitle": "Core platform, CI/CD, and developer onboarding",
+          "color": "#00A4EF",
+          "icon": "foundation",
+          "items": ["IDP Portal", "GitHub Integration", "Software Templates", "CI/CD Pipelines", "TechDocs"]
+        },
+        {
+          "id": "h2",
+          "title": "Horizon 2 — Intelligence",
+          "subtitle": "AI-powered development and intelligent automation",
+          "color": "#7FBA00",
+          "icon": "psychology",
+          "items": ["GitHub Copilot", "Lightspeed AI", "MCP Servers", "Azure AI Foundry", "Automated Testing"]
+        },
+        {
+          "id": "h3",
+          "title": "Horizon 3 — Autonomy",
+          "subtitle": "Self-healing systems and autonomous operations",
+          "color": "#FFB900",
+          "icon": "auto_fix_high",
+          "items": ["Agent Orchestration", "Self-Healing Infra", "Predictive Analytics", "Autonomous Deploys", "Continuous Optimization"]
+        }
+      ]
+    }
+
+---
+# ── 3. RBAC Policy ConfigMap ──────────────────────────────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhdh-rbac-policy
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: rhdh
+    app.kubernetes.io/part-of: three-horizons
+data:
+  rbac-policy.csv: |
+    # RBAC Policies for Three Horizons RHDH
+    # Format: p, <user/group>, <resource>, <action>, <effect>
+
+    # Admins — full access
+    p, role:default/admin, catalog-entity, read, allow
+    p, role:default/admin, catalog-entity, create, allow
+    p, role:default/admin, catalog-entity, update, allow
+    p, role:default/admin, catalog-entity, delete, allow
+    p, role:default/admin, scaffolder/action, execute, allow
+    p, role:default/admin, policy, read, allow
+    p, role:default/admin, policy, create, allow
+    p, role:default/admin, policy, update, allow
+    p, role:default/admin, policy, delete, allow
+    p, role:default/admin, kubernetes/proxy, use, allow
+
+    # Developers — read catalog, create entities, run templates
+    p, role:default/developer, catalog-entity, read, allow
+    p, role:default/developer, catalog-entity, create, allow
+    p, role:default/developer, scaffolder/action, execute, allow
+    p, role:default/developer, kubernetes/proxy, use, allow
+
+    # Viewers — read-only
+    p, role:default/viewer, catalog-entity, read, allow
+    p, role:default/viewer, policy, read, allow
+
+    # Group-to-role mapping
+    g, group:default/admins, role:default/admin
+    g, group:default/developers, role:default/developer
+    g, group:default/viewers, role:default/viewer
+
+---
+# ── 4. Dynamic Plugins ConfigMap ──────────────────────────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhdh-dynamic-plugins
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: rhdh
+    app.kubernetes.io/part-of: three-horizons
+data:
+  dynamic-plugins.yaml: |
+    # See deploy/dynamic-plugins.yaml for full config
+    # This ConfigMap is populated via:
+    #   kubectl create configmap rhdh-dynamic-plugins \
+    #     --from-file=dynamic-plugins.yaml=./dynamic-plugins.yaml \
+    #     -n rhdh --dry-run=client -o yaml | kubectl apply -f -

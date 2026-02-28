@@ -1,0 +1,296 @@
+# Red Hat Developer Hub Helm Chart Values - MCP Only
+
+nameOverride: rhdh
+fullnameOverride: rhdh
+
+# Image Configuration
+image:
+  repository: quay.io/rhdh/rhdh
+  tag: "1.2.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# Replication
+replicaCount: 1
+
+# Service Configuration
+service:
+  type: ClusterIP
+  port: 7007
+  targetPort: 7007
+  annotations: {}
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: rhdh.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: rhdh-tls
+      hosts:
+        - rhdh.example.com
+
+# Resources
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "1000m"
+  limits:
+    memory: "4Gi"
+    cpu: "2000m"
+
+# Node Selection
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Security Context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 1001
+  capabilities:
+    drop:
+      - ALL
+
+# Database Configuration
+postgresql:
+  enabled: true
+  auth:
+    username: rhdh
+    password: changeme
+    database: rhdh
+  primary:
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClassName: default
+
+# OIDC Configuration
+oidc:
+  issuer: "https://keycloak.example.com/auth/realms/rhdh"
+  clientId: "rhdh"
+  clientSecret: ""  # Set via environment variable
+
+# RBAC Configuration
+rbac:
+  enabled: true
+  policyFile: /etc/config/permission-policies-ai.csv
+
+# Dynamic Plugins Configuration
+dynamicPlugins:
+  enabled: true
+  configFile: /etc/config/dynamic-plugins.yaml
+
+# MCP Plugins Configuration
+mcp:
+  filesystem:
+    enabled: true
+    rootPath: /workspace
+    allowedPaths:
+      - /workspace/**
+      - /tmp/**
+    readOnly: false
+
+  git:
+    enabled: true
+    allowedRepositories:
+      - "https://github.com/**"
+    timeout: 30000
+
+  kubernetes:
+    enabled: true
+    kubeConfig: /etc/kubeconfig/config
+    allowedNamespaces:
+      - "*"
+    allowedClusters:
+      - "*"
+
+  github:
+    enabled: true
+    token: ""  # Set via secret
+    baseUrl: "https://api.github.com"
+    allowedOrganizations:
+      - "*"
+
+# Storage Configuration
+storage:
+  enabled: true
+  type: s3
+  s3:
+    bucket: rhdh-artifacts
+    region: us-east-1
+    credentials: aws
+
+# Logging Configuration
+logging:
+  level: debug
+  format: json
+
+# Monitoring
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    port: 9090
+
+# Feature Flags
+featureFlags:
+  dynamicPluginsEnabled: true
+  rbacEnabled: true
+  lightspeedEnabled: false  # MCP only
+
+# Environment Variables
+env:
+  - name: NODE_ENV
+    value: production
+  - name: LOG_LEVEL
+    value: debug
+  - name: GITHUB_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: mcp-github-token
+        key: token
+  - name: OIDC_ISSUER
+    valueFrom:
+      secretKeyRef:
+        name: rhdh-oidc
+        key: issuer
+  - name: OIDC_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: rhdh-oidc
+        key: clientId
+  - name: OIDC_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: rhdh-oidc
+        key: clientSecret
+
+# Volume Mounts
+volumeMounts:
+  - name: config
+    mountPath: /etc/config
+  - name: kubeconfig
+    mountPath: /etc/kubeconfig
+    readOnly: true
+
+# Volumes
+volumes:
+  - name: config
+    configMap:
+      name: rhdh-dynamic-plugins
+  - name: kubeconfig
+    secret:
+      secretName: kubeconfig
+      optional: true
+
+# Health Checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 7007
+  initialDelaySeconds: 60
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /.well-known/openid-configuration
+    port: 7007
+  initialDelaySeconds: 30
+  periodSeconds: 5
+
+# Startup Probe
+startupProbe:
+  httpGet:
+    path: /health
+    port: 7007
+  initialDelaySeconds: 0
+  periodSeconds: 5
+  failureThreshold: 40
+
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# Network Policy
+networkPolicy:
+  enabled: false
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: rhdh
+  egress:
+    - to:
+        - namespaceSelector: {}
+
+# Pod Security Policy
+podSecurityPolicy:
+  enabled: false
+
+# Service Account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# ConfigMap for app-config
+appConfig: |
+  app:
+    title: Red Hat Developer Hub
+    baseUrl: https://rhdh.example.com
+
+  backend:
+    baseUrl: https://rhdh.example.com
+    listen:
+      port: 7007
+
+  auth:
+    providers:
+      oidc:
+        development:
+          metadataUrl: '${OIDC_ISSUER}/.well-known/openid-configuration'
+          clientId: '${OIDC_CLIENT_ID}'
+          clientSecret: '${OIDC_CLIENT_SECRET}'
+
+  integrations:
+    github:
+      - host: github.com
+        token: '${GITHUB_TOKEN}'
+
+  rbac:
+    enabled: true
+    policyFile: /etc/config/permission-policies-ai.csv
+
+# Lifecycle Hooks
+lifecycle:
+  postStart:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - echo "RHDH with MCP plugins starting..."
+
+# Termination Grace Period
+terminationGracePeriodSeconds: 30

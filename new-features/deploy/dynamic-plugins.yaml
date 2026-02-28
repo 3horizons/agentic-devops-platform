@@ -1,0 +1,68 @@
+# =============================================================================
+# RHDH Three Horizons — Dynamic Plugins Configuration
+# For Helm values: global.dynamic.plugins
+# =============================================================================
+
+plugins:
+  # ── Core Backstage Plugins ──────────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/backstage-plugin-home
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-search
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-search-backend-module-pg
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-api-docs
+    disabled: false
+
+  # ── GitHub Integration ──────────────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-github-issues
+    disabled: false
+
+  # ── Developer Lightspeed (AI) ───────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/redhat-plugin-developer-lightspeed
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/redhat-plugin-developer-lightspeed-backend
+    disabled: false
+
+  # ── RBAC ────────────────────────────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+    disabled: false
+
+  # ── Kubernetes ──────────────────────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend
+    disabled: false
+
+  # ── Topology ────────────────────────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+    disabled: false

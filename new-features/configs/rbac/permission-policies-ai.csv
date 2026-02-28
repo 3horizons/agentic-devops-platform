@@ -1,0 +1,17 @@
+subject,action,resource,effect
+developers,lightspeed.chat,chat,allow
+developers,mcp.tools.execute,*,allow
+developers,lightspeed.chat.history.delete,chat,deny
+admins,lightspeed.chat,chat,allow
+admins,lightspeed.chat.history.delete,chat,allow
+admins,mcp.tools.execute,*,allow
+security-team,lightspeed.chat,chat,allow
+security-team,mcp.tools.execute,*,deny
+contractors,lightspeed.chat,chat,allow
+contractors,lightspeed.chat.history.delete,chat,deny
+contractors,mcp.tools.execute,*,deny
+interns,lightspeed.chat,chat,allow
+interns,lightspeed.chat.history.delete,chat,deny
+interns,mcp.tools.execute,*,deny
+guest,lightspeed.chat,chat,deny
+guest,mcp.tools.execute,*,deny

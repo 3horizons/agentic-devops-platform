@@ -2,8 +2,47 @@
 name: context-architect
 description: "Multi-file change architect — plans and executes coordinated edits across the codebase by mapping context, tracing dependencies, and validating results."
 tools:
-[vscode/getProjectSetupInfo, vscode/installExtension, vscode/memory, vscode/newWorkspace, vscode/runCommand, vscode/vscodeAPI, vscode/extensions, vscode/askQuestions, execute/runNotebookCell, execute/testFailure, execute/getTerminalOutput, execute/awaitTerminal, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, execute/runTests, read/getNotebookSummary, read/problems, read/readFile, read/readNotebookCellOutput, read/terminalSelection, read/terminalLastCommand, agent/runSubagent, edit/createDirectory, edit/createFile, edit/createJupyterNotebook, edit/editFiles, edit/editNotebook, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages, web/fetch, web/githubRepo, browser/openBrowserPage, todo]
-user-invokable: true
+  - vscode/getProjectSetupInfo
+  - vscode/installExtension
+  - vscode/memory
+  - vscode/newWorkspace
+  - vscode/runCommand
+  - vscode/vscodeAPI
+  - vscode/extensions
+  - vscode/askQuestions
+  - execute/runNotebookCell
+  - execute/testFailure
+  - execute/getTerminalOutput
+  - execute/awaitTerminal
+  - execute/killTerminal
+  - execute/createAndRunTask
+  - execute/runInTerminal
+  - execute/runTests
+  - read/getNotebookSummary
+  - read/problems
+  - read/readFile
+  - read/readNotebookCellOutput
+  - read/terminalSelection
+  - read/terminalLastCommand
+  - agent/runSubagent
+  - edit/createDirectory
+  - edit/createFile
+  - edit/createJupyterNotebook
+  - edit/editFiles
+  - edit/editNotebook
+  - edit/rename
+  - search/changes
+  - search/codebase
+  - search/fileSearch
+  - search/listDirectory
+  - search/textSearch
+  - search/searchSubagent
+  - search/usages
+  - web/fetch
+  - web/githubRepo
+  - browser/openBrowserPage
+  - todo
+user-invocable: true
 handoffs:
   - label: "Architecture Design"
     agent: architect
