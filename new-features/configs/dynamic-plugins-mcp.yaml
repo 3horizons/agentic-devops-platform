@@ -10,6 +10,26 @@ data:
     # Enable/disable by setting 'disabled: true/false'
 
     plugins:
+      # MCP Actions Backend — exposes Backstage actions as MCP tools
+      # Ref: https://github.com/backstage/backstage/tree/master/plugins/mcp-actions-backend
+      - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-plugin-mcp-actions-backend:bs_1.42.5__0.1.2!backstage-plugin-mcp-actions-backend
+        disabled: false
+
+      # Software Catalog MCP Tool — query entities by kind, type, owner, tags
+      # Ref: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations
+      - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-tool:bs_1.42.5__0.2.3!red-hat-developer-hub-backstage-plugin-software-catalog-mcp-tool
+        disabled: false
+
+      # Software Catalog MCP Extras — additional catalog query tools
+      # Ref: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/software-catalog-mcp-extras
+      - package: '@red-hat-developer-hub/backstage-plugin-software-catalog-mcp-extras-backend'
+        disabled: false
+
+      # TechDocs MCP Tool — retrieve documentation for catalog entities
+      # Ref: https://developers.redhat.com/articles/2025/11/10/mcp-red-hat-developer-hub-chat-your-catalog
+      - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-techdocs-mcp-tool:bs_1.42.5__0.3.0!red-hat-developer-hub-backstage-plugin-techdocs-mcp-tool
+        disabled: false
+
       # Filesystem MCP - Read/write files, directory traversal
       - package: '@backstage/plugin-mcp-filesystem'
         disabled: false

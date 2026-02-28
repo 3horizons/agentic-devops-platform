@@ -13,7 +13,7 @@ The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-ba
 ├── instructions/    # 3 code-generation instructions (.instructions.md)
 ├── prompts/         # 7 reusable prompts (.prompt.md)
 ├── skills/          # 15 operational skill sets
-└── ISSUE_TEMPLATE/  # 26 issue templates
+└── ISSUE_TEMPLATE/  # 27 issue templates
 ```
 
 ## Chat Agents

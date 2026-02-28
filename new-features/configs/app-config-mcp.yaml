@@ -1,16 +1,32 @@
 app:
-  title: Red Hat Developer Hub
-  baseUrl: https://rhdh.example.com
+  title: Three Horizons | Agentic DevOps Platform
+  baseUrl: http://devhub.135.18.141.224.nip.io
 
 backend:
-  baseUrl: https://rhdh.example.com
+  baseUrl: http://devhub.135.18.141.224.nip.io
   listen:
     port: 7007
   csp:
-    connect-src: ["'self'", 'https:']
+    connect-src: ["'self'", 'http:', 'https:']
   cors:
-    origin: https://rhdh.example.com
+    origin: http://devhub.135.18.141.224.nip.io
     credentials: true
+  # MCP Actions Backend — static token auth for MCP clients
+  # Generate token: node -p 'require("crypto").randomBytes(24).toString("base64")'
+  auth:
+    externalAccess:
+      - type: static
+        options:
+          token: ${MCP_TOKEN}
+          subject: mcp-clients
+        accessRestrictions:
+          - plugin: mcp-actions
+          - plugin: catalog
+  # Register MCP tool plugins with the Actions Registry
+  actions:
+    pluginSources:
+      - software-catalog-mcp-tool
+      - techdocs-mcp-tool
 
 auth:
   providers:

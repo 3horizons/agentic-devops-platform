@@ -6,7 +6,7 @@
 - **License**: MIT
 - **Author**: Microsoft LATAM Platform Engineering
 - **Repository**: `agentic-devops-platform/`
-- **Scale**: 1100+ files, ~80,000 lines of production-ready code
+- **Scale**: 949+ files, ~105,000 lines of production-ready code
 - **Partnership**: Microsoft + GitHub + Red Hat
 
 ## What This Project Is

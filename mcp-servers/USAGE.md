@@ -8,13 +8,14 @@ Model Context Protocol (MCP) servers provide agents with access to external tool
 
 | Agent | Allowed MCP Servers | Access Level |
 |-------|---------------------|--------------|
-| architect | azure | read-only |
-| platform | azure, kubernetes, helm, github | read-write |
+| architect | azure, backstage | read-only |
+| platform | azure, kubernetes, helm, github, backstage | read-write |
 | terraform | azure, terraform | read-write |
 | devops | azure, github, kubernetes, helm, docker, git | read-write |
 | security | azure, defender, entra | read-only |
 | sre | azure, kubernetes, helm | read-write |
-| reviewer | github | read-only |
+| reviewer | github, backstage | read-only |
+| template-engineer | github, backstage | read-write |
 
 ## Available MCP Servers
 
@@ -118,6 +119,59 @@ Microsoft Defender for Cloud.
 - `az security pricing` - Pricing plans
 - `az security assessment` - Assessments
 - `az security alert` - Security alerts
+
+### backstage
+RHDH/Backstage MCP Actions — software catalog queries, TechDocs retrieval, and scaffolder operations.
+
+**Transport:** Streamable HTTP (not CLI — connects to a running RHDH instance)
+
+**Endpoint:** `http://devhub.135.18.141.224.nip.io/api/mcp-actions/v1`
+
+**Capabilities:**
+- `catalog:query` — Search and filter entities by kind, type, owner, tags
+- `catalog:get` — Retrieve entity details with full metadata
+- `techdocs:list` — List entities with TechDocs documentation
+- `techdocs:get` — Retrieve TechDocs content for an entity
+
+**Environment Variables:**
+```bash
+RHDH_URL       # http://devhub.135.18.141.224.nip.io
+MCP_TOKEN      # Static token for Bearer auth
+```
+
+**Required RHDH Plugins (dynamic-plugins.yaml):**
+```yaml
+# MCP server backend
+- package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-plugin-mcp-actions-backend
+  disabled: false
+# Software Catalog MCP tool
+- package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-tool
+  disabled: false
+# TechDocs MCP tool
+- package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-techdocs-mcp-tool
+  disabled: false
+```
+
+**Required RHDH app-config:**
+```yaml
+backend:
+  auth:
+    externalAccess:
+      - type: static
+        options:
+          token: ${MCP_TOKEN}
+          subject: mcp-clients
+  actions:
+    pluginSources:
+      - software-catalog-mcp-tool
+      - techdocs-mcp-tool
+```
+
+**References:**
+- [Red Hat: MCP in RHDH — Chat with your catalog](https://developers.redhat.com/articles/2025/11/10/mcp-red-hat-developer-hub-chat-your-catalog)
+- [Backstage MCP Actions Backend](https://github.com/backstage/backstage/tree/master/plugins/mcp-actions-backend)
+- [RHDH MCP Integrations](https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations)
+- [RHDH Catalog MCP Extras](https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/software-catalog-mcp-extras)
 
 ### entra
 Microsoft Entra ID (Azure AD) operations.

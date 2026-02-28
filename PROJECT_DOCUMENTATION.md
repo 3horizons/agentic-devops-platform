@@ -1,456 +1,508 @@
-# Three Horizons Implementation Accelerator — Documentação Completa do Projeto
+# Three Horizons Implementation Accelerator — Complete Project Documentation
 
 > **Agentic DevOps Platform with Red Hat Developer Hub**
-> Versão: 4.0.0 | Licença: MIT | Última atualização: 2025-12-15
+> Version: 4.0.0 | License: MIT | Last Updated: 2026-02-28
 
 ---
 
-## Índice
+## Table of Contents
 
-1. [Visão Geral do Projeto](#1-visão-geral-do-projeto)
-2. [Arquitetura Three Horizons](#2-arquitetura-three-horizons)
-3. [Stack Tecnológica Completa](#3-stack-tecnológica-completa)
-4. [Requisitos Funcionais](#4-requisitos-funcionais)
-5. [Requisitos Não-Funcionais](#5-requisitos-não-funcionais)
+1. [Project Overview](#1-project-overview)
+2. [Three Horizons Architecture](#2-three-horizons-architecture)
+3. [Complete Technology Stack](#3-complete-technology-stack)
+4. [Functional Requirements](#4-functional-requirements)
+5. [Non-Functional Requirements](#5-non-functional-requirements)
 6. [User Stories](#6-user-stories)
-7. [Estrutura do Repositório](#7-estrutura-do-repositório)
-8. [Módulos Terraform (Infrastructure as Code)](#8-módulos-terraform-infrastructure-as-code)
-9. [Golden Paths (Templates RHDH)](#9-golden-paths-templates-rhdh)
-10. [Sistema de Agentes AI](#10-sistema-de-agentes-ai)
+7. [Repository Structure](#7-repository-structure)
+8. [Terraform Modules (Infrastructure as Code)](#8-terraform-modules-infrastructure-as-code)
+9. [Golden Paths (RHDH Templates)](#9-golden-paths-rhdh-templates)
+10. [AI Agent System](#10-ai-agent-system)
 11. [MCP Servers (Model Context Protocol)](#11-mcp-servers-model-context-protocol)
-12. [GitOps com ArgoCD](#12-gitops-com-argocd)
-13. [Observabilidade e Monitoramento](#13-observabilidade-e-monitoramento)
-14. [Segurança e Compliance](#14-segurança-e-compliance)
-15. [Políticas (OPA/Gatekeeper)](#15-políticas-opagatekeeper)
-16. [CI/CD e Automação](#16-cicd-e-automação)
-17. [Configurações](#17-configurações)
-18. [Scripts Operacionais](#18-scripts-operacionais)
-19. [Testes](#19-testes)
-20. [Deployment Multi-Cloud](#20-deployment-multi-cloud)
+12. [GitOps with ArgoCD](#12-gitops-with-argocd)
+13. [Observability and Monitoring](#13-observability-and-monitoring)
+14. [Security and Compliance](#14-security-and-compliance)
+15. [Policies (OPA/Gatekeeper)](#15-policies-opagatekeeper)
+16. [CI/CD and Automation](#16-cicd-and-automation)
+17. [Configuration](#17-configuration)
+18. [Operational Scripts](#18-operational-scripts)
+19. [Tests](#19-tests)
+20. [Multi-Cloud Deployment](#20-multi-cloud-deployment)
 21. [RHDH — Red Hat Developer Hub](#21-rhdh--red-hat-developer-hub)
-22. [Métricas e KPIs do Projeto](#22-métricas-e-kpis-do-projeto)
-23. [Histórico de Versões](#23-histórico-de-versões)
-24. [Referências e Links](#24-referências-e-links)
+22. [Metrics and KPIs](#22-metrics-and-kpis)
+23. [Version History](#23-version-history)
+24. [References and Links](#24-references-and-links)
 
 ---
 
-## 1. Visão Geral do Projeto
+## 1. Project Overview
 
-O **Three Horizons Implementation Accelerator** é uma plataforma enterprise-grade de DevOps agnóstica que combina **Infrastructure as Code**, **GitOps**, **AI Agents** e **Internal Developer Platform (IDP)** para acelerar a entrega de software em organizações de grande porte.
+The **Three Horizons Implementation Accelerator** is an enterprise-grade Agentic DevOps Platform that combines **Infrastructure as Code**, **GitOps**, **AI Agents**, and an **Internal Developer Platform (IDP)** to accelerate software delivery across large organizations.
 
-### Números do Projeto
+### Project Numbers
 
-| Métrica | Valor |
-|---------|-------|
-| Arquivos totais | 900+ |
-| Linhas de código | ~80.000 |
-| Módulos Terraform | 15 |
-| Agentes AI (GitHub Copilot) | 17 |
-| Golden Path Templates | 22 (9 detalhados no H2) |
-| MCP Servers | 13 (11 configurados + 2 custom) |
+| Metric | Value |
+|--------|-------|
+| Total files | 949+ |
+| Lines of code | ~105,000 |
+| Terraform modules | 15 |
+| AI Agents (GitHub Copilot) | 17 |
+| Golden Path Templates | 22 (H1: 6, H2: 9, H3: 7) |
+| MCP Servers | 13 |
 | GitHub Workflows | 9 |
-| Issue Templates | 23 |
-| Skills Reutilizáveis | 15 |
+| Issue Templates | 27 |
+| Reusable Skills | 15 |
 | Prometheus Alert Rules | 50+ |
 | Recording Rules | 40+ |
 | Grafana Dashboards | 3 |
-| Testes Go (Terratest) | 16 arquivos |
-| Políticas OPA/Rego | 10+ |
-| Constraint Templates K8s | 6 |
+| Go Tests (Terratest) | 16 files |
+| OPA/Rego Policies | 10+ |
+| Gatekeeper Constraint Templates | 5 |
 
-### Problema que Resolve
+### Problem Statement
 
-Organizações enterprise enfrentam fragmentação de ferramentas, falta de padronização, ciclos de entrega lentos e dificuldade em escalar práticas DevOps. Esta plataforma oferece um acelerador pré-configurado que vai de infraestrutura base até AI-powered development em três horizontes de maturidade.
+Enterprise organizations face tool fragmentation, lack of standardization, slow delivery cycles, and difficulty scaling DevOps practices. This platform provides a pre-configured accelerator that spans from base infrastructure to AI-powered development across three maturity horizons.
 
-### Proposta de Valor
+### Value Proposition
 
-- **Redução de 70% no tempo de onboarding** de novos times
-- **Padronização via Golden Paths** que guiam desenvolvedores pelo caminho feliz
-- **AI-Assisted Operations** com 17 agentes especializados e MCP servers
-- **Compliance automático** via Policy as Code (OPA + Gatekeeper)
-- **Multi-cloud ready** com Azure como primário, suporte a AWS, GCP e On-Premise
+- **70% reduction in onboarding time** for new teams
+- **Standardization via Golden Paths** guiding developers along the happy path
+- **AI-Assisted Operations** with 17 specialized agents and MCP servers
+- **Automated compliance** via Policy as Code (OPA + Gatekeeper)
+- **Multi-cloud ready** with Azure as primary, support for AWS, GCP, and On-Premise
 
 ---
 
-## 2. Arquitetura Three Horizons
+## 2. Three Horizons Architecture
 
-O projeto segue o modelo de **Three Horizons of Innovation**, dividindo a plataforma em três fases de maturidade:
+The project follows the **Three Horizons of Innovation** model, dividing the platform into three maturity phases:
 
-### H1 — Foundation (Horizonte 1: Base)
+### H1 — Foundation (Horizon 1: Base)
 
-Infraestrutura core e serviços fundamentais.
+Core infrastructure and fundamental services.
 
-- **AKS Cluster** — Kubernetes gerenciado no Azure
+- **AKS Cluster** — Managed Kubernetes on Azure
 - **Networking** — VNet, Subnets, NSGs, Private Endpoints
 - **Container Registry** — ACR (Azure Container Registry)
 - **Databases** — PostgreSQL Flexible Server + Redis Cache
 - **Security** — Key Vault, Managed Identity, RBAC
-- **Naming Convention** — Padrão de nomenclatura para todos os recursos
-- **Disaster Recovery** — Backup Vault, replicação geo-redundante
+- **Naming Convention** — Standardized naming for all resources
+- **Disaster Recovery** — Backup Vault, geo-redundant replication
 
-### H2 — Enhancement (Horizonte 2: Evolução)
+### H2 — Enhancement (Horizon 2: Evolution)
 
-Plataforma de desenvolvimento e automação.
+Development platform and automation.
 
-- **Red Hat Developer Hub (RHDH)** — Portal do desenvolvedor com Backstage
-- **ArgoCD** — GitOps engine para deployments
-- **Golden Path Templates** — Templates padronizados para criação de serviços
+- **Red Hat Developer Hub (RHDH)** — Developer portal with Backstage
+- **ArgoCD** — GitOps engine for deployments
+- **Golden Path Templates** — Standardized templates for service creation
 - **Observability Stack** — Prometheus + Grafana + Alertmanager
-- **External Secrets** — Integração com Azure Key Vault
-- **GitHub Runners** — Self-hosted runners para CI/CD
-- **OPA Gatekeeper** — Policy enforcement no cluster
-- **API Gateway** — Gerenciamento de APIs com rate limiting
+- **External Secrets** — Integration with Azure Key Vault
+- **GitHub Runners** — Self-hosted runners for CI/CD
+- **OPA Gatekeeper** — Policy enforcement on the cluster
+- **API Gateway** — API management with rate limiting
 
-### H3 — Innovation (Horizonte 3: Inovação)
+### H3 — Innovation (Horizon 3: Innovation)
 
-AI, automação inteligente e experiência do desenvolvedor.
+AI, intelligent automation, and developer experience.
 
-- **AI Foundry** — Azure AI com modelos GPT-4o e embeddings
-- **Developer Lightspeed** — AI chat integrado ao RHDH (Llama Stack + RAG)
-- **GitHub Copilot Agents** — 17 agentes especializados
-- **MCP Servers** — 13 servidores de contexto para AI
-- **Microsoft Purview** — Data governance e catalogação
-- **Cost Management** — Otimização de custos com budgets e alertas
-- **Microsoft Defender** — Segurança avançada para containers e cloud
+- **AI Foundry** — Azure AI with GPT-4o and embeddings
+- **Developer Lightspeed** — AI chat integrated into RHDH (Llama Stack + RAG)
+- **GitHub Copilot Agents** — 17 specialized agents
+- **MCP Servers** — 13 context servers for AI
+- **Microsoft Purview** — Data governance and cataloging
+- **Cost Management** — Cost optimization with budgets and alerts
+- **Microsoft Defender** — Advanced security for containers and cloud
 
 ---
 
-## 3. Stack Tecnológica Completa
+## 3. Complete Technology Stack
 
-### Infraestrutura & Cloud
+### Infrastructure & Cloud
 
-| Tecnologia | Uso | Versão/Detalhes |
-|------------|-----|-----------------|
-| **Microsoft Azure** | Cloud provider primário | Regiões: brazilsouth, eastus2, southcentralus |
-| **Terraform** | Infrastructure as Code | >= 1.5.0 com AzureRM >= 3.75.0 |
-| **Azure Kubernetes Service (AKS)** | Orquestração de containers | Kubernetes 1.28+ |
-| **Azure Container Registry (ACR)** | Registry de imagens | Premium SKU |
-| **Azure Key Vault** | Gerenciamento de secrets | Premium SKU com HSM |
-| **Azure PostgreSQL Flexible** | Banco de dados relacional | v14+ com geo-redundância |
-| **Azure Redis Cache** | Cache distribuído | Premium com clustering |
-| **Azure AI Foundry** | Serviços de AI | GPT-4o, text-embedding-ada-002 |
-| **Azure Virtual Network** | Networking | /16 com subnets dedicadas |
-| **Azure Backup Vault** | Disaster Recovery | Geo-redundante |
-| **Microsoft Purview** | Data Governance | Catalogação e classificação |
-| **Microsoft Defender for Cloud** | Segurança | Containers + Cloud posture |
+| Technology | Usage | Version/Details |
+|------------|-------|-----------------|
+| **Microsoft Azure** | Primary cloud provider | Regions: brazilsouth, eastus2, southcentralus |
+| **Terraform** | Infrastructure as Code | >= 1.5.0 with AzureRM >= 3.75.0 |
+| **Azure Kubernetes Service (AKS)** | Container orchestration | Kubernetes 1.29+ |
+| **Azure Container Registry (ACR)** | Image registry | Basic/Standard/Premium by deployment mode |
+| **Azure Key Vault** | Secrets management | RBAC, soft delete, purge protection |
+| **Azure PostgreSQL Flexible** | Relational database | v16 with geo-redundant backup |
+| **Azure Redis Cache** | Distributed cache | TLS 1.2+ enforcement |
+| **Azure AI Foundry** | AI services | GPT-4o, GPT-4o-mini, text-embedding-3-large |
+| **Azure Virtual Network** | Networking | /16 with dedicated subnets |
+| **Azure Backup Vault** | Disaster Recovery | Geo-redundant |
+| **Microsoft Purview** | Data Governance | Cataloging and classification |
+| **Microsoft Defender for Cloud** | Security | Containers + Cloud posture |
 
-### Plataforma & Orquestração
+### Platform & Orchestration
 
-| Tecnologia | Uso |
-|------------|-----|
+| Technology | Usage |
+|------------|-------|
 | **Red Hat Developer Hub (RHDH) 1.8** | Internal Developer Platform (Backstage enterprise) |
-| **ArgoCD** | GitOps continuous deployment |
-| **Helm** | Package manager para Kubernetes |
+| **ArgoCD 5.51.0** | GitOps continuous deployment |
+| **Helm** | Package manager for Kubernetes |
 | **OPA Gatekeeper** | Policy enforcement engine |
-| **External Secrets Operator** | Sincronização de secrets |
-| **cert-manager** | Gerenciamento de certificados TLS |
+| **External Secrets Operator 0.9.9** | Secrets synchronization |
+| **cert-manager** | TLS certificate management |
 | **ingress-nginx** | Ingress controller |
 | **external-dns** | DNS automation |
-| **Prometheus** | Monitoramento e métricas |
-| **Grafana** | Visualização e dashboards |
-| **Alertmanager** | Gestão de alertas |
+| **Prometheus** | Monitoring and metrics |
+| **Grafana** | Visualization and dashboards |
+| **Alertmanager** | Alert management |
 | **Jaeger** | Distributed tracing |
 
-### AI & Agentes
+### AI & Agents
 
-| Tecnologia | Uso |
-|------------|-----|
+| Technology | Usage |
+|------------|-------|
 | **GitHub Copilot** | AI code assistant |
-| **GitHub Copilot Agents** | 17 agentes especializados (.agent.md) |
-| **Model Context Protocol (MCP)** | Protocolo de comunicação AI-tools |
-| **Azure AI Foundry** | Backend de modelos AI |
-| **Developer Lightspeed** | AI chat no RHDH (Llama Stack + RAG) |
+| **GitHub Copilot Agents** | 17 specialized agents (.agent.md) |
+| **Model Context Protocol (MCP)** | AI-to-tools communication protocol |
+| **Azure AI Foundry** | AI model backend |
+| **Developer Lightspeed** | AI chat in RHDH (Llama Stack + RAG) |
 | **Llama Stack** | LLM inference server |
 | **Python AI SDK** | Azure AI Foundry SDK |
 
 ### CI/CD & DevOps
 
-| Tecnologia | Uso |
-|------------|-----|
+| Technology | Usage |
+|------------|-------|
 | **GitHub Actions** | CI/CD pipelines |
-| **GitHub Self-Hosted Runners** | Runners no AKS |
-| **Pre-commit hooks** | Code quality gates |
-| **Terratest (Go)** | Testes de infraestrutura |
-| **tflint** | Linting de Terraform |
-| **tfsec** | Security scanning de Terraform |
-| **ShellCheck** | Linting de shell scripts |
-| **yamllint** | Linting de YAML |
-| **markdownlint** | Linting de Markdown |
-| **detect-secrets** | Detecção de secrets no código |
-| **kubeconform** | Validação de manifests K8s |
-| **Conftest** | Policy testing com OPA |
+| **GitHub Self-Hosted Runners** | Runners on AKS (ARC) |
+| **Pre-commit hooks** | Code quality gates (14 hooks) |
+| **Terratest (Go)** | Infrastructure tests |
+| **tflint** | Terraform linting |
+| **tfsec** | Terraform security scanning |
+| **ShellCheck** | Shell script linting |
+| **yamllint** | YAML linting |
+| **markdownlint** | Markdown linting |
+| **detect-secrets** | Secret detection in code |
+| **kubeconform** | K8s manifest validation |
+| **Conftest** | Policy testing with OPA |
 | **Gitleaks** | Secret scanning |
 | **Trivy** | Container vulnerability scanning |
 
-### Linguagens & Frameworks
+### Languages & Frameworks
 
-| Linguagem | Uso |
-|-----------|-----|
-| **HCL (Terraform)** | Definição de infraestrutura |
-| **Go** | Testes de infraestrutura (Terratest) |
-| **Python** | AI agents, scripts de automação |
-| **Bash/Shell** | Scripts operacionais |
-| **YAML** | Configurações K8s, Helm, ArgoCD, GitHub Actions |
-| **Rego** | Políticas OPA |
-| **JSON** | Dashboards Grafana, configurações |
-| **Markdown** | Documentação |
+| Language | Usage |
+|----------|-------|
+| **HCL (Terraform)** | Infrastructure definitions |
+| **Go** | Infrastructure tests (Terratest) |
+| **Python 3.11+** | AI agents, automation scripts (FastAPI, Pydantic, structlog) |
+| **Bash/Shell** | Operational scripts (strict mode: `set -euo pipefail`) |
+| **YAML** | K8s configs, Helm, ArgoCD, GitHub Actions |
+| **Rego** | OPA policies |
+| **JSON** | Grafana dashboards, configurations |
+| **Markdown** | Documentation, agent specs |
 
 ---
 
-## 4. Requisitos Funcionais
+## 4. Functional Requirements
 
-### RF-001: Provisionamento de Infraestrutura
+### RF-001: Infrastructure Provisioning
 
-- **RF-001.1** — O sistema DEVE provisionar um cluster AKS com node pools configuráveis (system + user) via Terraform
-- **RF-001.2** — O sistema DEVE criar uma VNet com subnets isoladas para AKS, databases, endpoints privados e serviços
-- **RF-001.3** — O sistema DEVE configurar NSGs (Network Security Groups) com regras de segurança para cada subnet
-- **RF-001.4** — O sistema DEVE provisionar um Azure Container Registry (ACR) Premium com geo-replicação
-- **RF-001.5** — O sistema DEVE criar um Azure Key Vault com soft delete, purge protection e RBAC
-- **RF-001.6** — O sistema DEVE provisionar PostgreSQL Flexible Server com high availability e geo-redundant backup
-- **RF-001.7** — O sistema DEVE provisionar Redis Cache com clustering e persistência
-- **RF-001.8** — O sistema DEVE seguir uma convenção de nomenclatura padronizada para todos os recursos Azure
+- **RF-001.1** — The system MUST provision an AKS cluster with configurable node pools (system + user) via Terraform
+- **RF-001.2** — The system MUST create a VNet with isolated subnets for AKS, databases, private endpoints, and services
+- **RF-001.3** — The system MUST configure NSGs (Network Security Groups) with security rules per subnet
+- **RF-001.4** — The system MUST provision an Azure Container Registry (ACR) with geo-replication
+- **RF-001.5** — The system MUST create an Azure Key Vault with soft delete, purge protection, and RBAC
+- **RF-001.6** — The system MUST provision PostgreSQL Flexible Server with high availability and geo-redundant backup
+- **RF-001.7** — The system MUST provision Redis Cache with TLS 1.2+ enforcement
+- **RF-001.8** — The system MUST follow a standardized naming convention for all Azure resources
 
-### RF-002: GitOps e Continuous Deployment
+### RF-002: GitOps and Continuous Deployment
 
-- **RF-002.1** — O sistema DEVE implementar ArgoCD como engine de GitOps com App-of-Apps pattern
-- **RF-002.2** — O sistema DEVE suportar sync policies diferenciadas por ambiente (dev: auto-sync, staging: auto-sync, prod: manual)
-- **RF-002.3** — O sistema DEVE implementar sync waves para garantir ordem de deployment (cert-manager → ingress → monitoring → RHDH → apps)
-- **RF-002.4** — O sistema DEVE integrar External Secrets Operator com Azure Key Vault via Workload Identity
-- **RF-002.5** — O sistema DEVE suportar múltiplos repositórios Git (GitHub HTTPS/SSH, Azure DevOps, Helm repos)
-- **RF-002.6** — O sistema DEVE configurar RBAC no ArgoCD com integração SSO via Dex
+- **RF-002.1** — The system MUST implement ArgoCD as the GitOps engine with the App-of-Apps pattern
+- **RF-002.2** — The system MUST support differentiated sync policies per environment (dev: auto-sync, staging: auto-sync, prod: manual)
+- **RF-002.3** — The system MUST implement sync waves to ensure deployment order (cert-manager → ingress → monitoring → RHDH → apps)
+- **RF-002.4** — The system MUST integrate External Secrets Operator with Azure Key Vault via Workload Identity
+- **RF-002.5** — The system MUST support multiple Git repositories (GitHub HTTPS/SSH, Azure DevOps, Helm repos)
+- **RF-002.6** — The system MUST configure RBAC in ArgoCD with SSO integration via Dex
 
 ### RF-003: Internal Developer Platform (IDP)
 
-- **RF-003.1** — O sistema DEVE implantar Red Hat Developer Hub (RHDH) como portal do desenvolvedor
-- **RF-003.2** — O sistema DEVE disponibilizar Golden Path templates para criação padronizada de serviços
-- **RF-003.3** — O sistema DEVE suportar Dynamic Plugins via YAML (sem rebuild necessário)
-- **RF-003.4** — O sistema DEVE implementar TechDocs para documentação técnica integrada
-- **RF-003.5** — O sistema DEVE configurar homepage customizada com links, ações rápidas e widgets
-- **RF-003.6** — O sistema DEVE implementar RBAC no RHDH com roles Admin, Developer e Viewer
-- **RF-003.7** — O sistema DEVE suportar autenticação via GitHub OAuth
+- **RF-003.1** — The system MUST deploy Red Hat Developer Hub (RHDH) as the developer portal
+- **RF-003.2** — The system MUST provide Golden Path templates for standardized service creation
+- **RF-003.3** — The system MUST support Dynamic Plugins via YAML (no rebuild required)
+- **RF-003.4** — The system MUST implement TechDocs for integrated technical documentation
+- **RF-003.5** — The system MUST configure a customized homepage with links, quick actions, and widgets
+- **RF-003.6** — The system MUST implement RBAC in RHDH with Admin, Developer, and Viewer roles
+- **RF-003.7** — The system MUST support authentication via GitHub OAuth
 
 ### RF-004: Golden Path Templates
 
-- **RF-004.1** — O sistema DEVE fornecer template para criação de microserviços completos (API, DB, eventos, observabilidade, CI/CD)
-- **RF-004.2** — O sistema DEVE fornecer template para API microservice com OpenAPI, validação e error handling
-- **RF-004.3** — O sistema DEVE fornecer template para event-driven microservice com Event Hubs/Service Bus
-- **RF-004.4** — O sistema DEVE fornecer template para data pipeline com ETL e quality checks
-- **RF-004.5** — O sistema DEVE fornecer template para batch jobs com CronJob e monitoramento
-- **RF-004.6** — O sistema DEVE fornecer template para API Gateway com rate limiting e auth
-- **RF-004.7** — O sistema DEVE fornecer template para GitOps deployment com ArgoCD
-- **RF-004.8** — O sistema DEVE fornecer template para migração ADO → GitHub (6 fases)
-- **RF-004.9** — O sistema DEVE fornecer template para reusable GitHub Actions workflows
+- **RF-004.1** — The system MUST provide a full microservice template (API, DB, events, observability, CI/CD)
+- **RF-004.2** — The system MUST provide an API microservice template with OpenAPI, validation, and error handling
+- **RF-004.3** — The system MUST provide an event-driven microservice template with Event Hubs/Service Bus
+- **RF-004.4** — The system MUST provide a data pipeline template with ETL and quality checks
+- **RF-004.5** — The system MUST provide a batch job template with CronJob and monitoring
+- **RF-004.6** — The system MUST provide an API Gateway template with rate limiting and auth
+- **RF-004.7** — The system MUST provide a GitOps deployment template with ArgoCD
+- **RF-004.8** — The system MUST provide an ADO → GitHub migration template (6 phases)
+- **RF-004.9** — The system MUST provide a reusable GitHub Actions workflows template
 
-### RF-005: Observabilidade
+### RF-005: Observability
 
-- **RF-005.1** — O sistema DEVE implementar Prometheus para coleta de métricas
-- **RF-005.2** — O sistema DEVE implementar Grafana com 3 dashboards pré-configurados (Platform Overview, Cost Management, Golden Path Application)
-- **RF-005.3** — O sistema DEVE implementar 50+ alert rules cobrindo infraestrutura, aplicações, AI agents, GitOps, segurança e SLA
-- **RF-005.4** — O sistema DEVE implementar 40+ recording rules para métricas agregadas
-- **RF-005.5** — O sistema DEVE configurar ServiceMonitors para RHDH, ArgoCD, ingress-nginx, cert-manager e external-secrets
-- **RF-005.6** — O sistema DEVE implementar Alertmanager com notificações configuráveis
-- **RF-005.7** — O sistema DEVE suportar métricas SLO com burn rates em janelas de 5m, 1h, 24h e 30d
+- **RF-005.1** — The system MUST implement Prometheus for metrics collection
+- **RF-005.2** — The system MUST implement Grafana with 3 pre-configured dashboards (Platform Overview, Cost Management, Golden Path Application)
+- **RF-005.3** — The system MUST implement 50+ alert rules covering infrastructure, applications, AI agents, GitOps, security, and SLA
+- **RF-005.4** — The system MUST implement 40+ recording rules for aggregated metrics
+- **RF-005.5** — The system MUST configure ServiceMonitors for RHDH, ArgoCD, ingress-nginx, cert-manager, and external-secrets
+- **RF-005.6** — The system MUST implement Alertmanager with configurable notifications
+- **RF-005.7** — The system MUST support SLO metrics with burn rates across 5m, 1h, 24h, and 30d windows
 
-### RF-006: AI e Agentes Inteligentes
+### RF-006: AI and Intelligent Agents
 
-- **RF-006.1** — O sistema DEVE provisionar Azure AI Foundry com modelos GPT-4o e embeddings
-- **RF-006.2** — O sistema DEVE disponibilizar 17 agentes GitHub Copilot especializados
-- **RF-006.3** — O sistema DEVE configurar 13 MCP servers para comunicação AI-tools
-- **RF-006.4** — O sistema DEVE suportar Developer Lightspeed no RHDH para AI chat
-- **RF-006.5** — O sistema DEVE implementar BYOM (Bring Your Own Model) com suporte a Azure OpenAI, Ollama e vLLM
-- **RF-006.6** — O sistema DEVE suportar agent-to-agent handoffs com contexto compartilhado
-- **RF-006.7** — O sistema DEVE implementar 15 skills reutilizáveis para os agentes
+- **RF-006.1** — The system MUST provision Azure AI Foundry with GPT-4o / GPT-4o-mini models and embeddings
+- **RF-006.2** — The system MUST provide 17 specialized GitHub Copilot agents
+- **RF-006.3** — The system MUST configure 13 MCP servers for AI-to-tool communication
+- **RF-006.4** — The system MUST support Developer Lightspeed in RHDH for AI chat
+- **RF-006.5** — The system MUST implement BYOM (Bring Your Own Model) with Azure OpenAI, Ollama, and vLLM support
+- **RF-006.6** — The system MUST support agent-to-agent handoffs with shared context
+- **RF-006.7** — The system MUST implement 15 reusable skills for agents
 
-### RF-007: Segurança
+### RF-007: Security
 
-- **RF-007.1** — O sistema DEVE implementar Managed Identity / Workload Identity para autenticação sem secrets
-- **RF-007.2** — O sistema DEVE aplicar Network Policies isolando namespaces
-- **RF-007.3** — O sistema DEVE implementar OPA Gatekeeper com 6 constraint templates
-- **RF-007.4** — O sistema DEVE integrar Microsoft Defender for Containers e Cloud
-- **RF-007.5** — O sistema DEVE configurar private endpoints para todos os serviços PaaS
-- **RF-007.6** — O sistema DEVE implementar secret scanning com detect-secrets e gitleaks
-- **RF-007.7** — O sistema DEVE enforcement de TLS 1.2+ em todos os serviços
+- **RF-007.1** — The system MUST implement Managed Identity / Workload Identity for secret-less authentication
+- **RF-007.2** — The system MUST apply Network Policies isolating namespaces
+- **RF-007.3** — The system MUST implement OPA Gatekeeper with 5 constraint templates
+- **RF-007.4** — The system MUST integrate Microsoft Defender for Containers and Cloud
+- **RF-007.5** — The system MUST configure private endpoints for all PaaS services
+- **RF-007.6** — The system MUST implement secret scanning with detect-secrets and gitleaks
+- **RF-007.7** — The system MUST enforce TLS 1.2+ across all services
 
-### RF-008: Automação e Scripts
+### RF-008: Automation and Scripts
 
-- **RF-008.1** — O sistema DEVE fornecer script de deploy completo (`deploy-full.sh`)
-- **RF-008.2** — O sistema DEVE fornecer scripts de validação (prerequisites, config, deployment, agents, docs)
-- **RF-008.3** — O sistema DEVE fornecer scripts de setup (GitHub App, Identity Federation, Pre-commit, Branch Protection, Terraform Backend)
-- **RF-008.4** — O sistema DEVE fornecer script de onboarding de times (`onboard-team.sh`)
-- **RF-008.5** — O sistema DEVE fornecer script de migração ADO → GitHub
+- **RF-008.1** — The system MUST provide a full deployment script (`deploy-full.sh`)
+- **RF-008.2** — The system MUST provide validation scripts (prerequisites, config, deployment, agents, docs, substitutions)
+- **RF-008.3** — The system MUST provide setup scripts (GitHub App, Identity Federation, Pre-commit, Branch Protection, Terraform Backend, Portal)
+- **RF-008.4** — The system MUST provide Python automation scripts (TechDocs, skeleton generation, template updates)
+- **RF-008.5** — The system MUST provide an ADO → GitHub migration script
 
 ### RF-009: Cost Management
 
-- **RF-009.1** — O sistema DEVE implementar budgets com alertas em 50%, 80%, 90% e 100% do orçamento
-- **RF-009.2** — O sistema DEVE fornecer dashboard Grafana de custos
-- **RF-009.3** — O sistema DEVE implementar resource tagging obrigatório (environment, project, owner, cost-center)
-- **RF-009.4** — O sistema DEVE alertar sobre uso de VM sizes caros
+- **RF-009.1** — The system MUST implement budgets with alerts at 50%, 75%, 90%, and 100% of budget
+- **RF-009.2** — The system MUST provide a Grafana cost dashboard
+- **RF-009.3** — The system MUST implement mandatory resource tagging (environment, project, owner, cost-center)
+- **RF-009.4** — The system MUST alert on expensive VM sizes
 
 ---
 
-## 5. Requisitos Não-Funcionais
+## 5. Non-Functional Requirements
 
-### RNF-001: Disponibilidade
+### RNF-001: Availability
 
-- **RNF-001.1** — A plataforma DEVE manter SLA de 99.9% de disponibilidade para serviços core (AKS, RHDH, ArgoCD)
-- **RNF-001.2** — SLO burn rate DEVE ser monitorado em janelas de 5m, 1h, 24h e 30d
-- **RNF-001.3** — Failover automático DEVE estar configurado para PostgreSQL com geo-redundância
+- **RNF-001.1** — The platform MUST maintain 99.9% SLA availability for core services (AKS, RHDH, ArgoCD)
+- **RNF-001.2** — SLO burn rate MUST be monitored across 5m, 1h, 24h, and 30d windows
+- **RNF-001.3** — Automatic failover MUST be configured for PostgreSQL with geo-redundancy
 
 ### RNF-002: Performance
 
-- **RNF-002.1** — Latência de API DEVE ser < 500ms no p99 (alertas em > 1s)
-- **RNF-002.2** — RHDH DEVE responder em < 5s para operações de catalog
-- **RNF-002.3** — Alertas de AI Foundry DEVEM disparar quando latência > 5s
-- **RNF-002.4** — Recording rules DEVEM pré-calcular percentis de latência (p50, p90, p99)
+- **RNF-002.1** — API latency MUST be < 500ms at p99 (alerts at > 1s)
+- **RNF-002.2** — RHDH MUST respond in < 5s for catalog operations
+- **RNF-002.3** — AI Foundry alerts MUST trigger when latency > 5s
+- **RNF-002.4** — Recording rules MUST pre-calculate latency percentiles (p50, p90, p99)
 
-### RNF-003: Escalabilidade
+### RNF-003: Scalability
 
-- **RNF-003.1** — AKS DEVE suportar auto-scaling de node pools (min 2 → max configurável)
-- **RNF-003.2** — O sistema DEVE suportar 4 sizing profiles: Small (≤10 devs), Medium (10-50 devs), Large (50-200 devs), XLarge (200+ devs)
-- **RNF-003.3** — ACR DEVE suportar geo-replicação para múltiplas regiões
+- **RNF-003.1** — AKS MUST support node pool auto-scaling (min 2 → configurable max)
+- **RNF-003.2** — The system MUST support 4 sizing profiles: Small (≤10 devs), Medium (10-50 devs), Large (50-200 devs), XLarge (200+ devs)
+- **RNF-003.3** — ACR MUST support geo-replication across multiple regions
 
-### RNF-004: Segurança
+### RNF-004: Security
 
-- **RNF-004.1** — Todos os dados em trânsito DEVEM usar TLS 1.2+
-- **RNF-004.2** — Todos os dados em repouso DEVEM ser encriptados (AES-256)
-- **RNF-004.3** — Nenhum serviço PaaS DEVE ter acesso público habilitado (private endpoints obrigatórios)
-- **RNF-004.4** — Containers DEVEM rodar como non-root sem privilege escalation
-- **RNF-004.5** — Imagens DEVEM ser restritas a registries aprovados
-- **RNF-004.6** — RBAC DEVE estar habilitado em AKS, RHDH, ArgoCD e Key Vault
+- **RNF-004.1** — All data in transit MUST use TLS 1.2+
+- **RNF-004.2** — All data at rest MUST be encrypted (AES-256)
+- **RNF-004.3** — No PaaS service MUST have public access enabled (mandatory private endpoints)
+- **RNF-004.4** — Containers MUST run as non-root with no privilege escalation
+- **RNF-004.5** — Images MUST be restricted to approved registries
+- **RNF-004.6** — RBAC MUST be enabled on AKS, RHDH, ArgoCD, and Key Vault
 
 ### RNF-005: Compliance
 
-- **RNF-005.1** — A plataforma DEVE suportar compliance LGPD (dados no Brazil: brazilsouth)
-- **RNF-005.2** — A plataforma DEVE suportar auditorias SOC 2
-- **RNF-005.3** — A plataforma DEVE suportar PCI-DSS e CIS Benchmarks
-- **RNF-005.4** — Todas as políticas DEVEM ser versionadas e auditáveis via Git
+- **RNF-005.1** — The platform MUST support LGPD compliance (data in Brazil: brazilsouth)
+- **RNF-005.2** — The platform MUST support SOC 2 audits
+- **RNF-005.3** — The platform MUST support PCI-DSS and CIS Benchmarks
+- **RNF-005.4** — All policies MUST be versioned and auditable via Git
 
-### RNF-006: Observabilidade
+### RNF-006: Observability
 
-- **RNF-006.1** — 100% dos serviços core DEVEM ter ServiceMonitors configurados
-- **RNF-006.2** — Alertas DEVEM ter severidade classificada (critical, warning, info)
-- **RNF-006.3** — Dashboards DEVEM estar disponíveis para infraestrutura, custos e aplicações
-- **RNF-006.4** — Métricas de AI agents DEVEM incluir invocação, latência, tokens e erro rate
+- **RNF-006.1** — 100% of core services MUST have ServiceMonitors configured
+- **RNF-006.2** — Alerts MUST have classified severity (critical, warning, info)
+- **RNF-006.3** — Dashboards MUST be available for infrastructure, costs, and applications
+- **RNF-006.4** — AI agent metrics MUST include invocation, latency, tokens, and error rate
 
-### RNF-007: Manutenibilidade
+### RNF-007: Maintainability
 
-- **RNF-007.1** — Todo código Terraform DEVE passar por tflint, tfsec e Conftest
-- **RNF-007.2** — Documentação DEVE ser gerada automaticamente via terraform-docs
-- **RNF-007.3** — Pre-commit hooks DEVEM validar Terraform, Shell, YAML, Markdown, Kubernetes e Secrets
-- **RNF-007.4** — Agentes DEVEM ter especificações validáveis via `validate-agents.sh`
+- **RNF-007.1** — All Terraform code MUST pass tflint, tfsec, and Conftest
+- **RNF-007.2** — Documentation MUST be auto-generated via terraform-docs
+- **RNF-007.3** — Pre-commit hooks MUST validate Terraform, Shell, YAML, Markdown, Kubernetes, and Secrets
+- **RNF-007.4** — Agent specs MUST be validatable via `validate-agents.sh`
 
-### RNF-008: Portabilidade
+### RNF-008: Portability
 
-- **RNF-008.1** — A arquitetura DEVE suportar deployment em Azure (primário), AWS, GCP e On-Premise
-- **RNF-008.2** — Terraform modules DEVEM ser independentes e reutilizáveis
-- **RNF-008.3** — Golden Paths DEVEM ser agnósticos de cloud quando possível
+- **RNF-008.1** — The architecture MUST support deployment on Azure (primary), AWS, GCP, and On-Premise
+- **RNF-008.2** — Terraform modules MUST be independent and reusable
+- **RNF-008.3** — Golden Paths MUST be cloud-agnostic when possible
 
 ### RNF-009: Disaster Recovery
 
-- **RNF-009.1** — RPO (Recovery Point Objective) DEVE ser ≤ 1 hora para dados críticos
-- **RNF-009.2** — RTO (Recovery Time Objective) DEVE ser ≤ 4 horas para restauração completa
-- **RNF-009.3** — Backups DEVEM ser geo-redundantes com retenção configurável
-- **RNF-009.4** — DR runbooks DEVEM estar documentados e testados
+- **RNF-009.1** — RPO (Recovery Point Objective) MUST be ≤ 1 hour for critical data
+- **RNF-009.2** — RTO (Recovery Time Objective) MUST be ≤ 4 hours for full restoration
+- **RNF-009.3** — Backups MUST be geo-redundant with configurable retention
+- **RNF-009.4** — DR runbooks MUST be documented and tested
 
 ---
 
 ## 6. User Stories
 
-### Epic 1: Provisionamento de Infraestrutura
+### Epic 1: Infrastructure Provisioning
 
-**US-001** — Como **Platform Engineer**, eu quero provisionar toda a infraestrutura Azure com um único `terraform apply`, para que eu possa ter um ambiente completo em menos de 1 hora.
+**US-001** — As a **Platform Engineer**, I want to provision all Azure infrastructure with a single `terraform apply`, so I can have a complete environment in less than 1 hour.
 
-**US-002** — Como **Platform Engineer**, eu quero que todos os recursos sigam uma convenção de nomenclatura padronizada (`{project}-{environment}-{region}-{resource}`), para facilitar identificação e governança.
+**US-002** — As a **Platform Engineer**, I want all resources to follow a standardized naming convention (`{customer}-{env}-{resource}`), so that identification and governance are easier.
 
-**US-003** — Como **SRE**, eu quero que o cluster AKS tenha auto-scaling configurado com sizing profiles (S/M/L/XL), para atender diferentes escalas de time sem re-configuração manual.
+**US-003** — As an **SRE**, I want the AKS cluster to have auto-scaling configured with sizing profiles (S/M/L/XL), so it can serve different team scales without manual reconfiguration.
 
-**US-004** — Como **Security Engineer**, eu quero que todos os serviços PaaS usem private endpoints, para garantir que nenhum dado trafegue pela internet pública.
+**US-004** — As a **Security Engineer**, I want all PaaS services to use private endpoints, so no data traverses the public internet.
 
-**US-005** — Como **Platform Engineer**, eu quero que o sistema de naming gere nomes consistentes para todos os recursos, para que eu mantenha padrão organizacional em múltiplos ambientes.
+**US-005** — As a **Platform Engineer**, I want the naming system to generate consistent names for all resources, so I can maintain organizational standards across multiple environments.
 
-### Epic 2: GitOps e Deployments
+### Epic 2: GitOps and Deployments
 
-**US-006** — Como **DevOps Engineer**, eu quero que todas as aplicações sejam deployadas via ArgoCD com Git como source of truth, para ter auditabilidade e rollback fácil.
+**US-006** — As a **DevOps Engineer**, I want all applications deployed via ArgoCD with Git as the source of truth, so I have auditability and easy rollback.
 
-**US-007** — Como **DevOps Engineer**, eu quero sync policies diferenciadas por ambiente (dev=auto, prod=manual), para ter velocidade em dev sem comprometer segurança em produção.
+**US-007** — As a **DevOps Engineer**, I want differentiated sync policies per environment (dev=auto, prod=manual), so I have speed in dev without compromising production security.
 
-**US-008** — Como **DevOps Engineer**, eu quero sync waves para garantir que infraestrutura base (cert-manager, ingress) seja deployada antes das aplicações, para evitar falhas de dependência.
+**US-008** — As a **DevOps Engineer**, I want sync waves to ensure base infrastructure (cert-manager, ingress) is deployed before applications, to avoid dependency failures.
 
-**US-009** — Como **DevOps Engineer**, eu quero que secrets sejam sincronizados automaticamente do Azure Key Vault via External Secrets Operator, para nunca ter secrets em repositórios Git.
+**US-009** — As a **DevOps Engineer**, I want secrets to be automatically synced from Azure Key Vault via External Secrets Operator, so secrets are never stored in Git repositories.
 
 ### Epic 3: Developer Experience
 
-**US-010** — Como **Desenvolvedor**, eu quero acessar um portal (RHDH) onde posso criar um novo microserviço a partir de um template padronizado, para começar a desenvolver em minutos ao invés de dias.
+**US-010** — As a **Developer**, I want to access a portal (RHDH) where I can create a new microservice from a standardized template, so I can start developing in minutes instead of days.
 
-**US-011** — Como **Desenvolvedor**, eu quero escolher entre diferentes Golden Paths (microservice, API, event-driven, data pipeline, batch job), para usar o padrão arquitetural correto para meu caso de uso.
+**US-011** — As a **Developer**, I want to choose between different Golden Paths (microservice, API, event-driven, data pipeline, batch job), to use the correct architectural pattern for my use case.
 
-**US-012** — Como **Desenvolvedor**, eu quero que o template já inclua CI/CD, observabilidade, testes e documentação, para não precisar configurar cada um manualmente.
+**US-012** — As a **Developer**, I want templates to already include CI/CD, observability, tests, and documentation, so I don't need to configure each one manually.
 
-**US-013** — Como **Desenvolvedor**, eu quero ter um AI assistant (Developer Lightspeed) integrado ao portal, para me ajudar a resolver problemas e gerar código com contexto do meu projeto.
+**US-013** — As a **Developer**, I want an AI assistant (Developer Lightspeed) integrated into the portal, to help me solve problems and generate code with my project's context.
 
-**US-014** — Como **Tech Lead**, eu quero visualizar o catálogo completo de serviços, APIs e documentação no RHDH, para ter visibilidade de todos os componentes da plataforma.
+**US-014** — As a **Tech Lead**, I want to view the complete catalog of services, APIs, and documentation in RHDH, to have visibility into all platform components.
 
-**US-015** — Como **Desenvolvedor**, eu quero usar templates de GitHub Actions reusáveis, para não duplicar pipelines entre projetos.
+**US-015** — As a **Developer**, I want to use reusable GitHub Actions workflow templates, to avoid duplicating pipelines across projects.
 
-### Epic 4: Observabilidade
+### Epic 4: Observability
 
-**US-016** — Como **SRE**, eu quero ter dashboards Grafana pré-configurados para infraestrutura, custos e aplicações, para monitorar a saúde da plataforma em tempo real.
+**US-016** — As an **SRE**, I want pre-configured Grafana dashboards for infrastructure, costs, and applications, to monitor platform health in real time.
 
-**US-017** — Como **SRE**, eu quero receber alertas automáticos quando pods reiniciam mais de 5x em 15min, CPU > 80%, ou disco > 85%, para agir proativamente antes de impacto ao usuário.
+**US-017** — As an **SRE**, I want automatic alerts when pods restart more than 5x in 15min, CPU > 80%, or disk > 85%, to act proactively before user impact.
 
-**US-018** — Como **SRE**, eu quero monitorar SLOs com burn rates em múltiplas janelas de tempo, para priorizar ações baseado no impacto ao error budget.
+**US-018** — As an **SRE**, I want to monitor SLOs with burn rates across multiple time windows, to prioritize actions based on error budget impact.
 
-**US-019** — Como **SRE**, eu quero métricas específicas de AI agents (invocação, latência, tokens, erro), para garantir que os agentes estão performando adequadamente.
+**US-019** — As an **SRE**, I want specific AI agent metrics (invocation, latency, tokens, error), to ensure agents are performing adequately.
 
-**US-020** — Como **SRE**, eu quero alertas de GitOps que indiquem quando ArgoCD sync falhou ou RHDH está indisponível, para reagir rapidamente a problemas de deployment.
+**US-020** — As an **SRE**, I want GitOps alerts that indicate when ArgoCD sync has failed or RHDH is unavailable, to react quickly to deployment issues.
 
 ### Epic 5: AI Agents
 
-**US-021** — Como **Desenvolvedor**, eu quero interagir com agentes especializados (@platform, @devops, @sre, @security, etc.) no GitHub Copilot, para receber assistência contextual na minha tarefa.
+**US-021** — As a **Developer**, I want to interact with specialized agents (@platform, @devops, @sre, @security, etc.) in GitHub Copilot, to receive contextual assistance for my task.
 
-**US-022** — Como **Platform Engineer**, eu quero que agentes possam delegar tarefas entre si (handoffs), para que um fluxo complexo como deployment passe por validação, segurança e observabilidade automaticamente.
+**US-022** — As a **Platform Engineer**, I want agents to be able to delegate tasks between each other (handoffs), so a complex flow like deployment passes through validation, security, and observability automatically.
 
-**US-023** — Como **Platform Engineer**, eu quero usar MCP servers para dar aos agentes acesso controlado a Azure, GitHub, Terraform, Kubernetes e Helm, para que eles possam executar ações reais com segurança.
+**US-023** — As a **Platform Engineer**, I want to use MCP servers to give agents controlled access to Azure, GitHub, Terraform, Kubernetes, and Helm, so they can execute real actions safely.
 
-**US-024** — Como **DevOps Engineer**, eu quero usar chat modes (Architect, Reviewer, SRE) para ter personas especializadas, para receber orientação no tom e expertise corretos.
+**US-024** — As a **DevOps Engineer**, I want to use chat modes (Architect, Reviewer, SRE) for specialized personas, to receive guidance with the correct tone and expertise.
 
-**US-025** — Como **Platform Engineer**, eu quero criar novos agentes seguindo o template padronizado (.agent.md), para expandir a capacidade da plataforma com novos especialistas.
+**US-025** — As a **Platform Engineer**, I want to create new agents following the standardized template (.agent.md), to expand the platform's capabilities with new specialists.
 
-### Epic 6: Segurança e Compliance
+### Epic 6: Security and Compliance
 
-**US-026** — Como **Security Engineer**, eu quero que OPA Gatekeeper bloqueie containers privilegiados, sem resource limits, ou de registries não aprovados, para enforce security policies automaticamente.
+**US-026** — As a **Security Engineer**, I want OPA Gatekeeper to block privileged containers, containers without resource limits, or containers from unapproved registries, to enforce security policies automatically.
 
-**US-027** — Como **Security Engineer**, eu quero que políticas Terraform validem tags obrigatórias, TLS, encryption e public access em todo recurso Azure, para garantir compliance antes do deploy.
+**US-027** — As a **Security Engineer**, I want Terraform policies to validate mandatory tags, TLS, encryption, and public access on every Azure resource, to ensure compliance before deployment.
 
-**US-028** — Como **Compliance Officer**, eu quero que a plataforma suporte LGPD (dados no Brazil), SOC 2 e PCI-DSS, para atender requisitos regulatórios.
+**US-028** — As a **Compliance Officer**, I want the platform to support LGPD (data in Brazil), SOC 2, and PCI-DSS, to meet regulatory requirements.
 
-**US-029** — Como **Security Engineer**, eu quero que pre-commit hooks detectem secrets no código antes do commit, para prevenir vazamento de credenciais.
+**US-029** — As a **Security Engineer**, I want pre-commit hooks to detect secrets in code before commit, to prevent credential leaks.
 
-**US-030** — Como **Security Engineer**, eu quero alertas de segurança (certificados expirando, login failures, pod security violations), para responder a incidentes rapidamente.
+**US-030** — As a **Security Engineer**, I want security alerts (expiring certificates, login failures, pod security violations), to respond to incidents quickly.
 
-### Epic 7: Migração e Onboarding
+### Epic 7: Migration and Onboarding
 
-**US-031** — Como **Platform Engineer**, eu quero um template de migração ADO → GitHub em 6 fases, para migrar times do Azure DevOps para GitHub de forma estruturada.
+**US-031** — As a **Platform Engineer**, I want an ADO → GitHub migration template in 6 phases, to migrate teams from Azure DevOps to GitHub in a structured way.
 
-**US-032** — Como **Platform Engineer**, eu quero um script de onboarding (`onboard-team.sh`) que configure namespace, RBAC, service account, resource quotas e network policies para um novo time, para onboardar equipes em minutos.
+**US-032** — As a **Platform Engineer**, I want a bootstrap script that configures prerequisites, infrastructure, and platform services, to bootstrap the entire environment quickly.
 
-**US-033** — Como **Novo Desenvolvedor**, eu quero um quick start guiado por agente que me configure em 3 passos (prerequisites → deploy → validate), para começar a usar a plataforma no primeiro dia.
+**US-033** — As a **New Developer**, I want an agent-guided quick start that sets me up in 3 steps (prerequisites → deploy → validate), to start using the platform on day one.
 
 ### Epic 8: Cost Management
 
-**US-034** — Como **FinOps Engineer**, eu quero budgets Azure com alertas em 50%, 80%, 90% e 100%, para controlar gastos proativamente.
+**US-034** — As a **FinOps Engineer**, I want Azure budgets with alerts at 50%, 75%, 90%, and 100%, to proactively control spending.
 
-**US-035** — Como **FinOps Engineer**, eu quero um dashboard Grafana de custos, para visualizar tendências e identificar oportunidades de otimização.
+**US-035** — As a **FinOps Engineer**, I want a Grafana cost dashboard, to visualize trends and identify optimization opportunities.
 
-**US-036** — Como **FinOps Engineer**, eu quero alertas quando VMs caras (Standard_E, Standard_M) são usadas, para validar se o sizing é adequado.
+**US-036** — As a **FinOps Engineer**, I want alerts when expensive VMs (Standard_E, Standard_M) are used, to validate whether sizing is appropriate.
 
 ---
 
-## 7. Estrutura do Repositório
+## 7. Repository Structure
 
 ```
 agentic-devops-platform/
 ├── .github/                          # GitHub configuration
+│   ├── agents/                       # 17 Copilot Chat agents (.agent.md)
+│   │   ├── AGENT_TEMPLATE.md         # Base template for creating agents
+│   │   ├── architect.agent.md        # System architecture specialist
+│   │   ├── platform.agent.md         # IDP/Golden Paths specialist
+│   │   ├── devops.agent.md           # CI/CD specialist
+│   │   ├── sre.agent.md              # SRE/Observability specialist
+│   │   ├── terraform.agent.md        # IaC specialist
+│   │   ├── security.agent.md         # Security compliance
+│   │   ├── reviewer.agent.md         # Code review
+│   │   ├── deploy.agent.md           # Deployment orchestration
+│   │   ├── test.agent.md             # Testing/QA
+│   │   ├── docs.agent.md             # Documentation
+│   │   ├── onboarding.agent.md       # Team onboarding
+│   │   ├── template-engineer.agent.md # Template creation
+│   │   ├── context-architect.agent.md # Multi-file change planning
+│   │   ├── github-integration.agent.md # GitHub operations
+│   │   ├── ado-integration.agent.md  # Azure DevOps integration
+│   │   ├── hybrid-scenarios.agent.md # GitHub + ADO coexistence
+│   │   └── azure-portal-deploy.agent.md # Azure portal deployment
+│   ├── chatmodes/                    # 3 chat modes
+│   │   ├── architect.chatmode.md     # Architecture design sessions
+│   │   ├── reviewer.chatmode.md      # Code review sessions
+│   │   └── sre.chatmode.md           # Operations/incident sessions
+│   ├── instructions/                 # 3 path-specific instructions
+│   │   ├── kubernetes.instructions.md # *.yaml, *.yml, kubernetes/**, helm/**
+│   │   ├── python.instructions.md    # *.py, python/**
+│   │   └── terraform.instructions.md # *.tf, terraform/**, *.tfvars
+│   ├── prompts/                      # 7 reusable prompts
+│   │   ├── create-service.prompt.md  # Scaffold a new microservice
+│   │   ├── deploy-platform.prompt.md # Deploy the platform
+│   │   ├── deploy-service.prompt.md  # Deploy a service to AKS
+│   │   ├── generate-docs.prompt.md   # Generate documentation
+│   │   ├── generate-tests.prompt.md  # Generate test suites
+│   │   ├── review-code.prompt.md     # Perform code review
+│   │   └── troubleshoot-incident.prompt.md # Troubleshoot incidents
+│   ├── skills/                       # 15 reusable agent skills
+│   │   ├── README.md
+│   │   ├── ai-foundry-operations/    # Azure AI Foundry operations
+│   │   ├── argocd-cli/               # ArgoCD CLI operations
+│   │   ├── azure-cli/                # Azure CLI operations
+│   │   ├── azure-infrastructure/     # Azure infrastructure patterns
+│   │   ├── codespaces-golden-paths/  # GitHub Codespaces devcontainer configs
+│   │   ├── database-management/      # Database operations
+│   │   ├── deploy-orchestration/     # End-to-end deployment
+│   │   ├── github-cli/               # GitHub CLI operations
+│   │   ├── helm-cli/                 # Helm CLI operations
+│   │   ├── kubectl-cli/              # Kubernetes CLI operations
+│   │   ├── mcp-cli/                  # MCP server reference
+│   │   ├── observability-stack/      # Prometheus/Grafana setup
+│   │   ├── prerequisites/            # CLI tool validation
+│   │   ├── terraform-cli/            # Terraform CLI operations
+│   │   └── validation-scripts/       # Validation scripts
 │   ├── workflows/                    # 9 GitHub Actions workflows
 │   │   ├── ci-cd.yml                 # Combined CI/CD pipeline
 │   │   ├── ci.yml                    # Continuous Integration
@@ -461,38 +513,27 @@ agentic-devops-platform/
 │   │   ├── agent-router.yml          # Route issues to agents
 │   │   ├── issue-ops.yml             # Issue operations
 │   │   └── branch-protection.yml     # Branch protection rules
-│   ├── ISSUE_TEMPLATE/               # 23 issue templates
-│   ├── skills/                       # 15 reusable agent skills
-│   ├── chatmodes/                    # 3 chat modes (Architect, Reviewer, SRE)
-│   ├── prompts/                      # 7 reusable prompts
-│   ├── instructions/                 # Path-specific instructions
-│   └── copilot-instructions.md       # Global Copilot instructions
+│   ├── ISSUE_TEMPLATE/               # 27 issue templates
+│   ├── PULL_REQUEST_TEMPLATE.md      # PR template
+│   ├── scripts/                      # GitHub-specific scripts
+│   ├── copilot-instructions.md       # Global Copilot instructions
+│   └── dependabot.yml                # Dependabot configuration
 │
-├── agents-templates/                 # 17 agent specifications
-│   ├── AGENT_TEMPLATE.md             # Base template for agents
-│   ├── platform.agent.md             # IDP/Golden Paths specialist
-│   ├── devops.agent.md               # CI/CD specialist
-│   ├── sre.agent.md                  # SRE/Observability specialist
-│   ├── architect.agent.md            # System design
-│   ├── reviewer.agent.md             # Code review
-│   ├── terraform.agent.md            # IaC specialist
-│   ├── security.agent.md             # Security compliance
-│   ├── deploy.agent.md               # Deployment orchestration
-│   ├── test.agent.md                 # Testing/QA
-│   ├── docs.agent.md                 # Documentation
-│   ├── github-integration.agent.md   # GitHub operations
-│   ├── ado-integration.agent.md      # Azure DevOps integration
-│   ├── azure-portal-deploy.agent.md  # Azure portal deploy
-│   ├── template-engineer.agent.md    # Template creation
-│   ├── onboarding.agent.md           # Team onboarding
-│   └── hybrid-scenarios.agent.md     # Multi-step scenarios
+├── agents-templates/                 # Agent spec backup/reference copies
+│   ├── AGENT_TEMPLATE.md             # Base template
+│   └── *.agent.md                    # 16 agent specification copies
 │
 ├── terraform/                        # Infrastructure as Code
 │   ├── main.tf                       # Root module orchestration
-│   ├── variables.tf                  # Input variables
+│   ├── variables.tf                  # Input variables with validation
 │   ├── outputs.tf                    # Output values
+│   ├── backend.tf.example            # Remote state backend example
 │   ├── terraform.tfvars.example      # Example variable values
-│   ├── backend.tf.example            # Remote state backend
+│   ├── .terraform.lock.hcl           # Provider lock file
+│   ├── .tflint.hcl                   # Module-level TFLint config
+│   ├── README.md                     # Module documentation
+│   ├── environments/                 # Environment-specific tfvars
+│   ├── examples/                     # Usage examples
 │   └── modules/                      # 15 Terraform modules
 │       ├── naming/                   # Resource naming convention
 │       ├── networking/               # VNet, Subnets, NSGs
@@ -501,228 +542,380 @@ agentic-devops-platform/
 │       ├── databases/                # PostgreSQL + Redis
 │       ├── security/                 # Key Vault, RBAC
 │       ├── argocd/                   # ArgoCD deployment
-│       ├── observability/            # Prometheus, Grafana
+│       ├── observability/            # Prometheus, Grafana, Log Analytics
 │       ├── external-secrets/         # External Secrets Operator
-│       ├── github-runners/           # Self-hosted runners
-│       ├── ai-foundry/              # Azure AI services
+│       ├── github-runners/           # Self-hosted runners (ARC)
+│       ├── ai-foundry/               # Azure AI services
 │       ├── purview/                  # Data governance
 │       ├── defender/                 # Microsoft Defender
 │       ├── cost-management/          # Budgets and alerts
 │       └── disaster-recovery/        # Backup and recovery
 │
-├── golden-paths/                     # RHDH templates
-│   └── h2-enhancement/               # Horizon 2 templates
-│       ├── microservice/             # Full microservice
-│       ├── api-microservice/         # REST API service
-│       ├── event-driven-microservice/# Event-based service
-│       ├── data-pipeline/            # ETL pipelines
-│       ├── batch-job/                # CronJob workloads
-│       ├── api-gateway/              # API Management
-│       ├── gitops-deployment/        # ArgoCD manifests
-│       ├── ado-to-github-migration/  # Migration template
-│       └── reusable-workflows/       # GitHub Actions library
+├── golden-paths/                     # RHDH Software Templates (22 total)
+│   ├── README.md
+│   ├── common/                       # Shared template resources
+│   ├── h1-foundation/                # Horizon 1: 6 basic templates
+│   │   ├── README.md
+│   │   ├── basic-cicd/
+│   │   ├── documentation-site/
+│   │   ├── infrastructure-provisioning/
+│   │   ├── new-microservice/
+│   │   ├── security-baseline/
+│   │   └── web-application/
+│   ├── h2-enhancement/               # Horizon 2: 9 advanced templates
+│   │   ├── README.md
+│   │   ├── microservice/
+│   │   ├── api-microservice/
+│   │   ├── event-driven-microservice/
+│   │   ├── data-pipeline/
+│   │   ├── batch-job/
+│   │   ├── api-gateway/
+│   │   ├── gitops-deployment/
+│   │   ├── ado-to-github-migration/
+│   │   └── reusable-workflows/
+│   └── h3-innovation/                # Horizon 3: 7 AI/Agent templates
+│       ├── README.md
+│       ├── ai-evaluation-pipeline/
+│       ├── copilot-extension/
+│       ├── foundry-agent/
+│       ├── mlops-pipeline/
+│       ├── multi-agent-system/
+│       ├── rag-application/
+│       └── sre-agent-integration/
 │
 ├── argocd/                           # GitOps configuration
+│   ├── README.md
 │   ├── app-of-apps/                  # Root application
-│   ├── apps/                         # Individual applications
-│   ├── secrets/                      # Secret stores
-│   ├── sync-policies.yaml            # Sync policy presets
-│   └── repo-credentials.yaml         # Repository access
+│   ├── apps/                         # Individual ArgoCD applications
+│   ├── secrets/                      # Secret stores (ClusterSecretStore)
+│   ├── sync-policies.yaml            # 5 sync policy presets
+│   └── repo-credentials.yaml         # Multi-repo access credentials
 │
 ├── deploy/                           # Deployment manifests
-│   └── helm/                         # Helm values
-│       ├── argocd/values.yaml        # ArgoCD config
-│       ├── monitoring/values.yaml    # Prometheus stack
-│       ├── sre-alerts.yaml           # Alert rules
-│       ├── service-monitors.yaml     # Metric scrapers
-│       ├── external-secrets-config.yaml
+│   ├── README.md
+│   └── helm/                         # Helm values & K8s manifests
+│       ├── argocd/                   # ArgoCD Helm values
+│       ├── monitoring/               # Prometheus stack values
+│       ├── argocd-apps.yaml          # ArgoCD applications manifest
+│       ├── external-secrets-config.yaml # ESO configuration
 │       ├── ingress-all.yaml          # Ingress resources
-│       └── argocd-apps.yaml          # ArgoCD applications
+│       ├── service-monitors.yaml     # ServiceMonitor definitions
+│       └── sre-alerts.yaml           # SRE alert rules
 │
 ├── config/                           # Platform configuration
-│   ├── apm.yml                       # Agent Package Manager
+│   ├── README.md
+│   ├── apm.yml                       # Agent Package Manager manifest
 │   ├── sizing-profiles.yaml          # T-shirt sizing (S/M/L/XL)
 │   └── region-availability.yaml      # Azure regions matrix
 │
 ├── grafana/                          # Grafana dashboards
+│   ├── README.md
 │   └── dashboards/
-│       ├── platform-overview.json    # Infrastructure dashboard
-│       ├── cost-management.json      # Cost dashboard
-│       └── golden-path-application.json # App dashboard
+│       ├── platform-overview.json
+│       ├── cost-management.json
+│       └── golden-path-application.json
 │
 ├── prometheus/                       # Monitoring rules
+│   ├── README.md
 │   ├── alerting-rules.yaml           # 50+ alert rules
 │   └── recording-rules.yaml          # 40+ recording rules
 │
 ├── policies/                         # Policy as Code
-│   ├── terraform/azure.rego          # OPA policies for Terraform
-│   └── kubernetes/                   # Gatekeeper policies
-│       ├── constraint-templates/     # 6 ConstraintTemplates
+│   ├── README.md
+│   ├── terraform/
+│   │   └── azure.rego                # OPA policies for Terraform
+│   └── kubernetes/
+│       ├── constraint-templates/     # Gatekeeper ConstraintTemplates
 │       └── constraints/              # Applied constraints
 │
 ├── mcp-servers/                      # MCP configuration
-│   ├── mcp-config.json               # 11 server definitions
+│   ├── mcp-config.json               # 13 server definitions
 │   └── USAGE.md                      # Usage guide + access matrix
 │
 ├── scripts/                          # Operational scripts
-│   ├── deploy-full.sh                # Full deployment
-│   ├── platform-bootstrap.sh         # Platform setup
-│   ├── bootstrap.sh                  # H1 infrastructure
-│   ├── validate-*.sh                 # Validation scripts (5)
-│   ├── setup-*.sh                    # Setup scripts (5)
-│   ├── onboard-team.sh               # Team onboarding
-│   └── migration/                    # ADO→GitHub migration
+│   ├── README.md
+│   ├── deploy-full.sh                # Full end-to-end deployment
+│   ├── platform-bootstrap.sh         # Platform setup (RHDH, ArgoCD, monitoring)
+│   ├── bootstrap.sh                  # H1 infrastructure setup
+│   ├── setup-github-app.sh           # GitHub App for RHDH/ArgoCD auth
+│   ├── setup-identity-federation.sh  # OIDC Workload Identity Federation
+│   ├── setup-pre-commit.sh           # Install pre-commit hooks
+│   ├── setup-branch-protection.sh    # GitHub branch protection rules
+│   ├── setup-terraform-backend.sh    # Azure Storage for remote state
+│   ├── setup-portal.sh               # RHDH portal setup
+│   ├── validate-prerequisites.sh     # CLI tool validation
+│   ├── validate-config.sh            # Config file validation
+│   ├── validate-deployment.sh        # Post-deploy health checks
+│   ├── validate-agents.sh            # Agent spec validation
+│   ├── validate-docs.sh              # Documentation validation
+│   ├── validate-substitutions.sh     # Template substitution validation
+│   ├── add-techdocs.py               # Add TechDocs to catalog entities
+│   ├── fix-ownerpicker.py            # Fix OwnerPicker in templates
+│   ├── generate-skeletons.py         # Generate template skeletons
+│   ├── update-templates.py           # Update Golden Path templates
+│   ├── golden-paths/                 # Golden Path helper scripts
+│   │   ├── h1-foundation/
+│   │   └── h2-enhancement/
+│   └── migration/                    # Migration scripts
+│       └── ado-to-github-migration.sh
 │
-├── new-features/                     # RHDH-specific features
-│   ├── AGENTS.md                     # RHDH agent guide
-│   ├── configs/                      # Dynamic plugins, RBAC, Helm
-│   ├── foundry/                      # Python AI agents
-│   └── homepage/                     # RHDH homepage config
+├── new-features/                     # RHDH-specific features & customization
+│   ├── AGENTS.md                     # RHDH agent ecosystem guide
+│   ├── DEPLOY_CUSTOMIZATIONS_GUIDE.md
+│   ├── agent_ecosystem_github_foundry_v1.0.md
+│   ├── agent_ecosystem_review_v2.md
+│   ├── cowork_tasks_mcp_ai_deploy_v2.md
+│   ├── mcp_ai_deploy_master_index_v1.0.md
+│   ├── multi_cloud_deploy_guide_v1.0.md
+│   ├── rhdh_agent_ecosystem_v1.md
+│   ├── rhdh_deploy_customization_guide_v1.0.md
+│   ├── rhdh_mcp_lightspeed_deploy_guide_v1.0.md
+│   ├── configs/                      # Dynamic plugin & RBAC configs
+│   │   ├── app-config-lightspeed.yaml
+│   │   ├── app-config-mcp.yaml
+│   │   ├── dynamic-plugins-lightspeed.yaml
+│   │   ├── dynamic-plugins-mcp.yaml
+│   │   ├── configmaps/              # LCS & Llama Stack configs
+│   │   ├── helm/                    # Helm value variants
+│   │   └── rbac/                    # RBAC policies
+│   ├── deploy/                       # RHDH deployment configs
+│   │   ├── app-config-rhdh.yaml     # Main RHDH app config (branding, auth)
+│   │   ├── configmaps.yaml          # K8s ConfigMaps (homepage, RBAC)
+│   │   ├── dynamic-plugins.yaml     # Dynamic plugin configuration
+│   │   ├── helm-values.yaml         # Helm values for RHDH
+│   │   └── secrets.yaml             # Secrets template
+│   ├── foundry/                      # Python-based AI agents for RHDH
+│   │   ├── lightspeed-monitor-agent.py
+│   │   └── rhdh-agent.py
+│   └── homepage/                     # RHDH homepage customization
+│       ├── README.md
+│       ├── app-config.homepage.yaml
+│       ├── homepage-data.json
+│       ├── index.html
+│       └── login.html
 │
 ├── tests/                            # Test suites
 │   └── terraform/
+│       ├── README.md
+│       ├── go.mod
 │       └── modules/                  # 16 Go test files (Terratest)
 │
 ├── docs/                             # Documentation
-│   ├── research/agent-research.md    # Agent research
+│   ├── architecture/                 # Architecture docs
+│   │   ├── agents-overview.md
+│   │   └── copilot-agents-improvement-plan.md
+│   ├── assets/                       # 77 SVG/PNG diagram assets
+│   ├── guides/                       # 8 operational guides
+│   │   ├── ADMINISTRATOR_GUIDE.md
+│   │   ├── ARCHITECTURE_GUIDE.md
+│   │   ├── DEPLOYMENT_GUIDE.md
+│   │   ├── MODULE_REFERENCE.md
+│   │   ├── PERFORMANCE_TUNING_GUIDE.md
+│   │   ├── TROUBLESHOOTING_GUIDE.md
+│   │   ├── copilot-agents-best-practices.md
+│   │   └── copilot-agents-complete-guide.md
+│   ├── research/                     # Research documents
+│   │   └── agent-research.md
+│   ├── runbooks/                     # 6 operational runbooks
+│   │   ├── README.md
+│   │   ├── deployment-runbook.md
+│   │   ├── disaster-recovery.md
+│   │   ├── emergency-procedures.md
+│   │   ├── incident-response.md
+│   │   ├── node-replacement.md
+│   │   └── rollback-runbook.md
+│   ├── official-docs/                # Official vendor documentation
+│   │   ├── ansible/
+│   │   ├── backstage/
+│   │   └── rhdh/
+│   ├── BRANCHING_STRATEGY.md
 │   ├── GITHUB_COPILOT_AGENTS_BEST_PRACTICES.md
-│   └── official-docs/rhdh/           # Red Hat PDFs and HTML
+│   └── github_copilot_agents_best_practices_analysis.md
 │
-├── images-logos/                      # Brand assets
-├── platform/                          # Platform services docs
-├── AGENTS.md                          # Agent system overview
-├── README.md                          # Project README
-├── CONTRIBUTING.md                    # Contribution guide
-├── SECURITY.md                        # Security policy
-├── CHANGELOG.md                       # Version history
-├── CODEOWNERS                         # Code ownership
-└── LICENSE                            # MIT License
+├── images-logos/                     # Brand assets (15 files)
+│   ├── Three Horizon.png             # 3-partner composite logo (color)
+│   ├── Three Horizon-White.png       # 3-partner composite logo (white)
+│   └── *.png                         # Individual partner logos
+│
+├── platform/                         # Platform services documentation
+│   └── README.md
+│
+├── AGENTS.md                         # Agent system overview
+├── CLAUDE.md                         # Claude Code context file
+├── PROJECT_DOCUMENTATION.md          # This file
+├── README.md                         # Project README
+├── CONTRIBUTING.md                   # Contribution guide
+├── SECURITY.md                       # Security policy
+├── CHANGELOG.md                      # Version history
+├── CODEOWNERS                        # Code ownership
+├── LICENSE                           # MIT License
+├── .pre-commit-config.yaml           # 14 pre-commit hooks
+├── .tflint.hcl                       # TFLint rules (Azure-specific)
+├── .yamllint.yml                     # YAML lint rules
+├── .markdownlint.json                # Markdown lint rules
+├── .secrets.baseline                 # detect-secrets baseline
+└── .terraform-docs.yml              # Auto-generated Terraform docs
 ```
 
 ---
 
-## 8. Módulos Terraform (Infrastructure as Code)
+## 8. Terraform Modules (Infrastructure as Code)
 
-### 8.1 Visão Geral dos Módulos
+### 8.1 Module Overview
 
-Todos os módulos utilizam AzureRM provider >= 3.75.0 e Terraform >= 1.5.0.
+All modules use AzureRM provider >= 3.75.0 and Terraform >= 1.5.0. Each module follows a consistent structure: `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`, `README.md`.
 
-| # | Módulo | Descrição | Recursos Criados |
-|---|--------|-----------|------------------|
-| 1 | **naming** | Convenção de nomenclatura | Nomes padronizados para todos os recursos |
-| 2 | **networking** | Rede virtual | VNet, Subnets (AKS, DB, PE, Services), NSGs, Route Tables |
-| 3 | **aks-cluster** | Cluster Kubernetes | AKS com system + user node pools, Managed Identity, RBAC |
-| 4 | **container-registry** | Registry de imagens | ACR Premium, geo-replicação, integração AKS |
-| 5 | **databases** | Bancos de dados | PostgreSQL Flexible Server, Redis Cache, diagnósticos |
-| 6 | **security** | Segurança core | Key Vault, Managed Identity, role assignments |
-| 7 | **argocd** | GitOps | ArgoCD via Helm, namespace, RBAC, ingress |
-| 8 | **observability** | Monitoramento | Prometheus, Grafana, Alertmanager, Log Analytics |
-| 9 | **external-secrets** | Secret sync | External Secrets Operator, ClusterSecretStore, Workload Identity |
-| 10 | **github-runners** | CI runners | Self-hosted GitHub Actions runners no AKS |
-| 11 | **ai-foundry** | Inteligência artificial | Cognitive Account, AI Search, model deployments |
-| 12 | **purview** | Governança de dados | Microsoft Purview Account, scan rules |
-| 13 | **defender** | Segurança avançada | Defender for Containers, Cloud, Key Vault |
-| 14 | **cost-management** | Custos | Budgets, alertas, tags obrigatórias |
-| 15 | **disaster-recovery** | DR | Backup Vault, políticas, geo-replicação |
+| # | Module | Description | Resources Created |
+|---|--------|-------------|-------------------|
+| 1 | **naming** | Resource naming convention | Standardized names: `{customer}-{env}-{resource}` |
+| 2 | **networking** | Virtual networking | VNet, Subnets (AKS nodes, pods, PE, bastion, AppGW), NSGs, Private DNS Zones, Route Tables |
+| 3 | **aks-cluster** | Kubernetes cluster | AKS with system + user node pools, Workload Identity, Azure Policy, Defender |
+| 4 | **container-registry** | Image registry | ACR with geo-replication, AKS AcrPull role integration |
+| 5 | **databases** | Databases | PostgreSQL Flexible Server v16 + Redis Cache with private endpoints |
+| 6 | **security** | Core security | Key Vault (RBAC, soft delete), Managed Identities, Workload Identity Federation |
+| 7 | **argocd** | GitOps | ArgoCD via Helm with HA, SSO, RBAC, ingress |
+| 8 | **observability** | Monitoring | Log Analytics, Container Insights, Azure Managed Grafana, action groups |
+| 9 | **external-secrets** | Secret sync | External Secrets Operator via Helm + ClusterSecretStore linked to Key Vault |
+| 10 | **github-runners** | CI runners | ARC (Actions Runner Controller) self-hosted runners on AKS |
+| 11 | **ai-foundry** | Artificial intelligence | Cognitive Account (OpenAI), AI Search, Content Safety, model deployments |
+| 12 | **purview** | Data governance | Microsoft Purview Account with private endpoints |
+| 13 | **defender** | Advanced security | Defender for Containers, Servers, Storage, Key Vault |
+| 14 | **cost-management** | Cost management | Budgets with alerts at 50/75/90/100% |
+| 15 | **disaster-recovery** | DR | Backup Vault, geo-replication, cross-region DR |
 
-### 8.2 Variáveis Globais (terraform/variables.tf)
+### 8.2 Deployment Modes
 
-Variáveis-chave que controlam todo o deployment:
+The root `main.tf` uses a `deployment_mode` variable with three presets:
 
-- `project_name` — Nome do projeto (usado no naming convention)
-- `environment` — Ambiente (dev, staging, prod)
-- `location` — Região Azure primária
-- `tags` — Tags obrigatórias (environment, project, owner, cost-center)
-- `aks_config` — Configuração do cluster (versão K8s, node count, VM size)
-- `networking_config` — CIDRs da VNet e subnets
-- `database_config` — SKU e versão do PostgreSQL/Redis
-- `enable_*` — Feature flags para cada módulo (enable_defender, enable_purview, etc.)
+| Mode | AKS Nodes | VM Size | HA | Monitoring | AI |
+|------|-----------|---------|----|-----------|----|
+| **express** | 3 | Standard_D4s_v5 | No | Yes | No |
+| **standard** | 5 | Standard_D4s_v5 | Yes | Yes | Yes |
+| **enterprise** | 10 | Standard_D8s_v5 | Yes | Yes | Yes |
 
-### 8.3 Outputs Globais (terraform/outputs.tf)
+### 8.3 Required Variables (terraform/variables.tf)
 
-Os outputs incluem:
+```hcl
+customer_name          # 3-20 lowercase alphanumeric, e.g. "contoso"
+environment            # "dev" | "staging" | "prod"
+azure_subscription_id  # Azure subscription
+azure_tenant_id        # Azure AD tenant
+admin_group_id         # Azure AD admin group
+github_org             # GitHub organization
+github_token           # GitHub PAT (sensitive)
+```
 
-- IDs e endpoints de todos os recursos criados
-- Credenciais de acesso (via Key Vault references)
-- Comandos `kubectl` para conexão ao cluster
-- URLs de acesso para RHDH, ArgoCD, Grafana
-- Connection strings para databases
+### 8.4 Feature Flags
 
----
+```hcl
+enable_databases           = true    # PostgreSQL + Redis
+enable_container_registry  = true    # ACR
+enable_argocd              = true    # GitOps
+enable_external_secrets    = true    # ESO
+enable_observability       = true    # Prometheus/Grafana
+enable_github_runners      = false   # Self-hosted runners
+enable_ai_foundry          = false   # Azure AI (H3)
+enable_defender            = false   # Microsoft Defender
+enable_purview             = false   # Data governance
+enable_cost_management     = false   # Budget alerts
+enable_disaster_recovery   = false   # DR config
+```
 
-## 9. Golden Paths (Templates RHDH)
+### 8.5 Module Dependency Order
 
-Golden Paths são templates padronizados registrados no Red Hat Developer Hub que guiam desenvolvedores pelo "caminho feliz" de criação de serviços.
+```
+networking → security → aks-cluster → databases
+                                    → container-registry
+                                    → ai-foundry
+                                    → observability → argocd
+                                                   → external-secrets
+                                                   → github-runners
+```
 
-### 9.1 Templates Disponíveis (H2 Enhancement)
+### 8.6 Global Outputs (terraform/outputs.tf)
 
-#### Microservice Completo
-- **Escopo**: API REST + Database + Event Producer/Consumer + Observabilidade + CI/CD
-- **Inclui**: Dockerfile, Helm chart, GitHub Actions, Prometheus metrics, health checks
-- **Linguagens**: Configurável (Node.js, Python, Java, Go)
+Outputs include:
 
-#### API Microservice
-- **Escopo**: RESTful API com OpenAPI spec, validação, error handling, observabilidade
-- **Inclui**: OpenAPI 3.0 spec, request validation, structured error responses, rate limiting
-
-#### Event-Driven Microservice
-- **Escopo**: Microservice baseado em eventos com Event Hubs/Service Bus
-- **Inclui**: Dead letter queues, retry policies, event schema validation, idempotency
-
-#### Data Pipeline
-- **Escopo**: ETL pipeline com Databricks
-- **Inclui**: Data quality checks, schema validation, monitoring, alerting
-
-#### Batch Job
-- **Escopo**: Kubernetes CronJob com monitoramento
-- **Inclui**: Job scheduling, failure handling, resource limits, alerting
-
-#### API Gateway
-- **Escopo**: API Management com OpenAPI
-- **Inclui**: Rate limiting, authentication (JWT/OAuth), routing, request transformation
-
-#### GitOps Deployment
-- **Escopo**: ArgoCD application manifests
-- **Inclui**: Sync policies, health checks, rollback configuration, notifications
-
-#### ADO to GitHub Migration
-- **Escopo**: Migração em 6 fases do Azure DevOps para GitHub
-- **Fases**: Config → Repos → Pipelines → Boards → Artifacts → Validation
-
-#### Reusable Workflows
-- **Escopo**: Library de GitHub Actions workflows reutilizáveis
-- **Inclui**: CI, CD, security scanning, linting, testing workflows
+- IDs and endpoints for all created resources
+- Access credentials (via Key Vault references)
+- `kubectl` commands for cluster connection
+- Access URLs for RHDH, ArgoCD, Grafana
+- Connection strings for databases
 
 ---
 
-## 10. Sistema de Agentes AI
+## 9. Golden Paths (RHDH Templates)
 
-### 10.1 Agentes GitHub Copilot
+Golden Paths are standardized templates registered in Red Hat Developer Hub that guide developers along the "happy path" of service creation.
 
-O projeto define 17 agentes especializados no formato `.agent.md` (padrão agents.md open standard):
+### 9.1 H1 Foundation Templates (6)
 
-| Agente | Escopo | Tools |
-|--------|--------|-------|
+| Template | Description |
+|----------|-------------|
+| **basic-cicd** | Basic CI/CD pipeline with GitHub Actions |
+| **security-baseline** | Security baseline configuration |
+| **documentation-site** | Documentation site with TechDocs |
+| **web-application** | Web application scaffold |
+| **new-microservice** | New microservice scaffold |
+| **infrastructure-provisioning** | IaC provisioning template |
+
+### 9.2 H2 Enhancement Templates (9)
+
+| Template | Description |
+|----------|-------------|
+| **microservice** | Full microservice (API + DB + Events + Observability + CI/CD) |
+| **api-microservice** | RESTful API with OpenAPI spec, validation, error handling |
+| **event-driven-microservice** | Event-based with Event Hubs/Service Bus, dead letter, retry |
+| **data-pipeline** | ETL pipeline with data quality checks and schema validation |
+| **batch-job** | Kubernetes CronJob with monitoring and failure handling |
+| **api-gateway** | API Management with rate limiting, JWT/OAuth auth |
+| **gitops-deployment** | ArgoCD application manifests with sync policies |
+| **ado-to-github-migration** | 6-phase migration (Config → Repos → Pipelines → Boards → Artifacts → Validation) |
+| **reusable-workflows** | GitHub Actions reusable workflow library |
+
+### 9.3 H3 Innovation Templates (7)
+
+| Template | Description |
+|----------|-------------|
+| **foundry-agent** | AI Foundry agent with Azure OpenAI |
+| **sre-agent-integration** | SRE agent with observability integration |
+| **mlops-pipeline** | MLOps pipeline for model training and deployment |
+| **multi-agent-system** | Multi-agent orchestration system |
+| **copilot-extension** | GitHub Copilot extension |
+| **rag-application** | RAG (Retrieval Augmented Generation) application |
+| **ai-evaluation-pipeline** | AI model evaluation pipeline |
+
+---
+
+## 10. AI Agent System
+
+### 10.1 GitHub Copilot Agents
+
+The project defines 17 specialized agents in `.github/agents/` following the `.agent.md` open standard format:
+
+| Agent | Scope | Tools |
+|-------|-------|-------|
+| **@architect** | System design, AI Foundry, multi-agent design | — |
 | **@platform** | IDP, Golden Paths, Catalog, Onboarding | kubernetes, helm, github |
-| **@devops** | CI/CD, K8s, GitOps, Pipelines | kubernetes, helm, github, argocd |
+| **@devops** | CI/CD, K8s, GitOps, MLOps, Pipelines | kubernetes, helm, github, argocd |
 | **@sre** | Observability, SLOs, Incident Response | prometheus, grafana, kubernetes |
-| **@architect** | System design, architecture decisions | - |
-| **@reviewer** | Code review, security analysis | github |
 | **@terraform** | Infrastructure as Code | terraform, azure |
 | **@security** | Compliance, vulnerability scanning | defender, gitleaks, trivy |
+| **@reviewer** | Code review, security analysis | github |
 | **@deploy** | Deployment orchestration | argocd, kubernetes, helm |
-| **@test** | Testing and QA automation | - |
-| **@docs** | Documentation generation | - |
-| **@github-integration** | GitHub operations | github |
-| **@ado-integration** | Azure DevOps integration | azure |
-| **@azure-portal-deploy** | Azure portal deployment | azure |
-| **@template-engineer** | Golden Path template creation | kubernetes, helm |
+| **@test** | Testing and QA automation | — |
+| **@docs** | Documentation generation | — |
 | **@onboarding** | Team onboarding workflows | kubernetes, github |
-| **@hybrid-scenarios** | Multi-step complex scenarios | all |
+| **@template-engineer** | Golden Path template creation | kubernetes, helm |
+| **@context-architect** | Multi-file change planning, dependency tracing | all |
+| **@github-integration** | GitHub App, org discovery, GHAS, Actions, Packages | github |
+| **@ado-integration** | Azure DevOps PAT, repos, pipelines, boards | azure |
+| **@hybrid-scenarios** | GitHub + ADO coexistence (scenarios A/B/C) | all |
+| **@azure-portal-deploy** | Azure portal AKS, Key Vault, PostgreSQL, ACR | azure |
 
-### 10.2 Estrutura de um Agente (.agent.md)
+### 10.2 Agent Spec Structure (.agent.md)
 
-Cada agente segue um formato padronizado com:
+Each agent follows a standardized format with YAML frontmatter:
 
 ```yaml
 ---
@@ -734,76 +927,80 @@ handoffs: [other-agent-1, other-agent-2]
 ---
 ```
 
-Seguido de seções:
-- **Purpose** — O que o agente faz
-- **Commands** — Comandos disponíveis
+Followed by sections:
+- **Purpose** — What the agent does
+- **Commands** — Available commands
 - **Boundaries** — Always do / Ask first / Never do
-- **Task Decomposition** — Como quebrar tarefas complexas
-- **Handoffs** — Quando e para quem delegar
+- **Task Decomposition** — How to break down complex tasks
+- **Handoffs** — When and to whom to delegate
 
-### 10.3 Fluxos de Handoff
+### 10.3 Handoff Flows
 
-1. **Deployment Flow**: @deploy → @security (scan) → @sre (monitoring) → @deploy (execute)
-2. **Security Flow**: @security → @terraform (fix infra) → @reviewer (validate)
-3. **Template Flow**: @template-engineer → @platform (register) → @docs (document)
-4. **Multi-file Change**: @architect (plan) → @terraform + @devops (implement) → @reviewer (validate)
-5. **Hybrid Integration**: @github-integration + @ado-integration → @deploy
+```
+Deployment:   @onboarding → @architect → @terraform → @deploy → @sre
+Security:     @reviewer → @security → @devops (remediate) → @test
+Templates:    @platform → @template-engineer → @devops → @security
+Multi-file:   Any agent → @context-architect → @test → @docs
+Hybrid:       @github-integration + @ado-integration → @hybrid-scenarios → @deploy
+```
 
-### 10.4 Skills Reutilizáveis
+### 10.4 Reusable Skills
 
-15 skills em `.github/skills/`:
+15 skills in `.github/skills/`:
 
-| Skill | Descrição |
-|-------|-----------|
-| azure-infrastructure | Bootstrap de infraestrutura Azure |
-| azure-cli | Operações Azure CLI |
-| terraform-cli | Operações Terraform (init, plan, apply) |
-| kubernetes | Operações kubectl |
-| helm-cli | Operações Helm |
-| github-cli | Operações GitHub |
-| argocd-cli | Operações ArgoCD |
-| prerequisites | Validação de pré-requisitos |
-| observability-stack | Setup de monitoramento |
-| ai-foundry-operations | Gestão de AI Foundry |
-| mcp-cli | Configuração MCP |
-| deploy-orchestration | Coordenação de deploy |
-| database-management | Gestão de databases |
-| codespaces-golden-paths | GitHub Codespaces setup |
-| validation-scripts | Scripts de validação |
+| Skill | Description |
+|-------|-------------|
+| **ai-foundry-operations** | Azure AI Foundry and OpenAI operations |
+| **argocd-cli** | ArgoCD CLI for GitOps workflows |
+| **azure-cli** | Azure CLI resource management |
+| **azure-infrastructure** | Azure infrastructure patterns |
+| **codespaces-golden-paths** | GitHub Codespaces devcontainer configs |
+| **database-management** | Database operations and health monitoring |
+| **deploy-orchestration** | End-to-end platform deployment |
+| **github-cli** | GitHub CLI for repos and workflows |
+| **helm-cli** | Helm CLI for Kubernetes packages |
+| **kubectl-cli** | Kubernetes CLI for AKS |
+| **mcp-cli** | MCP server reference |
+| **observability-stack** | Prometheus, Grafana, observability |
+| **prerequisites** | CLI tool validation and setup |
+| **terraform-cli** | Terraform CLI for Azure infra |
+| **validation-scripts** | Validation scripts for deployments |
 
 ### 10.5 Chat Modes
 
-3 personas especializadas para GitHub Copilot Chat:
+3 specialized personas for GitHub Copilot Chat:
 
-- **Architect** — Foco em design de sistemas, trade-offs, ADRs
-- **Reviewer** — Foco em code review, segurança, best practices
-- **SRE** — Foco em observabilidade, SLOs, incident response
+| Mode | Focus |
+|------|-------|
+| **Architect** | System design, trade-offs, ADRs |
+| **Reviewer** | Code review, security, best practices |
+| **SRE** | Observability, SLOs, incident response |
 
 ### 10.6 Reusable Prompts
 
-7 prompts padronizados em `.github/prompts/`:
+7 standardized prompts in `.github/prompts/`:
 
-| Prompt | Uso |
-|--------|-----|
-| review-code | Code review com foco em segurança |
-| generate-tests | Geração de testes |
-| create-service | Scaffolding de serviço |
-| generate-docs | Geração de documentação |
-| deploy-platform | Deploy da plataforma |
-| troubleshoot-incident | Resposta a incidentes |
-| deploy-service | Deploy de serviço |
+| Prompt | Usage |
+|--------|-------|
+| **deploy-platform** | Deploy the Three Horizons platform |
+| **create-service** | Scaffold a new microservice |
+| **deploy-service** | Deploy a service to AKS |
+| **generate-docs** | Generate documentation |
+| **generate-tests** | Generate test suites |
+| **review-code** | Perform code review |
+| **troubleshoot-incident** | Troubleshoot incidents |
 
 ---
 
 ## 11. MCP Servers (Model Context Protocol)
 
-### 11.1 Servidores Configurados
+### 11.1 Configured Servers
 
-13 MCP servers que dão aos agentes AI acesso controlado a ferramentas:
+13 MCP servers giving AI agents controlled access to tools. Defined in `mcp-servers/mcp-config.json`:
 
-| Server | Comando | Capabilities |
+| Server | Command | Capabilities |
 |--------|---------|-------------|
-| **azure** | `az` | Azure CLI — recursos, RBAC, monitoring |
+| **azure** | `az` | Azure CLI — resources, RBAC, monitoring |
 | **github** | `gh` | GitHub CLI — repos, PRs, issues, actions |
 | **terraform** | `terraform` | Plan, apply, state, validate |
 | **kubernetes** | `kubectl` | Pods, services, deployments, logs |
@@ -813,281 +1010,288 @@ Seguido de seções:
 | **bash** | `bash` | Shell commands (with restrictions) |
 | **filesystem** | `fs` | Read, write, list files |
 | **defender** | `defender` | Security scanning, compliance |
+| **purview** | `purview` | Data governance operations |
+| **entra** | `entra` | Azure AD / Entra ID operations |
 | **copilot** | `copilot` | GitHub Copilot CLI |
 
-### 11.2 Matriz de Acesso
+### 11.2 Access Matrix
 
-Cada agente tem acesso específico a determinados MCP servers:
+Each agent has specific access to certain MCP servers:
 
-| Agente | azure | github | terraform | kubernetes | helm |
-|--------|-------|--------|-----------|------------|------|
+| Agent | azure | github | terraform | kubernetes | helm |
+|-------|-------|--------|-----------|------------|------|
 | @terraform | ✅ | ✅ | ✅ | ❌ | ❌ |
 | @devops | ✅ | ✅ | ❌ | ✅ | ✅ |
 | @sre | ✅ | ❌ | ❌ | ✅ | ❌ |
 | @security | ✅ | ✅ | ✅ | ✅ | ❌ |
 | @deploy | ✅ | ✅ | ❌ | ✅ | ✅ |
 
-### 11.3 Segurança dos MCP Servers
+### 11.3 MCP Server Security
 
-- **Read-only operations**: Permitidas sem confirmação
-- **Write operations**: Requerem confirmação do usuário
-- **Forbidden operations**: Nunca executadas (delete production resources, force push main)
-- **Authentication**: Via variáveis de ambiente (AZURE_SUBSCRIPTION_ID, GITHUB_TOKEN, etc.)
+- **Read-only operations**: Allowed without confirmation (`az resource list/show`, `kubectl get`, `helm list`)
+- **Write operations**: Require user confirmation (`terraform apply`, `kubectl apply`, `helm install`)
+- **Forbidden operations**: Never executed (`kubectl delete namespace production`, `terraform destroy -auto-approve`, `az keyvault secret show --query value`)
 
 ---
 
-## 12. GitOps com ArgoCD
+## 12. GitOps with ArgoCD
 
-### 12.1 Padrão App-of-Apps
+### 12.1 App-of-Apps Pattern
 
-O ArgoCD utiliza o padrão **App-of-Apps** com uma Root Application que gerencia todas as outras:
+ArgoCD uses the **App-of-Apps** pattern with a Root Application (`argocd/app-of-apps/root-application.yaml`) that manages all child apps.
 
-**Deployment Waves (ordem de instalação):**
+**Deployment Waves (installation order):**
 
-| Wave | Componente | Tipo |
+| Wave | Component | Type |
 |------|-----------|------|
 | 1 | cert-manager, external-dns | Infrastructure |
 | 2 | ingress-nginx | Networking |
 | 3 | prometheus, jaeger | Observability |
 | 4 | Red Hat Developer Hub | Platform |
-| 5+ | Team namespaces, Golden Paths, Cluster Issuers | Applications |
+| 5+ | Team namespaces, applications | Applications |
 
 ### 12.2 Sync Policies
 
-| Preset | Prune | Self-Heal | Auto-Sync | Uso |
-|--------|-------|-----------|-----------|-----|
-| dev-auto-sync | ✅ | ✅ | ✅ | Desenvolvimento |
-| staging-auto-sync | ✅ | ✅ | ✅ | Staging |
-| prod-manual-sync | ❌ | ❌ | ❌ | Produção |
-| infra-careful-sync | ❌ | ✅ | ✅ | Infra crítica |
-| preview-aggressive-sync | ✅ | ✅ | ✅ | Ambientes efêmeros |
+5 sync policy presets defined in `argocd/sync-policies.yaml`:
+
+| Preset | Prune | Self-Heal | Auto-Sync | Usage |
+|--------|-------|-----------|-----------|-------|
+| **dev-auto-sync** | ✅ | ✅ | ✅ | Development |
+| **staging-auto-sync** | ✅ | ✅ | ✅ | Staging |
+| **prod-manual-sync** | ❌ | ❌ | ❌ | Production (manual approval) |
+| **infra-careful-sync** | ❌ | ✅ | ✅ | Critical infrastructure |
+| **preview-aggressive-sync** | ✅ | ✅ | ✅ | Ephemeral/preview environments |
 
 ### 12.3 Repository Credentials
 
-Suporte a múltiplos tipos de repositório:
-- GitHub HTTPS com PAT
-- GitHub SSH com deploy keys
+Support for multiple repository types (`argocd/repo-credentials.yaml`):
+- GitHub HTTPS with PAT
+- GitHub SSH with deploy keys
 - Azure DevOps HTTPS
 - Helm repositories (Bitnami, Prometheus, Grafana, Jetstack)
-- ACR (Azure Container Registry) como Helm OCI
+- ACR (Azure Container Registry) as Helm OCI
 
 ---
 
-## 13. Observabilidade e Monitoramento
+## 13. Observability and Monitoring
 
-### 13.1 Stack de Observabilidade
+### 13.1 Observability Stack
 
-- **Prometheus** — Coleta de métricas com scrape configurado
-- **Grafana** — Dashboards com SSO via Azure AD
-- **Alertmanager** — Gestão e roteamento de alertas
+- **Prometheus** — Metrics collection with configured scrape
+- **Grafana** — Dashboards with SSO via Azure AD
+- **Alertmanager** — Alert management and routing
 - **Jaeger** — Distributed tracing
 - **Log Analytics** — Azure-native logging
 
-### 13.2 Alertas por Categoria
+### 13.2 Alerts by Category
 
-#### Infraestrutura (H1)
-- Node não pronto por > 5min (critical)
-- Pod reiniciando > 5x em 15min (warning)
-- PVC > 85% utilizado (warning)
-- CPU > 80% por > 15min (warning)
-- Memória > 85% por > 15min (warning)
+#### Infrastructure (H1)
+- Node not ready > 5min (critical)
+- Pod restarting > 5x in 15min (warning)
+- PVC > 85% used (warning)
+- CPU > 80% for > 15min (warning)
+- Memory > 85% for > 15min (warning)
 
-#### Plataforma (H2)
-- RHDH indisponível por > 5min (critical)
-- ArgoCD sync falhando por > 15min (critical)
-- Grafana indisponível por > 5min (warning)
+#### Platform (H2)
+- RHDH unavailable > 5min (critical)
+- ArgoCD sync failing > 15min (critical)
+- Grafana unavailable > 5min (warning)
 
 #### AI/Agents (H3)
-- AI Foundry latência > 5s (warning)
-- Agent failure rate > 10% em 15min (warning)
+- AI Foundry latency > 5s (warning)
+- Agent failure rate > 10% in 15min (warning)
 - Multi-agent orchestration timeout (warning)
 
 #### SRE/SLOs
-- SLO burn rate alto (1h window) (critical)
-- SLO burn rate moderado (6h window) (warning)
+- SLO burn rate high (1h window) (critical)
+- SLO burn rate moderate (6h window) (warning)
 - Availability SLA breach (critical)
 
-#### Segurança
-- Certificados expirando em < 30 dias (warning)
-- Failed login attempts > 10 em 5min (warning)
+#### Security
+- Certificates expiring in < 30 days (warning)
+- Failed login attempts > 10 in 5min (warning)
 - Pod security policy violations (warning)
 
 ### 13.3 Grafana Dashboards
 
-| Dashboard | Painéis |
-|-----------|---------|
+| Dashboard | Panels |
+|-----------|--------|
 | **Platform Overview** | Cluster health, node status, pod distribution, resource usage |
 | **Cost Management** | Budget utilization, cost trends, resource costs by tag |
 | **Golden Path Application** | App RED metrics, latency, error rates, deployment frequency |
 
 ### 13.4 ServiceMonitors
 
-Métricas coletadas de:
-- RHDH (porta 7007, path /metrics)
+Metrics collected from:
+- RHDH (port 7007, path /metrics)
 - ArgoCD (server, repo-server, controller)
-- ingress-nginx (porta 10254)
-- cert-manager (porta 9402)
-- external-secrets (porta 8080)
+- ingress-nginx (port 10254)
+- cert-manager (port 9402)
+- external-secrets (port 8080)
 
 ---
 
-## 14. Segurança e Compliance
+## 14. Security and Compliance
 
-### 14.1 Modelo de Segurança
+### 14.1 Security Model
 
 ```
-┌─────────────────────────────────────────────────┐
-│                  Perímetro                        │
-│  ┌─────────────────────────────────────────────┐ │
-│  │           Network Security                    │ │
-│  │  VNet + NSGs + Private Endpoints             │ │
-│  │  ┌────────────────────────────────────────┐  │ │
-│  │  │         Identity & Access               │  │ │
-│  │  │  Managed Identity + Workload Identity   │  │ │
-│  │  │  RBAC + Azure AD + Key Vault           │  │ │
-│  │  │  ┌──────────────────────────────────┐  │  │ │
-│  │  │  │       Runtime Security           │  │  │ │
-│  │  │  │  Gatekeeper + Defender           │  │  │ │
-│  │  │  │  Non-root + No-privilege         │  │  │ │
-│  │  │  │  Approved registries only        │  │  │ │
-│  │  │  └──────────────────────────────────┘  │  │ │
-│  │  └────────────────────────────────────────┘  │ │
-│  └─────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│                   Perimeter                       │
+│  ┌─────────────────────────────────────────────┐  │
+│  │           Network Security                   │  │
+│  │  VNet + NSGs + Private Endpoints            │  │
+│  │  ┌────────────────────────────────────────┐ │  │
+│  │  │         Identity & Access              │ │  │
+│  │  │  Managed Identity + Workload Identity  │ │  │
+│  │  │  RBAC + Azure AD + Key Vault          │ │  │
+│  │  │  ┌──────────────────────────────────┐ │ │  │
+│  │  │  │       Runtime Security          │ │ │  │
+│  │  │  │  Gatekeeper + Defender          │ │ │  │
+│  │  │  │  Non-root + No-privilege        │ │ │  │
+│  │  │  │  Approved registries only       │ │ │  │
+│  │  │  └──────────────────────────────────┘ │ │  │
+│  │  └────────────────────────────────────────┘ │  │
+│  └─────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────┘
 ```
 
-### 14.2 Padrões de Segurança
+### 14.2 Security Standards
 
-| Área | Implementação |
-|------|---------------|
-| **Authentication** | Managed Identity, Workload Identity, OIDC Federation, Azure AD SSO |
+| Area | Implementation |
+|------|----------------|
+| **Authentication** | Managed Identity, Workload Identity, OIDC Federation, Azure AD SSO, GitHub OAuth |
 | **Network** | Private Endpoints, NSGs, VNet isolation, no public access |
 | **Data Protection** | TLS 1.2+, AES-256 encryption at rest, Key Vault for secrets |
 | **Container** | Non-root, no privilege escalation, read-only rootfs, approved registries |
 | **CI/CD** | Branch protection, signed commits, secret scanning, SAST |
 
-### 14.3 Ferramentas de Segurança Integradas
+### 14.3 Integrated Security Tooling
 
-- **Gitleaks** — Secret scanning em commits
-- **detect-secrets** — Baseline de secrets no repositório
-- **Trivy** — Vulnerability scanning de containers
-- **tfsec** — Security analysis de Terraform
-- **OPA/Gatekeeper** — Policy enforcement runtime
+- **Gitleaks** — Secret scanning in commits
+- **detect-secrets** — Repository secrets baseline (13+ detectors)
+- **Trivy** — Container vulnerability scanning
+- **tfsec** — Terraform security analysis
+- **OPA/Gatekeeper** — Runtime policy enforcement
 - **Microsoft Defender** — Cloud security posture management
-- **Conftest** — Policy testing para Terraform plans
+- **Conftest** — Policy testing for Terraform plans
 
-### 14.4 Compliance Suportado
+### 14.4 Compliance Support
 
-- **LGPD** — Dados no brazilsouth, consent management
+- **LGPD** — Primary region brazilsouth, consent management
 - **SOC 2** — Audit trails, access controls, monitoring
 - **PCI-DSS** — Network segmentation, encryption, access management
-- **CIS Benchmarks** — Kubernetes e Azure hardening
+- **CIS Benchmarks** — Kubernetes and Azure hardening
 
-### 14.5 Versões Suportadas
+### 14.5 Supported Versions
 
-| Versão | Suporte |
-|--------|---------|
-| 4.x | ✅ Suporte ativo com security patches |
-| 3.x | ❌ Sem suporte |
-| < 3.0 | ❌ Sem suporte |
+| Version | Support |
+|---------|---------|
+| 4.x | ✅ Active support with security patches |
+| 3.x | ❌ No support |
+| < 3.0 | ❌ No support |
 
 ---
 
-## 15. Políticas (OPA/Gatekeeper)
+## 15. Policies (OPA/Gatekeeper)
 
-### 15.1 Políticas Terraform (Rego)
+### 15.1 Terraform Policies (Rego)
 
-Políticas OPA executadas via Conftest no pipeline CI:
+OPA policies executed via Conftest in the CI pipeline (`policies/terraform/azure.rego`):
 
-| Política | Severidade | Descrição |
-|----------|-----------|-----------|
-| Required Tags | Error | environment, project, owner, cost-center obrigatórios |
-| TLS Enforcement | Error | Storage accounts e PostgreSQL devem usar TLS 1.2 |
-| Encryption | Error | Storage e Key Vault devem ter encryption habilitado |
-| No Public Access | Error | Storage, Key Vault, AKS sem acesso público |
+| Policy | Severity | Description |
+|--------|----------|-------------|
+| Required Tags | Error | environment, project, owner, cost-center mandatory |
+| TLS Enforcement | Error | Storage accounts and PostgreSQL must use TLS 1.2 |
+| Encryption | Error | Storage and Key Vault must have encryption enabled |
+| No Public Access | Error | Storage, Key Vault, AKS without public access |
 | HTTPS Only | Error | Storage accounts HTTPS-only |
-| Private Endpoints | Warning | Serviços PaaS devem ter private endpoints |
-| AKS RBAC | Error | AKS deve ter RBAC, Managed Identity, Azure Policy, Defender |
-| Geo-redundant Backups | Error | PostgreSQL deve ter backup geo-redundante |
-| Expensive VMs | Warning | Alerta sobre uso de Standard_E/Standard_M series |
+| Private Endpoints | Warning | PaaS services should have private endpoints |
+| AKS RBAC | Error | AKS must have RBAC, Managed Identity, Azure Policy, Defender |
+| Geo-redundant Backups | Error | PostgreSQL must have geo-redundant backups |
+| Expensive VMs | Warning | Alert on Standard_E/Standard_M series usage |
 
-### 15.2 Constraint Templates Kubernetes (Gatekeeper)
+### 15.2 Kubernetes Constraint Templates (Gatekeeper)
 
-| Template | Descrição |
-|----------|-----------|
-| **K8sRequiredLabels** | Labels obrigatórias com regex validation |
-| **K8sContainerResources** | CPU e memory requests/limits obrigatórios |
-| **K8sDenyPrivileged** | Bloqueia containers privilegiados |
-| **K8sRequireNonRoot** | Exige execução como non-root |
-| **K8sAllowedRegistries** | Restringe a registries aprovados |
-| **K8sDenyHostNamespace** | Bloqueia acesso ao host namespace |
+5 ConstraintTemplates in `policies/kubernetes/constraint-templates/`:
+
+| Template | Description |
+|----------|-------------|
+| **K8sRequiredLabels** | Mandatory labels with regex validation |
+| **K8sContainerResources** | CPU and memory requests/limits required |
+| **K8sDenyPrivileged** | Block privileged containers |
+| **K8sRequireNonRoot** | Enforce non-root execution |
+| **K8sAllowedRegistries** | Restrict to approved registries only |
 
 ---
 
-## 16. CI/CD e Automação
+## 16. CI/CD and Automation
 
 ### 16.1 GitHub Actions Workflows
 
-| Workflow | Trigger | Descrição |
-|----------|---------|-----------|
-| **ci-cd.yml** | push/PR to main | Pipeline completo (lint, test, build, deploy) |
+9 workflows in `.github/workflows/`:
+
+| Workflow | Trigger | Description |
+|----------|---------|-------------|
+| **ci-cd.yml** | push/PR to main | Full pipeline (lint, test, build, deploy) |
 | **ci.yml** | push/PR | Continuous Integration (lint, test, validate) |
 | **cd.yml** | merge to main | Continuous Deployment (deploy to staging/prod) |
 | **terraform-test.yml** | changes in terraform/ | Terratest execution |
-| **validate-agents.yml** | changes in agents/ | Validação de specs de agentes |
-| **release.yml** | tag creation | Release automation com CHANGELOG |
-| **agent-router.yml** | issue creation | Roteia issues para agentes corretos |
-| **issue-ops.yml** | issue events | Automação de issue operations |
-| **branch-protection.yml** | scheduled | Enforcement de branch rules |
+| **validate-agents.yml** | changes in agents/ | Agent spec validation |
+| **release.yml** | tag creation | Release automation with CHANGELOG |
+| **agent-router.yml** | issue creation | Route issues to correct agents |
+| **issue-ops.yml** | issue events | Issue operations automation |
+| **branch-protection.yml** | scheduled | Branch rules enforcement |
 
 ### 16.2 Pre-commit Hooks
 
-Hooks executados antes de cada commit:
+14 hooks defined in `.pre-commit-config.yaml`:
 
-| Hook | Escopo | Ação |
-|------|--------|------|
-| terraform fmt | .tf files | Formatação |
-| terraform validate | .tf files | Validação de sintaxe |
-| tflint | .tf files | Linting de Terraform |
+| Hook | Scope | Action |
+|------|-------|--------|
+| terraform fmt | .tf files | Formatting |
+| terraform validate | .tf files | Syntax validation |
+| tflint | .tf files | Terraform linting |
 | tfsec | .tf files | Security scanning |
-| shellcheck | .sh files | Linting de shell |
-| kubeconform | .yaml K8s files | Validação de manifests |
-| yamllint | .yaml files | Linting YAML |
-| markdownlint | .md files | Linting Markdown |
-| detect-secrets | all files | Detecção de secrets |
-| end-of-file-fixer | all files | Newline no final |
-| trailing-whitespace | all files | Espaços em branco |
-| check-yaml | .yaml files | Sintaxe YAML |
-| check-json | .json files | Sintaxe JSON |
+| shellcheck | .sh files | Shell linting |
+| kubeconform | .yaml K8s files | Manifest validation |
+| yamllint | .yaml files | YAML linting |
+| markdownlint | .md files | Markdown linting |
+| detect-secrets | all files | Secret detection |
+| end-of-file-fixer | all files | Final newline |
+| trailing-whitespace | all files | Whitespace cleanup |
+| check-yaml | .yaml files | YAML syntax |
+| check-json | .json files | JSON syntax |
+| gitleaks | all files | Secret scanning |
 
 ### 16.3 Branch Strategy
 
-- `main` — Branch protegida, requer PR com aprovação
-- `feature/*` — Features novas
+- `main` — Protected branch, requires PR with approval
+- `feature/*` — New features
 - `bugfix/*` — Bug fixes
-- `hotfix/*` — Hotfixes para produção
-- `release/*` — Preparação de releases
+- `hotfix/*` — Production hotfixes
+- `release/*` — Release preparation
 
 ### 16.4 Commit Convention
 
 ```
 <type>(<scope>): <description>
 
-Types: feat, fix, docs, style, refactor, perf, test, chore, ci
+Types: feat, fix, docs, refactor, test, chore, ci, infra
 Scopes: terraform, k8s, argocd, agents, golden-paths, scripts, docs
 ```
 
 ---
 
-## 17. Configurações
+## 17. Configuration
 
 ### 17.1 APM (Agent Package Manager) — config/apm.yml
 
-Manifesto central que define todas as dependências, instruções, prompts e agentes do projeto. Serve como "package.json" para a configuração de agentes, com targets de compilação para VSCode, Claude e Codex.
+Central manifest defining all dependencies, instructions, prompts, agents, and compilation targets (VSCode, Claude, Codex).
 
 ### 17.2 Sizing Profiles — config/sizing-profiles.yaml
 
-Perfis T-shirt para dimensionamento de infraestrutura:
+T-shirt sizing profiles for infrastructure dimensioning:
 
 | Profile | Devs | AKS Nodes | PostgreSQL | Redis | AI Foundry |
 |---------|------|-----------|------------|-------|------------|
@@ -1098,81 +1302,93 @@ Perfis T-shirt para dimensionamento de infraestrutura:
 
 ### 17.3 Region Availability — config/region-availability.yaml
 
-| Tier | Regiões | Serviços |
+| Tier | Regions | Services |
 |------|---------|----------|
-| **Tier 1** | brazilsouth, eastus2, southcentralus | Todos os serviços (AKS, AI, Purview, etc.) |
-| **Tier 2** | westus2 | Maioria dos serviços (sem Purview) |
+| **Tier 1** | brazilsouth, eastus2, southcentralus | All services (AKS, AI, Purview, etc.) |
+| **Tier 2** | westus2 | Most services (no Purview) |
 
 **Deployment Patterns:**
 - **LGPD Compliance**: Primary brazilsouth, DR eastus2
 - **Multi-LATAM**: Primary brazilsouth, Secondary southcentralus
 - **US-Based**: Primary eastus2, Secondary westus2
 
-### 17.4 Arquivos de Lint e Validação
+### 17.4 Lint and Validation Files
 
-| Arquivo | Propósito |
-|---------|-----------|
-| `.tflint.hcl` | Regras para Terraform linting (Azure-specific) |
-| `.yamllint.yml` | Regras YAML (200 chars max, allow comments) |
-| `.markdownlint.json` | Regras Markdown (proper names: Kubernetes, Azure, RHDH) |
-| `.terraform-docs.yml` | Auto-geração de docs Terraform |
-| `.secrets.baseline` | Baseline de detect-secrets com 13+ detectors |
-| `.pre-commit-config.yaml` | Definição de todos os pre-commit hooks |
+| File | Purpose |
+|------|---------|
+| `.tflint.hcl` | Terraform linting rules (Azure-specific) |
+| `.yamllint.yml` | YAML lint rules (200 chars max, allow comments) |
+| `.markdownlint.json` | Markdown lint rules (proper names: Kubernetes, Azure, RHDH) |
+| `.terraform-docs.yml` | Auto-generated Terraform module docs |
+| `.secrets.baseline` | detect-secrets baseline with 13+ detectors |
+| `.pre-commit-config.yaml` | All pre-commit hook definitions |
 
 ---
 
-## 18. Scripts Operacionais
+## 18. Operational Scripts
 
-### 18.1 Scripts de Deployment
+All scripts are in `scripts/` and follow strict mode (`set -euo pipefail`).
 
-| Script | Descrição |
+### 18.1 Deployment Scripts
+
+| Script | Description |
+|--------|-------------|
+| `deploy-full.sh` | Full end-to-end deployment (infra + platform + apps) |
+| `platform-bootstrap.sh` | Platform setup (RHDH, ArgoCD, monitoring) |
+| `bootstrap.sh` | H1 infrastructure setup (Terraform apply) |
+
+### 18.2 Validation Scripts
+
+| Script | Validates |
 |--------|-----------|
-| `deploy-full.sh` | Deploy completo end-to-end (infra + platform + apps) |
-| `platform-bootstrap.sh` | Bootstrap da plataforma (RHDH, ArgoCD, monitoring) |
-| `bootstrap.sh` | Setup da infraestrutura H1 (Terraform apply) |
+| `validate-prerequisites.sh` | Installed CLIs (az ≥ 2.50, terraform ≥ 1.5, kubectl ≥ 1.28, helm ≥ 3.12, gh ≥ 2.30) |
+| `validate-config.sh` | Configuration files (tfvars, sizing, regions) |
+| `validate-deployment.sh` | Post-deploy health (pods, services, endpoints) |
+| `validate-agents.sh` | Agent specs (YAML frontmatter, boundaries, handoffs) |
+| `validate-docs.sh` | Documentation (broken links, formatting, completeness) |
+| `validate-substitutions.sh` | Template substitution validation |
 
-### 18.2 Scripts de Validação
+### 18.3 Setup Scripts
 
-| Script | Valida |
-|--------|--------|
-| `validate-prerequisites.sh` | CLIs instaladas (az, terraform, kubectl, helm, gh, etc.) |
-| `validate-config.sh` | Arquivos de configuração (tfvars, sizing, regions) |
-| `validate-deployment.sh` | Saúde pós-deploy (pods, services, endpoints) |
-| `validate-agents.sh` | Specs dos agentes (YAML frontmatter, boundaries, handoffs) |
-| `validate-docs.sh` | Documentação (links quebrados, formatação, completeness) |
-
-### 18.3 Scripts de Setup
-
-| Script | Configura |
-|--------|-----------|
-| `setup-github-app.sh` | GitHub App para autenticação RHDH |
+| Script | Configures |
+|--------|------------|
+| `setup-github-app.sh` | GitHub App for RHDH/ArgoCD auth |
 | `setup-identity-federation.sh` | OIDC Workload Identity Federation |
-| `setup-pre-commit.sh` | Instala e configura pre-commit hooks |
-| `setup-branch-protection.sh` | Rules de branch no GitHub |
-| `setup-terraform-backend.sh` | Backend remoto (Azure Storage Account) |
+| `setup-pre-commit.sh` | Install and configure pre-commit hooks |
+| `setup-branch-protection.sh` | GitHub branch protection rules |
+| `setup-terraform-backend.sh` | Azure Storage Account for remote state |
+| `setup-portal.sh` | RHDH portal setup and configuration |
 
-### 18.4 Scripts Operacionais
+### 18.4 Python Automation Scripts
 
-| Script | Descrição |
-|--------|-----------|
-| `onboard-team.sh` | Cria namespace, RBAC, service account, quotas, network policies |
-| `migration/ado-to-github-migration.sh` | Migração ADO → GitHub em 6 fases |
+| Script | Description |
+|--------|-------------|
+| `add-techdocs.py` | Add TechDocs annotations to catalog entities |
+| `fix-ownerpicker.py` | Fix OwnerPicker in Golden Path templates |
+| `generate-skeletons.py` | Generate template skeletons from specifications |
+| `update-templates.py` | Update Golden Path template versions |
+
+### 18.5 Migration Scripts
+
+| Script | Description |
+|--------|-------------|
+| `migration/ado-to-github-migration.sh` | ADO → GitHub migration in 6 phases |
 
 ---
 
-## 19. Testes
+## 19. Tests
 
-### 19.1 Framework de Testes
+### 19.1 Test Framework
 
-O projeto utiliza **Terratest** (Go) para testes de infraestrutura. Cada módulo Terraform tem seu próprio arquivo de teste.
+The project uses **Terratest** (Go) for infrastructure tests. Each Terraform module has its own test file in `tests/terraform/modules/`.
 
-### 19.2 Arquivos de Teste
+### 19.2 Test Files
 
-| Teste | Módulo | Validações |
-|-------|--------|------------|
-| `aks_cluster_test.go` | AKS | Versão K8s, node pools, RBAC, identity |
+| Test | Module | Validations |
+|------|--------|-------------|
+| `aks_cluster_test.go` | AKS | K8s version, node pools, RBAC, identity |
 | `networking_test.go` | Networking | VNet CIDR, subnets, NSGs |
-| `container_registry_test.go` | ACR | SKU, geo-replicação, admin disabled |
+| `container_registry_test.go` | ACR | SKU, geo-replication, admin disabled |
 | `databases_test.go` | Databases | PostgreSQL version, SSL, Redis config |
 | `security_test.go` | Security | Key Vault, purge protection, RBAC |
 | `argocd_test.go` | ArgoCD | Namespace, Helm values, ingress |
@@ -1187,35 +1403,35 @@ O projeto utiliza **Terratest** (Go) para testes de infraestrutura. Cada módulo
 | `naming_test.go` | Naming | Convention compliance |
 | `integration_test.go` | All | End-to-end cross-module tests |
 
-### 19.3 Padrão de Testes
+### 19.3 Test Pattern
 
-Cada teste segue o padrão:
+Each test follows:
 
-1. `t.Parallel()` — Execução paralela
-2. Define variáveis Terraform
-3. `terraform.Init()` — Inicializa módulo
-4. `terraform.Validate()` — Valida sintaxe
-5. `terraform.Plan()` — Gera plan
-6. Assertions no plan output (nomes, configurações, properties)
+1. `t.Parallel()` — Parallel execution
+2. Define Terraform variables
+3. `terraform.Init()` — Initialize module
+4. `terraform.Validate()` — Validate syntax
+5. `terraform.Plan()` — Generate plan
+6. Assertions on plan output (names, configurations, properties)
 
 ---
 
-## 20. Deployment Multi-Cloud
+## 20. Multi-Cloud Deployment
 
-### 20.1 Azure (Primário)
+### 20.1 Azure (Primary)
 
-Deployment completo com todos os 15 módulos Terraform:
+Full deployment with all 15 Terraform modules:
 - **Compute**: AKS, GitHub Runners
 - **Storage**: ACR, PostgreSQL, Redis, Backup Vault
 - **Security**: Key Vault, Managed Identity, Defender
-- **AI**: AI Foundry (GPT-4o, embeddings)
+- **AI**: AI Foundry (GPT-4o, GPT-4o-mini, text-embedding-3-large)
 - **Governance**: Purview, Cost Management
 - **Networking**: VNet, NSGs, Private Endpoints
 
-### 20.2 AWS (Secundário)
+### 20.2 AWS (Secondary)
 
-| Azure | AWS Equivalente |
-|-------|-----------------|
+| Azure | AWS Equivalent |
+|-------|----------------|
 | AKS | EKS |
 | ACR | ECR |
 | Key Vault | Secrets Manager |
@@ -1223,10 +1439,10 @@ Deployment completo com todos os 15 módulos Terraform:
 | PostgreSQL Flexible | RDS PostgreSQL |
 | Redis Cache | ElastiCache |
 
-### 20.3 GCP (Secundário)
+### 20.3 GCP (Secondary)
 
-| Azure | GCP Equivalente |
-|-------|-----------------|
+| Azure | GCP Equivalent |
+|-------|----------------|
 | AKS | GKE |
 | ACR | Artifact Registry |
 | Key Vault | Secret Manager |
@@ -1235,7 +1451,7 @@ Deployment completo com todos os 15 módulos Terraform:
 
 ### 20.4 On-Premise
 
-| Azure | On-Premise Equivalente |
+| Azure | On-Premise Equivalent |
 |-------|----------------------|
 | AKS | OpenShift / k3s |
 | ACR | Harbor |
@@ -1248,18 +1464,18 @@ Deployment completo com todos os 15 módulos Terraform:
 
 ### 21.1 RHDH vs Backstage
 
-| Aspecto | Backstage OSS | RHDH (Red Hat) |
-|---------|---------------|----------------|
+| Aspect | Backstage OSS | RHDH (Red Hat) |
+|--------|---------------|----------------|
 | Plugins | Code-based (npm build) | Dynamic Plugins (YAML-only) |
-| Deployment | Kustomize + custom image | Helm chart padrão |
-| RBAC | Básico (Owner model) | Built-in com CSV policies |
-| AI | Requer custom plugin | Developer Lightspeed nativo |
-| Support | Comunidade | Red Hat Enterprise Support |
-| Auth | Configuração manual | Pré-integrado com OAuth |
+| Deployment | Kustomize + custom image | Standard Helm chart |
+| RBAC | Basic (Owner model) | Built-in with CSV policies |
+| AI | Requires custom plugin | Native Developer Lightspeed |
+| Support | Community | Red Hat Enterprise Support |
+| Auth | Manual configuration | Pre-integrated with OAuth |
 
 ### 21.2 Dynamic Plugins
 
-No RHDH, plugins são habilitados via YAML sem rebuild:
+In RHDH, plugins are enabled via YAML without rebuild. Configuration in `new-features/deploy/dynamic-plugins.yaml`:
 
 ```yaml
 global:
@@ -1275,97 +1491,109 @@ global:
 
 ### 21.3 Developer Lightspeed
 
-AI chat integrado ao RHDH usando:
-- **LCS (Lightspeed Conversation Service)** — Backend de conversação
+AI chat integrated into RHDH using:
+- **LCS (Lightspeed Conversation Service)** — Conversation backend
 - **Llama Stack** — LLM inference
-- **RAG** — Retrieval Augmented Generation com docs do projeto
-- **BYOM** — Suporte a Azure OpenAI, Ollama, vLLM como modelos alternativos
+- **RAG** — Retrieval Augmented Generation with project docs
+- **BYOM** — Support for Azure OpenAI, Ollama, vLLM as alternative models
+
+Configuration files in `new-features/configs/`:
+- `app-config-lightspeed.yaml` — Lightspeed app config
+- `dynamic-plugins-lightspeed.yaml` — Lightspeed plugins
+- `configmaps/llama-stack-*.yaml` — Llama Stack variants (Azure OpenAI, Ollama, vLLM)
 
 ### 21.4 RBAC Policies
 
-| Role | Permissões |
-|------|-----------|
-| **Admin** | Tudo (catalog, scaffolder, AI, plugins) |
+| Role | Permissions |
+|------|------------|
+| **Admin** | Everything (catalog, scaffolder, AI, plugins) |
 | **Developer** | Catalog read/write, scaffolder execute, AI chat |
-| **Viewer** | Catalog read-only, documentação |
+| **Viewer** | Catalog read-only, documentation |
 
-### 21.5 Homepage Customizada
+Policy files: `new-features/configs/rbac/permission-policies-ai.csv`
 
-Homepage do RHDH com:
-- Quick actions (criar serviço, visualizar catalog)
-- Links importantes (ArgoCD, Grafana, docs)
-- Status widgets (deployments recentes, alertas)
-- Microsoft branding (4-color logo palette)
+### 21.5 Customized Homepage
+
+RHDH homepage customization in `new-features/homepage/`:
+- Quick actions (create service, view catalog)
+- Important links (ArgoCD, Grafana, docs)
+- Status widgets (recent deployments, alerts)
+- Three Horizons branding (Microsoft + GitHub + Red Hat)
 
 ---
 
-## 22. Métricas e KPIs do Projeto
+## 22. Metrics and KPIs
 
-### 22.1 Recording Rules (Métricas Pré-calculadas)
+### 22.1 Recording Rules (Pre-calculated Metrics)
 
-| Categoria | Métricas |
-|-----------|----------|
+| Category | Metrics |
+|----------|---------|
 | **Cluster** | CPU/memory/storage utilization ratios |
 | **Applications** | Request rate, error rate, latency (p50/p90/p99) |
-| **SLO** | Availability em janelas 5m, 1h, 24h, 30d |
+| **SLO** | Availability across 5m, 1h, 24h, 30d windows |
 | **GitOps** | ArgoCD app sync success rate, time to sync |
 | **AI Agents** | Invocation rate, LLM latency, token usage, error rate |
 | **Golden Paths** | Template creation rate, success rate, time to first deploy |
 | **Platform Health** | Aggregated health score |
 
-### 22.2 Deploy Times Estimados
+### 22.2 Estimated Deploy Times
 
-| Fase | Tempo |
-|------|-------|
-| H1 Foundation (Terraform) | ~45 minutos |
-| H2 Enhancement (ArgoCD + RHDH) | ~30 minutos |
-| H3 Innovation (AI + Agents) | ~15 minutos |
-| **Total** | **~90 minutos** |
+| Phase | Time |
+|-------|------|
+| H1 Foundation (Terraform) | ~45 minutes |
+| H2 Enhancement (ArgoCD + RHDH) | ~30 minutes |
+| H3 Innovation (AI + Agents) | ~15 minutes |
+| **Total** | **~90 minutes** |
 
 ---
 
-## 23. Histórico de Versões
+## 23. Version History
 
-### v4.0.0 (2025-12-15) — Current
+### v4.0.0 (2026-02-28) — Current
 
-Adições massivas:
-- 15 módulos Terraform completos
-- 17 agentes GitHub Copilot com handoffs
-- 22 Golden Path templates
+Major additions:
+- 15 complete Terraform modules
+- 17 GitHub Copilot agents with handoffs
+- 22 Golden Path templates (H1: 6, H2: 9, H3: 7)
 - 13 MCP servers
 - 3 Grafana dashboards
 - 50+ alert rules + 40+ recording rules
-- 6 Gatekeeper constraint templates
+- 5 Gatekeeper constraint templates
 - 16 Terratest suites
-- 23 issue templates
+- 27 issue templates
 - 9 GitHub Actions workflows
-- Scripts de deploy, validação, setup e onboarding
+- 77 SVG/PNG diagram assets
+- 8 operational guides + 6 runbooks
+- Python automation scripts
+- RHDH portal customization (homepage, branding, dynamic plugins)
+- Developer Lightspeed integration (Llama Stack + RAG + BYOM)
+- Deployment, validation, setup, and migration scripts
 
 ### v3.0.0 (2025-06-01)
 
-- Arquitetura Three Horizons inicial
-- 8 módulos Terraform
-- ArgoCD com App-of-Apps
-- 5 Golden Paths básicos
+- Initial Three Horizons architecture
+- 8 Terraform modules
+- ArgoCD with App-of-Apps
+- 5 basic Golden Paths
 - Prometheus + Grafana base
 
 ### v2.0.0 (2025-01-15)
 
-- Módulos Azure infrastructure
+- Azure infrastructure modules
 - AKS + Networking + ACR + Databases + Key Vault
-- CI pipeline básico
+- Basic CI pipeline
 
 ### v1.0.0 (2024-09-01)
 
-- Release inicial
-- Terraform base para AKS
-- Documentação inicial
+- Initial release
+- Base Terraform for AKS
+- Initial documentation
 
 ---
 
-## 24. Referências e Links
+## 24. References and Links
 
-### Documentação Oficial
+### Official Documentation
 
 - [Red Hat Developer Hub 1.8 Documentation](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.8)
 - [Backstage.io](https://backstage.io)
@@ -1376,26 +1604,26 @@ Adições massivas:
 - [OPA Gatekeeper](https://open-policy-agent.github.io/gatekeeper)
 - [Terratest](https://terratest.gruntwork.io)
 
-### Equipes Responsáveis (CODEOWNERS)
+### Responsible Teams (CODEOWNERS)
 
-| Área | Time |
+| Area | Team |
 |------|------|
 | Default | @platform-team |
 | Terraform | @platform-team @infra-team |
 | Kubernetes/Helm | @platform-team @devops-team |
-| Golden Paths | @platform-team + times por horizonte |
+| Golden Paths | @platform-team + per-horizon teams |
 | Security | @security-team |
 | AI Agents/MCP | @platform-team @ai-team |
 | Documentation | @platform-team @docs-team |
 
-### Contatos de Segurança
+### Security Contacts
 
 - **Email**: security@three-horizons.dev
-- **Vulnerabilidades**: Reportar via processo descrito em SECURITY.md
-- **Severidade**: Critical (< 24h), High (< 48h), Medium (< 1 semana), Low (próximo sprint)
+- **Vulnerabilities**: Report via process described in SECURITY.md
+- **Severity**: Critical (< 24h), High (< 48h), Medium (< 1 week), Low (next sprint)
 
 ---
 
-> **Documento gerado em**: 2026-02-28
-> **Fonte**: Análise completa do repositório `agentic-devops-platform/`
-> **Cobertura**: 900+ arquivos, 80.000+ linhas de código, 15 módulos Terraform, 17 agentes AI, 22 Golden Paths, 13 MCP servers
+> **Document generated on**: 2026-02-28
+> **Source**: Complete analysis of the `agentic-devops-platform/` repository
+> **Coverage**: 949+ files, 105,000+ lines of code, 15 Terraform modules, 17 AI agents, 22 Golden Paths, 13 MCP servers

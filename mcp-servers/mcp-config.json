@@ -99,6 +99,37 @@
       "description": "GitHub Copilot CLI operations",
       "env": {},
       "capabilities": ["gh copilot", "gh copilot explain", "gh copilot suggest"]
+    },
+    "backstage": {
+      "url": "http://devhub.135.18.141.224.nip.io/api/mcp-actions/v1",
+      "description": "RHDH/Backstage MCP Actions — software catalog queries, TechDocs retrieval, and scaffolder operations via Streamable HTTP",
+      "transport": "streamable-http",
+      "headers": {
+        "Authorization": "Bearer ${MCP_TOKEN}"
+      },
+      "env": {
+        "RHDH_URL": "http://devhub.135.18.141.224.nip.io",
+        "MCP_TOKEN": "${MCP_TOKEN}"
+      },
+      "capabilities": [
+        "catalog:query — search and filter entities by kind, type, owner, tags",
+        "catalog:get — retrieve entity details with full metadata",
+        "techdocs:list — list entities with TechDocs documentation",
+        "techdocs:get — retrieve TechDocs content for an entity"
+      ],
+      "plugins": {
+        "server": "@backstage/plugin-mcp-actions-backend",
+        "tools": [
+          "@red-hat-developer-hub/backstage-plugin-software-catalog-mcp-tool",
+          "@red-hat-developer-hub/backstage-plugin-software-catalog-mcp-extras-backend",
+          "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-tool"
+        ]
+      },
+      "references": [
+        "https://developers.redhat.com/articles/2025/11/10/mcp-red-hat-developer-hub-chat-your-catalog",
+        "https://github.com/backstage/backstage/tree/master/plugins/mcp-actions-backend",
+        "https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations"
+      ]
     }
   }
 }
