@@ -88,6 +88,6 @@ src/
 
 ## Links
 
-- [Three Horizons Documentation](https://github.com/${{values.repoUrl | parseRepoUrl | pick('owner') }}/three-horizons-accelerator)
+- [Three Horizons Documentation](https://github.com/${{values.repoUrl | parseRepoUrl | pick('owner') }}/agentic-devops-platform)
 - [ArgoCD Dashboard](https://argocd.example.com)
 - [Grafana Dashboard](https://grafana.example.com)

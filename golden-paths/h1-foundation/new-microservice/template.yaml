@@ -31,7 +31,7 @@ metadata:
     - title: Node.js Best Practices
       url: https://github.com/goldbergyoni/nodebestpractices
     - title: Three Horizons Guide
-      url: https://github.com/paulanunes85/three-horizons-accelerator
+      url: https://github.com/3horizons/agentic-devops-platform
 
 spec:
   owner: platform-engineering

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# paulasilvatech - Portal Setup Wizard
+# Three Horizons - Portal Setup Wizard
 # =============================================================================
 # Interactive wizard that collects all configuration needed to deploy
 # a developer portal (RHDH) on Azure or locally.
@@ -51,7 +51,7 @@ done
 banner() {
   echo -e "\n${PURPLE}${BOLD}"
   echo "  ============================================================"
-  echo "    paulasilvatech - Agentic DevOps Platform Setup Wizard"
+  echo "    Three Horizons - Agentic DevOps Platform Setup Wizard"
   echo "  ============================================================"
   echo -e "${NC}\n"
 }
@@ -192,7 +192,7 @@ step4_github() {
     warn "Private key file not found: $GITHUB_APP_PRIVATE_KEY_FILE"
   fi
 
-  ask TEMPLATE_REPO "Template repository" "${GITHUB_ORG:+$GITHUB_ORG/three-horizons-accelerator}"
+  ask TEMPLATE_REPO "Template repository" "${GITHUB_ORG:+$GITHUB_ORG/agentic-devops-platform}"
   ok "Template repo: $TEMPLATE_REPO"
 }
 

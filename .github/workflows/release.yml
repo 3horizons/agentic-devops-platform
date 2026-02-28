@@ -73,7 +73,7 @@ jobs:
       - name: Create Release Archive
         run: |
           VERSION="${{ needs.validate.outputs.version }}"
-          ARCHIVE_NAME="three-horizons-accelerator-${VERSION}"
+          ARCHIVE_NAME="agentic-devops-platform-${VERSION}"
 
           # Create distribution folder
           mkdir -p dist
@@ -201,11 +201,11 @@ jobs:
             ```bash
             # Clone the repository
             git clone https://github.com/${{ github.repository }}.git
-            cd three-horizons-accelerator-v4
+            cd agentic-devops-platform
 
             # Or download the release
-            wget https://github.com/${{ github.repository }}/releases/download/${{ needs.validate.outputs.version }}/three-horizons-accelerator-${{ needs.validate.outputs.version }}.tar.gz
-            tar -xzf three-horizons-accelerator-${{ needs.validate.outputs.version }}.tar.gz
+            wget https://github.com/${{ github.repository }}/releases/download/${{ needs.validate.outputs.version }}/agentic-devops-platform-${{ needs.validate.outputs.version }}.tar.gz
+            tar -xzf agentic-devops-platform-${{ needs.validate.outputs.version }}.tar.gz
             ```
 
             ## Documentation

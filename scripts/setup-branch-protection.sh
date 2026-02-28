@@ -10,7 +10,7 @@
 #   ./scripts/setup-branch-protection.sh [OWNER/REPO]
 #
 # Example:
-#   ./scripts/setup-branch-protection.sh myorg/three-horizons-accelerator
+#   ./scripts/setup-branch-protection.sh myorg/agentic-devops-platform
 #
 # =============================================================================
 

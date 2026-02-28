@@ -120,6 +120,6 @@ pytest tests/test_api.py -v
 
 ## Links
 
-- [Three Horizons Documentation](https://github.com/${{values.repoUrl | parseRepoUrl | pick('owner') }}/three-horizons-accelerator)
+- [Three Horizons Documentation](https://github.com/${{values.repoUrl | parseRepoUrl | pick('owner') }}/agentic-devops-platform)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [SQLAlchemy Documentation](https://docs.sqlalchemy.org/)

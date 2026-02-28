@@ -85,5 +85,5 @@ This application is deployed via ArgoCD. Changes to the `main` branch automatica
 
 ## Links
 
-- [Three Horizons Documentation](https://github.com/${{values.repoUrl | parseRepoUrl | pick('owner') }}/three-horizons-accelerator)
+- [Three Horizons Documentation](https://github.com/${{values.repoUrl | parseRepoUrl | pick('owner') }}/agentic-devops-platform)
 - [Component Library](https://design.example.com)

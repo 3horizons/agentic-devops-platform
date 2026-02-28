@@ -37,14 +37,14 @@ This project follows a standard code of conduct. Please be respectful and constr
 2. Clone your fork:
 
    ```bash
-   git clone https://github.com/YOUR-USERNAME/three-horizons-accelerator-v4.git
-   cd three-horizons-accelerator-v4
+   git clone https://github.com/YOUR-USERNAME/agentic-devops-platform.git
+   cd agentic-devops-platform
    ```
 
 3. Add upstream remote:
 
    ```bash
-   git remote add upstream https://github.com/ORIGINAL-OWNER/three-horizons-accelerator-v4.git
+   git remote add upstream https://github.com/ORIGINAL-OWNER/agentic-devops-platform.git
    ```
 
 ## Development Setup

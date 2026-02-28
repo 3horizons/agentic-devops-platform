@@ -138,6 +138,21 @@ catalog:
       target: https://github.com/3horizons/todo-app/blob/main/template.yaml
       rules:
         - allow: [Template]
+    # Golden Paths — H1 Foundation
+    - type: url
+      target: https://github.com/3horizons/agentic-devops-platform/blob/rhdevhub-demo/golden-paths/h1-foundation/new-microservice/template.yaml
+      rules:
+        - allow: [Template]
+    # Golden Paths — H2 Enhancement
+    - type: url
+      target: https://github.com/3horizons/agentic-devops-platform/blob/rhdevhub-demo/golden-paths/h2-enhancement/microservice/template.yaml
+      rules:
+        - allow: [Template]
+    # Golden Paths — H3 Innovation
+    - type: url
+      target: https://github.com/3horizons/agentic-devops-platform/blob/rhdevhub-demo/golden-paths/h3-innovation/foundry-agent/template.yaml
+      rules:
+        - allow: [Template]
 
 # ---------------------------------------------------------------------------
 # Dynamic Plugins — RHDH v1.4+

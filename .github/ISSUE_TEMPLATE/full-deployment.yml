@@ -171,8 +171,8 @@ body:
         
         ```bash
         # 1. Clone and setup
-        git clone https://github.com/myorg/three-horizons-accelerator.git
-        cd three-horizons-accelerator
+        git clone https://github.com/myorg/agentic-devops-platform.git
+        cd agentic-devops-platform
         
         # 2. Validate prerequisites
         ./scripts/validate-prerequisites.sh

@@ -1,7 +1,7 @@
 # APM Package Manifest
 # Agent Package Manager - https://github.com/danielmeppiel/apm
 
-name: three-horizons-accelerator
+name: agentic-devops-platform
 version: 1.0.0
 description: |
   Enterprise Platform Engineering accelerator with AI-native deployment agents.
@@ -10,7 +10,7 @@ description: |
 
 author: Microsoft LATAM Platform Engineering
 license: MIT
-repository: https://github.com/microsoft-latam/three-horizons-accelerator
+repository: https://github.com/3horizons/agentic-devops-platform
 
 # Keywords for discovery
 keywords:

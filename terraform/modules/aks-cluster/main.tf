@@ -30,7 +30,7 @@ locals {
 
   default_tags = merge(var.tags, {
     Component = "AKS"
-    Module    = "three-horizons-accelerator"
+    Module    = "agentic-devops-platform"
   })
 }
 

@@ -170,8 +170,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/paulanunes85/three-horizons-accelerator-v4/compare/v4.0.0...HEAD
-[4.0.0]: https://github.com/paulanunes85/three-horizons-accelerator-v4/releases/tag/v4.0.0
-[3.0.0]: https://github.com/paulanunes85/three-horizons-accelerator-v4/releases/tag/v3.0.0
-[2.0.0]: https://github.com/paulanunes85/three-horizons-accelerator-v4/releases/tag/v2.0.0
-[1.0.0]: https://github.com/paulanunes85/three-horizons-accelerator-v4/releases/tag/v1.0.0
+[Unreleased]: https://github.com/3horizons/agentic-devops-platform/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/3horizons/agentic-devops-platform/releases/tag/v4.0.0
+[3.0.0]: https://github.com/3horizons/agentic-devops-platform/releases/tag/v3.0.0
+[2.0.0]: https://github.com/3horizons/agentic-devops-platform/releases/tag/v2.0.0
+[1.0.0]: https://github.com/3horizons/agentic-devops-platform/releases/tag/v1.0.0
