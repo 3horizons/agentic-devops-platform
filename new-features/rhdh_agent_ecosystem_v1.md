@@ -1,4 +1,4 @@
-# Three Horizons — Red Hat Developer Hub Accelerator — Agent Ecosystem
+# Red Hat Developer Hub Accelerator — Agent Ecosystem
 
 | Field | Value |
 |-------|-------|
@@ -25,7 +25,7 @@ This repository contains the **Red Hat Developer Hub (RHDH)** accelerator. Every
 - **Operator lifecycle** — `rhdh.redhat.com/v1alpha3` Custom Resource on ARO
 
 **What is NOT in this repository:**
-- Backstage upstream — see `open-horizons-backstage` repository
+- Backstage upstream — see `three-horizons-backstage` repository
 - Static plugins, `yarn add`, EntityPage.tsx, custom Docker images, ACR
 
 ---
