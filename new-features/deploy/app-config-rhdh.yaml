@@ -132,6 +132,12 @@ catalog:
       schedule:
         frequency: { minutes: 60 }
         timeout: { minutes: 15 }
+  locations:
+    # Golden Path — Todo App (full-stack React + Express + Terraform)
+    - type: url
+      target: https://github.com/3horizons/todo-app/blob/main/template.yaml
+      rules:
+        - allow: [Template]
 
 # ---------------------------------------------------------------------------
 # Dynamic Plugins — RHDH v1.4+

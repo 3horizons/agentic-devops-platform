@@ -84,6 +84,11 @@ catalog:
           minutes: 10
       host: ${GITHUB_HOST:github.com}
   locations:
+    # Golden Path — Todo App (full-stack React + Express + Terraform)
+    - type: url
+      target: https://github.com/3horizons/todo-app/blob/main/template.yaml
+      rules:
+        - allow: [Template]
     - type: github-discovery
       target:
         - url: https://${GITHUB_HOST:github.com}/${GITHUB_ORG}
