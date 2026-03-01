@@ -20,6 +20,13 @@ auth:
         clientSecret: ${GITHUB_CLIENT_SECRET}
         enterpriseInstanceUrl: ${GITHUB_ENTERPRISE_URL:''}
         allowedOrganizations: ${ALLOWED_GITHUB_ORGS}
+        additionalScopes:
+          - user:email
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+            - resolver: emailMatchingUserEntityProfileEmail
+            - resolver: emailLocalPartMatchingUserEntityName
 
 # Sign-in page - GitHub only
 signInPage: github
@@ -32,11 +39,19 @@ backend:
     host: 0.0.0.0
   csp:
     connect-src:
-      - 'self'
+      - "'self'"
       - 'http://localhost:7007'
+      - 'http:'
+      - 'https:'
+      - 'ws:'
+      - 'wss:'
       - 'https://github.com'
       - 'https://api.github.com'
       - 'https://raw.githubusercontent.com'
+    img-src:
+      - "'self'"
+      - 'data:'
+      - 'https:'
   auth:
     keys:
       - secret: ${BACKEND_SECRET:insecure-secret}

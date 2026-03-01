@@ -17,11 +17,16 @@ branding:
   favicon: data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 23 23'%3E%3Crect x='1' y='1' width='10' height='10' fill='%23F25022'/%3E%3Crect x='12' y='1' width='10' height='10' fill='%237FBA00'/%3E%3Crect x='1' y='12' width='10' height='10' fill='%2300A4EF'/%3E%3Crect x='12' y='12' width='10' height='10' fill='%23FFB900'/%3E%3C/svg%3E
   theme:
     light:
-      primaryColor: '#00A4EF'
-      headerColor1: '#00A4EF'
-      headerColor2: '#0078D4'
-      navigationIndicatorColor: '#00A4EF'
-      # Microsoft Segoe UI font stack
+      palette:
+        primary:
+          main: '#00A4EF'
+        navigation:
+          indicator: '#00A4EF'
+      pageTheme:
+        home:
+          backgroundColor:
+            - '#00A4EF'
+            - '#0078D4'
       fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif"
       # White background
       backgroundColor: '#FFFFFF'
@@ -32,10 +37,16 @@ branding:
       sidebarSelectedItemTextColor: '#FFFFFF'
       sidebarSelectedItemIndicatorColor: '#00A4EF'
     dark:
-      primaryColor: '#4DB8FF'
-      headerColor1: '#1B1B1F'
-      headerColor2: '#2D2D30'
-      navigationIndicatorColor: '#4DB8FF'
+      palette:
+        primary:
+          main: '#4DB8FF'
+        navigation:
+          indicator: '#4DB8FF'
+      pageTheme:
+        home:
+          backgroundColor:
+            - '#1B1B1F'
+            - '#2D2D30'
       fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif"
       backgroundColor: '#1B1B1F'
       paperColor: '#252529'
@@ -57,9 +68,12 @@ auth:
         clientId: ${GITHUB_APP_CLIENT_ID}
         clientSecret: ${GITHUB_APP_CLIENT_SECRET}
         enterpriseInstanceUrl: ${GITHUB_ENTERPRISE_URL:}
+        additionalScopes:
+          - user:email
         signIn:
           resolvers:
             - resolver: usernameMatchingUserEntityName
+      dangerouslyAllowSignInWithoutUserInCatalog: true
 
 signInPage: github
 
@@ -81,13 +95,18 @@ backend:
   csp:
     connect-src:
       - "'self'"
+      - 'http:'
+      - 'https:'
+      - 'ws:'
+      - 'wss:'
       - 'https://github.com'
       - 'https://api.github.com'
       - 'https://raw.githubusercontent.com'
     img-src:
       - "'self'"
-      - 'https://avatars.githubusercontent.com'
       - 'data:'
+      - 'https:'
+      - 'https://avatars.githubusercontent.com'
   database:
     client: pg
     connection:
@@ -95,6 +114,9 @@ backend:
       port: ${POSTGRES_PORT:5432}
       user: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
+    pool:
+      min: 0
+      max: 2
 
 # ---------------------------------------------------------------------------
 # Catalog — GitHub Discovery
@@ -140,17 +162,17 @@ catalog:
         - allow: [Template]
     # Golden Paths — H1 Foundation
     - type: url
-      target: https://github.com/3horizons/agentic-devops-platform/blob/rhdevhub-demo/golden-paths/h1-foundation/new-microservice/template.yaml
+      target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/new-microservice/template.yaml
       rules:
         - allow: [Template]
     # Golden Paths — H2 Enhancement
     - type: url
-      target: https://github.com/3horizons/agentic-devops-platform/blob/rhdevhub-demo/golden-paths/h2-enhancement/microservice/template.yaml
+      target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/microservice/template.yaml
       rules:
         - allow: [Template]
     # Golden Paths — H3 Innovation
     - type: url
-      target: https://github.com/3horizons/agentic-devops-platform/blob/rhdevhub-demo/golden-paths/h3-innovation/foundry-agent/template.yaml
+      target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/foundry-agent/template.yaml
       rules:
         - allow: [Template]
 

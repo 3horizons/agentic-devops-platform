@@ -66,3 +66,22 @@ plugins:
   # ── Topology ────────────────────────────────────────────────────────────
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
     disabled: false
+
+  # ── Disabled Plugins (runtime-validated fixes) ──────────────────────────
+  # Segment analytics — loads external scripts from cdn.segment.com, causes CSP violations
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
+    disabled: true
+
+  # Signals — WebSocket /api/signals fails without proper backend support
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals
+    disabled: true
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
+    disabled: true
+
+  # Adoption Insights — causes 'digest' TypeError (crypto context issue)
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-adoption-insights
+    disabled: true
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-analytics-module-adoption-insights-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-adoption-insights-backend-dynamic
+    disabled: true
