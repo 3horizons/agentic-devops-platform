@@ -333,8 +333,8 @@ logger:
 # Scaffolder (Software Templates) configuration
 scaffolder:
   defaultAuthor:
-    name: Open Horizons Scaffolder
-    email: scaffolder@three-horizons.local
+    name: Three Horizons Platform
+    email: platform@3horizons.dev
   defaultCommitAction: commit
 
 # Search backend configuration

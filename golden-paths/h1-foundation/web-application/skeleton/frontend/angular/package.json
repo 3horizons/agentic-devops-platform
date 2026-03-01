@@ -1,0 +1,19 @@
+{
+  "name": "${{values.appName}}",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test"
+  },
+  "dependencies": {
+    "@angular/core": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/router": "^17.3.0"
+  },
+  "devDependencies": {
+    "@angular/cli": "^17.3.0",
+    "typescript": "^5.5.4"
+  }
+}
