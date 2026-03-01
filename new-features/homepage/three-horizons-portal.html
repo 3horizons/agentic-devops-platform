@@ -1,196 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three Horizons</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 23 23'><rect x='1' y='1' width='10' height='10' fill='%23F25022'/><rect x='12' y='1' width='10' height='10' fill='%237FBA00'/><rect x='1' y='12' width='10' height='10' fill='%2300A4EF'/><rect x='12' y='12' width='10' height='10' fill='%23FFB900'/></svg>">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Horizons — Developer Hub</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 23 23'><rect x='1' y='1' width='10' height='10' fill='%23F25022'/><rect x='12' y='1' width='10' height='10' fill='%237FBA00'/><rect x='1' y='12' width='10' height='10' fill='%2300A4EF'/><rect x='12' y='12' width='10' height='10' fill='%23FFB900'/></svg>">
+<style>
 :root {
-    /* Microsoft 4-Color Palette */
-    --ms-blue: #00A4EF;
-    --ms-green: #7FBA00;
-    --ms-yellow: #FFB900;
-    --ms-red: #F25022;
-    --ms-dark-blue: #0078D4;
-
-    /* Neutrals */
-    --bg-primary: #FFFFFF;
-    --bg-secondary: #F8F9FA;
-    --bg-tertiary: #F3F5F7;
-    --text-primary: #1B1B1F;
-    --text-secondary: #5C5C5C;
-    --text-tertiary: #9A9A9A;
-    --text-inverse: #FFFFFF;
-    --border-light: #E8E8E8;
-    --border-lighter: #F0F0F0;
-
-    /* Sidebar */
-    --sidebar-bg: #1B1B1F;
-    --sidebar-text: #B0B0B0;
-    --sidebar-active-text: #FFFFFF;
-    --sidebar-hover-bg: rgba(255,255,255,0.07);
-    --sidebar-active-bg: rgba(255,255,255,0.12);
-    --sidebar-indicator: var(--ms-blue);
-    --sidebar-width: 220px;
-
-    /* Typography */
-    --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    --font-mono: 'Cascadia Code', 'Consolas', monospace;
-    --fs-xs: 11px; --fs-sm: 12px; --fs-base: 14px; --fs-md: 15px;
-    --fs-lg: 18px; --fs-xl: 24px; --fs-2xl: 32px; --fs-hero: 42px;
-
-    /* Spacing */
-    --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-xl: 32px; --sp-2xl: 48px;
-
-    /* Radii */
-    --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px;
-
-    /* Shadows */
-    --sh-sm: 0 1px 3px rgba(0,0,0,0.06);
-    --sh-md: 0 4px 12px rgba(0,0,0,0.08);
-    --sh-lg: 0 8px 24px rgba(0,0,0,0.10);
-    --sh-hover: 0 8px 20px rgba(0,0,0,0.12);
-
-    /* Color bar */
-    --color-bar-h: 4px;
-    --color-bar: linear-gradient(to right, var(--ms-red) 0%, var(--ms-red) 25%, var(--ms-green) 25%, var(--ms-green) 50%, var(--ms-blue) 50%, var(--ms-blue) 75%, var(--ms-yellow) 75%, var(--ms-yellow) 100%);
-
-    /* Transitions */
-    --t-fast: 0.15s ease; --t-base: 0.25s ease; --t-slow: 0.4s ease;
+  --ms-blue:#00A4EF;--ms-green:#7FBA00;--ms-yellow:#FFB900;--ms-red:#F25022;--ms-dark-blue:#0078D4;
+  --bg-primary:#FFFFFF;--bg-secondary:#F8F9FA;--bg-tertiary:#F3F5F7;
+  --text-primary:#1B1B1F;--text-secondary:#5C5C5C;--text-tertiary:#9A9A9A;--text-inverse:#FFFFFF;
+  --border-light:#E8E8E8;--border-lighter:#F0F0F0;
+  --sidebar-bg:#1B1B1F;--sidebar-text:#B0B0B0;--sidebar-active-text:#FFFFFF;
+  --sidebar-hover-bg:rgba(255,255,255,0.07);--sidebar-active-bg:rgba(255,255,255,0.12);
+  --sidebar-indicator:var(--ms-blue);--sidebar-width:220px;
+  --font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --fs-xs:11px;--fs-sm:12px;--fs-base:14px;--fs-md:15px;--fs-lg:18px;--fs-xl:24px;--fs-2xl:32px;
+  --sp-xs:4px;--sp-sm:8px;--sp-md:16px;--sp-lg:24px;--sp-xl:32px;--sp-2xl:48px;
+  --r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;
+  --sh-sm:0 1px 3px rgba(0,0,0,0.06);--sh-md:0 4px 12px rgba(0,0,0,0.08);--sh-hover:0 8px 20px rgba(0,0,0,0.12);
+  --color-bar-h:4px;
+  --color-bar:linear-gradient(to right,var(--ms-red) 0%,var(--ms-red) 25%,var(--ms-green) 25%,var(--ms-green) 50%,var(--ms-blue) 50%,var(--ms-blue) 75%,var(--ms-yellow) 75%,var(--ms-yellow) 100%);
+  --t-fast:0.15s ease;--t-base:0.25s ease;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; background: var(--bg-primary); font-family: var(--font-family); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
-
-/* ─── Color Bar ─── */
-.color-bar { position: fixed; top: 0; left: 0; width: 100%; height: var(--color-bar-h); background: var(--color-bar); z-index: 1000; }
-
-/* ─── Sidebar ─── */
-.sidebar { position: fixed; left: 0; top: var(--color-bar-h); width: var(--sidebar-width); height: calc(100vh - var(--color-bar-h)); background: var(--sidebar-bg); display: flex; flex-direction: column; z-index: 900; overflow-y: auto; }
-.sidebar-header { padding: var(--sp-lg) var(--sp-md); display: flex; align-items: center; gap: var(--sp-sm); border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: var(--sp-sm); }
-.sidebar-header svg { width: 22px; height: 22px; flex-shrink: 0; }
-.sidebar-header img { height: 22px; width: auto; flex-shrink: 0; }
-.sidebar-brand { font-size: var(--fs-md); font-weight: 700; color: var(--sidebar-active-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sidebar-nav { flex: 1; padding: 0 var(--sp-sm); display: flex; flex-direction: column; gap: 2px; }
-.nav-item { display: flex; align-items: center; gap: var(--sp-md); padding: 10px var(--sp-md); border-radius: var(--r-sm); color: var(--sidebar-text); font-size: var(--fs-base); font-weight: 500; cursor: pointer; transition: all var(--t-fast); text-decoration: none; border: none; background: none; width: 100%; text-align: left; }
-.nav-item:hover { background: var(--sidebar-hover-bg); color: var(--sidebar-active-text); }
-.nav-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active-text); border-left: 3px solid var(--sidebar-indicator); padding-left: calc(var(--sp-md) - 3px); }
-.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
-.nav-item.active svg, .nav-item:hover svg { opacity: 1; }
-.nav-divider { height: 1px; background: rgba(255,255,255,0.06); margin: var(--sp-sm) var(--sp-md); }
-.sidebar-footer { padding: var(--sp-md); border-top: 1px solid rgba(255,255,255,0.08); }
-
-/* ─── Main Content Area ─── */
-.main { margin-left: var(--sidebar-width); margin-top: var(--color-bar-h); min-height: calc(100vh - var(--color-bar-h)); }
-
-/* ─── Page Header ─── */
-.page-header { padding: var(--sp-lg) var(--sp-xl); border-bottom: 1px solid var(--border-light); background: var(--bg-primary); display: flex; align-items: center; justify-content: space-between; }
-.page-title { font-size: var(--fs-xl); font-weight: 700; color: var(--text-primary); }
-.page-subtitle { font-size: var(--fs-base); color: var(--text-secondary); margin-top: var(--sp-xs); }
-.page-actions { display: flex; gap: var(--sp-sm); }
-
-/* ─── Breadcrumb ─── */
-.breadcrumb { padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-sm); color: var(--text-tertiary); display: flex; align-items: center; gap: var(--sp-xs); }
-.breadcrumb a { color: var(--ms-blue); text-decoration: none; }
-
-/* ─── Content ─── */
-.content { padding: var(--sp-lg) var(--sp-xl); }
-
-/* ─── Cards ─── */
-.card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); transition: all var(--t-base); }
-.card:hover { box-shadow: var(--sh-hover); transform: translateY(-2px); }
-.card-header { font-size: var(--fs-lg); font-weight: 700; margin-bottom: var(--sp-sm); }
-.card-desc { font-size: var(--fs-base); color: var(--text-secondary); line-height: 1.6; }
-
-/* ─── Grid Layouts ─── */
-.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-lg); }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-md); }
-
-/* ─── Buttons ─── */
-.btn { display: inline-flex; align-items: center; gap: var(--sp-sm); padding: 10px var(--sp-lg); border-radius: var(--r-md); font-size: var(--fs-base); font-weight: 600; font-family: var(--font-family); cursor: pointer; transition: all var(--t-base); border: none; text-decoration: none; }
-.btn-primary { background: var(--ms-blue); color: var(--text-inverse); }
-.btn-primary:hover { background: var(--ms-dark-blue); box-shadow: var(--sh-md); }
-.btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-light); }
-.btn-outline:hover { background: var(--bg-secondary); }
-.btn-github { background: #24292e; color: #FFF; }
-.btn-github:hover { background: #2f363d; }
-
-/* ─── Tags / Badges ─── */
-.tag { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.3px; }
-.tag-blue { background: rgba(0,164,239,0.12); color: var(--ms-blue); }
-.tag-green { background: rgba(127,186,0,0.12); color: #5A9400; }
-.tag-yellow { background: rgba(255,185,0,0.12); color: #B58200; }
-.tag-red { background: rgba(242,80,34,0.12); color: var(--ms-red); }
-
-/* ─── Tables ─── */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: var(--fs-base); }
-th { background: var(--bg-secondary); color: var(--text-secondary); font-weight: 600; text-align: left; padding: 12px var(--sp-md); border-bottom: 2px solid var(--border-light); font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.5px; }
-td { padding: 12px var(--sp-md); border-bottom: 1px solid var(--border-lighter); }
-tr:hover td { background: var(--bg-secondary); }
-
-/* ─── Search Bar ─── */
-.search-bar { display: flex; align-items: center; gap: var(--sp-sm); background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-sm) var(--sp-md); width: 100%; max-width: 600px; transition: all var(--t-base); }
-.search-bar:focus-within { border-color: var(--ms-blue); box-shadow: 0 0 0 3px rgba(0,164,239,0.15); background: var(--bg-primary); }
-.search-bar svg { width: 18px; height: 18px; color: var(--text-tertiary); flex-shrink: 0; }
-.search-bar input { flex: 1; border: none; background: none; font-size: var(--fs-md); font-family: var(--font-family); color: var(--text-primary); outline: none; }
-.search-bar input::placeholder { color: var(--text-tertiary); }
-
-/* ─── Stat Cards ─── */
-.stat-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); text-align: center; border-top: 3px solid; }
-.stat-card .stat-val { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-xs); }
-.stat-card .stat-label { font-size: var(--fs-sm); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-
-/* ─── Empty State ─── */
-.empty-state { text-align: center; padding: var(--sp-2xl); color: var(--text-tertiary); }
-.empty-state svg { width: 48px; height: 48px; margin-bottom: var(--sp-md); opacity: 0.4; }
-
-/* ─── Section Heading ─── */
-.section-title { font-size: var(--fs-lg); font-weight: 700; color: var(--text-primary); margin-bottom: var(--sp-md); display: flex; align-items: center; gap: var(--sp-sm); }
-.section-title .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-/* ─── Page Visibility ─── */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ─── Horizon Cards (shared) ─── */
-.horizon-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); }
-.hz-card { border-radius: var(--r-lg); padding: var(--sp-lg); border-top: 4px solid; background: var(--bg-primary); border: 1px solid var(--border-light); transition: all var(--t-base); }
-.hz-card:hover { box-shadow: var(--sh-hover); transform: translateY(-3px); }
-.hz-card:nth-child(1) { border-top: 4px solid var(--ms-blue); }
-.hz-card:nth-child(2) { border-top: 4px solid var(--ms-green); }
-.hz-card:nth-child(3) { border-top: 4px solid var(--ms-yellow); }
-.hz-card .hz-icon { font-size: 28px; margin-bottom: var(--sp-sm); }
-.hz-card .hz-title { font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-xs); }
-.hz-card .hz-desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.5; }
-.hz-card .hz-items { margin-top: var(--sp-sm); display: flex; flex-wrap: wrap; gap: var(--sp-xs); }
-
-/* ─── Template Card ─── */
-.tpl-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); transition: all var(--t-base); cursor: pointer; }
-.tpl-card:hover { box-shadow: var(--sh-hover); transform: translateY(-2px); }
-.tpl-card .tpl-icon { font-size: 32px; margin-bottom: var(--sp-sm); }
-.tpl-card .tpl-title { font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-xs); }
-.tpl-card .tpl-desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.5; margin-bottom: var(--sp-sm); }
-.tpl-card .tpl-tags { display: flex; flex-wrap: wrap; gap: var(--sp-xs); }
-
-/* ─── Quick Link ─── */
-.quick-link { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-md); border-radius: var(--r-md); border: 1px solid var(--border-light); transition: all var(--t-base); cursor: pointer; text-decoration: none; color: inherit; }
-.quick-link:hover { background: var(--bg-secondary); border-color: var(--ms-blue); }
-.quick-link .ql-icon { width: 40px; height: 40px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.quick-link .ql-title { font-size: var(--fs-base); font-weight: 600; }
-.quick-link .ql-desc { font-size: var(--fs-sm); color: var(--text-secondary); }
-
-/* ─── Responsive ─── */
-@media (max-width: 900px) { .grid-3, .horizon-row { grid-template-columns: 1fr 1fr; } .grid-4 { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .grid-2, .grid-3, .grid-4, .horizon-row { grid-template-columns: 1fr; } .sidebar { display: none; } .main { margin-left: 0; } }
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:var(--bg-primary);font-family:var(--font-family);color:var(--text-primary);-webkit-font-smoothing:antialiased;}
+.color-bar{position:fixed;top:0;left:0;width:100%;height:var(--color-bar-h);background:var(--color-bar);z-index:1000;}
+.sidebar{position:fixed;left:0;top:var(--color-bar-h);width:var(--sidebar-width);height:calc(100vh - var(--color-bar-h));background:var(--sidebar-bg);display:flex;flex-direction:column;z-index:900;overflow-y:auto;}
+.sidebar-header{padding:var(--sp-lg) var(--sp-md);display:flex;align-items:center;gap:var(--sp-sm);border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:var(--sp-sm);}
+.sidebar-header svg{width:22px;height:22px;flex-shrink:0;}
+.sidebar-brand{font-size:var(--fs-md);font-weight:700;color:var(--sidebar-active-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-nav{flex:1;padding:0 var(--sp-sm);display:flex;flex-direction:column;gap:2px;}
+.nav-item{display:flex;align-items:center;gap:var(--sp-md);padding:10px var(--sp-md);border-radius:var(--r-sm);color:var(--sidebar-text);font-size:var(--fs-base);font-weight:500;cursor:pointer;transition:all var(--t-fast);text-decoration:none;border:none;background:none;width:100%;text-align:left;}
+.nav-item:hover{background:var(--sidebar-hover-bg);color:var(--sidebar-active-text);}
+.nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);border-left:3px solid var(--sidebar-indicator);padding-left:calc(var(--sp-md) - 3px);}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:0.7;}
+.nav-item.active svg,.nav-item:hover svg{opacity:1;}
+.nav-divider{height:1px;background:rgba(255,255,255,0.06);margin:var(--sp-sm) var(--sp-md);}
+.sidebar-footer{padding:var(--sp-md);border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;justify-content:center;}
+.main{margin-left:var(--sidebar-width);margin-top:var(--color-bar-h);min-height:calc(100vh - var(--color-bar-h));}
+.page-header{padding:var(--sp-lg) var(--sp-xl);border-bottom:1px solid var(--border-light);background:var(--bg-primary);display:flex;align-items:center;justify-content:space-between;}
+.page-title{font-size:var(--fs-xl);font-weight:700;color:var(--text-primary);}
+.page-subtitle{font-size:var(--fs-base);color:var(--text-secondary);margin-top:var(--sp-xs);}
+.page-actions{display:flex;gap:var(--sp-sm);}
+.content{padding:var(--sp-lg) var(--sp-xl);}
+.card{background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:var(--sp-lg);transition:all var(--t-base);}
+.card:hover{box-shadow:var(--sh-hover);transform:translateY(-2px);}
+.card-header{font-size:var(--fs-lg);font-weight:700;margin-bottom:var(--sp-sm);}
+.card-desc{font-size:var(--fs-base);color:var(--text-secondary);line-height:1.6;}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-lg);}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-lg);}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-md);}
+.btn{display:inline-flex;align-items:center;gap:var(--sp-sm);padding:10px var(--sp-lg);border-radius:var(--r-md);font-size:var(--fs-base);font-weight:600;font-family:var(--font-family);cursor:pointer;transition:all var(--t-base);border:none;text-decoration:none;}
+.btn-primary{background:var(--ms-blue);color:var(--text-inverse);}
+.btn-primary:hover{background:var(--ms-dark-blue);box-shadow:var(--sh-md);}
+.btn-outline{background:transparent;color:var(--text-primary);border:1px solid var(--border-light);}
+.btn-outline:hover{background:var(--bg-secondary);}
+.tag{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:var(--fs-xs);font-weight:600;letter-spacing:0.3px;}
+.tag-blue{background:rgba(0,164,239,0.12);color:var(--ms-blue);}
+.tag-green{background:rgba(127,186,0,0.12);color:#5A9400;}
+.tag-yellow{background:rgba(255,185,0,0.12);color:#B58200;}
+.tag-red{background:rgba(242,80,34,0.12);color:var(--ms-red);}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-base);}
+th{background:var(--bg-secondary);color:var(--text-secondary);font-weight:600;text-align:left;padding:12px var(--sp-md);border-bottom:2px solid var(--border-light);font-size:var(--fs-sm);text-transform:uppercase;letter-spacing:0.5px;}
+td{padding:12px var(--sp-md);border-bottom:1px solid var(--border-lighter);}
+tr:hover td{background:var(--bg-secondary);}
+.search-bar{display:flex;align-items:center;gap:var(--sp-sm);background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:var(--sp-sm) var(--sp-md);width:100%;max-width:600px;transition:all var(--t-base);}
+.search-bar:focus-within{border-color:var(--ms-blue);box-shadow:0 0 0 3px rgba(0,164,239,0.15);background:var(--bg-primary);}
+.search-bar svg{width:18px;height:18px;color:var(--text-tertiary);flex-shrink:0;}
+.search-bar input{flex:1;border:none;background:none;font-size:var(--fs-md);font-family:var(--font-family);color:var(--text-primary);outline:none;}
+.search-bar input::placeholder{color:var(--text-tertiary);}
+.stat-card{background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:var(--sp-lg);text-align:center;border-top:3px solid;}
+.stat-card .stat-val{font-size:var(--fs-2xl);font-weight:800;margin-bottom:var(--sp-xs);}
+.stat-card .stat-label{font-size:var(--fs-sm);color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;}
+.section-title{font-size:var(--fs-lg);font-weight:700;color:var(--text-primary);margin-bottom:var(--sp-md);display:flex;align-items:center;gap:var(--sp-sm);}
+.section-title .dot{width:8px;height:8px;border-radius:50%;}
+.page{display:none;}.page.active{display:block;}
+.horizon-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-lg);}
+.hz-card{border-radius:var(--r-lg);padding:var(--sp-lg);border-top:4px solid;background:var(--bg-primary);border:1px solid var(--border-light);transition:all var(--t-base);}
+.hz-card:hover{box-shadow:var(--sh-hover);transform:translateY(-3px);}
+.hz-card:nth-child(1){border-top:4px solid var(--ms-blue);}
+.hz-card:nth-child(2){border-top:4px solid var(--ms-green);}
+.hz-card:nth-child(3){border-top:4px solid var(--ms-yellow);}
+.hz-card .hz-icon{font-size:28px;margin-bottom:var(--sp-sm);}
+.hz-card .hz-title{font-size:var(--fs-md);font-weight:700;margin-bottom:var(--sp-xs);}
+.hz-card .hz-desc{font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.5;}
+.hz-card .hz-items{margin-top:var(--sp-sm);display:flex;flex-wrap:wrap;gap:var(--sp-xs);}
+.tpl-card{background:var(--bg-primary);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:var(--sp-lg);transition:all var(--t-base);cursor:pointer;}
+.tpl-card:hover{box-shadow:var(--sh-hover);transform:translateY(-2px);}
+.tpl-card .tpl-icon{font-size:32px;margin-bottom:var(--sp-sm);}
+.tpl-card .tpl-title{font-size:var(--fs-md);font-weight:700;margin-bottom:var(--sp-xs);}
+.tpl-card .tpl-desc{font-size:var(--fs-sm);color:var(--text-secondary);line-height:1.5;margin-bottom:var(--sp-sm);}
+.tpl-card .tpl-tags{display:flex;flex-wrap:wrap;gap:var(--sp-xs);}
+.quick-link{display:flex;align-items:center;gap:var(--sp-md);padding:var(--sp-md);border-radius:var(--r-md);border:1px solid var(--border-light);transition:all var(--t-base);cursor:pointer;text-decoration:none;color:inherit;}
+.quick-link:hover{background:var(--bg-secondary);border-color:var(--ms-blue);}
+.quick-link .ql-icon{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.quick-link .ql-title{font-size:var(--fs-base);font-weight:600;}
+.quick-link .ql-desc{font-size:var(--fs-sm);color:var(--text-secondary);}
+@media(max-width:900px){.grid-3,.horizon-row{grid-template-columns:1fr 1fr;}.grid-4{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.grid-2,.grid-3,.grid-4,.horizon-row{grid-template-columns:1fr;}.sidebar{display:none;}.main{margin-left:0;}}
 </style>
 </head>
 <body>
 <div class="color-bar"></div>
 <aside class="sidebar">
-  <div class="sidebar-header"><img src="../../images-logos/Three-Horizon-Logo.png" alt="Three Horizons"><span class="sidebar-brand">Three Horizons</span></div>
+  <div class="sidebar-header">
+    <svg viewBox="0 0 23 23" fill="none"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg>
+    <span class="sidebar-brand">Three Horizons</span>
+  </div>
   <nav class="sidebar-nav">
     <button class="nav-item active" data-page="home" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></button>
     <button class="nav-item" data-page="group" onclick="showPage('group')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>My Group</span></button>
@@ -205,13 +123,14 @@ tr:hover td { background: var(--bg-secondary); }
     <button class="nav-item" data-page="admin" onclick="showPage('admin')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Administration</span></button>
     <button class="nav-item" data-page="settings" onclick="showPage('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></button>
   </nav>
-  <div class="sidebar-footer" style="display:flex;gap:8px;align-items:center;justify-content:center;"><img src="../../images-logos/Three-Horizon-Logo.png" alt="Three Horizons" style="height:18px;width:auto;opacity:0.6;"></div>
+  <div class="sidebar-footer">
+    <svg viewBox="0 0 23 23" width="18" height="18" style="opacity:0.6;"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg>
+  </div>
 </aside>
 
 <div class="main">
-  <div id="page-home" class="page active">
-<div class="content">
-  <!-- Hero: clean typographic hero with subtle accent line, no logo -->
+<!-- ═══════════════════════════ HOME ═══════════════════════════ -->
+<div id="page-home" class="page active"><div class="content">
   <div style="padding:var(--sp-2xl) 0 var(--sp-xl);">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:var(--sp-sm);">
       <div style="width:4px;height:40px;border-radius:2px;background:linear-gradient(180deg,var(--ms-blue),var(--ms-green));"></div>
@@ -223,22 +142,18 @@ tr:hover td { background: var(--bg-secondary); }
     <p style="color:var(--text-secondary);font-size:15px;margin:var(--sp-sm) 0 var(--sp-lg);max-width:600px;">Powered by Red Hat® Developer Hub — Your single pane of glass for services, APIs, documentation, and developer tooling.</p>
     <div class="search-bar" style="max-width:640px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search components, APIs, templates, and docs..."></div>
   </div>
-
-  <!-- Key Metrics Row -->
   <div class="grid-4" style="margin-bottom:var(--sp-lg);">
     <div class="stat-card" style="border-top-color:var(--ms-blue);"><div class="stat-val" style="color:var(--ms-blue);">42</div><div class="stat-label">Components</div></div>
     <div class="stat-card" style="border-top-color:var(--ms-green);"><div class="stat-val" style="color:var(--ms-green);">18</div><div class="stat-label">APIs</div></div>
     <div class="stat-card" style="border-top-color:var(--ms-yellow);"><div class="stat-val" style="color:#B58200;">12</div><div class="stat-label">Templates</div></div>
     <div class="stat-card" style="border-top-color:var(--ms-red);"><div class="stat-val" style="color:var(--ms-red);">3</div><div class="stat-label">Horizons</div></div>
   </div>
-
   <div class="section-title" style="margin-top:var(--sp-xl);"><div class="dot" style="background:var(--ms-blue)"></div>Three Horizons</div>
   <div class="horizon-row">
     <div class="hz-card"><div class="hz-icon">🔨</div><div class="hz-title">Horizon 1 — Foundation</div><div class="hz-desc">Core platform, CI/CD, and developer onboarding</div><div class="hz-items"><span class="tag tag-blue">IDP Portal</span><span class="tag tag-blue">GitHub</span><span class="tag tag-blue">Templates</span><span class="tag tag-blue">CI/CD</span></div></div>
     <div class="hz-card"><div class="hz-icon">⚡</div><div class="hz-title">Horizon 2 — Intelligence</div><div class="hz-desc">AI-powered development and intelligent automation</div><div class="hz-items"><span class="tag tag-green">Copilot</span><span class="tag tag-green">AI Foundry</span><span class="tag tag-green">MCP</span><span class="tag tag-green">Lightspeed</span></div></div>
     <div class="hz-card"><div class="hz-icon">🚀</div><div class="hz-title">Horizon 3 — Autonomy</div><div class="hz-desc">Self-healing systems and autonomous operations</div><div class="hz-items"><span class="tag tag-yellow">Agents</span><span class="tag tag-yellow">Self-Healing</span><span class="tag tag-yellow">Predictive</span></div></div>
   </div>
-
   <div class="section-title" style="margin-top:var(--sp-xl);"><div class="dot" style="background:var(--ms-green)"></div>Quick Access</div>
   <div class="grid-4">
     <a class="quick-link" onclick="showPage('catalog')"><div class="ql-icon" style="background:rgba(0,164,239,0.1);color:var(--ms-blue);">📦</div><div><div class="ql-title">Software Catalog</div><div class="ql-desc">Browse components</div></div></a>
@@ -246,7 +161,6 @@ tr:hover td { background: var(--bg-secondary); }
     <a class="quick-link" onclick="showPage('create')"><div class="ql-icon" style="background:rgba(255,185,0,0.1);color:#B58200;">✨</div><div><div class="ql-title">Create Component</div><div class="ql-desc">Use templates</div></div></a>
     <a class="quick-link" onclick="showPage('docs')"><div class="ql-icon" style="background:rgba(242,80,34,0.1);color:var(--ms-red);">📚</div><div><div class="ql-title">Documentation</div><div class="ql-desc">TechDocs & guides</div></div></a>
   </div>
-
   <div class="section-title" style="margin-top:var(--sp-xl);"><div class="dot" style="background:var(--ms-red)"></div>Featured Templates</div>
   <div class="grid-3">
     <div class="tpl-card"><div class="tpl-icon">🟢</div><div class="tpl-title">Node.js Microservice</div><div class="tpl-desc">Express + TypeScript + Docker + GitHub Actions CI/CD</div><div class="tpl-tags"><span class="tag tag-green">nodejs</span><span class="tag tag-blue">typescript</span></div></div>
@@ -254,7 +168,9 @@ tr:hover td { background: var(--bg-secondary); }
     <div class="tpl-card"><div class="tpl-icon">⚛️</div><div class="tpl-title">React Frontend</div><div class="tpl-desc">React + TypeScript + Vite + Tailwind CSS</div><div class="tpl-tags"><span class="tag tag-blue">react</span><span class="tag tag-green">vite</span></div></div>
   </div>
 </div></div>
-  <div id="page-group" class="page">
+
+<!-- ═══════════════════════════ MY GROUP ═══════════════════════════ -->
+<div id="page-group" class="page">
 <div class="page-header"><div><div class="page-title">My Group</div><div class="page-subtitle">Your team's components, APIs, and resources</div></div></div>
 <div class="content">
   <div class="grid-4" style="margin-bottom:var(--sp-lg);">
@@ -273,7 +189,9 @@ tr:hover td { background: var(--bg-secondary); }
     </tbody>
   </table></div>
 </div></div>
-  <div id="page-catalog" class="page">
+
+<!-- ═══════════════════════════ CATALOG ═══════════════════════════ -->
+<div id="page-catalog" class="page">
 <div class="page-header"><div><div class="page-title">Software Catalog</div><div class="page-subtitle">Discover and manage all registered components, services, and resources</div></div><div class="page-actions"><button class="btn btn-outline">Filter</button><button class="btn btn-primary">+ Register</button></div></div>
 <div class="content">
   <div class="search-bar" style="margin-bottom:var(--sp-lg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Filter by name, kind, or owner..."></div>
@@ -295,7 +213,9 @@ tr:hover td { background: var(--bg-secondary); }
     </tbody>
   </table></div>
 </div></div>
-  <div id="page-apis" class="page">
+
+<!-- ═══════════════════════════ APIS ═══════════════════════════ -->
+<div id="page-apis" class="page">
 <div class="page-header"><div><div class="page-title">API Explorer</div><div class="page-subtitle">Browse and discover all registered APIs and their documentation</div></div></div>
 <div class="content">
   <div class="search-bar" style="margin-bottom:var(--sp-lg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search APIs..."></div>
@@ -308,7 +228,9 @@ tr:hover td { background: var(--bg-secondary); }
     <div class="card"><div class="card-header" style="color:var(--ms-green);">Search API</div><div class="card-desc">Full-text search across all catalog entities and documentation</div><div style="margin-top:var(--sp-sm);display:flex;gap:var(--sp-xs);"><span class="tag tag-blue">OpenAPI</span><span class="tag tag-blue">v1.0</span></div></div>
   </div>
 </div></div>
-  <div id="page-learn" class="page">
+
+<!-- ═══════════════════════════ LEARNING ═══════════════════════════ -->
+<div id="page-learn" class="page">
 <div class="page-header"><div><div class="page-title">Learning</div><div class="page-subtitle">Educational resources, learning paths, and skill development</div></div></div>
 <div class="content">
   <div class="grid-2">
@@ -318,7 +240,9 @@ tr:hover td { background: var(--bg-secondary); }
     <div class="card" style="border-left:4px solid var(--ms-red);"><div class="card-header">🔐 Security & Compliance</div><div class="card-desc">Identity, RBAC, secrets management, and compliance automation for enterprise platforms.</div></div>
   </div>
 </div></div>
-  <div id="page-create" class="page">
+
+<!-- ═══════════════════════════ CREATE ═══════════════════════════ -->
+<div id="page-create" class="page">
 <div class="page-header"><div><div class="page-title">Create</div><div class="page-subtitle">Scaffold new components from software templates</div></div></div>
 <div class="content">
   <div class="search-bar" style="margin-bottom:var(--sp-lg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search templates..."></div>
@@ -331,7 +255,9 @@ tr:hover td { background: var(--bg-secondary); }
     <div class="tpl-card"><div class="tpl-icon">🐹</div><div class="tpl-title">Go Microservice</div><div class="tpl-desc">Lightweight Go service with Chi router and Docker multi-stage</div><div class="tpl-tags"><span class="tag tag-blue">go</span><span class="tag tag-green">docker</span><span class="tag tag-blue">chi</span></div></div>
   </div>
 </div></div>
-  <div id="page-docs" class="page">
+
+<!-- ═══════════════════════════ DOCS ═══════════════════════════ -->
+<div id="page-docs" class="page">
 <div class="page-header"><div><div class="page-title">Documentation</div><div class="page-subtitle">Platform documentation, TechDocs, and developer guides</div></div></div>
 <div class="content">
   <div class="search-bar" style="margin-bottom:var(--sp-lg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search documentation..."></div>
@@ -344,7 +270,9 @@ tr:hover td { background: var(--bg-secondary); }
     <div class="card" style="border-left:4px solid var(--ms-green);"><div class="card-header">📦 Template Authoring</div><div class="card-desc">Guide to creating and publishing new software templates for the scaffolder.</div></div>
   </div>
 </div></div>
-  <div id="page-lightspeed" class="page">
+
+<!-- ═══════════════════════════ LIGHTSPEED ═══════════════════════════ -->
+<div id="page-lightspeed" class="page">
 <div class="page-header"><div><div class="page-title">Developer Lightspeed</div><div class="page-subtitle">AI-powered development assistant powered by Azure AI Foundry</div></div></div>
 <div class="content">
   <div style="max-width:700px;margin:0 auto;">
@@ -362,7 +290,9 @@ tr:hover td { background: var(--bg-secondary); }
     </div>
   </div>
 </div></div>
-  <div id="page-notify" class="page">
+
+<!-- ═══════════════════════════ NOTIFICATIONS ═══════════════════════════ -->
+<div id="page-notify" class="page">
 <div class="page-header"><div><div class="page-title">Notifications</div><div class="page-subtitle">Stay updated with platform events and alerts</div></div></div>
 <div class="content">
   <div class="card" style="border-left:4px solid var(--ms-blue);margin-bottom:var(--sp-md);"><div class="card-header" style="font-size:var(--fs-base);">🔔 New template available: Go Microservice v2.0</div><div class="card-desc">A new version of the Go Microservice template has been published with improved health checks. — 2 hours ago</div></div>
@@ -370,7 +300,9 @@ tr:hover td { background: var(--bg-secondary); }
   <div class="card" style="border-left:4px solid var(--ms-yellow);margin-bottom:var(--sp-md);"><div class="card-header" style="font-size:var(--fs-base);">⚠️ TechDocs rebuild required: platform-overview</div><div class="card-desc">Documentation source has been updated. TechDocs rebuild is pending. — 1 day ago</div></div>
   <div class="card" style="border-left:4px solid var(--ms-red);margin-bottom:var(--sp-md);"><div class="card-header" style="font-size:var(--fs-base);">🆕 You were added to team: platform-admins</div><div class="card-desc">Your GitHub team membership has been synced to the catalog. — 2 days ago</div></div>
 </div></div>
-  <div id="page-admin" class="page">
+
+<!-- ═══════════════════════════ ADMIN ═══════════════════════════ -->
+<div id="page-admin" class="page">
 <div class="page-header"><div><div class="page-title">Administration</div><div class="page-subtitle">RBAC policies, user management, and platform configuration</div></div></div>
 <div class="content">
   <div class="section-title"><div class="dot" style="background:var(--ms-red)"></div>Role-Based Access Control</div>
@@ -389,7 +321,9 @@ tr:hover td { background: var(--bg-secondary); }
     <div class="card"><div class="card-header" style="font-size:var(--fs-md);">Kubernetes</div><div class="card-desc">Cluster topology and workload visualization.</div><div style="margin-top:var(--sp-sm);"><span class="tag tag-green">Enabled</span></div></div>
   </div>
 </div></div>
-  <div id="page-settings" class="page">
+
+<!-- ═══════════════════════════ SETTINGS ═══════════════════════════ -->
+<div id="page-settings" class="page">
 <div class="page-header"><div><div class="page-title">Settings</div><div class="page-subtitle">User preferences, integrations, and profile settings</div></div></div>
 <div class="content">
   <div class="grid-2">
@@ -402,15 +336,14 @@ tr:hover td { background: var(--bg-secondary); }
 </div>
 
 <script>
-function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    const page = document.getElementById('page-' + pageId);
-    if (page) page.classList.add('active');
-    const nav = document.querySelector('[data-page="' + pageId + '"]');
-    if (nav) nav.classList.add('active');
+function showPage(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const page=document.getElementById('page-'+pageId);
+  if(page)page.classList.add('active');
+  const nav=document.querySelector('[data-page="'+pageId+'"]');
+  if(nav)nav.classList.add('active');
 }
 </script>
-
 </body>
 </html>

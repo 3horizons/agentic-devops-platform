@@ -165,6 +165,32 @@ plugins:
   pluginConfig:
     dynamicPlugins:
       frontend:
+        default.main-menu-items:
+          menuItems:
+            default.apis:
+              icon: extension
+              priority: 70
+              title: APIs
+            default.catalog:
+              icon: category
+              priority: 80
+              title: Catalog
+            default.docs:
+              icon: docs
+              priority: 40
+              title: Docs
+            default.home:
+              icon: home
+              priority: 100
+              title: Home
+            default.learning-paths:
+              icon: school
+              priority: 60
+              title: Learning Paths
+            default.my-group:
+              icon: group
+              priority: 90
+              title: My Group
         red-hat-developer-hub.backstage-plugin-dynamic-home-page:
           dynamicRoutes:
           - importName: DynamicHomePage
