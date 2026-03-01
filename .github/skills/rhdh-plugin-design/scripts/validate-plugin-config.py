@@ -10,13 +10,16 @@ Checks:
 5. Route path conflicts
 
 Usage:
-  python validate-plugin-config.py <path-to-dynamic-plugins-config.yaml> [<path-to-app-config.yaml>]
+  python validate-plugin-config.py <path-to-dynamic-plugins-config.yaml> \
+    [<path-to-app-config.yaml>]
 """
 
-import sys
-import yaml
 import re
-from pathlib import Path
+import sys
+
+import yaml  # type: ignore[import-untyped]
+
+ValidationResult = tuple[list[str], list[str]]
 
 VALID_ICONS = {
     "HomeIcon", "CategoryIcon", "ExtensionIcon", "CreateComponentIcon",
@@ -45,10 +48,10 @@ VALID_MOUNT_POINTS = {
 }
 
 
-def validate_dynamic_plugins_config(filepath: str) -> list[str]:
+def validate_dynamic_plugins_config(filepath: str) -> ValidationResult:
     """Validate dynamic-plugins-config.yaml"""
-    errors = []
-    warnings = []
+    errors: list[str] = []
+    warnings: list[str] = []
 
     try:
         with open(filepath) as f:
@@ -68,9 +71,13 @@ def validate_dynamic_plugins_config(filepath: str) -> list[str]:
         warnings.append("No frontend plugins configured")
         return errors, warnings
 
-    routes_seen = {}
+    routes_seen: dict[str, str] = {}
 
     for plugin_name, plugin_config in frontend.items():
+        if not isinstance(plugin_config, dict):
+            warnings.append(f"[{plugin_name}] Expected a mapping, got {type(plugin_config).__name__}")
+            continue
+
         prefix = f"[{plugin_name}]"
 
         # Check for unknown wiring keys
@@ -113,6 +120,12 @@ def validate_dynamic_plugins_config(filepath: str) -> list[str]:
 
             if "mountPoint" not in mp:
                 errors.append(f"{mp_prefix} Missing required 'mountPoint'")
+            else:
+                mount_point = mp["mountPoint"]
+                if mount_point not in VALID_MOUNT_POINTS:
+                    warnings.append(
+                        f"{mp_prefix} Unknown mount point '{mount_point}'"
+                    )
 
             if "importName" not in mp:
                 errors.append(f"{mp_prefix} Missing required 'importName'")
@@ -129,10 +142,10 @@ def validate_dynamic_plugins_config(filepath: str) -> list[str]:
     return errors, warnings
 
 
-def validate_app_config_branding(filepath: str) -> list[str]:
+def validate_app_config_branding(filepath: str) -> ValidationResult:
     """Validate app-config.yaml branding section"""
-    errors = []
-    warnings = []
+    errors: list[str] = []
+    warnings: list[str] = []
 
     try:
         with open(filepath) as f:
@@ -141,6 +154,9 @@ def validate_app_config_branding(filepath: str) -> list[str]:
         return [f"YAML parse error: {e}"], []
     except FileNotFoundError:
         return [f"File not found: {filepath}"], []
+
+    if not config:
+        return ["Empty configuration file"], []
 
     app = config.get("app", {})
     branding = app.get("branding", {})
@@ -168,7 +184,8 @@ def validate_app_config_branding(filepath: str) -> list[str]:
     return errors, warnings
 
 
-def main():
+def main() -> None:
+    """Validate plugin configuration files and report errors/warnings."""
     if len(sys.argv) < 2:
         print("Usage: validate-plugin-config.py <dynamic-plugins-config.yaml> [<app-config.yaml>]")
         sys.exit(1)
