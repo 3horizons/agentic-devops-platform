@@ -1,0 +1,45 @@
+# Three Horizons - Organization Entities
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: paulanunes85
+  annotations:
+    github.com/user-login: paulanunes85
+spec:
+  profile:
+    displayName: Paula Silva
+    email: paulanunes85@github.com
+    picture: https://avatars.githubusercontent.com/u/paulanunes85
+  memberOf:
+    - platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  description: Three Horizons Platform Engineering Team
+spec:
+  type: team
+  profile:
+    displayName: Platform Team
+  children: []
+  members:
+    - paulanunes85
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: three-horizons
+  description: Agentic DevOps Platform
+spec:
+  owner: platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: developer-hub
+  description: Internal Developer Platform powered by Red Hat Developer Hub
+spec:
+  owner: platform-team
+  domain: three-horizons
