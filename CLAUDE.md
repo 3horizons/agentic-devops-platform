@@ -87,7 +87,7 @@ agentic-devops-platform/
 ├── golden-paths/                     # RHDH Software Templates
 │   ├── h1-foundation/                # 6 basic templates
 │   ├── h2-enhancement/               # 9 advanced templates
-│   └── h3-innovation/                # 7 AI/Agent templates
+│   └── h3-innovation/                # 8 AI/Agent templates
 ├── argocd/                           # GitOps configuration
 │   ├── app-of-apps/root-application.yaml
 │   ├── apps/                         # Individual ArgoCD apps
@@ -365,7 +365,7 @@ In `policies/terraform/azure.rego`, enforced via Conftest in CI:
 
 ### CI Validation
 
-9 GitHub Actions workflows in `.github/workflows/`:
+10 GitHub Actions workflows in `.github/workflows/`:
 
 | Workflow | Trigger |
 |----------|---------|
@@ -378,6 +378,7 @@ In `policies/terraform/azure.rego`, enforced via Conftest in CI:
 | `agent-router.yml` | Issue creation — route to correct agent |
 | `issue-ops.yml` | Issue events — automation |
 | `branch-protection.yml` | Scheduled — enforce branch rules |
+| `engineering-intelligence.yml` | Scheduled (6h) + manual — collect DORA, Copilot, GHAS metrics |
 
 ## Scripts
 
@@ -404,6 +405,12 @@ In `policies/terraform/azure.rego`, enforced via Conftest in CI:
 - `scripts/setup-branch-protection.sh` — GitHub branch rules
 - `scripts/setup-terraform-backend.sh` — Azure Storage Account for remote state
 - `scripts/setup-portal.sh` — RHDH portal setup and configuration
+
+### Engineering Intelligence
+
+- `scripts/engineering-intelligence/collect-github-metrics.sh` — PR cycle time, deployment frequency, contributor stats
+- `scripts/engineering-intelligence/collect-copilot-metrics.sh` — Copilot acceptance rate, language/editor breakdown, seat utilization
+- `scripts/engineering-intelligence/collect-security-metrics.sh` — GHAS code scanning, secret scanning, Dependabot aggregation
 
 ### Operations
 
@@ -538,3 +545,4 @@ cd tests/terraform && go test -v ./modules/...
 8. **Observability is comprehensive**: 50+ alert rules, 40+ recording rules, 3 dashboards — changes should maintain this coverage
 9. **Policy as Code is enforced**: OPA policies for Terraform (Conftest in CI) and Gatekeeper constraints for K8s runtime — all code must comply
 10. **Brazil-first**: Default region is `brazilsouth` for LGPD compliance, AI Foundry uses `eastus2` for model availability
+11. **Engineering Intelligence is Faros AI-inspired**: The `@engineering-intelligence` agent provides DORA metrics, Copilot analytics, GHAS security posture, and developer productivity dashboards — all sourced from GitHub APIs and displayed as RHDH dynamic plugin tabs

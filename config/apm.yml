@@ -48,6 +48,10 @@ instructions:
     applyTo: "**/ai-foundry/**"
     description: AI Foundry deployment guidelines
 
+  - path: .apm/instructions/engineering-intelligence.instructions.md
+    applyTo: "**/engineering-intelligence/**,**/dashboards/**,**/metrics/**"
+    description: Engineering Intelligence API patterns and data standards
+
 # Primitives - Prompts (workflows)
 prompts:
   - path: .apm/prompts/deploy-infrastructure.prompt.md
@@ -66,6 +70,18 @@ prompts:
     name: health-check
     description: Run platform health check
 
+  - path: .apm/prompts/collect-metrics.prompt.md
+    name: collect-metrics
+    description: Collect DORA, Copilot, and security metrics from GitHub APIs
+
+  - path: .apm/prompts/generate-dashboard.prompt.md
+    name: generate-dashboard
+    description: Generate RHDH Engineering Intelligence dashboard plugin
+
+  - path: .apm/prompts/audit-security-posture.prompt.md
+    name: audit-security-posture
+    description: Audit GHAS security posture across org repositories
+
 # Primitives - Agents (personas)
 agents:
   - path: .apm/agents/infrastructure-agent.agent.md
@@ -83,6 +99,10 @@ agents:
   - path: .apm/agents/platform-orchestrator.agent.md
     name: platform-orchestrator
     description: Multi-agent workflow coordinator
+
+  - path: .apm/agents/engineering-intelligence.agent.md
+    name: engineering-intelligence
+    description: DORA metrics, Copilot analytics, GHAS security posture, developer productivity
 
 # Compilation targets
 targets:
