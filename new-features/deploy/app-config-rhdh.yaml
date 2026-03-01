@@ -6,6 +6,7 @@
 
 app:
   title: Three Horizons — Developer Hub
+  signInPage: github
   baseUrl: https://devhub.135.18.141.224.nip.io
 
 # ---------------------------------------------------------------------------
@@ -74,8 +75,6 @@ auth:
           resolvers:
             - resolver: usernameMatchingUserEntityName
       dangerouslyAllowSignInWithoutUserInCatalog: true
-
-signInPage: github
 
 # ---------------------------------------------------------------------------
 # Backend
@@ -283,8 +282,14 @@ scaffolder:
 proxy:
   endpoints:
     '/developer-hub':
-      target: https://devhub.135.18.141.224.nip.io
-      pathRewrite:
-        '^/api/proxy/developer-hub/tech-radar': /tech-radar
+      target: http://localhost:7007
       changeOrigin: true
-      secure: true
+      allowedMethods:
+        - GET
+      headers:
+        Accept: application/json
+    '/developer-hub/learning-paths':
+      target: http://localhost:7007
+      changeOrigin: true
+      allowedMethods:
+        - GET
