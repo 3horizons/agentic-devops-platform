@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP Developer Chat — RHDH 1.8</title>
+<style>
+  :root {
+    --ms-blue: #0078D4;
+    --ms-dark-blue: #005A9E;
+    --ms-green: #107C10;
+    --ms-red: #D13438;
+    --ms-yellow: #FFB900;
+    --ms-orange: #FF8C00;
+    --sidebar-bg: #1B1B1F;
+    --chat-bg: #FAFAFA;
+    --msg-user: #E8F0FE;
+    --msg-ai: #FFFFFF;
+    --border: #E0E0E0;
+    --text: #333333;
+    --text-light: #666666;
+    --code-bg: #1E1E1E;
+    --code-text: #D4D4D4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; height: 100vh; display: flex; background: var(--chat-bg); color: var(--text); }
+
+  /* Sidebar */
+  .sidebar { width: 280px; background: var(--sidebar-bg); color: #fff; display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid #333; }
+  .sidebar-header h1 { font-size: 16px; font-weight: 600; color: #fff; }
+  .sidebar-header p { font-size: 11px; color: #999; margin-top: 4px; }
+  .sidebar-section { padding: 16px 20px 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; }
+  .tool-list { list-style: none; padding: 0 12px; }
+  .tool-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; display: flex; align-items: center; gap: 10px; }
+  .tool-item:hover { background: #2A2A2E; }
+  .tool-item.active { background: var(--ms-blue); }
+  .tool-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .tool-name { font-size: 13px; font-weight: 500; }
+  .tool-desc { font-size: 11px; color: #999; margin-top: 2px; }
+  .tool-item.active .tool-desc { color: #cce0ff; }
+  .status-bar { margin-top: auto; padding: 16px 20px; border-top: 1px solid #333; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .status-dot.connected { background: #107C10; }
+  .status-text { font-size: 12px; color: #999; }
+
+  /* Main Chat */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .chat-header { padding: 16px 24px; border-bottom: 1px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: space-between; }
+  .chat-header h2 { font-size: 16px; font-weight: 600; color: var(--text); }
+  .header-badge { font-size: 11px; background: #E8F5E9; color: var(--ms-green); padding: 3px 10px; border-radius: 12px; font-weight: 600; }
+  .messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .message { max-width: 85%; display: flex; gap: 12px; }
+  .message.user { align-self: flex-end; flex-direction: row-reverse; }
+  .message.ai { align-self: flex-start; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; font-weight: 600; }
+  .avatar.user-av { background: var(--ms-blue); color: #fff; }
+  .avatar.ai-av { background: #222; color: #fff; }
+  .bubble { padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+  .message.user .bubble { background: var(--ms-blue); color: #fff; border-bottom-right-radius: 4px; }
+  .message.ai .bubble { background: var(--msg-ai); border: 1px solid var(--border); border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .bubble code { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12px; background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px; }
+  .message.user .bubble code { background: rgba(255,255,255,0.2); }
+  .code-block { background: var(--code-bg); color: var(--code-text); padding: 12px 16px; border-radius: 8px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12px; line-height: 1.5; margin: 8px 0; overflow-x: auto; white-space: pre; }
+  .result-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 13px; }
+  .result-table th { background: var(--ms-blue); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; font-size: 12px; }
+  .result-table td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+  .result-table tr:hover td { background: #F5F9FF; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin: 1px 2px; font-weight: 500; }
+  .tag-blue { background: #E3F2FD; color: #1565C0; }
+  .tag-green { background: #E8F5E9; color: #2E7D32; }
+  .tag-orange { background: #FFF3E0; color: #E65100; }
+  .tag-purple { background: #F3E5F5; color: #6A1B9A; }
+  .tool-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ms-blue); font-weight: 600; margin-bottom: 6px; }
+  .tool-badge svg { width: 14px; height: 14px; }
+  .typing-indicator { display: flex; gap: 4px; padding: 8px 0; }
+  .typing-dot { width: 8px; height: 8px; background: #999; border-radius: 50%; animation: typing 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing { 0%,60%,100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
+
+  /* Input */
+  .input-area { padding: 16px 24px; border-top: 1px solid var(--border); background: #fff; }
+  .input-row { display: flex; gap: 8px; align-items: flex-end; }
+  .input-box { flex: 1; display: flex; align-items: center; border: 2px solid var(--border); border-radius: 12px; padding: 4px 4px 4px 16px; transition: border-color 0.2s; background: #fff; }
+  .input-box:focus-within { border-color: var(--ms-blue); }
+  .input-box input { flex: 1; border: none; outline: none; font-size: 14px; font-family: inherit; padding: 10px 0; background: transparent; }
+  .send-btn { width: 40px; height: 40px; border-radius: 10px; border: none; background: var(--ms-blue); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
+  .send-btn:hover { background: var(--ms-dark-blue); }
+  .send-btn:disabled { background: #ccc; cursor: default; }
+  .suggestions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .suggestion { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: #fff; cursor: pointer; transition: all 0.15s; color: var(--text-light); }
+  .suggestion:hover { border-color: var(--ms-blue); color: var(--ms-blue); background: #F5F9FF; }
+
+  /* Action buttons in chat */
+  .action-btns { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .action-btn { font-size: 12px; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--ms-blue); color: var(--ms-blue); background: #fff; cursor: pointer; transition: all 0.15s; font-weight: 500; }
+  .action-btn:hover { background: var(--ms-blue); color: #fff; }
+  .coverage-bar { height: 8px; border-radius: 4px; background: #eee; margin: 6px 0; overflow: hidden; }
+  .coverage-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .message { max-width: 95%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h1>MCP Developer Chat</h1>
+    <p>Red Hat Developer Hub 1.8</p>
+  </div>
+
+  <div class="sidebar-section">MCP Tools Available</div>
+  <ul class="tool-list">
+    <li class="tool-item active" onclick="selectTool(0)">
+      <div class="tool-icon" style="background:#0078D4">&#128218;</div>
+      <div><div class="tool-name">fetch-catalog-entities</div><div class="tool-desc">Query Software Catalog</div></div>
+    </li>
+    <li class="tool-item" onclick="selectTool(1)">
+      <div class="tool-icon" style="background:#107C10">&#128196;</div>
+      <div><div class="tool-name">fetch-techdocs</div><div class="tool-desc">List TechDocs entities</div></div>
+    </li>
+    <li class="tool-item" onclick="selectTool(2)">
+      <div class="tool-icon" style="background:#FFB900">&#128200;</div>
+      <div><div class="tool-name">analyze-techdocs-coverage</div><div class="tool-desc">Documentation health</div></div>
+    </li>
+    <li class="tool-item" onclick="selectTool(3)">
+      <div class="tool-icon" style="background:#D13438">&#128221;</div>
+      <div><div class="tool-name">retrieve-techdocs-content</div><div class="tool-desc">Read specific TechDoc</div></div>
+    </li>
+  </ul>
+
+  <div class="sidebar-section">Quick Actions</div>
+  <ul class="tool-list">
+    <li class="tool-item" onclick="quickAction('scaffold')">
+      <div class="tool-icon" style="background:#FF8C00">&#9889;</div>
+      <div><div class="tool-name">Scaffold Service</div><div class="tool-desc">Create from template</div></div>
+    </li>
+    <li class="tool-item" onclick="quickAction('audit')">
+      <div class="tool-icon" style="background:#6A1B9A">&#128270;</div>
+      <div><div class="tool-name">Audit Compliance</div><div class="tool-desc">Check catalog standards</div></div>
+    </li>
+  </ul>
+
+  <div class="status-bar">
+    <span class="status-dot connected"></span>
+    <span class="status-text">Connected to RHDH MCP Server</span>
+    <div style="font-size:11px;color:#555;margin-top:4px">/api/mcp-actions/v1</div>
+  </div>
+</aside>
+
+<!-- Main Chat -->
+<main class="main">
+  <div class="chat-header">
+    <h2>Developer Hub Assistant</h2>
+    <span class="header-badge">MCP Connected</span>
+  </div>
+
+  <div class="messages" id="messages">
+    <!-- Welcome message -->
+    <div class="message ai">
+      <div class="avatar ai-av">AI</div>
+      <div class="bubble">
+        <div class="tool-badge">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm1 12H7V7h2v5zm0-6H7V4h2v2z"/></svg>
+          MCP Server Ready
+        </div>
+        <strong>Welcome to the RHDH MCP Developer Chat!</strong><br><br>
+        I'm connected to your Red Hat Developer Hub via the Model Context Protocol. I can help you:<br><br>
+        &#128218; <strong>Query the Software Catalog</strong> — Find components, APIs, systems, users<br>
+        &#128196; <strong>Search TechDocs</strong> — Retrieve documentation for any entity<br>
+        &#128200; <strong>Analyze Coverage</strong> — Check documentation health across namespaces<br>
+        &#128221; <strong>Read Docs Content</strong> — Fetch specific documentation pages<br><br>
+        Try asking a question or use the suggestions below!
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <div class="input-box">
+        <input type="text" id="userInput" placeholder="Ask about your catalog, APIs, documentation..." onkeydown="if(event.key==='Enter')sendMessage()">
+      </div>
+      <button class="send-btn" onclick="sendMessage()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+      </button>
+    </div>
+    <div class="suggestions" id="suggestions">
+      <div class="suggestion" onclick="useSuggestion(this)">List all components in the catalog</div>
+      <div class="suggestion" onclick="useSuggestion(this)">What APIs are owned by team-platform?</div>
+      <div class="suggestion" onclick="useSuggestion(this)">What is the TechDocs coverage?</div>
+      <div class="suggestion" onclick="useSuggestion(this)">Fetch docs for payment-service</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const messages = document.getElementById('messages');
+const input = document.getElementById('userInput');
+
+// Simulated catalog data
+const catalogData = {
+  components: [
+    { name: "payment-service", type: "service", owner: "team-payments", lifecycle: "production", tags: ["java", "spring-boot", "critical"], hasDocs: true },
+    { name: "user-auth-api", type: "service", owner: "team-platform", lifecycle: "production", tags: ["go", "authentication", "oidc"], hasDocs: true },
+    { name: "order-processor", type: "service", owner: "team-orders", lifecycle: "production", tags: ["python", "kafka", "async"], hasDocs: false },
+    { name: "notification-hub", type: "service", owner: "team-platform", lifecycle: "development", tags: ["node", "websocket", "events"], hasDocs: true },
+    { name: "catalog-api", type: "service", owner: "team-platform", lifecycle: "production", tags: ["go", "rest", "crud"], hasDocs: true },
+    { name: "ml-inference", type: "service", owner: "team-ai", lifecycle: "experimental", tags: ["python", "pytorch", "genai", "llm"], hasDocs: false },
+    { name: "vllm-model-server", type: "model-server", owner: "team-ai", lifecycle: "production", tags: ["genai", "ibm", "llm", "vllm"], hasDocs: true },
+    { name: "data-pipeline", type: "service", owner: "team-data", lifecycle: "production", tags: ["spark", "scala", "etl"], hasDocs: false },
+  ],
+  apis: [
+    { name: "beneficiary-management-api", type: "openapi", owner: "team-payments", lifecycle: "production" },
+    { name: "user-management-api", type: "openapi", owner: "team-platform", lifecycle: "production" },
+    { name: "order-tracking-api", type: "graphql", owner: "team-orders", lifecycle: "production" },
+    { name: "notification-api", type: "asyncapi", owner: "team-platform", lifecycle: "development" },
+  ]
+};
+
+const toolItems = document.querySelectorAll('.tool-item');
+function selectTool(idx) {
+  toolItems.forEach(t => t.classList.remove('active'));
+  toolItems[idx].classList.add('active');
+}
+
+function useSuggestion(el) {
+  input.value = el.textContent;
+  sendMessage();
+}
+
+function quickAction(action) {
+  if (action === 'scaffold') {
+    input.value = "Show me available software templates for creating a new service";
+  } else if (action === 'audit') {
+    input.value = "Audit all production components for compliance: docs, owner, tags";
+  }
+  sendMessage();
+}
+
+function addMessage(content, type) {
+  const div = document.createElement('div');
+  div.className = `message ${type}`;
+  const avatarClass = type === 'user' ? 'user-av' : 'ai-av';
+  const avatarText = type === 'user' ? 'PS' : 'AI';
+  div.innerHTML = `<div class="avatar ${avatarClass}">${avatarText}</div><div class="bubble">${content}</div>`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'message ai';
+  div.id = 'typing';
+  div.innerHTML = `<div class="avatar ai-av">AI</div><div class="bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addMessage(text, 'user');
+  document.getElementById('suggestions').style.display = 'none';
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    processQuery(text);
+  }, 800 + Math.random() * 700);
+}
+
+function processQuery(query) {
+  const q = query.toLowerCase();
+
+  // List all components
+  if (q.includes('list all component') || q.includes('all components') || (q.includes('list') && q.includes('catalog'))) {
+    selectTool(0);
+    const rows = catalogData.components.map(c =>
+      `<tr><td><strong>${c.name}</strong></td><td><span class="tag tag-blue">${c.type}</span></td><td>${c.owner}</td><td><span class="tag ${c.lifecycle==='production'?'tag-green':c.lifecycle==='development'?'tag-orange':'tag-purple'}">${c.lifecycle}</span></td><td>${c.hasDocs?'&#9989;':'&#10060;'}</td></tr>`
+    ).join('');
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> fetch-catalog-entities → kind: "Component"</div>
+      Found <strong>${catalogData.components.length} components</strong> in the Software Catalog:
+      <table class="result-table">
+        <tr><th>Name</th><th>Type</th><th>Owner</th><th>Lifecycle</th><th>Docs</th></tr>
+        ${rows}
+      </table>
+      <div class="action-btns">
+        <button class="action-btn" onclick="input.value='Show details for payment-service';sendMessage()">&#128269; Inspect payment-service</button>
+        <button class="action-btn" onclick="input.value='Which components are missing documentation?';sendMessage()">&#128200; Check doc coverage</button>
+      </div>`, 'ai'
+    );
+  }
+  // APIs owned by team
+  else if (q.includes('api') && (q.includes('team-platform') || q.includes('owned by'))) {
+    selectTool(0);
+    const team = q.includes('team-platform') ? 'team-platform' : 'team-payments';
+    const filtered = catalogData.apis.filter(a => a.owner === team);
+    const rows = filtered.map(a =>
+      `<tr><td><strong>${a.name}</strong></td><td><span class="tag tag-purple">${a.type}</span></td><td>${a.owner}</td><td><span class="tag tag-green">${a.lifecycle}</span></td></tr>`
+    ).join('');
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> fetch-catalog-entities → kind: "API", owner: "${team}"</div>
+      Found <strong>${filtered.length} APIs</strong> owned by <code>${team}</code>:
+      <table class="result-table">
+        <tr><th>Name</th><th>Type</th><th>Owner</th><th>Lifecycle</th></tr>
+        ${rows}
+      </table>
+      <div class="action-btns">
+        <button class="action-btn" onclick="input.value='Fetch the API definition for user-management-api';sendMessage()">&#128196; View API Definition</button>
+        <button class="action-btn" onclick="input.value='Generate a curl command for the notification-api';sendMessage()">&#9889; Generate curl</button>
+      </div>`, 'ai'
+    );
+  }
+  // TechDocs coverage
+  else if (q.includes('coverage') || q.includes('documentation health') || q.includes('missing doc')) {
+    selectTool(2);
+    const total = catalogData.components.length;
+    const withDocs = catalogData.components.filter(c => c.hasDocs).length;
+    const pct = Math.round((withDocs / total) * 100);
+    const missing = catalogData.components.filter(c => !c.hasDocs);
+    const missingList = missing.map(c => `<tr><td><strong>${c.name}</strong></td><td>${c.owner}</td><td><span class="tag tag-orange">${c.lifecycle}</span></td></tr>`).join('');
+
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> analyze-techdocs-coverage</div>
+      <strong>Documentation Coverage Analysis</strong><br><br>
+      <div style="display:flex;gap:24px;margin:8px 0">
+        <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#0078D4">${total}</div><div style="font-size:12px;color:#666">Total Entities</div></div>
+        <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#107C10">${withDocs}</div><div style="font-size:12px;color:#666">With TechDocs</div></div>
+        <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#D13438">${missing.length}</div><div style="font-size:12px;color:#666">Missing Docs</div></div>
+        <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:${pct>=70?'#107C10':'#FFB900'}">${pct}%</div><div style="font-size:12px;color:#666">Coverage</div></div>
+      </div>
+      <div class="coverage-bar"><div class="coverage-fill" style="width:${pct}%;background:${pct>=70?'#107C10':'#FFB900'}"></div></div>
+      <br><strong>Components missing documentation:</strong>
+      <table class="result-table">
+        <tr><th>Component</th><th>Owner</th><th>Lifecycle</th></tr>
+        ${missingList}
+      </table>
+      <div class="action-btns">
+        <button class="action-btn" onclick="input.value='Create a Jira ticket for missing docs on order-processor';sendMessage()">&#128203; Create Jira Ticket</button>
+        <button class="action-btn" onclick="input.value='Notify owners about missing documentation';sendMessage()">&#128231; Notify Owners</button>
+      </div>`, 'ai'
+    );
+  }
+  // Fetch docs for specific service
+  else if (q.includes('fetch doc') || q.includes('techdoc') && q.includes('payment')) {
+    selectTool(3);
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> retrieve-techdocs-content → entityRef: "component:default/payment-service"</div>
+      <strong>TechDocs: payment-service</strong><br>
+      <span style="font-size:12px;color:#666">Last modified: 2026-02-15 | Content-Type: text/html</span><br><br>
+      <div class="code-block"># Payment Service
+
+## Overview
+The Payment Service handles all financial transactions
+including credit card processing, refunds, and billing.
+
+## Architecture
+- Runtime: Java 21 + Spring Boot 3.2
+- Database: PostgreSQL 16
+- Message Queue: Apache Kafka
+- Authentication: OAuth2 / OIDC via Keycloak
+
+## API Endpoints
+- POST /api/v1/payments — Create a payment
+- GET  /api/v1/payments/{id} — Get payment details
+- POST /api/v1/refunds — Process a refund
+- GET  /api/v1/billing/summary — Billing summary
+
+## Dependencies
+- user-auth-api (authentication)
+- notification-hub (payment confirmations)
+- order-processor (order fulfillment trigger)</div>
+      <div class="action-btns">
+        <button class="action-btn" onclick="input.value='Generate a curl command for POST /api/v1/payments';sendMessage()">&#9889; Generate curl</button>
+        <button class="action-btn" onclick="input.value='Who owns payment-service and what depends on it?';sendMessage()">&#128101; Show Dependencies</button>
+        <button class="action-btn" onclick="input.value='Show the about page for payment-service';sendMessage()">&#128196; about.html</button>
+      </div>`, 'ai'
+    );
+  }
+  // Details for payment-service
+  else if (q.includes('detail') && q.includes('payment') || q.includes('inspect payment')) {
+    selectTool(0);
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> fetch-catalog-entities → name: "payment-service", verbose: true</div>
+      <strong>payment-service</strong> <span class="tag tag-green">production</span> <span class="tag tag-blue">service</span><br><br>
+      <table class="result-table">
+        <tr><th>Property</th><th>Value</th></tr>
+        <tr><td>Kind</td><td>Component</td></tr>
+        <tr><td>Type</td><td>service</td></tr>
+        <tr><td>Owner</td><td>team-payments</td></tr>
+        <tr><td>Lifecycle</td><td>production</td></tr>
+        <tr><td>System</td><td>payments-platform</td></tr>
+        <tr><td>Tags</td><td><span class="tag tag-blue">java</span> <span class="tag tag-blue">spring-boot</span> <span class="tag tag-orange">critical</span></td></tr>
+        <tr><td>TechDocs</td><td>&#9989; Available</td></tr>
+        <tr><td>Depends On</td><td>user-auth-api, notification-hub</td></tr>
+        <tr><td>Consumed By</td><td>order-processor, billing-dashboard</td></tr>
+      </table>`, 'ai'
+    );
+  }
+  // Generate curl
+  else if (q.includes('curl') || q.includes('generate')) {
+    selectTool(0);
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> fetch-catalog-entities → API definition resolved</div>
+      Based on the OpenAPI spec for <strong>beneficiary-management-api</strong>, here's the curl command for <code>POST /api/v1/beneficiaries</code>:<br>
+      <div class="code-block">curl -X POST \\
+  https://api.mycompany.com/api/v1/beneficiaries \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $TOKEN" \\
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "account": {
+      "bank_code": "001",
+      "branch": "1234",
+      "number": "56789-0"
+    }
+  }'</div>
+      <div class="action-btns">
+        <button class="action-btn" onclick="navigator.clipboard.writeText('curl -X POST ...')">&#128203; Copy to Clipboard</button>
+        <button class="action-btn" onclick="input.value='Show all endpoints for this API';sendMessage()">&#128196; All Endpoints</button>
+      </div>`, 'ai'
+    );
+  }
+  // Scaffold / templates
+  else if (q.includes('template') || q.includes('scaffold')) {
+    selectTool(0);
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> fetch-catalog-entities → kind: "Template"</div>
+      Found <strong>5 Software Templates</strong> available:
+      <table class="result-table">
+        <tr><th>Template</th><th>Language</th><th>Description</th></tr>
+        <tr><td><strong>spring-boot-service</strong></td><td><span class="tag tag-blue">Java</span></td><td>Spring Boot 3.2 microservice with PostgreSQL</td></tr>
+        <tr><td><strong>go-rest-api</strong></td><td><span class="tag tag-green">Go</span></td><td>Go REST API with Chi router and OIDC auth</td></tr>
+        <tr><td><strong>python-ml-service</strong></td><td><span class="tag tag-orange">Python</span></td><td>FastAPI ML inference service with GPU support</td></tr>
+        <tr><td><strong>node-event-handler</strong></td><td><span class="tag tag-purple">Node.js</span></td><td>Event-driven service with Kafka consumer</td></tr>
+        <tr><td><strong>docs-only</strong></td><td><span class="tag tag-blue">Markdown</span></td><td>TechDocs-only template for documentation</td></tr>
+      </table>
+      <div class="action-btns">
+        <button class="action-btn" onclick="input.value='Create a new service from spring-boot-service template';sendMessage()">&#9889; Use spring-boot-service</button>
+        <button class="action-btn" onclick="input.value='Create a new service from go-rest-api template';sendMessage()">&#9889; Use go-rest-api</button>
+      </div>`, 'ai'
+    );
+  }
+  // Audit compliance
+  else if (q.includes('audit') || q.includes('compliance')) {
+    selectTool(2);
+    const prod = catalogData.components.filter(c => c.lifecycle === 'production');
+    const compliant = prod.filter(c => c.hasDocs && c.tags.length > 0);
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> analyze-techdocs-coverage + fetch-catalog-entities → lifecycle: "production"</div>
+      <strong>Production Compliance Audit</strong><br><br>
+      <table class="result-table">
+        <tr><th>Component</th><th>Owner</th><th>Docs</th><th>Tags</th><th>Status</th></tr>
+        ${prod.map(c => `<tr><td><strong>${c.name}</strong></td><td>${c.owner}</td><td>${c.hasDocs?'&#9989;':'&#10060;'}</td><td>${c.tags.length>0?'&#9989;':'&#10060;'}</td><td>${c.hasDocs && c.tags.length>0 ? '<span class="tag tag-green">Compliant</span>' : '<span class="tag tag-orange">Action Needed</span>'}</td></tr>`).join('')}
+      </table>
+      <br><strong>Summary:</strong> ${compliant.length}/${prod.length} production components are fully compliant.
+      <div class="action-btns">
+        <button class="action-btn" onclick="input.value='Create Jira tickets for non-compliant components';sendMessage()">&#128203; Create Jira Tickets</button>
+        <button class="action-btn" onclick="input.value='Send compliance report to team leads';sendMessage()">&#128231; Send Report</button>
+      </div>`, 'ai'
+    );
+  }
+  // Dependencies
+  else if (q.includes('depend') || q.includes('who owns')) {
+    selectTool(0);
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> fetch-catalog-entities → name: "payment-service", verbose: true</div>
+      <strong>payment-service</strong> — Dependency Map<br><br>
+      <strong>Owner:</strong> team-payments<br><br>
+      <strong>Depends On (upstream):</strong>
+      <table class="result-table">
+        <tr><th>Service</th><th>Owner</th><th>Purpose</th></tr>
+        <tr><td>user-auth-api</td><td>team-platform</td><td>Authentication / OIDC tokens</td></tr>
+        <tr><td>notification-hub</td><td>team-platform</td><td>Payment confirmation emails</td></tr>
+      </table>
+      <strong>Consumed By (downstream):</strong>
+      <table class="result-table">
+        <tr><th>Service</th><th>Owner</th><th>Purpose</th></tr>
+        <tr><td>order-processor</td><td>team-orders</td><td>Triggers fulfillment on payment</td></tr>
+        <tr><td>billing-dashboard</td><td>team-finance</td><td>Revenue reporting</td></tr>
+      </table>`, 'ai'
+    );
+  }
+  // Jira / notify — simulated action
+  else if (q.includes('jira') || q.includes('notify') || q.includes('send')) {
+    addMessage(
+      `<div class="tool-badge"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2z"/></svg> Action Executed</div>
+      &#9989; <strong>Action simulated successfully!</strong><br><br>
+      In a production setup, this would integrate with external systems via additional MCP tools registered in the Actions Registry. You can extend RHDH's MCP server by creating custom MCP tool plugins that connect to:<br><br>
+      &#128203; <strong>Jira / Azure DevOps</strong> — Create tickets, update status<br>
+      &#128231; <strong>Slack / Teams</strong> — Send notifications to channels<br>
+      &#9889; <strong>GitHub Actions</strong> — Trigger CI/CD workflows<br>
+      &#128295; <strong>ArgoCD</strong> — Deploy or rollback services<br><br>
+      <em>The Actions Registry allows any Backstage plugin to register functions as MCP tools.</em>`, 'ai'
+    );
+  }
+  // Default fallback
+  else {
+    addMessage(
+      `I can help you with that! Here are the MCP tools available:<br><br>
+      <strong>1. fetch-catalog-entities</strong> — Query Components, APIs, Systems, Users, Groups<br>
+      <strong>2. fetch-techdocs</strong> — List entities with documentation<br>
+      <strong>3. analyze-techdocs-coverage</strong> — Check documentation health percentage<br>
+      <strong>4. retrieve-techdocs-content</strong> — Read specific TechDoc content<br><br>
+      Try one of these queries:
+      <div class="action-btns" style="margin-top:8px">
+        <button class="action-btn" onclick="input.value='List all components in the catalog';sendMessage()">&#128218; List Components</button>
+        <button class="action-btn" onclick="input.value='What is the TechDocs coverage?';sendMessage()">&#128200; Check Coverage</button>
+        <button class="action-btn" onclick="input.value='Show me available software templates';sendMessage()">&#9889; Templates</button>
+      </div>`, 'ai'
+    );
+  }
+}
+</script>
+</body>
+</html>
