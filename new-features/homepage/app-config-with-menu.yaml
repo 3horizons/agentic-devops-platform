@@ -1,0 +1,402 @@
+app:
+  baseUrl: http://devhub.135.18.141.224.nip.io
+  signInPage: github
+  title: Three Horizons | Agentic DevOps Platform
+auth:
+  environment: development
+  providers:
+    github:
+      development:
+        additionalScopes:
+        - user:email
+        clientId: ${GITHUB_APP_CLIENT_ID}
+        clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+        signIn:
+          resolvers:
+          - dangerouslyAllowSignInWithoutUserInCatalog: true
+            resolver: usernameMatchingUserEntityName
+          - resolver: emailMatchingUserEntityProfileEmail
+          - resolver: emailLocalPartMatchingUserEntityName
+    guest:
+      dangerouslyAllowOutsideDevelopment: true
+backend:
+  auth:
+    externalAccess:
+    - options:
+        subject: legacy-default
+        token: demo-azure-token-3horizons-2026
+      type: static
+  baseUrl: http://devhub.135.18.141.224.nip.io
+  cors:
+    credentials: true
+    methods:
+    - GET
+    - HEAD
+    - PATCH
+    - POST
+    - PUT
+    - DELETE
+    origin: http://devhub.135.18.141.224.nip.io
+  csp:
+    connect-src:
+    - '''self'''
+    - 'http:'
+    - 'https:'
+    - 'ws:'
+    - 'wss:'
+    img-src:
+    - '''self'''
+    - 'data:'
+    - 'https:'
+    script-src:
+    - '''self'''
+    - '''unsafe-eval'''
+    upgrade-insecure-requests: false
+  database:
+    client: pg
+    connection:
+      database: rhdh
+      host: pg-threehorizons-demo.postgres.database.azure.com
+      password: Thr33H0rizons2026Demo
+      port: 5432
+      ssl:
+        rejectUnauthorized: false
+        require: true
+      user: pgadmin
+    pluginDivisionMode: schema
+    pool:
+      acquireTimeoutMillis: 30000
+      createRetryIntervalMillis: 100
+      createTimeoutMillis: 10000
+      destroyTimeoutMillis: 5000
+      idleTimeoutMillis: 30000
+      max: 3
+      min: 0
+      reapIntervalMillis: 1000
+  helmet:
+    contentSecurityPolicy: false
+    hsts:
+      includeSubDomains: false
+      maxAge: 0
+      preload: false
+catalog:
+  locations:
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/todo-app/blob/main/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/web-application/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/new-microservice/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/basic-cicd/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/documentation-site/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/infrastructure-provisioning/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/security-baseline/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/api-microservice/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/microservice/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/api-gateway/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/gitops-deployment/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/event-driven-microservice/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/batch-job/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/data-pipeline/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/reusable-workflows/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/ado-to-github-migration/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/rag-application/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/copilot-extension/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/foundry-agent/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/multi-agent-system/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/mlops-pipeline/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/ai-evaluation-pipeline/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - Template
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/sre-agent-integration/template.yaml
+    type: url
+  - rules:
+    - allow:
+      - User
+      - Group
+      - Domain
+      - System
+    target: https://github.com/3horizons/agentic-devops-platform/blob/main/backstage/examples/org.yaml
+    type: url
+  - target: https://github.com/3horizons/agentic-devops-platform/blob/main/backstage/examples/entities.yaml
+    type: url
+  - target: https://github.com/3horizons/agentic-devops-platform/blob/main/backstage/catalog-info.yaml
+    type: url
+  rules:
+  - allow:
+    - Component
+    - System
+    - API
+    - Resource
+    - Location
+    - Domain
+    - Template
+    - User
+    - Group
+dynamicPlugins:
+  frontend:
+    default.main-menu-items:
+      menuItems:
+        default.apis:
+          icon: extension
+          priority: 70
+          title: APIs
+        default.catalog:
+          icon: category
+          priority: 80
+          title: Catalog
+        default.create:
+          icon: add
+          priority: 50
+          title: Create...
+        default.docs:
+          icon: docs
+          priority: 40
+          title: Docs
+        default.home:
+          icon: home
+          priority: 100
+          title: Home
+        default.learning-paths:
+          icon: school
+          priority: 60
+          title: Learning Paths
+        default.my-group:
+          icon: group
+          priority: 90
+          title: My Group
+    red-hat-developer-hub.backstage-plugin-dynamic-home-page:
+      mountPoints:
+      - config:
+          layouts:
+            lg:
+              h: 1
+              w: 10
+              x: 1
+            md:
+              h: 1
+              w: 10
+              x: 1
+            sm:
+              h: 1
+              w: 10
+              x: 1
+            xl:
+              h: 1
+              w: 10
+              x: 1
+            xs:
+              h: 1
+              w: 12
+            xxs:
+              h: 1
+              w: 12
+        importName: SearchBar
+        mountPoint: home.page/cards
+      - config:
+          layouts:
+            lg:
+              h: 8
+              w: 7
+            md:
+              h: 8
+              w: 7
+            sm:
+              h: 8
+              w: 12
+            xl:
+              h: 8
+              w: 7
+            xs:
+              h: 8
+              w: 12
+            xxs:
+              h: 8
+              w: 12
+        importName: QuickAccessCard
+        mountPoint: home.page/cards
+      - config:
+          layouts:
+            lg:
+              h: 4
+              w: 5
+              x: 7
+            md:
+              h: 4
+              w: 5
+              x: 7
+            sm:
+              h: 4
+              w: 12
+            xl:
+              h: 4
+              w: 5
+              x: 7
+            xs:
+              h: 4
+              w: 12
+            xxs:
+              h: 4
+              w: 12
+        importName: CatalogStarredEntitiesCard
+        mountPoint: home.page/cards
+      - config:
+          layouts:
+            lg:
+              h: 4
+              w: 5
+              x: 7
+            md:
+              h: 4
+              w: 5
+              x: 7
+            sm:
+              h: 4
+              w: 12
+            xl:
+              h: 4
+              w: 5
+              x: 7
+            xs:
+              h: 4
+              w: 12
+            xxs:
+              h: 4
+              w: 12
+        importName: FeaturedDocsCard
+        mountPoint: home.page/cards
+integrations:
+  github:
+  - apps:
+    - appId: ${GITHUB_APP_ID}
+      clientId: ${GITHUB_APP_CLIENT_ID}
+      clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+      privateKey: ${GITHUB_APP_PRIVATE_KEY}
+      webhookSecret: ${GITHUB_WEBHOOK_SECRET}
+    host: github.com
+kubernetes:
+  clusterLocatorMethods:
+  - clusters: []
+    type: config
+  serviceLocatorMethod:
+    type: multiTenant
+organization:
+  name: Three Horizons
+proxy:
+  endpoints:
+    /developer-hub:
+      allowedMethods:
+      - GET
+      changeOrigin: true
+      headers:
+        Accept: application/json
+      target: http://localhost:7007
+    /developer-hub/learning-paths:
+      allowedMethods:
+      - GET
+      changeOrigin: true
+      target: http://localhost:7007
+    /github/api:
+      allowedMethods:
+      - GET
+      changeOrigin: true
+      headers:
+        Accept: application/vnd.github+json
+      target: https://api.github.com
+scaffolder:
+  defaultAuthor:
+    email: platform@3horizons.dev
+    name: Three Horizons Platform
+  defaultCommitMessage: 'feat: initial scaffold from Golden Path'
+techdocs:
+  builder: local
+  generator:
+    runIn: local
+  publisher:
+    type: local
