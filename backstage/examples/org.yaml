@@ -28,6 +28,20 @@ spec:
     - paulanunes85
 ---
 apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-engineering
+  description: Platform Engineering Team
+spec:
+  type: team
+  profile:
+    displayName: Platform Engineering
+  parent: platform-team
+  children: []
+  members:
+    - paulanunes85
+---
+apiVersion: backstage.io/v1alpha1
 kind: Domain
 metadata:
   name: three-horizons
