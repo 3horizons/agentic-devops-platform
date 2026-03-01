@@ -6,7 +6,7 @@ tools:
   - read/problems
   - agent/runSubagent
   - web/fetch
-user-invokable: true
+user-invocable: true
 handoffs:
   - label: "Implementation (IaC)"
     agent: terraform

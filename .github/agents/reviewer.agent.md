@@ -4,7 +4,7 @@ description: Specialist in Code Quality, Best Practices, and Constructive Feedba
 tools:
   - search/codebase
   - read/problems
-user-invokable: true
+user-invocable: true
 handoffs:
   - label: "Security Deep Dive"
     agent: security

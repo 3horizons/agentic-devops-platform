@@ -6,7 +6,7 @@ tools:
   - edit/editFiles
   - execute/runInTerminal
   - read/problems
-user-invokable: true
+user-invocable: true
 handoffs:
   - label: "GitHub Setup"
     agent: github-integration

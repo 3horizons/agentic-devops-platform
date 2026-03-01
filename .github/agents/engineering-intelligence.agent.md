@@ -5,7 +5,7 @@ tools:
   - search/codebase
   - execute/runInTerminal
   - read/problems
-user-invokable: true
+user-invocable: true
 handoffs:
   - label: "Deploy Dashboard"
     agent: platform

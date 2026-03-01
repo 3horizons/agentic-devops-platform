@@ -7,7 +7,7 @@ tools:
   - execute/runInTerminal
   - read/problems
   - agent/runSubagent
-user-invokable: true
+user-invocable: true
 handoffs:
   - label: "Security Review"
     agent: security
