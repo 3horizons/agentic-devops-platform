@@ -278,6 +278,76 @@ data:
                     importName: DynamicHomePage
 
       # ════════════════════════════════════════════════════════════════════
+      # CUSTOM — Three Horizons Home Page
+      # ════════════════════════════════════════════════════════════════════
+      - package: oci://myacr.azurecr.io/plugins/home-three-horizons:latest
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              "@internal/plugin-home-three-horizons":
+                dynamicRoutes:
+                  - path: /
+                    importName: ThreeHorizonsHomePage
+                    menuItem:
+                      icon: HomeIcon
+                      text: Home
+
+      # ════════════════════════════════════════════════════════════════════
+      # CUSTOM — My Group Dashboard
+      # ════════════════════════════════════════════════════════════════════
+      - package: oci://myacr.azurecr.io/plugins/my-group-dashboard:latest
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              "@internal/plugin-my-group-dashboard":
+                dynamicRoutes:
+                  - path: /my-group
+                    importName: MyGroupDashboardPage
+                    menuItem:
+                      icon: GroupIcon
+                      text: My Group
+
+      # ════════════════════════════════════════════════════════════════════
+      # CUSTOM — Copilot Metrics Dashboard
+      # ════════════════════════════════════════════════════════════════════
+      - package: oci://myacr.azurecr.io/plugins/copilot-metrics:latest
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              "@internal/plugin-copilot-metrics":
+                dynamicRoutes:
+                  - path: /copilot-metrics
+                    importName: CopilotMetricsPage
+                    menuItem:
+                      icon: AssessmentIcon
+                      text: Copilot Metrics
+
+      # ════════════════════════════════════════════════════════════════════
+      # CUSTOM — GHAS Metrics Dashboard (Frontend)
+      # ════════════════════════════════════════════════════════════════════
+      - package: oci://myacr.azurecr.io/plugins/ghas-metrics:latest
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              "@internal/plugin-ghas-metrics":
+                dynamicRoutes:
+                  - path: /ghas-metrics
+                    importName: GhasMetricsPage
+                    menuItem:
+                      icon: SecurityIcon
+                      text: GHAS Metrics
+
+      # ════════════════════════════════════════════════════════════════════
+      # CUSTOM — GHAS Metrics Backend (Aggregation)
+      # ════════════════════════════════════════════════════════════════════
+      - package: oci://myacr.azurecr.io/plugins/ghas-metrics-backend:latest
+        disabled: false
+
+      # ════════════════════════════════════════════════════════════════════
       # DISABLED PLUGINS — Known issues (runtime-validated)
       # ════════════════════════════════════════════════════════════════════
 

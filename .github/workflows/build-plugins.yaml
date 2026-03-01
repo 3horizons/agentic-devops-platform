@@ -1,0 +1,153 @@
+# =============================================================================
+# RHDH Custom Dynamic Plugins — Build & Push OCI Artifacts to ACR
+# Builds all 4 frontend + 1 backend custom plugins and pushes to Azure
+# Container Registry as OCI artifacts using ORAS.
+# =============================================================================
+name: Build RHDH Dynamic Plugins
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'plugins/**'
+  workflow_dispatch:
+
+env:
+  ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
+  ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+  ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+  NODE_VERSION: '20'
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Frontend Plugins — Matrix build for all 4 frontend plugins
+  # ---------------------------------------------------------------------------
+  build-frontend-plugins:
+    name: Build Frontend — ${{ matrix.plugin }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin:
+          - home-three-horizons
+          - my-group-dashboard
+          - copilot-metrics
+          - ghas-metrics
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: plugins/${{ matrix.plugin }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm install
+
+      - name: Build plugin
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm run build
+
+      - name: Lint
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm test
+
+      - name: Export dynamic plugin
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npx @janus-idp/cli package export-dynamic-plugin
+
+      - name: Install ORAS CLI
+        uses: oras-project/setup-oras@v1
+
+      - name: Login to ACR
+        run: oras login ${{ env.ACR_REGISTRY }} -u ${{ env.ACR_USERNAME }} -p ${{ env.ACR_PASSWORD }}
+
+      - name: Push OCI artifact to ACR
+        working-directory: plugins/${{ matrix.plugin }}
+        run: |
+          SHORT_SHA=${GITHUB_SHA::7}
+          ARTIFACT_REF="${ACR_REGISTRY}/plugins/${{ matrix.plugin }}"
+
+          # Push with commit SHA tag
+          oras push "${ARTIFACT_REF}:${SHORT_SHA}" \
+            --artifact-type application/vnd.backstage.dynamic-plugin \
+            dist-dynamic/:application/gzip
+
+          # Push with latest tag
+          oras push "${ARTIFACT_REF}:latest" \
+            --artifact-type application/vnd.backstage.dynamic-plugin \
+            dist-dynamic/:application/gzip
+
+          echo "::notice ::Pushed ${ARTIFACT_REF}:${SHORT_SHA} and ${ARTIFACT_REF}:latest"
+
+  # ---------------------------------------------------------------------------
+  # Backend Plugin — GHAS Metrics Backend (separate job)
+  # ---------------------------------------------------------------------------
+  build-backend-plugin:
+    name: Build Backend — ghas-metrics-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: plugins/ghas-metrics-backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: plugins/ghas-metrics-backend
+        run: npm install
+
+      - name: Build plugin
+        working-directory: plugins/ghas-metrics-backend
+        run: npm run build
+
+      - name: Lint
+        working-directory: plugins/ghas-metrics-backend
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: plugins/ghas-metrics-backend
+        run: npm test
+
+      - name: Export dynamic plugin
+        working-directory: plugins/ghas-metrics-backend
+        run: npx @janus-idp/cli package export-dynamic-plugin
+
+      - name: Install ORAS CLI
+        uses: oras-project/setup-oras@v1
+
+      - name: Login to ACR
+        run: oras login ${{ env.ACR_REGISTRY }} -u ${{ env.ACR_USERNAME }} -p ${{ env.ACR_PASSWORD }}
+
+      - name: Push OCI artifact to ACR
+        working-directory: plugins/ghas-metrics-backend
+        run: |
+          SHORT_SHA=${GITHUB_SHA::7}
+          ARTIFACT_REF="${ACR_REGISTRY}/plugins/ghas-metrics-backend"
+
+          # Push with commit SHA tag
+          oras push "${ARTIFACT_REF}:${SHORT_SHA}" \
+            --artifact-type application/vnd.backstage.dynamic-plugin \
+            dist-dynamic/:application/gzip
+
+          # Push with latest tag
+          oras push "${ARTIFACT_REF}:latest" \
+            --artifact-type application/vnd.backstage.dynamic-plugin \
+            dist-dynamic/:application/gzip
+
+          echo "::notice ::Pushed ${ARTIFACT_REF}:${SHORT_SHA} and ${ARTIFACT_REF}:latest"

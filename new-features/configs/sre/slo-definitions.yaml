@@ -1,0 +1,348 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - SLO DEFINITIONS
+# =============================================================================
+#
+# Service Level Objectives for the RHDH Developer Hub portal and its custom
+# plugins. These SLOs define the reliability targets that the platform team
+# commits to for internal developer consumers.
+#
+# Portal: RHDH 1.8 on :7007
+# Plugins: home-three-horizons, my-group-dashboard, copilot-metrics,
+#          ghas-metrics (frontend), ghas-metrics-backend (Express router)
+#
+# Methodology: Google SRE Workbook multi-window, multi-burn-rate approach
+# Reference: https://sre.google/workbook/alerting-on-slos/
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SLO Definitions
+# -----------------------------------------------------------------------------
+slos:
+  # ---------------------------------------------------------------------------
+  # 1. Portal Availability
+  # ---------------------------------------------------------------------------
+  - name: portal-availability
+    description: "RHDH portal availability measured by successful probe responses"
+    service: rhdh-developer-hub
+    target: 99.9%
+    window: 30d
+    indicator:
+      type: availability
+      metric: up{job="rhdh-developer-hub"}
+      good_event: "Probe response is successful (up == 1)"
+      total_event: "All probe attempts"
+    error_budget:
+      monthly_minutes: 43.2  # 30d * 24h * 60m * 0.001
+      description: "43.2 minutes of downtime allowed per 30-day window"
+    alerting:
+      # Multi-window, multi-burn-rate alerting per Google SRE Workbook
+      burn_rate_windows:
+        - window: 5m
+          long_window: 1h
+          factor: 14.4  # 2% of budget consumed in 1h
+          severity: critical
+          action: "Page on-call SRE immediately"
+        - window: 30m
+          long_window: 6h
+          factor: 6     # 5% of budget consumed in 6h
+          severity: critical
+          action: "Page on-call SRE"
+        - window: 6h
+          long_window: 24h
+          factor: 3     # 10% of budget consumed in 3d
+          severity: warning
+          action: "Create ticket, investigate within business hours"
+        - window: 24h
+          long_window: 30d
+          factor: 1     # 100% of budget consumed in 30d
+          severity: warning
+          action: "Create ticket, monitor trend"
+    recording_rules:
+      - rhdh:availability:5m
+      - rhdh:availability:1h
+      - rhdh:availability:24h
+      - rhdh:availability:30d
+    dashboard: rhdh-portal-health
+
+  # ---------------------------------------------------------------------------
+  # 2. Portal Latency
+  # ---------------------------------------------------------------------------
+  - name: portal-latency
+    description: "RHDH page load p95 latency must be under 2 seconds"
+    service: rhdh-developer-hub
+    target: 95%
+    window: 30d
+    indicator:
+      type: latency
+      threshold: 2s
+      percentile: p95
+      metric: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub"}[5m]))
+      good_event: "Requests completed in under 2 seconds"
+      total_event: "All HTTP requests"
+    error_budget:
+      monthly_minutes: 2160  # 30d * 24h * 60m * 0.05
+      description: "5% of requests may exceed the 2-second latency threshold"
+    alerting:
+      rules:
+        - condition: "p95 > 2s for 10m"
+          severity: warning
+          action: "Investigate slow endpoints, check database queries and external API calls"
+        - condition: "p95 > 5s for 5m"
+          severity: critical
+          action: "Page on-call SRE, portal is severely degraded"
+        - condition: "p99 > 10s for 5m"
+          severity: critical
+          action: "Page on-call SRE, investigate potential resource exhaustion"
+    recording_rules:
+      - rhdh:latency:p50
+      - rhdh:latency:p90
+      - rhdh:latency:p95
+      - rhdh:latency:p99
+    dashboard: rhdh-portal-health
+
+  # ---------------------------------------------------------------------------
+  # 3. Portal Error Rate
+  # ---------------------------------------------------------------------------
+  - name: portal-error-rate
+    description: "RHDH portal 5xx server error rate must remain below 0.1%"
+    service: rhdh-developer-hub
+    target: 99.9%
+    window: 30d
+    indicator:
+      type: error-rate
+      metric: |
+        sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[5m]))
+        / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m]))
+      good_event: "Non-5xx HTTP responses"
+      total_event: "All HTTP responses"
+    error_budget:
+      description: "0.1% of total requests may return 5xx errors over 30 days"
+    alerting:
+      rules:
+        - condition: "error_rate > 5% for 5m"
+          severity: warning
+          action: "Investigate error logs, check recent deployments"
+        - condition: "error_rate > 15% for 2m"
+          severity: critical
+          action: "Page on-call SRE, consider rollback"
+    recording_rules:
+      - rhdh:error_rate:5m
+      - rhdh:error_rate:1h
+      - rhdh:error_rate:24h
+    dashboard: rhdh-portal-health
+
+  # ---------------------------------------------------------------------------
+  # 4. Copilot Metrics Proxy Success Rate
+  # ---------------------------------------------------------------------------
+  - name: copilot-proxy-success
+    description: "Copilot Metrics proxy endpoint success rate"
+    service: rhdh-developer-hub
+    plugin: copilot-metrics
+    target: 99%
+    window: 7d
+    indicator:
+      type: availability
+      metric: rhdh:proxy:copilot:success_rate:5m
+      good_event: "Proxy requests returning 2xx"
+      total_event: "All proxy requests to /api/proxy/github-copilot"
+    error_budget:
+      weekly_minutes: 100.8  # 7d * 24h * 60m * 0.01
+      description: "~100 minutes of proxy failures allowed per 7-day window"
+    alerting:
+      rules:
+        - condition: "success_rate < 50% for 5m"
+          severity: warning
+          action: "Check GitHub API token validity and rate limits"
+        - condition: "success_rate < 10% for 5m"
+          severity: critical
+          action: "Page on-call, Copilot metrics plugin is effectively down"
+    dependencies:
+      - name: "GitHub REST API"
+        description: "Copilot usage statistics endpoints"
+        expected_availability: 99.9%
+      - name: "RHDH proxy middleware"
+        description: "Backstage proxy plugin forwarding requests"
+    recording_rules:
+      - rhdh:proxy:copilot:success_rate:5m
+      - rhdh:proxy:copilot:request_rate:5m
+      - rhdh:proxy:copilot:error_rate:5m
+      - rhdh:proxy:copilot:latency:p95
+    dashboard: rhdh-portal-health
+
+  # ---------------------------------------------------------------------------
+  # 5. GHAS Metrics Proxy Success Rate
+  # ---------------------------------------------------------------------------
+  - name: ghas-proxy-success
+    description: "GHAS Metrics proxy endpoint success rate"
+    service: rhdh-developer-hub
+    plugin: ghas-metrics
+    target: 99%
+    window: 7d
+    indicator:
+      type: availability
+      metric: rhdh:proxy:ghas:success_rate:5m
+      good_event: "Proxy requests returning 2xx"
+      total_event: "All proxy requests to /api/proxy/github-security"
+    error_budget:
+      weekly_minutes: 100.8  # 7d * 24h * 60m * 0.01
+      description: "~100 minutes of proxy failures allowed per 7-day window"
+    alerting:
+      rules:
+        - condition: "success_rate < 50% for 5m"
+          severity: warning
+          action: "Check GitHub API token validity, GHAS license, and rate limits"
+        - condition: "success_rate < 10% for 5m"
+          severity: critical
+          action: "Page on-call, GHAS metrics plugin is effectively down"
+    dependencies:
+      - name: "GitHub REST API"
+        description: "Code scanning, secret scanning, and Dependabot endpoints"
+        expected_availability: 99.9%
+      - name: "GitHub Advanced Security"
+        description: "GHAS must be enabled on target repositories"
+    recording_rules:
+      - rhdh:proxy:ghas:success_rate:5m
+      - rhdh:proxy:ghas:request_rate:5m
+      - rhdh:proxy:ghas:error_rate:5m
+      - rhdh:proxy:ghas:latency:p95
+    dashboard: rhdh-portal-health
+
+  # ---------------------------------------------------------------------------
+  # 6. GHAS Backend Aggregation Performance
+  # ---------------------------------------------------------------------------
+  - name: ghas-backend-latency
+    description: "GHAS backend aggregation p95 latency must be under 30 seconds"
+    service: rhdh-developer-hub
+    plugin: ghas-metrics-backend
+    target: 95%
+    window: 7d
+    indicator:
+      type: latency
+      threshold: 30s
+      percentile: p95
+      metric: rhdh:backend:ghas:latency:p95
+      good_event: "Backend aggregation requests completed in under 30 seconds"
+      total_event: "All backend aggregation requests to /api/ghas-metrics"
+    error_budget:
+      description: "5% of aggregation requests may exceed the 30-second threshold"
+    alerting:
+      rules:
+        - condition: "p95 > 30s for 5m"
+          severity: warning
+          action: "Check GitHub API rate limits, consider caching aggregation results"
+        - condition: "p95 > 60s for 5m"
+          severity: critical
+          action: "Investigate backend health, check for large organization payloads"
+    dependencies:
+      - name: "GitHub REST API"
+        description: "Multiple GHAS endpoints called in sequence for aggregation"
+        expected_availability: 99.9%
+    recording_rules:
+      - rhdh:backend:ghas:latency:p95
+      - rhdh:backend:ghas:latency:p99
+      - rhdh:backend:ghas:request_rate:5m
+      - rhdh:backend:ghas:error_rate:5m
+    dashboard: rhdh-portal-health
+
+  # ---------------------------------------------------------------------------
+  # 7. Catalog Freshness
+  # ---------------------------------------------------------------------------
+  - name: catalog-freshness
+    description: "Catalog entities must not decrease unexpectedly"
+    service: rhdh-developer-hub
+    target: 99.9%
+    window: 30d
+    indicator:
+      type: freshness
+      metric: backstage_catalog_entities_count
+      good_event: "Catalog entity count remains stable or increases"
+      total_event: "All catalog sync cycles"
+    error_budget:
+      description: "Catalog entity drops exceeding 10 entities in 30 minutes should not occur more than 0.1% of the time"
+    alerting:
+      rules:
+        - condition: "entity count drops by >10 in 30m"
+          severity: warning
+          action: "Check catalog providers (GitHub discovery, static locations), verify SCM connectivity"
+        - condition: "entity count drops to 0"
+          severity: critical
+          action: "Page on-call, catalog database may be corrupted or providers disconnected"
+    dependencies:
+      - name: "GitHub API / SCM providers"
+        description: "Entity discovery depends on SCM provider connectivity"
+      - name: "PostgreSQL database"
+        description: "Catalog state stored in RHDH PostgreSQL backend"
+    recording_rules:
+      - rhdh:catalog:entities:total
+      - rhdh:catalog:entities:by_kind
+    dashboard: rhdh-portal-health
+
+# -----------------------------------------------------------------------------
+# Global Configuration
+# -----------------------------------------------------------------------------
+config:
+  # Prometheus job label used for RHDH portal metrics
+  prometheus_job: rhdh-developer-hub
+
+  # Namespace where RHDH is deployed
+  namespace: rhdh
+
+  # Container name for resource metric queries
+  container: rhdh-developer-hub
+
+  # ServiceMonitor scrape port
+  metrics_port: 7007
+  metrics_path: /metrics
+
+  # Grafana dashboard UID for linking
+  dashboard_uid: rhdh-portal-health
+
+  # Alertmanager routing labels for RHDH alerts
+  alertmanager:
+    route_match:
+      component: rhdh
+    receivers:
+      critical:
+        - pagerduty-platform-critical
+        - slack-platform-critical
+      warning:
+        - slack-platform-warnings
+
+# -----------------------------------------------------------------------------
+# Escalation Policy
+# -----------------------------------------------------------------------------
+escalation:
+  critical:
+    response_time: 15m
+    resolution_time: 4h
+    notify:
+      - channel: pagerduty
+        policy: platform-on-call
+      - channel: slack
+        target: "#platform-incidents"
+      - channel: email
+        target: platform-sre@company.com
+  warning:
+    response_time: 4h
+    resolution_time: 24h
+    notify:
+      - channel: slack
+        target: "#platform-alerts"
+      - channel: email
+        target: platform-team@company.com
+
+# -----------------------------------------------------------------------------
+# Review Cadence
+# -----------------------------------------------------------------------------
+review:
+  frequency: weekly
+  meeting: "Platform SLO Review"
+  attendees:
+    - Platform Engineering team
+    - SRE on-call rotation
+  agenda:
+    - Error budget consumption review
+    - SLO target adjustments
+    - Incident retrospectives
+    - Plugin health trends

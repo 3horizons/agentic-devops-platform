@@ -1,0 +1,265 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - RHDH PORTAL RECORDING RULES
+# =============================================================================
+#
+# Pre-computed metrics for the RHDH Developer Hub portal and custom plugins.
+# These recording rules power the rhdh-portal-health Grafana dashboard and
+# enable efficient SLO alerting.
+#
+# Portal endpoint: :7007/metrics
+# Plugins: home-three-horizons, my-group-dashboard, copilot-metrics,
+#          ghas-metrics (frontend), ghas-metrics-backend (Express router)
+#
+# =============================================================================
+
+groups:
+  # ===========================================================================
+  # PORTAL AVAILABILITY & PERFORMANCE
+  # ===========================================================================
+  - name: rhdh-portal-recording
+    interval: 1m
+    rules:
+      # -----------------------------------------------------------------------
+      # Portal Availability (multiple windows for SLO tracking)
+      # -----------------------------------------------------------------------
+      - record: rhdh:availability:5m
+        expr: avg_over_time(up{job="rhdh-developer-hub"}[5m])
+
+      - record: rhdh:availability:1h
+        expr: avg_over_time(up{job="rhdh-developer-hub"}[1h])
+
+      - record: rhdh:availability:24h
+        expr: avg_over_time(up{job="rhdh-developer-hub"}[24h])
+
+      - record: rhdh:availability:30d
+        expr: avg_over_time(up{job="rhdh-developer-hub"}[30d])
+
+      # -----------------------------------------------------------------------
+      # Request Rate by Status Code
+      # -----------------------------------------------------------------------
+      - record: rhdh:http_requests:rate5m
+        expr: sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m])) by (code)
+
+      - record: rhdh:http_requests:rate5m:total
+        expr: sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m]))
+
+      - record: rhdh:http_requests:rate5m:by_path
+        expr: sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m])) by (path, code)
+
+      # -----------------------------------------------------------------------
+      # Error Rates
+      # -----------------------------------------------------------------------
+      - record: rhdh:error_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m]))
+
+      - record: rhdh:error_rate:1h
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[1h]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[1h]))
+
+      - record: rhdh:error_rate:24h
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[24h]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[24h]))
+
+      - record: rhdh:client_error_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"4.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m]))
+
+      # -----------------------------------------------------------------------
+      # Latency Percentiles
+      # -----------------------------------------------------------------------
+      - record: rhdh:latency:p50
+        expr: histogram_quantile(0.5, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub"}[5m]))
+
+      - record: rhdh:latency:p90
+        expr: histogram_quantile(0.9, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub"}[5m]))
+
+      - record: rhdh:latency:p95
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub"}[5m]))
+
+      - record: rhdh:latency:p99
+        expr: histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub"}[5m]))
+
+  # ===========================================================================
+  # PLUGIN PROXY METRICS
+  # ===========================================================================
+  - name: rhdh-plugin-proxy-recording
+    interval: 1m
+    rules:
+      # -----------------------------------------------------------------------
+      # Copilot Metrics Proxy
+      # -----------------------------------------------------------------------
+      - record: rhdh:proxy:copilot:success_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*",code=~"2.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*"}[5m]))
+
+      - record: rhdh:proxy:copilot:request_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*"}[5m]))
+
+      - record: rhdh:proxy:copilot:error_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*",code=~"[45].."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*"}[5m]))
+
+      - record: rhdh:proxy:copilot:latency:p95
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*"}[5m]))
+
+      # -----------------------------------------------------------------------
+      # GHAS Metrics Proxy
+      # -----------------------------------------------------------------------
+      - record: rhdh:proxy:ghas:success_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*",code=~"2.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*"}[5m]))
+
+      - record: rhdh:proxy:ghas:request_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*"}[5m]))
+
+      - record: rhdh:proxy:ghas:error_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*",code=~"[45].."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*"}[5m]))
+
+      - record: rhdh:proxy:ghas:latency:p95
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*"}[5m]))
+
+      # -----------------------------------------------------------------------
+      # GHAS Backend Aggregation (Express router)
+      # -----------------------------------------------------------------------
+      - record: rhdh:backend:ghas:request_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*"}[5m]))
+
+      - record: rhdh:backend:ghas:error_rate:5m
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*",code=~"5.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*"}[5m]))
+
+      - record: rhdh:backend:ghas:latency:p95
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*"}[5m]))
+
+      - record: rhdh:backend:ghas:latency:p99
+        expr: |
+          histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*"}[5m]))
+
+  # ===========================================================================
+  # CATALOG & PLATFORM METRICS
+  # ===========================================================================
+  - name: rhdh-catalog-recording
+    interval: 1m
+    rules:
+      # -----------------------------------------------------------------------
+      # Catalog Entity Counts
+      # -----------------------------------------------------------------------
+      - record: rhdh:catalog:entities:total
+        expr: backstage_catalog_entities_count
+
+      - record: rhdh:catalog:entities:by_kind
+        expr: backstage_catalog_entities_count by (kind)
+
+      # -----------------------------------------------------------------------
+      # Scaffolder (Golden Path) Metrics
+      # -----------------------------------------------------------------------
+      - record: rhdh:scaffolder:tasks:rate_1h
+        expr: |
+          sum(increase(rhdh_scaffolder_task_count[1h])) by (status)
+
+      - record: rhdh:scaffolder:tasks:success_rate
+        expr: |
+          sum(rate(rhdh_scaffolder_task_count{status="completed"}[24h]))
+          / sum(rate(rhdh_scaffolder_task_count[24h]))
+
+  # ===========================================================================
+  # RESOURCE USAGE
+  # ===========================================================================
+  - name: rhdh-resource-recording
+    interval: 1m
+    rules:
+      # -----------------------------------------------------------------------
+      # Memory
+      # -----------------------------------------------------------------------
+      - record: rhdh:memory:usage_bytes
+        expr: |
+          container_memory_working_set_bytes{namespace="rhdh",container="rhdh-developer-hub"}
+
+      - record: rhdh:memory:limit_bytes
+        expr: |
+          container_spec_memory_limit_bytes{namespace="rhdh",container="rhdh-developer-hub"}
+
+      - record: rhdh:memory:usage_ratio
+        expr: |
+          container_memory_working_set_bytes{namespace="rhdh",container="rhdh-developer-hub"}
+          / container_spec_memory_limit_bytes{namespace="rhdh",container="rhdh-developer-hub"}
+
+      # -----------------------------------------------------------------------
+      # CPU
+      # -----------------------------------------------------------------------
+      - record: rhdh:cpu:usage_cores
+        expr: |
+          rate(container_cpu_usage_seconds_total{namespace="rhdh",container="rhdh-developer-hub"}[5m])
+
+      - record: rhdh:cpu:usage_ratio
+        expr: |
+          rate(container_cpu_usage_seconds_total{namespace="rhdh",container="rhdh-developer-hub"}[5m])
+          / container_spec_cpu_quota{namespace="rhdh",container="rhdh-developer-hub"} * 100000
+
+      # -----------------------------------------------------------------------
+      # Pod Restarts
+      # -----------------------------------------------------------------------
+      - record: rhdh:pod:restarts:1h
+        expr: |
+          increase(kube_pod_container_status_restarts_total{namespace="rhdh",container="rhdh-developer-hub"}[1h])
+
+      - record: rhdh:pod:restarts:24h
+        expr: |
+          increase(kube_pod_container_status_restarts_total{namespace="rhdh",container="rhdh-developer-hub"}[24h])
+
+  # ===========================================================================
+  # SLO METRICS
+  # ===========================================================================
+  - name: rhdh-slo-recording
+    interval: 1m
+    rules:
+      # -----------------------------------------------------------------------
+      # Error Budget (99.9% availability SLO, 30d window)
+      # -----------------------------------------------------------------------
+      - record: rhdh:slo:error_budget:remaining
+        expr: |
+          1 - (
+            (1 - (
+              sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code!~"5.."}[30d]))
+              / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[30d]))
+            ))
+            / (1 - 0.999)
+          )
+
+      - record: rhdh:slo:burn_rate:1h
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[1h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[1h]))
+          ) / (1 - 0.999)
+
+      - record: rhdh:slo:burn_rate:6h
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[6h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[6h]))
+          ) / (1 - 0.999)
+
+      - record: rhdh:slo:burn_rate:24h
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[24h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[24h]))
+          ) / (1 - 0.999)

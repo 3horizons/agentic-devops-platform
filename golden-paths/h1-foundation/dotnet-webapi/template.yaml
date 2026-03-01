@@ -1,0 +1,162 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H1 .NET WEB API GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating .NET 8 Web API services.
+# Includes health checks, OpenAPI/Swagger, structured logging, CI/CD,
+# and Kubernetes deployment.
+#
+# Horizon: H1 - Foundation
+# Use Case: Scaffold production-ready .NET Web API microservices
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h1-dotnet-webapi
+  title: "H1: .NET Web API"
+  description: |
+    Production-ready .NET 8 Web API with health checks, OpenAPI/Swagger,
+    structured logging, CI/CD, and K8s deployment.
+  tags:
+    - h1-foundation
+    - microservice
+    - dotnet
+    - csharp
+    - webapi
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: .NET 8 Documentation
+      url: https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-8
+    - title: ASP.NET Core Minimal APIs
+      url: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis
+    - title: Three Horizons Guide
+      url: https://github.com/3horizons/agentic-devops-platform
+
+spec:
+  owner: platform-engineering
+  type: service
+
+  # ===========================================================================
+  # PARAMETERS
+  # ===========================================================================
+
+  parameters:
+    # -------------------------------------------------------------------------
+    # Service Information
+    # -------------------------------------------------------------------------
+    - title: Service Information
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Service Name
+          description: Unique name for the Web API service (lowercase, hyphens allowed)
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 50
+          ui:autofocus: true
+
+        description:
+          title: Description
+          description: A brief description of the service
+          type: string
+          maxLength: 300
+
+        owner:
+          title: Owner
+          description: Team that owns this service
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        system:
+          title: System
+          description: Parent system this service belongs to
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+
+        lifecycle:
+          title: Lifecycle
+          description: Development stage of the service
+          type: string
+          default: experimental
+          enum:
+            - experimental
+            - production
+            - deprecated
+          enumNames:
+            - Experimental
+            - Production
+            - Deprecated
+
+    # -------------------------------------------------------------------------
+    # Repository Configuration
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+
+  steps:
+    - id: fetch-template
+      name: Fetch .NET Web API Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          lifecycle: ${{ parameters.lifecycle }}
+          repoUrl: ${{ parameters.repoUrl }}
+
+    - id: publish
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        protectDefaultBranch: true
+
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  # ===========================================================================
+  # OUTPUT
+  # ===========================================================================
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

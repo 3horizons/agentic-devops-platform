@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(az resource list --resource-group rg-threehorizons-demo --output table)",
+      "Bash(helm get values rhdh-demo -n devhub)",
+      "Bash(kubectl get nodes)",
+      "Bash(helm get values rhdh-demo -n devhub --all)",
+      "Bash(az acr show --name acrbackstagedemo --query \"{loginServer:loginServer,adminUserEnabled:adminUserEnabled,sku:sku.name}\" --output json)",
+      "Bash(kubectl get configmap rhdh-demo-developer-hub-app-config -n devhub -o jsonpath='{.data.app-config\\\\.yaml}')",
+      "Bash(kubectl get configmap rhdh-demo-dynamic-plugins -n devhub -o jsonpath='{.data.dynamic-plugins\\\\.yaml}')"
+    ]
+  }
+}

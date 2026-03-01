@@ -1,0 +1,26 @@
+Script started on Sun Mar  1 15:38:30 2026
+Command: 
+import os
+fp = new-features/deploy/app-config-rhdh.yaml
+with open(fp, r, encoding=utf-8) as f:
+    content = f.read()
+
+old_branding = content.split( # Microsoft Branding)[0]
+old_branding +=  # Microsoft Branding
+
+auth_idx = content.find(# GitHub-Only Authentication)
+if auth_idx == -1:
+    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section    print(ERROR: cannot find auth section        print(ERROR:dColor: #FFFFFF
+e()
+print(encoded)
+" | xargs -I{} python3 -c "import base64,sys; exec(base64.b64decode('{}').decode())""
+script: 
+import os
+fp = new-features/deploy/app-config-rhdh.yaml
+with open(fp, r, encoding=utf-8) as f:
+    content = f.read()
+
+old_branding = content.split(: No such file or directory
+
+Command exit status: 1
+Script done on Sun Mar  1 15:38:30 2026

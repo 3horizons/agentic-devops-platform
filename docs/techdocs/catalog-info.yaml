@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: three-horizons-docs
+  title: Three Horizons Documentation
+  description: Platform documentation for the Three Horizons Agentic DevOps Platform
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - documentation
+    - platform
+    - three-horizons
+spec:
+  type: documentation
+  lifecycle: production
+  owner: platform-team

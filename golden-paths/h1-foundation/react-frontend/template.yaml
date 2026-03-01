@@ -1,0 +1,161 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H1 REACT FRONTEND GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating React SPA applications.
+# Includes TypeScript, Vite, testing, CI/CD pipeline, and container deployment.
+#
+# Horizon: H1 - Foundation
+# Use Case: Scaffold production-ready React frontend applications
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h1-react-frontend
+  title: "H1: React Frontend Application"
+  description: |
+    Production-ready React SPA with TypeScript, Vite, testing,
+    CI/CD pipeline, and container deployment.
+  tags:
+    - h1-foundation
+    - frontend
+    - react
+    - typescript
+    - vite
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: React Documentation
+      url: https://react.dev
+    - title: Vite Documentation
+      url: https://vitejs.dev
+    - title: Three Horizons Guide
+      url: https://github.com/3horizons/agentic-devops-platform
+
+spec:
+  owner: platform-engineering
+  type: website
+
+  # ===========================================================================
+  # PARAMETERS
+  # ===========================================================================
+
+  parameters:
+    # -------------------------------------------------------------------------
+    # Application Information
+    # -------------------------------------------------------------------------
+    - title: Application Information
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Application Name
+          description: Unique name for the React application (lowercase, hyphens allowed)
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 50
+          ui:autofocus: true
+
+        description:
+          title: Description
+          description: A brief description of the application
+          type: string
+          maxLength: 300
+
+        owner:
+          title: Owner
+          description: Team that owns this application
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        system:
+          title: System
+          description: Parent system this application belongs to
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+
+        lifecycle:
+          title: Lifecycle
+          description: Development stage of the application
+          type: string
+          default: experimental
+          enum:
+            - experimental
+            - production
+            - deprecated
+          enumNames:
+            - Experimental
+            - Production
+            - Deprecated
+
+    # -------------------------------------------------------------------------
+    # Repository Configuration
+    # -------------------------------------------------------------------------
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # ===========================================================================
+  # STEPS
+  # ===========================================================================
+
+  steps:
+    - id: fetch-template
+      name: Fetch React Frontend Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          lifecycle: ${{ parameters.lifecycle }}
+          repoUrl: ${{ parameters.repoUrl }}
+
+    - id: publish
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        protectDefaultBranch: true
+
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  # ===========================================================================
+  # OUTPUT
+  # ===========================================================================
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

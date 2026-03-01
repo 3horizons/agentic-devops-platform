@@ -1,0 +1,143 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - H1 GO MICROSERVICE GOLDEN PATH TEMPLATE
+# =============================================================================
+#
+# RHDH Software Template for creating Go microservices.
+# Includes Chi router, structured logging, health checks, CI/CD, and
+# Kubernetes deployment support.
+#
+# Horizon: H1 - Foundation
+# Use Case: Scaffold production-ready Go microservices with best practices
+#
+# =============================================================================
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h1-go-microservice
+  title: "H1: Go Microservice"
+  description: |
+    Production-ready Go microservice with Chi router, structured logging
+    (zap), health checks, CI/CD pipeline, and Kubernetes deployment support.
+  tags:
+    - h1-foundation
+    - microservice
+    - golang
+    - go
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: Go Documentation
+      url: https://go.dev/doc/
+    - title: Chi Router
+      url: https://github.com/go-chi/chi
+    - title: Three Horizons Guide
+      url: https://github.com/3horizons/agentic-devops-platform
+
+spec:
+  owner: platform-engineering
+  type: service
+
+  parameters:
+    - title: Service Information
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Service Name
+          description: Unique name for the microservice (lowercase, hyphens allowed)
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 50
+          ui:autofocus: true
+
+        description:
+          title: Description
+          description: A brief description of the microservice
+          type: string
+          maxLength: 300
+
+        owner:
+          title: Owner
+          description: Team that owns this service
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+
+        system:
+          title: System
+          description: Parent system this service belongs to
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+
+        lifecycle:
+          title: Lifecycle
+          description: Development stage of the service
+          type: string
+          default: experimental
+          enum:
+            - experimental
+            - production
+            - deprecated
+          enumNames:
+            - Experimental
+            - Production
+            - Deprecated
+
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  steps:
+    - id: fetch-template
+      name: Fetch Go Microservice Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          lifecycle: ${{ parameters.lifecycle }}
+          repoUrl: ${{ parameters.repoUrl }}
+
+    - id: publish
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: "${{ parameters.description }}"
+        defaultBranch: main
+        repoVisibility: internal
+        protectDefaultBranch: true
+
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

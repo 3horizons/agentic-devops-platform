@@ -1,0 +1,19 @@
+{
+  "name": "${{ values.name }}",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.vscode-dotnet-runtime"
+      ],
+      "settings": {
+        "dotnet.defaultSolution": "src/${{ values.name }}.sln"
+      }
+    }
+  },
+  "forwardPorts": [8080],
+  "postCreateCommand": "dotnet restore src/"
+}

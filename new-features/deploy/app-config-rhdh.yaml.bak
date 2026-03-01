@@ -1,0 +1,295 @@
+# =============================================================================
+# RHDH Three Horizons — Complete App Config for Azure Deployment
+# Target: devhub.3horizons.ai
+# Auth: GitHub-only | Branding: Microsoft 4-Color Palette + White BG
+# =============================================================================
+
+app:
+  title: Three Horizons — Developer Hub
+  signInPage: github
+  baseUrl: https://devhub.3horizons.ai
+
+# ---------------------------------------------------------------------------
+# Microsoft Branding — White BG + 4-Color Logo Palette
+# ---------------------------------------------------------------------------
+branding:
+  title: Three Horizons
+  # Microsoft favicon (SVG inline with MS 4-color squares)
+  favicon: data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 23 23'%3E%3Crect x='1' y='1' width='10' height='10' fill='%23F25022'/%3E%3Crect x='12' y='1' width='10' height='10' fill='%237FBA00'/%3E%3Crect x='1' y='12' width='10' height='10' fill='%2300A4EF'/%3E%3Crect x='12' y='12' width='10' height='10' fill='%23FFB900'/%3E%3C/svg%3E
+  theme:
+    light:
+      palette:
+        primary:
+          main: '#00A4EF'
+        navigation:
+          indicator: '#00A4EF'
+      pageTheme:
+        home:
+          backgroundColor:
+            - '#00A4EF'
+            - '#0078D4'
+      fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif"
+      # White background
+      backgroundColor: '#FFFFFF'
+      paperColor: '#FFFFFF'
+      # Sidebar
+      sidebarBackgroundColor: '#1B1B1F'
+      sidebarItemTextColor: '#E0E0E0'
+      sidebarSelectedItemTextColor: '#FFFFFF'
+      sidebarSelectedItemIndicatorColor: '#00A4EF'
+    dark:
+      palette:
+        primary:
+          main: '#4DB8FF'
+        navigation:
+          indicator: '#4DB8FF'
+      pageTheme:
+        home:
+          backgroundColor:
+            - '#1B1B1F'
+            - '#2D2D30'
+      fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif"
+      backgroundColor: '#1B1B1F'
+      paperColor: '#252529'
+      sidebarBackgroundColor: '#111114'
+      sidebarItemTextColor: '#CCCCCC'
+      sidebarSelectedItemTextColor: '#FFFFFF'
+      sidebarSelectedItemIndicatorColor: '#4DB8FF'
+
+# ---------------------------------------------------------------------------
+# GitHub-Only Authentication
+# ---------------------------------------------------------------------------
+auth:
+  environment: production
+  session:
+    secret: ${AUTH_SESSION_SECRET}
+  providers:
+    github:
+      production:
+        clientId: ${GITHUB_APP_CLIENT_ID}
+        clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+        enterpriseInstanceUrl: ${GITHUB_ENTERPRISE_URL:}
+        additionalScopes:
+          - user:email
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUserEntityName
+      dangerouslyAllowSignInWithoutUserInCatalog: true
+
+# ---------------------------------------------------------------------------
+# Backend
+# ---------------------------------------------------------------------------
+backend:
+  baseUrl: https://devhub.3horizons.ai
+  listen:
+    port: 7007
+    host: 0.0.0.0
+  auth:
+    keys:
+      - secret: ${BACKEND_AUTH_SECRET}
+  cors:
+    origin: https://devhub.3horizons.ai
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  csp:
+    connect-src:
+      - "'self'"
+      - 'http:'
+      - 'https:'
+      - 'ws:'
+      - 'wss:'
+      - 'https://github.com'
+      - 'https://api.github.com'
+      - 'https://raw.githubusercontent.com'
+    img-src:
+      - "'self'"
+      - 'data:'
+      - 'https:'
+      - 'https://avatars.githubusercontent.com'
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT:5432}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+    pool:
+      min: 0
+      max: 2
+
+# ---------------------------------------------------------------------------
+# Catalog — GitHub Discovery
+# ---------------------------------------------------------------------------
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+  rules:
+    - allow:
+        - Component
+        - API
+        - Resource
+        - System
+        - Domain
+        - User
+        - Group
+        - Location
+        - Template
+  providers:
+    github:
+      mainOrg:
+        organization: ${GITHUB_ORG}
+        catalogPath: /catalog-info.yaml
+        filters:
+          branch: main
+          repository: '.*'
+        schedule:
+          frequency: { minutes: 30 }
+          timeout: { minutes: 10 }
+    githubOrg:
+      id: production
+      githubUrl: https://github.com
+      orgs:
+        - ${GITHUB_ORG}
+      schedule:
+        frequency: { minutes: 60 }
+        timeout: { minutes: 15 }
+  locations:
+    # Golden Path — Todo App (full-stack React + Express + Terraform)
+    - type: url
+      target: https://github.com/3horizons/todo-app/blob/main/template.yaml
+      rules:
+        - allow: [Template]
+    # Golden Paths — H1 Foundation
+    - type: url
+      target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h1-foundation/new-microservice/template.yaml
+      rules:
+        - allow: [Template]
+    # Golden Paths — H2 Enhancement
+    - type: url
+      target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h2-enhancement/microservice/template.yaml
+      rules:
+        - allow: [Template]
+    # Golden Paths — H3 Innovation
+    - type: url
+      target: https://github.com/3horizons/agentic-devops-platform/blob/main/golden-paths/h3-innovation/foundry-agent/template.yaml
+      rules:
+        - allow: [Template]
+
+# ---------------------------------------------------------------------------
+# Dynamic Plugins — RHDH v1.4+
+# ---------------------------------------------------------------------------
+dynamicPlugins:
+  frontend:
+    # Homepage plugin
+    backstage.plugin-home:
+      mountPoints:
+        - mountPoint: entity.page.overview/cards
+          importName: HomePageComponent
+          config:
+            layout:
+              gridColumnEnd: span 12
+      dynamicRoutes:
+        - path: /
+          importName: HomePage
+
+    # Search plugin
+    backstage.plugin-search:
+      dynamicRoutes:
+        - path: /search
+          importName: SearchPage
+
+    # Catalog plugin
+    backstage.plugin-catalog:
+      dynamicRoutes:
+        - path: /catalog
+          importName: CatalogPage
+
+    # TechDocs
+    backstage.plugin-techdocs:
+      dynamicRoutes:
+        - path: /docs
+          importName: TechdocsPage
+
+    # API Docs
+    backstage.plugin-api-docs:
+      dynamicRoutes:
+        - path: /api-docs
+          importName: ApiDocsPage
+
+    # GitHub Actions
+    backstage.plugin-github-actions:
+      mountPoints:
+        - mountPoint: entity.page.ci-cd/cards
+          importName: EntityGithubActionsContent
+
+    # Developer Lightspeed (AI Chat)
+    redhat.plugin-developer-lightspeed:
+      dynamicRoutes:
+        - path: /lightspeed
+          importName: LightspeedPage
+      appIcons:
+        - name: lightspeedIcon
+          importName: LightspeedIcon
+
+    # RBAC plugin
+    janus-idp.backstage-plugin-rbac:
+      dynamicRoutes:
+        - path: /rbac
+          importName: RbacPage
+      menuItems:
+        Administration:
+          icon: SecurityIcon
+          title: RBAC
+
+# ---------------------------------------------------------------------------
+# Lightspeed (AI) — Azure AI Foundry
+# ---------------------------------------------------------------------------
+lightspeed:
+  servers:
+    - id: azure-ai-foundry
+      url: ${AZURE_AI_FOUNDRY_ENDPOINT}
+      token: ${AZURE_AI_FOUNDRY_API_KEY}
+
+# ---------------------------------------------------------------------------
+# RBAC / Permissions
+# ---------------------------------------------------------------------------
+permission:
+  enabled: true
+  rbac:
+    admin:
+      users:
+        - name: ${RHDH_ADMIN_USER:admin}
+    policies-csv-file: /opt/app-root/src/rbac-policy.csv
+
+# ---------------------------------------------------------------------------
+# Organization
+# ---------------------------------------------------------------------------
+organization:
+  name: Three Horizons
+
+# ---------------------------------------------------------------------------
+# Scaffolder
+# ---------------------------------------------------------------------------
+scaffolder:
+  defaultAuthor:
+    name: Three Horizons Scaffolder
+    email: scaffolder@three-horizons.dev
+  defaultCommitMessage: 'chore: scaffolded from Three Horizons template'
+
+# ---------------------------------------------------------------------------
+# Proxy Endpoints
+# ---------------------------------------------------------------------------
+proxy:
+  endpoints:
+    '/developer-hub':
+      target: http://localhost:7007
+      changeOrigin: true
+      allowedMethods:
+        - GET
+      headers:
+        Accept: application/json
+    '/developer-hub/learning-paths':
+      target: http://localhost:7007
+      changeOrigin: true
+      allowedMethods:
+        - GET

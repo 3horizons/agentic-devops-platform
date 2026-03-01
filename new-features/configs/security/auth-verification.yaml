@@ -1,0 +1,255 @@
+# =============================================================================
+# Auth Provider Verification Checklist for RHDH Three Horizons Portal
+# Target: devhub.3horizons.ai (RHDH 1.8 on AKS)
+#
+# This file documents every authentication surface, token requirement,
+# and secret dependency for the portal. Use it as a pre-flight checklist
+# before each deployment and after rotating secrets.
+# =============================================================================
+
+auth:
+  # ---------------------------------------------------------------------------
+  # 1. GitHub OAuth — Primary Sign-In Provider
+  # ---------------------------------------------------------------------------
+  github_oauth:
+    enabled: true
+    client_id_source: azure_key_vault
+    client_id_env: GITHUB_APP_CLIENT_ID
+    client_secret_source: azure_key_vault
+    client_secret_env: GITHUB_APP_CLIENT_SECRET
+    scopes:
+      - read:user
+      - user:email
+      - read:org
+      - repo
+    callback_url: https://${RHDH_BASE_URL}/api/auth/github/handler/frame
+    sign_in_resolver: usernameMatchingUserEntityName
+    allow_sign_in_without_catalog_user: true
+    verification:
+      - "GitHub OAuth App or GitHub App created with correct callback URL"
+      - "Client ID stored in Azure Key Vault as GITHUB_APP_CLIENT_ID"
+      - "Client Secret stored in Azure Key Vault as GITHUB_APP_CLIENT_SECRET"
+      - "Callback URL matches portal domain (https://devhub.3horizons.ai/api/auth/github/handler/frame)"
+      - "Organization membership check enabled via read:org scope"
+      - "Sign-in resolver set to usernameMatchingUserEntityName"
+      - "dangerouslyAllowSignInWithoutUserInCatalog set to true (initial bootstrap only)"
+      - "External Secrets Operator syncs Key Vault secrets to K8s rhdh namespace"
+
+  # ---------------------------------------------------------------------------
+  # 2. Proxy Endpoints — Backend API Proxies
+  # ---------------------------------------------------------------------------
+  proxy_endpoints:
+    github_copilot:
+      path: /github-copilot
+      target: https://api.github.com
+      allowed_methods:
+        - GET
+      token_source: azure_key_vault
+      token_env: GITHUB_COPILOT_TOKEN
+      required_scopes:
+        - copilot
+        - manage_billing:copilot
+        - read:org
+      consumed_by:
+        - "@internal/plugin-copilot-metrics"
+      api_endpoints_used:
+        - "GET /orgs/{org}/copilot/metrics"
+        - "GET /orgs/{org}/copilot/billing"
+        - "GET /orgs/{org}/team/{team_slug}/copilot/metrics"
+      verification:
+        - "PAT has 'copilot' scope"
+        - "PAT has 'manage_billing:copilot' scope for seat/billing data"
+        - "PAT has 'read:org' scope for org membership"
+        - "PAT stored in Azure Key Vault as GITHUB_COPILOT_TOKEN"
+        - "Proxy header injects Authorization: Bearer ${GITHUB_COPILOT_TOKEN}"
+        - "Proxy allowedMethods restricted to GET only"
+        - "Proxy endpoint returns 200 for /orgs/{org}/copilot/metrics"
+        - "API version header set: X-GitHub-Api-Version: 2022-11-28"
+
+    github_security:
+      path: /github-security
+      target: https://api.github.com
+      allowed_methods:
+        - GET
+      token_source: azure_key_vault
+      token_env: GITHUB_SECURITY_TOKEN
+      required_scopes:
+        - security_events
+        - repo
+        - read:org
+      consumed_by:
+        - "@internal/plugin-ghas-metrics"
+        - "@internal/plugin-ghas-metrics-backend"
+      api_endpoints_used:
+        - "GET /orgs/{org}/code-scanning/alerts"
+        - "GET /orgs/{org}/secret-scanning/alerts"
+        - "GET /orgs/{org}/settings/billing/advanced-security"
+        - "GET /repos/{owner}/{repo}/dependabot/alerts"
+      verification:
+        - "PAT has 'security_events' scope for code scanning and secret scanning"
+        - "PAT has 'repo' scope for Dependabot alerts (repo-level API)"
+        - "PAT has 'read:org' scope for org membership and billing"
+        - "PAT stored in Azure Key Vault as GITHUB_SECURITY_TOKEN"
+        - "Proxy header injects Authorization: Bearer ${GITHUB_SECURITY_TOKEN}"
+        - "Proxy allowedMethods restricted to GET only"
+        - "Proxy endpoint returns 200 for /orgs/{org}/code-scanning/alerts"
+        - "Backend plugin reads token from proxy config (no separate secret)"
+        - "API version header set: X-GitHub-Api-Version: 2022-11-28"
+
+  # ---------------------------------------------------------------------------
+  # 3. Session and Backend Auth Secrets
+  # ---------------------------------------------------------------------------
+  session:
+    secret_source: azure_key_vault
+    secret_env: AUTH_SESSION_SECRET
+    backend_auth_secret_env: BACKEND_AUTH_SECRET
+    verification:
+      - "AUTH_SESSION_SECRET stored in Azure Key Vault (min 32 chars, random)"
+      - "BACKEND_AUTH_SECRET stored in Azure Key Vault (min 32 chars, random)"
+      - "Session secret rotated at least every 90 days"
+      - "Cookie secure flag set for production (HTTPS only)"
+      - "SameSite cookie attribute set to Lax or Strict"
+      - "External Secrets Operator syncs both secrets to rhdh namespace"
+
+  # ---------------------------------------------------------------------------
+  # 4. Database Credentials
+  # ---------------------------------------------------------------------------
+  database:
+    client: pg
+    host_source: azure_key_vault
+    host_env: POSTGRES_HOST
+    user_source: azure_key_vault
+    user_env: POSTGRES_USER
+    password_source: azure_key_vault
+    password_env: POSTGRES_PASSWORD
+    port: 5432
+    tls_required: true
+    verification:
+      - "PostgreSQL Flexible Server uses private endpoint (no public access)"
+      - "POSTGRES_HOST resolves to private endpoint FQDN"
+      - "POSTGRES_USER stored in Azure Key Vault"
+      - "POSTGRES_PASSWORD stored in Azure Key Vault (min 16 chars, complex)"
+      - "TLS 1.2+ enforced on PostgreSQL Flexible Server"
+      - "Database pool max connections set to 2 (conservative for single pod)"
+      - "Connection string never logged or exposed in error messages"
+
+  # ---------------------------------------------------------------------------
+  # 5. AI / Lightspeed Credentials
+  # ---------------------------------------------------------------------------
+  lightspeed:
+    provider: azure-openai
+    endpoint_source: azure_key_vault
+    endpoint_env: AZURE_AI_FOUNDRY_ENDPOINT
+    api_key_source: azure_key_vault
+    api_key_env: AZURE_AI_FOUNDRY_API_KEY
+    verification:
+      - "Azure AI Foundry endpoint stored in Key Vault"
+      - "API key stored in Key Vault as AZURE_AI_FOUNDRY_API_KEY"
+      - "Endpoint uses private endpoint (no public access)"
+      - "Content Safety filters enabled on the AI Foundry deployment"
+      - "Token usage monitored via Lightspeed backend logs"
+
+  # ---------------------------------------------------------------------------
+  # 6. RBAC Configuration
+  # ---------------------------------------------------------------------------
+  rbac:
+    enabled: true
+    plugin: janus-idp-backstage-plugin-rbac
+    policy_file: /opt/app-root/src/rbac-policy.csv
+    policy_source: ConfigMap mounted as volume
+    admin_users:
+      - "${RHDH_ADMIN_USER}"
+    superusers_from_config: true
+    verification:
+      - "permission.enabled set to true in app-config-rhdh.yaml"
+      - "RBAC plugin (janus-idp-backstage-plugin-rbac) enabled in dynamic-plugins-config.yaml"
+      - "Policy CSV file mounted in container at /opt/app-root/src/rbac-policy.csv"
+      - "ConfigMap rhdh-rbac-policy exists in rhdh namespace with correct data"
+      - "Admin user defined in permission.rbac.admin.users config"
+      - "Admin user can access /admin/rbac page and see all policies"
+      - "Developer role can create and update catalog entities"
+      - "Developer cannot access /admin/rbac policy management"
+      - "Developer cannot delete (unregister) catalog entities"
+      - "Viewer role has read-only catalog and template access"
+      - "Viewer cannot execute scaffolder actions (Create page submit)"
+      - "Viewer cannot access Kubernetes proxy endpoints"
+      - "Group assignments match GitHub org team structure"
+      - "AI permission policies (permission-policies-ai.csv) loaded separately for Lightspeed"
+
+  # ---------------------------------------------------------------------------
+  # 7. GitHub Organization Discovery
+  # ---------------------------------------------------------------------------
+  catalog_discovery:
+    github_org_provider:
+      org: ${GITHUB_ORG}
+      schedule_frequency_minutes: 60
+      schedule_timeout_minutes: 15
+    github_entity_provider:
+      org: ${GITHUB_ORG}
+      catalog_path: /catalog-info.yaml
+      branch: main
+      schedule_frequency_minutes: 30
+      schedule_timeout_minutes: 10
+    verification:
+      - "GitHub App or PAT has read access to org members and teams"
+      - "GitHub org provider populates User and Group entities correctly"
+      - "Group entities match role assignments in rbac-policy.csv"
+      - "Catalog provider discovers all repos with catalog-info.yaml"
+      - "Discovery schedules do not overlap (stagger initial delays)"
+
+  # ---------------------------------------------------------------------------
+  # 8. Container Security Context
+  # ---------------------------------------------------------------------------
+  container_security:
+    run_as_non_root: true
+    read_only_root_filesystem: false  # RHDH needs writable /tmp and /opt/app-root
+    allow_privilege_escalation: false
+    capabilities_drop:
+      - ALL
+    verification:
+      - "Pod security context sets runAsNonRoot: true"
+      - "No privileged containers in the RHDH deployment"
+      - "allowPrivilegeEscalation set to false"
+      - "All capabilities dropped"
+      - "Service account uses Workload Identity (no static secrets)"
+      - "Network policies restrict egress to required endpoints only"
+
+  # ---------------------------------------------------------------------------
+  # 9. TLS / Ingress
+  # ---------------------------------------------------------------------------
+  ingress:
+    host: devhub.3horizons.ai
+    tls_enabled: true
+    cert_manager: true
+    issuer: letsencrypt-prod
+    verification:
+      - "TLS certificate is valid and not expired"
+      - "cert-manager ClusterIssuer letsencrypt-prod is Ready"
+      - "HTTPS redirect enforced (HTTP 301 to HTTPS)"
+      - "HSTS header set with max-age >= 31536000"
+      - "TLS 1.2+ enforced (no TLS 1.0/1.1)"
+
+  # ---------------------------------------------------------------------------
+  # 10. Content Security Policy (CSP)
+  # ---------------------------------------------------------------------------
+  csp:
+    connect_src:
+      - "'self'"
+      - "http:"
+      - "https:"
+      - "ws:"
+      - "wss:"
+      - "https://github.com"
+      - "https://api.github.com"
+      - "https://raw.githubusercontent.com"
+    img_src:
+      - "'self'"
+      - "data:"
+      - "https:"
+      - "https://avatars.githubusercontent.com"
+    verification:
+      - "CSP connect-src includes all required API endpoints"
+      - "CSP does not include unsafe-inline or unsafe-eval for scripts"
+      - "CSP img-src allows GitHub avatars and data URIs"
+      - "No CSP violations logged in browser console during normal usage"
+      - "Segment analytics plugin disabled to prevent CSP violations from cdn.segment.com"

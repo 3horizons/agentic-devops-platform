@@ -1,0 +1,25 @@
+{
+  "name": "${{ values.name }} - Go Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/go:1.22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "redhat.vscode-yaml",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "go.lintTool": "golangci-lint",
+        "go.lintOnSave": "package",
+        "go.testOnSave": true,
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "forwardPorts": [8080],
+  "postCreateCommand": "go mod download",
+  "remoteUser": "vscode"
+}

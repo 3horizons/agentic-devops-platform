@@ -1,0 +1,106 @@
+# =============================================================================
+# RHDH Three Horizons — Main RBAC Policy (Casbin Format)
+# Mounted at: /opt/app-root/src/rbac-policy.csv
+#
+# Format:
+#   p, role, resource, action, effect   (permission rule)
+#   g, user/group, role                 (group/role assignment)
+#
+# Resources:
+#   catalog-entity          — Catalog CRUD
+#   catalog.entity.create   — Entity registration (scaffolder output)
+#   scaffolder-template     — Template gallery (Create page)
+#   scaffolder-action       — Template execution (run scaffolder)
+#   policy-entity           — RBAC policy management (/admin/rbac)
+#   kubernetes.proxy        — Kubernetes API proxy
+#   ocm.entity.read         — Open Cluster Management read
+#   ocm.cluster.read        — OCM cluster read
+#   topology.view.read      — Topology plugin view
+#
+# Actions: create, read, update, delete, use
+# Effects: allow, deny
+# =============================================================================
+
+# =============================================================================
+# ROLE: admin — Full platform administration
+# =============================================================================
+p, role:default/admin, catalog-entity, create, allow
+p, role:default/admin, catalog-entity, read, allow
+p, role:default/admin, catalog-entity, update, allow
+p, role:default/admin, catalog-entity, delete, allow
+p, role:default/admin, catalog.entity.create, use, allow
+p, role:default/admin, scaffolder-template, read, allow
+p, role:default/admin, scaffolder-action, use, allow
+p, role:default/admin, policy-entity, read, allow
+p, role:default/admin, policy-entity, create, allow
+p, role:default/admin, policy-entity, update, allow
+p, role:default/admin, policy-entity, delete, allow
+p, role:default/admin, kubernetes.proxy, use, allow
+p, role:default/admin, ocm.entity.read, read, allow
+p, role:default/admin, ocm.cluster.read, read, allow
+p, role:default/admin, topology.view.read, read, allow
+
+# =============================================================================
+# ROLE: developer — Create and manage entities, run templates, no policy admin
+# =============================================================================
+p, role:default/developer, catalog-entity, create, allow
+p, role:default/developer, catalog-entity, read, allow
+p, role:default/developer, catalog-entity, update, allow
+p, role:default/developer, catalog.entity.create, use, allow
+p, role:default/developer, scaffolder-template, read, allow
+p, role:default/developer, scaffolder-action, use, allow
+p, role:default/developer, kubernetes.proxy, use, allow
+p, role:default/developer, topology.view.read, read, allow
+
+# Developer cannot manage RBAC policies
+p, role:default/developer, policy-entity, read, deny
+p, role:default/developer, policy-entity, create, deny
+p, role:default/developer, policy-entity, update, deny
+p, role:default/developer, policy-entity, delete, deny
+
+# Developer cannot delete catalog entities (unregister)
+p, role:default/developer, catalog-entity, delete, deny
+
+# =============================================================================
+# ROLE: viewer — Read-only access to catalog and templates
+# =============================================================================
+p, role:default/viewer, catalog-entity, read, allow
+p, role:default/viewer, scaffolder-template, read, allow
+p, role:default/viewer, topology.view.read, read, allow
+
+# Viewer explicit denies
+p, role:default/viewer, catalog-entity, create, deny
+p, role:default/viewer, catalog-entity, update, deny
+p, role:default/viewer, catalog-entity, delete, deny
+p, role:default/viewer, catalog.entity.create, use, deny
+p, role:default/viewer, scaffolder-action, use, deny
+p, role:default/viewer, policy-entity, read, deny
+p, role:default/viewer, policy-entity, create, deny
+p, role:default/viewer, policy-entity, update, deny
+p, role:default/viewer, policy-entity, delete, deny
+p, role:default/viewer, kubernetes.proxy, use, deny
+
+# =============================================================================
+# GROUP ASSIGNMENTS — Admin teams
+# =============================================================================
+g, group:default/platform-team, role:default/admin
+g, group:default/infra-team, role:default/admin
+g, group:default/security-team, role:default/admin
+
+# =============================================================================
+# GROUP ASSIGNMENTS — Developer teams
+# =============================================================================
+g, group:default/devops-team, role:default/developer
+g, group:default/dev-team, role:default/developer
+g, group:default/backend-team, role:default/developer
+g, group:default/frontend-team, role:default/developer
+g, group:default/ai-team, role:default/developer
+g, group:default/docs-team, role:default/developer
+
+# =============================================================================
+# GROUP ASSIGNMENTS — Viewer teams
+# =============================================================================
+g, group:default/stakeholders, role:default/viewer
+g, group:default/management, role:default/viewer
+g, group:default/contractors, role:default/viewer
+g, group:default/interns, role:default/viewer

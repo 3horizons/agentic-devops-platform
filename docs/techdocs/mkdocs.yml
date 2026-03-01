@@ -1,0 +1,30 @@
+site_name: Three Horizons Developer Hub
+site_description: Platform documentation for the Three Horizons Agentic DevOps Platform
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Platform Overview: getting-started/overview.md
+    - Quick Start: getting-started/quick-start.md
+    - Onboarding Guide: getting-started/onboarding.md
+  - Architecture:
+    - Three Horizons Model: architecture/three-horizons.md
+    - Infrastructure: architecture/infrastructure.md
+    - Platform Services: architecture/platform-services.md
+  - Development:
+    - Golden Path Templates: development/golden-paths.md
+    - API Guidelines: development/api-guidelines.md
+    - CI/CD Pipelines: development/cicd.md
+  - Security:
+    - Security Baseline: security/security-baseline.md
+    - RBAC Policies: security/rbac.md
+    - Secret Management: security/secrets.md
+  - Operations:
+    - Monitoring & Observability: operations/monitoring.md
+    - Incident Response: operations/incident-response.md
+    - Runbooks: operations/runbooks.md
+  - AI & Automation:
+    - Copilot Integration: ai/copilot.md
+    - Lightspeed Chat: ai/lightspeed.md
+    - MCP Servers: ai/mcp-servers.md
+plugins:
+  - techdocs-core

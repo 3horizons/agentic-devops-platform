@@ -1,0 +1,351 @@
+# =============================================================================
+# THREE HORIZONS ACCELERATOR - RHDH PORTAL ALERTING RULES
+# =============================================================================
+#
+# Alerting rules specific to the RHDH Developer Hub portal and its custom
+# plugins: home-three-horizons, my-group-dashboard, copilot-metrics,
+# ghas-metrics (frontend), and ghas-metrics-backend (Express router).
+#
+# Portal endpoint: :7007/metrics
+#
+# =============================================================================
+
+groups:
+  # ===========================================================================
+  # RHDH PORTAL AVAILABILITY & PERFORMANCE
+  # ===========================================================================
+  - name: rhdh-portal
+    interval: 30s
+    rules:
+      # -----------------------------------------------------------------------
+      # Portal Availability
+      # -----------------------------------------------------------------------
+      - alert: RHDHPortalDown
+        expr: up{job="rhdh-developer-hub"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH Developer Hub is down"
+          description: "RHDH portal has been unreachable for 2 minutes."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-portal-down"
+
+      # -----------------------------------------------------------------------
+      # HTTP Error Rate
+      # -----------------------------------------------------------------------
+      - alert: RHDHHighErrorRate
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH error rate above 5%"
+          description: "RHDH portal 5xx error rate has exceeded the 5% threshold for 5 minutes."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-high-error-rate"
+
+      - alert: RHDHCriticalErrorRate
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m])) > 0.15
+        for: 2m
+        labels:
+          severity: critical
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH critical error rate above 15%"
+          description: "RHDH portal 5xx error rate has exceeded 15% for 2 minutes. Immediate investigation required."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-critical-error-rate"
+
+      # -----------------------------------------------------------------------
+      # Latency
+      # -----------------------------------------------------------------------
+      - alert: RHDHSlowPageLoads
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub"}[5m])) > 2
+        for: 10m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH p95 latency above 2s SLO"
+          description: "RHDH portal p95 request latency has been above the 2-second SLO for 10 minutes."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-slow-page-loads"
+
+      - alert: RHDHCriticalLatency
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub"}[5m])) > 5
+        for: 5m
+        labels:
+          severity: critical
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH p95 latency above 5s"
+          description: "RHDH portal p95 request latency has exceeded 5 seconds for 5 minutes."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-critical-latency"
+
+      # -----------------------------------------------------------------------
+      # Plugin Proxy Failures - Copilot Metrics
+      # -----------------------------------------------------------------------
+      - alert: CopilotMetricsProxyFailure
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*",code=~"[45].."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*"}[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          horizon: h2
+          component: copilot-metrics
+        annotations:
+          summary: "Copilot Metrics proxy error rate above 50%"
+          description: "The Copilot Metrics plugin proxy endpoint is returning errors for more than 50% of requests. Check GitHub API connectivity and token validity."
+          runbook_url: "${RUNBOOK_BASE_URL}/copilot-metrics-proxy-failure"
+
+      - alert: CopilotMetricsProxyDown
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-copilot.*"}[5m])) == 0
+          and
+          up{job="rhdh-developer-hub"} == 1
+        for: 15m
+        labels:
+          severity: warning
+          horizon: h2
+          component: copilot-metrics
+        annotations:
+          summary: "Copilot Metrics proxy receiving no traffic"
+          description: "The Copilot Metrics proxy endpoint has received no traffic for 15 minutes while RHDH is up. Plugin may be misconfigured."
+          runbook_url: "${RUNBOOK_BASE_URL}/copilot-metrics-proxy-no-traffic"
+
+      # -----------------------------------------------------------------------
+      # Plugin Proxy Failures - GHAS Metrics
+      # -----------------------------------------------------------------------
+      - alert: GHASMetricsProxyFailure
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*",code=~"[45].."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/proxy/github-security.*"}[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          horizon: h2
+          component: ghas-metrics
+        annotations:
+          summary: "GHAS Metrics proxy error rate above 50%"
+          description: "The GHAS Metrics plugin proxy endpoint is returning errors for more than 50% of requests. Check GitHub API connectivity and GHAS enablement."
+          runbook_url: "${RUNBOOK_BASE_URL}/ghas-metrics-proxy-failure"
+
+      # -----------------------------------------------------------------------
+      # GHAS Backend Aggregation
+      # -----------------------------------------------------------------------
+      - alert: GHASBackendHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*"}[5m])) > 30
+        for: 5m
+        labels:
+          severity: warning
+          horizon: h2
+          component: ghas-metrics-backend
+        annotations:
+          summary: "GHAS backend aggregation p95 latency above 30s"
+          description: "The ghas-metrics-backend Express router p95 latency exceeds 30 seconds. This may indicate GitHub API rate limiting or large organization data sets."
+          runbook_url: "${RUNBOOK_BASE_URL}/ghas-backend-high-latency"
+
+      - alert: GHASBackendErrors
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*",code=~"5.."}[5m]))
+          / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",path=~"/api/ghas-metrics.*"}[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          horizon: h2
+          component: ghas-metrics-backend
+        annotations:
+          summary: "GHAS backend error rate above 10%"
+          description: "The ghas-metrics-backend is returning server errors for more than 10% of requests."
+          runbook_url: "${RUNBOOK_BASE_URL}/ghas-backend-errors"
+
+      # -----------------------------------------------------------------------
+      # Pod Health
+      # -----------------------------------------------------------------------
+      - alert: RHDHPodRestarts
+        expr: |
+          increase(kube_pod_container_status_restarts_total{namespace="rhdh",container="rhdh-developer-hub"}[1h]) > 3
+        for: 5m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH pod restarted {{ $value }} times in 1h"
+          description: "RHDH Developer Hub pod has restarted more than 3 times in the last hour. Check container logs for crash reasons."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-pod-restarts"
+
+      - alert: RHDHPodNotReady
+        expr: |
+          kube_pod_status_ready{namespace="rhdh",condition="true"} == 0
+          and
+          kube_pod_status_phase{namespace="rhdh",phase="Running"} == 1
+        for: 5m
+        labels:
+          severity: critical
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH pod is running but not ready"
+          description: "RHDH pod is in Running state but readiness probe is failing. Portal may be partially degraded."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-pod-not-ready"
+
+      # -----------------------------------------------------------------------
+      # Resource Usage
+      # -----------------------------------------------------------------------
+      - alert: RHDHHighMemoryUsage
+        expr: |
+          container_memory_working_set_bytes{namespace="rhdh",container="rhdh-developer-hub"}
+          / container_spec_memory_limit_bytes{namespace="rhdh",container="rhdh-developer-hub"} > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH memory usage above 85% of limit"
+          description: "RHDH container memory usage is at {{ $value | humanizePercentage }} of its configured limit. Risk of OOM kill if load increases."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-high-memory"
+
+      - alert: RHDHHighCPUUsage
+        expr: |
+          rate(container_cpu_usage_seconds_total{namespace="rhdh",container="rhdh-developer-hub"}[5m])
+          / container_spec_cpu_quota{namespace="rhdh",container="rhdh-developer-hub"} * 100000 > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH CPU usage above 85% of limit"
+          description: "RHDH container CPU usage is at {{ $value | humanizePercentage }} of its configured limit."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-high-cpu"
+
+      # -----------------------------------------------------------------------
+      # Catalog Health
+      # -----------------------------------------------------------------------
+      - alert: RHDHCatalogEntityDrop
+        expr: |
+          decrease(backstage_catalog_entities_count[30m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "Catalog entity count dropped by {{ $value }} in 30 minutes"
+          description: "The RHDH catalog has lost more than 10 entities in 30 minutes. This may indicate a catalog provider sync failure or accidental unregistration."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-catalog-entity-drop"
+
+      - alert: RHDHCatalogProcessingErrors
+        expr: |
+          sum(rate(backstage_catalog_processing_errors_total[5m])) > 0
+        for: 10m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh
+        annotations:
+          summary: "RHDH catalog processing errors detected"
+          description: "The catalog processor is encountering errors. Some entities may not be up to date."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-catalog-processing-errors"
+
+  # ===========================================================================
+  # RHDH SLO BURN RATE ALERTS
+  # ===========================================================================
+  - name: rhdh-slo-burn-rate
+    interval: 30s
+    rules:
+      # -----------------------------------------------------------------------
+      # Multi-window, multi-burn-rate alerts for 99.9% availability SLO
+      # -----------------------------------------------------------------------
+      - alert: RHDHSLOBurnRateCritical
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[5m]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[5m]))
+          ) > (14.4 * 0.001)
+          and
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[1h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[1h]))
+          ) > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: critical
+          horizon: h2
+          component: rhdh-slo
+        annotations:
+          summary: "RHDH SLO burn rate critical (14.4x)"
+          description: "RHDH error budget is being consumed at 14.4x the sustainable rate. At this rate, the entire 30-day error budget will be exhausted in approximately 2 hours."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-slo-burn-rate-critical"
+
+      - alert: RHDHSLOBurnRateHigh
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[30m]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[30m]))
+          ) > (6 * 0.001)
+          and
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[6h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[6h]))
+          ) > (6 * 0.001)
+        for: 5m
+        labels:
+          severity: critical
+          horizon: h2
+          component: rhdh-slo
+        annotations:
+          summary: "RHDH SLO burn rate high (6x)"
+          description: "RHDH error budget is being consumed at 6x the sustainable rate. At this rate, 5% of the 30-day error budget will be consumed in approximately 6 hours."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-slo-burn-rate-high"
+
+      - alert: RHDHSLOBurnRateWarning
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[6h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[6h]))
+          ) > (3 * 0.001)
+          and
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[24h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[24h]))
+          ) > (3 * 0.001)
+        for: 30m
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh-slo
+        annotations:
+          summary: "RHDH SLO burn rate elevated (3x)"
+          description: "RHDH error budget is being consumed at 3x the sustainable rate. At this rate, 10% of the 30-day error budget will be consumed in approximately 3 days."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-slo-burn-rate-warning"
+
+      - alert: RHDHSLOBurnRateSlow
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub",code=~"5.."}[24h]))
+            / sum(rate(http_request_duration_seconds_count{job="rhdh-developer-hub"}[24h]))
+          ) > (1 * 0.001)
+        for: 3h
+        labels:
+          severity: warning
+          horizon: h2
+          component: rhdh-slo
+        annotations:
+          summary: "RHDH SLO burn rate slow but sustained (1x)"
+          description: "RHDH error budget is being consumed at the maximum sustainable rate. If this continues for the full 30-day window, the error budget will be fully exhausted."
+          runbook_url: "${RUNBOOK_BASE_URL}/rhdh-slo-burn-rate-slow"
