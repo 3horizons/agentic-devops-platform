@@ -28,6 +28,10 @@ handoffs:
     agent: deploy
     prompt: "Deploy the platform with updated portal configuration."
     send: false
+  - label: "Engineering Metrics"
+    agent: engineering-intelligence
+    prompt: "Collect and visualize engineering metrics (DORA, Copilot, Security) for the RHDH portal."
+    send: false
 ---
 
 # Platform Agent

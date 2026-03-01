@@ -1,0 +1,136 @@
+# ============================================================
+# Three Horizons Portal — Dynamic Plugins Configuration
+# Copy this into your dynamic-plugins-config.yaml
+# ============================================================
+
+dynamicPlugins:
+  frontend:
+
+    # ── Custom Home Page Plugin ──────────────────────────────
+    # Replaces the default RHDH home with Three Horizons portal
+    "@internal/plugin-home-three-horizons":
+      dynamicRoutes:
+        - path: /
+          importName: ThreeHorizonsHomePage
+          menuItem:
+            icon: HomeIcon
+            text: Home
+
+    # ── Custom My Group Dashboard ────────────────────────────
+    "@internal/plugin-my-group-dashboard":
+      dynamicRoutes:
+        - path: /my-group
+          importName: MyGroupDashboard
+          menuItem:
+            icon: GroupIcon
+            text: My Group
+
+    # ── Catalog (native — configure sidebar entry) ───────────
+    # Catalog is built-in; this just ensures the sidebar icon
+    "@backstage/plugin-catalog":
+      menuItems:
+        - text: Catalog
+          icon: CategoryIcon
+          to: /catalog
+
+    # ── API Docs ─────────────────────────────────────────────
+    "@backstage/plugin-api-docs":
+      dynamicRoutes:
+        - path: /api-docs
+          importName: ApiExplorerPage
+          menuItem:
+            icon: ExtensionIcon
+            text: APIs
+
+    # ── Learning Paths (TechDocs subpage or custom) ──────────
+    # Option A: Route to a TechDocs entity
+    # Option B: Custom plugin
+    # "@internal/plugin-learning-paths":
+    #   dynamicRoutes:
+    #     - path: /learning-paths
+    #       importName: LearningPathsPage
+    #       menuItem:
+    #         icon: SchoolIcon
+    #         text: Learning Paths
+
+    # ── Scaffolder / Create (native) ─────────────────────────
+    "@backstage/plugin-scaffolder":
+      menuItems:
+        - text: Create
+          icon: CreateComponentIcon
+          to: /create
+
+    # ── TechDocs (native) ────────────────────────────────────
+    "@backstage/plugin-techdocs":
+      dynamicRoutes:
+        - path: /docs
+          importName: TechDocsIndexPage
+          menuItem:
+            icon: LibraryBooksIcon
+            text: Docs
+
+    # ── Lightspeed (AI Chat) ─────────────────────────────────
+    # Developer Preview — requires Azure OpenAI or RHAI config
+    "@redhat/backstage-plugin-lightspeed":
+      dynamicRoutes:
+        - path: /lightspeed
+          importName: LightspeedPage
+          menuItem:
+            icon: ChatIcon
+            text: Lightspeed
+
+    # ── Notifications ────────────────────────────────────────
+    "@backstage-community/plugin-notifications":
+      dynamicRoutes:
+        - path: /notifications
+          importName: NotificationsPage
+          menuItem:
+            icon: NotificationsIcon
+            text: Notifications
+
+    # ── Copilot Metrics Dashboard ──────────────────────────
+    # Custom plugin — requires backend proxy to GitHub REST API
+    "@internal/plugin-copilot-metrics":
+      dynamicRoutes:
+        - path: /copilot-metrics
+          importName: CopilotMetricsPage
+          menuItem:
+            icon: AssessmentIcon
+            text: Copilot Metrics
+
+    # ── GHAS Metrics Dashboard ────────────────────────────────
+    # Custom plugin — requires backend proxy to GitHub REST API
+    "@internal/plugin-ghas-metrics":
+      dynamicRoutes:
+        - path: /ghas-metrics
+          importName: GhasMetricsPage
+          menuItem:
+            icon: SecurityIcon
+            text: GHAS Metrics
+
+    # ── RBAC Administration ──────────────────────────────────
+    "@janus-idp/backstage-plugin-rbac":
+      dynamicRoutes:
+        - path: /admin/rbac
+          importName: RbacPage
+          menuItem:
+            icon: AdminPanelSettingsIcon
+            text: Administration
+
+    # ── User Settings (native) ───────────────────────────────
+    "@backstage/plugin-user-settings":
+      menuItems:
+        - text: Settings
+          icon: SettingsIcon
+          to: /settings
+
+    # ── Kubernetes Topology ──────────────────────────────────
+    "@janus-idp/backstage-plugin-topology":
+      mountPoints:
+        - mountPoint: entity.page.kubernetes/cards
+          importName: TopologyPage
+          config:
+            if:
+              allOf:
+                - isKind: component
+                - hasAnnotation: backstage.io/kubernetes-id

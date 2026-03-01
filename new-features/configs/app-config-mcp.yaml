@@ -1,15 +1,15 @@
 app:
   title: Three Horizons | Agentic DevOps Platform
-  baseUrl: http://devhub.135.18.141.224.nip.io
+  baseUrl: https://devhub.3horizons.ai
 
 backend:
-  baseUrl: http://devhub.135.18.141.224.nip.io
+  baseUrl: https://devhub.3horizons.ai
   listen:
     port: 7007
   csp:
     connect-src: ["'self'", 'http:', 'https:']
   cors:
-    origin: http://devhub.135.18.141.224.nip.io
+    origin: https://devhub.3horizons.ai
     credentials: true
   # MCP Actions Backend — static token auth for MCP clients
   # Generate token: node -p 'require("crypto").randomBytes(24).toString("base64")'

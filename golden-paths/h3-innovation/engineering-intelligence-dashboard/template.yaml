@@ -1,0 +1,146 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: engineering-intelligence-dashboard
+  title: Engineering Intelligence Dashboard Plugin
+  description: |
+    Creates an RHDH dynamic plugin that provides engineering intelligence
+    dashboards — DORA metrics, GitHub Copilot analytics, Advanced Security
+    posture, and developer productivity KPIs. Inspired by Faros AI.
+  tags:
+    - rhdh
+    - dashboard
+    - metrics
+    - dora
+    - copilot
+    - security
+    - h3-innovation
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - title: Engineering Intelligence Agent
+      url: https://github.com/3horizons/agentic-devops-platform/blob/main/.github/agents/engineering-intelligence.agent.md
+spec:
+  owner: platform-team
+  type: rhdh-plugin
+  lifecycle: experimental
+
+  parameters:
+    - title: Plugin Configuration
+      required:
+        - pluginName
+        - githubOrg
+      properties:
+        pluginName:
+          title: Plugin Name
+          type: string
+          default: engineering-intelligence
+          description: Name for the RHDH plugin package
+          pattern: '^[a-z][a-z0-9-]*$'
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          description: GitHub org to collect metrics from
+        description:
+          title: Description
+          type: string
+          default: Engineering Intelligence Dashboard for RHDH
+
+    - title: Dashboard Tabs
+      properties:
+        enableDora:
+          title: DORA Metrics Tab
+          type: boolean
+          default: true
+          description: Deployment frequency, lead time, MTTR, change failure rate
+        enableCopilot:
+          title: Copilot Analytics Tab
+          type: boolean
+          default: true
+          description: Acceptance rate, adoption, language breakdown
+        enableSecurity:
+          title: Security Posture Tab
+          type: boolean
+          default: true
+          description: Code scanning, secret scanning, Dependabot alerts
+        enableProductivity:
+          title: Developer Productivity Tab
+          type: boolean
+          default: true
+          description: PR cycle time, throughput, review load
+
+    - title: Data Configuration
+      properties:
+        collectionFrequency:
+          title: Collection Frequency
+          type: string
+          default: '6h'
+          enum: ['1h', '6h', '12h', '24h']
+          description: How often to collect metrics from GitHub APIs
+        retentionDays:
+          title: Data Retention (days)
+          type: number
+          default: 90
+          description: How long to keep raw metric data
+        cacheStrategy:
+          title: Cache Strategy
+          type: string
+          default: redis
+          enum: ['redis', 'in-memory', 'none']
+          description: Caching layer for dashboard performance
+
+    - title: Infrastructure
+      properties:
+        usePostgresql:
+          title: PostgreSQL for Metric Storage
+          type: boolean
+          default: true
+          description: Store metric snapshots in PostgreSQL for trend analysis
+        useRedis:
+          title: Redis for Caching
+          type: boolean
+          default: true
+          description: Use Redis for API response caching
+
+  steps:
+    - id: fetch-skeleton
+      name: Fetch Plugin Skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          pluginName: ${{ parameters.pluginName }}
+          githubOrg: ${{ parameters.githubOrg }}
+          description: ${{ parameters.description }}
+          enableDora: ${{ parameters.enableDora }}
+          enableCopilot: ${{ parameters.enableCopilot }}
+          enableSecurity: ${{ parameters.enableSecurity }}
+          enableProductivity: ${{ parameters.enableProductivity }}
+          collectionFrequency: ${{ parameters.collectionFrequency }}
+          retentionDays: ${{ parameters.retentionDays }}
+          cacheStrategy: ${{ parameters.cacheStrategy }}
+
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=rhdh-plugin-${{ parameters.pluginName }}
+        description: ${{ parameters.description }}
+        defaultBranch: main
+        protectDefaultBranch: true
+
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Catalog Entity
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

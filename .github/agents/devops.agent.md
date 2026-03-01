@@ -32,6 +32,10 @@ handoffs:
     agent: context-architect
     prompt: "Coordinate multi-file changes across pipeline configurations."
     send: false
+  - label: "Engineering Metrics"
+    agent: engineering-intelligence
+    prompt: "Analyze CI/CD health metrics, DORA scores, and pipeline performance dashboards."
+    send: false
 ---
 
 # DevOps Agent

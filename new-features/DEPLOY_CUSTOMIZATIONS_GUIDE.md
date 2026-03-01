@@ -6,7 +6,7 @@ Complete guide for deploying Microsoft-branded homepage customizations to the li
 
 | Aspect | Backstage (Open Source) | RHDH (Red Hat) |
 |--------|------------------------|----------------|
-| **URL** | backstage.20.62.35.83.sslip.io | devhub.135.18.141.224.nip.io |
+| **URL** | backstage.20.62.35.83.sslip.io | devhub.3horizons.ai |
 | **Customization** | React/TypeScript code | YAML-only (ConfigMaps) |
 | **Deploy Method** | Build new Docker image | Helm upgrade + ConfigMaps |
 | **Auth** | GitHub OAuth | GitHub OAuth |
@@ -191,7 +191,7 @@ helm upgrade --install rhdh redhat-developer/backstage \
 
 ```bash
 kubectl rollout status deployment/rhdh-backstage -n rhdh
-curl -s -o /dev/null -w "%{http_code}" https://devhub.135.18.141.224.nip.io/healthcheck
+curl -s -o /dev/null -w "%{http_code}" https://devhub.3horizons.ai/healthcheck
 ```
 
 ---
@@ -207,8 +207,8 @@ Both portals need a GitHub OAuth App configured.
    - Homepage URL: `https://backstage.20.62.35.83.sslip.io`
    - Callback URL: `https://backstage.20.62.35.83.sslip.io/api/auth/github/handler/frame`
 3. For **RHDH**:
-   - Homepage URL: `https://devhub.135.18.141.224.nip.io`
-   - Callback URL: `https://devhub.135.18.141.224.nip.io/api/auth/github/handler/frame`
+   - Homepage URL: `https://devhub.3horizons.ai`
+   - Callback URL: `https://devhub.3horizons.ai/api/auth/github/handler/frame`
 4. Copy Client ID and Client Secret into the respective configs.
 
 ---

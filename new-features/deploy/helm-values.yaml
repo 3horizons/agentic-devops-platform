@@ -1,11 +1,11 @@
 # =============================================================================
 # RHDH Three Horizons — Helm Values for Azure Deployment
-# Target: devhub.135.18.141.224.nip.io
+# Target: devhub.3horizons.ai
 # helm install rhdh redhat-developer/backstage -f helm-values.yaml
 # =============================================================================
 
 global:
-  clusterRouterBase: 135.18.141.224.nip.io
+  clusterRouterBase: 3horizons.ai
   # Dynamic plugins from external ConfigMap
   dynamic:
     includes:
@@ -83,7 +83,7 @@ upstream:
   ingress:
     enabled: true
     className: nginx
-    host: devhub.135.18.141.224.nip.io
+    host: devhub.3horizons.ai
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
       nginx.ingress.kubernetes.io/proxy-body-size: '20m'
@@ -91,7 +91,7 @@ upstream:
     tls:
       - secretName: rhdh-tls
         hosts:
-          - devhub.135.18.141.224.nip.io
+          - devhub.3horizons.ai
 
   # ── PostgreSQL ──────────────────────────────────────────────────────────
   postgresql:

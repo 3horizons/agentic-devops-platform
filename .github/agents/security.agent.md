@@ -22,6 +22,10 @@ handoffs:
     agent: context-architect
     prompt: "Apply security fixes across multiple affected files."
     send: false
+  - label: "Security Posture Dashboard"
+    agent: engineering-intelligence
+    prompt: "Generate security posture dashboard with GHAS metrics, MTTR trends, and vulnerability scorecard."
+    send: false
 ---
 
 # Security Agent

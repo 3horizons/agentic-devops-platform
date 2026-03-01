@@ -23,6 +23,10 @@ handoffs:
     agent: terraform
     prompt: "Recover or recreate infrastructure components."
     send: false
+  - label: "Engineering Metrics"
+    agent: engineering-intelligence
+    prompt: "Correlate incident data with DORA MTTR metrics and engineering productivity trends."
+    send: false
 ---
 
 # SRE Agent

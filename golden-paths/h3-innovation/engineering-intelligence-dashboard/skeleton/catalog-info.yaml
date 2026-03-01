@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.pluginName }}
+  title: Engineering Intelligence Dashboard
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: ${{ values.githubOrg }}/rhdh-plugin-${{ values.pluginName }}
+  tags:
+    - rhdh-plugin
+    - engineering-intelligence
+    - dora-metrics
+    - copilot-analytics
+    - security-posture
+  links:
+    - title: GitHub Org
+      url: https://github.com/${{ values.githubOrg }}
+spec:
+  type: rhdh-plugin
+  lifecycle: experimental
+  owner: platform-team
+  system: three-horizons-platform

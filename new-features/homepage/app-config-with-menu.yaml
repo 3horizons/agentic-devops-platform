@@ -1,5 +1,5 @@
 app:
-  baseUrl: http://devhub.135.18.141.224.nip.io
+  baseUrl: https://devhub.3horizons.ai
   signInPage: github
   title: Three Horizons | Agentic DevOps Platform
 auth:
@@ -26,7 +26,7 @@ backend:
         subject: legacy-default
         token: demo-azure-token-3horizons-2026
       type: static
-  baseUrl: http://devhub.135.18.141.224.nip.io
+  baseUrl: https://devhub.3horizons.ai
   cors:
     credentials: true
     methods:
@@ -36,7 +36,7 @@ backend:
     - POST
     - PUT
     - DELETE
-    origin: http://devhub.135.18.141.224.nip.io
+    origin: https://devhub.3horizons.ai
   csp:
     connect-src:
     - '''self'''

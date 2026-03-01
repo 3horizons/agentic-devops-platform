@@ -100,15 +100,41 @@
       "env": {},
       "capabilities": ["gh copilot", "gh copilot explain", "gh copilot suggest"]
     },
+    "engineering-intelligence": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-github"],
+      "description": "Engineering Intelligence metrics collection — DORA, Copilot, Security, Productivity via GitHub APIs",
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+        "GH_TOKEN": "${GITHUB_TOKEN}",
+        "COPILOT_METRICS_TOKEN": "${COPILOT_METRICS_TOKEN}"
+      },
+      "capabilities": [
+        "gh api /repos/{owner}/{repo}/pulls — PR cycle time and throughput",
+        "gh api /repos/{owner}/{repo}/deployments — Deployment frequency",
+        "gh api /repos/{owner}/{repo}/actions/runs — CI/CD health",
+        "gh api /orgs/{org}/copilot/metrics — Copilot adoption and acceptance",
+        "gh api /orgs/{org}/copilot/billing — Seat utilization",
+        "gh api /repos/{owner}/{repo}/code-scanning/alerts — SAST posture",
+        "gh api /repos/{owner}/{repo}/secret-scanning/alerts — Secret hygiene",
+        "gh api /repos/{owner}/{repo}/dependabot/alerts — Dependency health",
+        "gh api graphql — Complex PR/review/commit queries"
+      ],
+      "access-matrix": {
+        "read-only": ["gh api /repos/*/pulls", "gh api /repos/*/deployments", "gh api /orgs/*/copilot/metrics", "gh api /repos/*/code-scanning/alerts"],
+        "requires-confirmation": ["Write to PostgreSQL metric store", "Create RHDH plugin ConfigMap"],
+        "forbidden": ["Expose individual developer metrics", "Access source code content", "Store tokens in files"]
+      }
+    },
     "backstage": {
-      "url": "http://devhub.135.18.141.224.nip.io/api/mcp-actions/v1",
+      "url": "https://devhub.3horizons.ai/api/mcp-actions/v1",
       "description": "RHDH/Backstage MCP Actions — software catalog queries, TechDocs retrieval, and scaffolder operations via Streamable HTTP",
       "transport": "streamable-http",
       "headers": {
         "Authorization": "Bearer ${MCP_TOKEN}"
       },
       "env": {
-        "RHDH_URL": "http://devhub.135.18.141.224.nip.io",
+        "RHDH_URL": "https://devhub.3horizons.ai",
         "MCP_TOKEN": "${MCP_TOKEN}"
       },
       "capabilities": [

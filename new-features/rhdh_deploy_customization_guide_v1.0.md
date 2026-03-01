@@ -1,7 +1,7 @@
 # Three Horizons RHDH — Deployment & Customization Guide
 
 **Platform:** Red Hat Developer Hub (RHDH)
-**Target:** `devhub.135.18.141.224.nip.io`
+**Target:** `devhub.3horizons.ai`
 **Auth:** GitHub OAuth | **Branding:** Microsoft 4-Color Palette + White Background
 **Version:** 1.0 | **Author:** Paula Silva — Microsoft Latam GBB
 
@@ -100,8 +100,8 @@ The homepage content is stored in a ConfigMap (`rhdh-homepage-data`) as JSON. It
 
 1. Go to **GitHub > Settings > Developer Settings > OAuth Apps > New OAuth App**
 2. Application name: `Three Horizons RHDH`
-3. Homepage URL: `https://devhub.135.18.141.224.nip.io`
-4. Authorization callback URL: `https://devhub.135.18.141.224.nip.io/api/auth/github/handler/frame`
+3. Homepage URL: `https://devhub.3horizons.ai`
+4. Authorization callback URL: `https://devhub.3horizons.ai/api/auth/github/handler/frame`
 5. Click **Register application** and copy Client ID and Client Secret
 6. Add credentials to `secrets.yaml` under `GITHUB_APP_CLIENT_ID` and `GITHUB_APP_CLIENT_SECRET`
 
@@ -180,7 +180,7 @@ kubectl rollout status deployment/rhdh-backstage -n rhdh
 
 # Check health endpoint
 curl -s -o /dev/null -w '%{http_code}' \
-  https://devhub.135.18.141.224.nip.io/healthcheck
+  https://devhub.3horizons.ai/healthcheck
 
 # Check pod logs
 kubectl logs -f deployment/rhdh-backstage -n rhdh
@@ -228,7 +228,7 @@ To update Quick Access links, Templates, or Three Horizons cards:
 1. Edit the `homepage-data.json` section in `configmaps.yaml`
 2. Apply the updated ConfigMap: `kubectl apply -f configmaps.yaml -n rhdh`
 3. Restart the pod: `kubectl rollout restart deployment/rhdh-backstage -n rhdh`
-4. Verify the changes at `https://devhub.135.18.141.224.nip.io`
+4. Verify the changes at `https://devhub.3horizons.ai`
 
 ### Updating Branding
 
@@ -252,7 +252,7 @@ To enable additional dynamic plugins:
 
 ### Post-Deploy Verification
 
-1. Access `https://devhub.135.18.141.224.nip.io` — should see Microsoft-branded login page
+1. Access `https://devhub.3horizons.ai` — should see Microsoft-branded login page
 2. Click "Sign in with GitHub" — should redirect to GitHub OAuth
 3. After login, verify homepage shows Quick Access, Templates, and Three Horizons
 4. Check the sidebar has all 10 navigation items

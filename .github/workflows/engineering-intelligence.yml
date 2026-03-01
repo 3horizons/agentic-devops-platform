@@ -1,0 +1,177 @@
+name: Engineering Intelligence Metrics Collection
+
+on:
+  schedule:
+    # Run every 6 hours (4x daily)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      org:
+        description: 'GitHub Organization'
+        required: true
+        default: '3horizons'
+      scope:
+        description: 'Collection scope'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - dora
+          - copilot
+          - security
+      period:
+        description: 'Collection period (days)'
+        required: true
+        default: '90'
+        type: choice
+        options:
+          - '30'
+          - '60'
+          - '90'
+
+permissions:
+  contents: read
+  security-events: read
+  actions: read
+  deployments: read
+  pull-requests: read
+  issues: read
+
+env:
+  GITHUB_ORG: ${{ inputs.org || '3horizons' }}
+  COLLECTION_PERIOD: ${{ inputs.period || '90' }}
+  DATA_DIR: data/engineering-intelligence
+
+jobs:
+  collect-github-metrics:
+    name: 📊 GitHub Engineering Metrics
+    runs-on: ubuntu-latest
+    if: ${{ inputs.scope == 'all' || inputs.scope == 'dora' || github.event_name == 'schedule' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Collect GitHub metrics
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/engineering-intelligence/collect-github-metrics.sh
+          ./scripts/engineering-intelligence/collect-github-metrics.sh \
+            --org "$GITHUB_ORG" \
+            --period "$COLLECTION_PERIOD" \
+            --output summary
+
+      - name: Upload metrics artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-metrics-${{ github.run_id }}
+          path: ${{ env.DATA_DIR }}/github-metrics-*.json
+          retention-days: 90
+
+  collect-copilot-metrics:
+    name: 🤖 Copilot Analytics
+    runs-on: ubuntu-latest
+    if: ${{ inputs.scope == 'all' || inputs.scope == 'copilot' || github.event_name == 'schedule' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Collect Copilot metrics
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_METRICS_TOKEN }}
+        run: |
+          chmod +x scripts/engineering-intelligence/collect-copilot-metrics.sh
+          ./scripts/engineering-intelligence/collect-copilot-metrics.sh \
+            --org "$GITHUB_ORG" \
+            --output summary
+
+      - name: Upload metrics artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: copilot-metrics-${{ github.run_id }}
+          path: ${{ env.DATA_DIR }}/copilot-metrics-*.json
+          retention-days: 90
+
+  collect-security-metrics:
+    name: 🔒 Security Posture
+    runs-on: ubuntu-latest
+    if: ${{ inputs.scope == 'all' || inputs.scope == 'security' || github.event_name == 'schedule' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Collect Security metrics
+        env:
+          GH_TOKEN: ${{ secrets.SECURITY_METRICS_TOKEN }}
+        run: |
+          chmod +x scripts/engineering-intelligence/collect-security-metrics.sh
+          ./scripts/engineering-intelligence/collect-security-metrics.sh \
+            --org "$GITHUB_ORG" \
+            --output summary
+
+      - name: Upload metrics artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-metrics-${{ github.run_id }}
+          path: ${{ env.DATA_DIR }}/security-metrics-*.json
+          retention-days: 90
+
+  generate-report:
+    name: 📋 Generate Report
+    runs-on: ubuntu-latest
+    needs: [collect-github-metrics, collect-copilot-metrics, collect-security-metrics]
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all metrics
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ env.DATA_DIR }}
+          merge-multiple: true
+
+      - name: Generate consolidated report
+        run: |
+          echo "📊 Engineering Intelligence Report" > report.md
+          echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> report.md
+          echo "Organization: $GITHUB_ORG" >> report.md
+          echo "Period: Last ${COLLECTION_PERIOD} days" >> report.md
+          echo "" >> report.md
+
+          # Merge all JSON files into a summary
+          for f in ${DATA_DIR}/*.json; do
+            if [ -f "$f" ]; then
+              echo "Processing: $f"
+              echo "## $(basename "$f" .json)" >> report.md
+              jq -r 'if .totals then "Total Open Alerts: \(.totals.total_open_alerts // "N/A")" elif .summary then "Copilot Acceptance Rate: \(.summary.code_completions.acceptance_rate // "N/A")%" else "Data collected successfully" end' "$f" >> report.md
+              echo "" >> report.md
+            fi
+          done
+
+      - name: Upload consolidated report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ei-report-${{ github.run_id }}
+          path: report.md
+          retention-days: 90
+
+      - name: Create summary
+        run: |
+          echo "## 📊 Engineering Intelligence Collection Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric Category | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| GitHub Metrics | ${{ needs.collect-github-metrics.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Copilot Analytics | ${{ needs.collect-copilot-metrics.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Posture | ${{ needs.collect-security-metrics.result }} |" >> $GITHUB_STEP_SUMMARY

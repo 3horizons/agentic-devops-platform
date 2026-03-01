@@ -48,11 +48,11 @@ An enterprise-grade **Agentic DevOps Platform** that combines Infrastructure as 
 
 ### AI & Agents
 
-- **17 GitHub Copilot Chat Agents** (.agent.md format) with handoff orchestration
-- **13 MCP Servers** for AI-tool communication (azure, github, terraform, kubernetes, helm, docker, git, bash, filesystem, defender, purview, entra, copilot)
-- **15 Reusable Skills** for CLI operations
-- **3 Chat Modes**: Architect, Reviewer, SRE
-- **7 Reusable Prompts**: deploy-platform, create-service, review-code, generate-tests, generate-docs, deploy-service, troubleshoot-incident
+- **18 GitHub Copilot Chat Agents** (.agent.md format) with handoff orchestration
+- **14 MCP Servers** for AI-tool communication (azure, github, terraform, kubernetes, helm, docker, git, bash, filesystem, defender, purview, entra, copilot, engineering-intelligence)
+- **19 Reusable Skills** for CLI operations
+- **4 Chat Modes**: Architect, Reviewer, SRE, Engineering Intelligence
+- **10 Reusable Prompts**: deploy-platform, create-service, review-code, generate-tests, generate-docs, deploy-service, troubleshoot-incident, collect-metrics, generate-dashboard, audit-security-posture
 - **Developer Lightspeed** — AI chat in RHDH using Llama Stack + RAG
 
 ### Languages
@@ -71,13 +71,13 @@ An enterprise-grade **Agentic DevOps Platform** that combines Infrastructure as 
 ```
 agentic-devops-platform/
 ├── .github/                          # GitHub config
-│   ├── agents/                       # 17 Copilot Chat agents (.agent.md)
-│   ├── chatmodes/                    # 3 chat modes (.chatmode.md)
-│   ├── instructions/                 # 3 code-gen instructions (terraform, kubernetes, python)
-│   ├── prompts/                      # 7 reusable prompts (.prompt.md)
-│   ├── skills/                       # 15 operational skills
-│   ├── workflows/                    # 9 GitHub Actions workflows
-│   ├── ISSUE_TEMPLATE/               # 27 issue templates
+│   ├── agents/                       # 18 Copilot Chat agents (.agent.md)
+│   ├── chatmodes/                    # 4 chat modes (.chatmode.md)
+│   ├── instructions/                 # 4 code-gen instructions (terraform, kubernetes, python, engineering-intelligence)
+│   ├── prompts/                      # 10 reusable prompts (.prompt.md)
+│   ├── skills/                       # 19 operational skills
+│   ├── workflows/                    # 10 GitHub Actions workflows
+│   ├── ISSUE_TEMPLATE/               # 28 issue templates
 │   └── copilot-instructions.md       # Global Copilot context
 ├── terraform/                        # 15 IaC modules
 │   ├── main.tf                       # Root orchestration (providers, locals, module calls)
@@ -182,7 +182,7 @@ networking → security → aks-cluster → databases
 
 ## Agent System
 
-### 17 Copilot Chat Agents
+### 18 Copilot Chat Agents
 
 Located in `.github/agents/`. Each agent uses YAML frontmatter with `tools`, `infer`, `skills`, `handoffs` and a three-tier boundary system (ALWAYS / ASK FIRST / NEVER).
 
@@ -205,6 +205,7 @@ Located in `.github/agents/`. Each agent uses YAML frontmatter with `tools`, `in
 | `@ado-integration` | `@ado-integration Migrate from ADO` | Azure DevOps PAT, repos, pipelines, boards |
 | `@hybrid-scenarios` | `@hybrid-scenarios Scenario A` | GitHub + ADO coexistence (scenarios A/B/C) |
 | `@azure-portal-deploy` | `@azure-portal-deploy Provision AKS` | Azure portal AKS, Key Vault, PostgreSQL, ACR |
+| `@engineering-intelligence` | `@engineering-intelligence Collect DORA metrics` | DORA metrics, Copilot analytics, GHAS security posture, developer productivity |
 
 ### Key Orchestration Flows
 

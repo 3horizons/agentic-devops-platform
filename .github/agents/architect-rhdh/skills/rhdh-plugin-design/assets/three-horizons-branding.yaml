@@ -1,0 +1,42 @@
+# ============================================================
+# Three Horizons Portal — RHDH Branding Configuration
+# Copy this section into your app-config.yaml
+# ============================================================
+
+app:
+  title: Three Horizons — Developer Hub
+  baseUrl: https://portal.example.com
+
+  branding:
+    fullLogo: /branding/three-horizons-full.svg
+    iconLogo: /branding/ms-icon.svg
+
+    theme:
+      light:
+        # Microsoft primary blue
+        primaryColor: '#0078D4'
+
+        # 4-color header bar (RHDH 1.8+)
+        headerColor1: '#F25022'   # Red
+        headerColor2: '#7FBA00'   # Green
+        headerColor3: '#00A4EF'   # Blue
+        headerColor4: '#FFB900'   # Yellow
+
+        # Sidebar / Navigation
+        navigationIndicatorColor: '#00A4EF'
+
+        # Background colors
+        pageTheme:
+          home:
+            backgroundColor: '#FFFFFF'
+            fontColor: '#1B1B1F'
+
+        # Navigation sidebar
+        navigation:
+          background: '#1B1B1F'
+          color: '#B0B0B0'
+          selectedColor: '#FFFFFF'
+          indicatorColor: '#00A4EF'
+
+        # Typography
+        fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif"

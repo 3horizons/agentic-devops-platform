@@ -125,7 +125,7 @@ RHDH/Backstage MCP Actions — software catalog queries, TechDocs retrieval, and
 
 **Transport:** Streamable HTTP (not CLI — connects to a running RHDH instance)
 
-**Endpoint:** `http://devhub.135.18.141.224.nip.io/api/mcp-actions/v1`
+**Endpoint:** `https://devhub.3horizons.ai/api/mcp-actions/v1`
 
 **Capabilities:**
 - `catalog:query` — Search and filter entities by kind, type, owner, tags
@@ -135,7 +135,7 @@ RHDH/Backstage MCP Actions — software catalog queries, TechDocs retrieval, and
 
 **Environment Variables:**
 ```bash
-RHDH_URL       # http://devhub.135.18.141.224.nip.io
+RHDH_URL       # https://devhub.3horizons.ai
 MCP_TOKEN      # Static token for Bearer auth
 ```
 

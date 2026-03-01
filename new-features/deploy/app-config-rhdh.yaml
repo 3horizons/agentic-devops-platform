@@ -1,13 +1,13 @@
 # =============================================================================
 # RHDH Three Horizons — Complete App Config for Azure Deployment
-# Target: devhub.135.18.141.224.nip.io
+# Target: devhub.3horizons.ai
 # Auth: GitHub-only | Branding: Microsoft 4-Color Palette + White BG
 # =============================================================================
 
 app:
   title: Three Horizons — Developer Hub
   signInPage: github
-  baseUrl: https://devhub.135.18.141.224.nip.io
+  baseUrl: https://devhub.3horizons.ai
 
 # ---------------------------------------------------------------------------
 # Microsoft Branding — White BG + 4-Color Logo Palette
@@ -80,7 +80,7 @@ auth:
 # Backend
 # ---------------------------------------------------------------------------
 backend:
-  baseUrl: https://devhub.135.18.141.224.nip.io
+  baseUrl: https://devhub.3horizons.ai
   listen:
     port: 7007
     host: 0.0.0.0
@@ -88,7 +88,7 @@ backend:
     keys:
       - secret: ${BACKEND_AUTH_SECRET}
   cors:
-    origin: https://devhub.135.18.141.224.nip.io
+    origin: https://devhub.3horizons.ai
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   csp:
