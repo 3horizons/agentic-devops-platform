@@ -1,3 +1,4 @@
 {
-    "workbench.browser.enableChatTools": true
+    "workbench.browser.enableChatTools": true,
+    "chat.agent.thinkingStyle": "collapsedPreview"
 }

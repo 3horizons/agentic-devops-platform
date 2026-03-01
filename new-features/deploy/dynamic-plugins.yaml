@@ -45,12 +45,18 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-github-issues
     disabled: false
 
-  # ── Developer Lightspeed (AI) ───────────────────────────────────────────
+  # ── Developer Lightspeed (AI) — Azure OpenAI ─────────────────────────────
   - package: ./dynamic-plugins/dist/redhat-plugin-developer-lightspeed
     disabled: false
 
   - package: ./dynamic-plugins/dist/redhat-plugin-developer-lightspeed-backend
     disabled: false
+    pluginConfig:
+      lightspeed:
+        servers:
+          - id: azure-openai-default
+            url: ${AZURE_OPENAI_ENDPOINT}
+            token: ${AZURE_OPENAI_KEY}
 
   # ── RBAC ────────────────────────────────────────────────────────────────
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
@@ -63,8 +69,19 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend
     disabled: false
 
+  # ── Notifications ─────────────────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications
+    disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
+    disabled: false
+
   # ── Topology ────────────────────────────────────────────────────────────
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+    disabled: false
+
+  # ── User Settings ──────────────────────────────────────────────────────
+  - package: ./dynamic-plugins/dist/backstage-plugin-user-settings
     disabled: false
 
   # ── Disabled Plugins (runtime-validated fixes) ──────────────────────────

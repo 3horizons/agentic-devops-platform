@@ -1,0 +1,92 @@
+name: "📊 H3: Engineering Intelligence Dashboard"
+description: "Deploy Engineering Intelligence metrics collection and RHDH dashboard"
+title: "[Engineering Intelligence] Deploy metrics dashboard"
+labels: ["h3-innovation", "engineering-intelligence", "copilot-agent"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Engineering Intelligence Dashboard
+        This issue triggers the **@engineering-intelligence** agent.
+        Deploys DORA metrics, Copilot analytics, GHAS security posture, and developer productivity dashboards as RHDH tabs.
+
+  - type: input
+    id: github_org
+    attributes:
+      label: "GitHub Organization"
+      description: "The GitHub organization to collect metrics from"
+      placeholder: "e.g., 3horizons"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: metric_scope
+    attributes:
+      label: "Metric Scope"
+      description: "Which metrics to collect and display"
+      options:
+        - "Full Suite - DORA + Copilot + Security + Productivity"
+        - "DORA Only - Deployment Frequency, Lead Time, MTTR, CFR"
+        - "Copilot Only - Acceptance rate, language breakdown, seat utilization"
+        - "Security Only - Code scanning, secret scanning, Dependabot"
+        - "Productivity Only - PR cycle time, review time, contributor activity"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: collection_frequency
+    attributes:
+      label: "Collection Frequency"
+      options:
+        - "every-6h - Every 6 hours (default)"
+        - "every-12h - Twice daily"
+        - "daily - Once per day"
+        - "weekly - Once per week"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data_retention
+    attributes:
+      label: "Data Retention Period"
+      options:
+        - "30d - Last 30 days"
+        - "90d - Last 90 days (default)"
+        - "180d - Last 6 months"
+        - "365d - Last year"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dashboard_tabs
+    attributes:
+      label: "Dashboard Tabs to Enable"
+      options:
+        - label: "DORA Metrics (Deployment Frequency, Lead Time, MTTR, Change Failure Rate)"
+          required: true
+        - label: "Copilot Analytics (Acceptance Rate, Language/Editor Breakdown, Seat Utilization)"
+        - label: "Security Posture (Code Scanning, Secret Scanning, Dependabot, Composite Score)"
+        - label: "Developer Productivity (PR Cycle Time, Review Time, PRs/Week, Active Contributors)"
+
+  - type: checkboxes
+    id: integration_options
+    attributes:
+      label: "Integration Options"
+      options:
+        - label: "Register as RHDH Dynamic Plugin"
+        - label: "Enable GitHub Actions scheduled collection"
+        - label: "Export metrics as Prometheus recording rules"
+        - label: "Configure Grafana dashboard"
+        - label: "Enable Slack/Teams notifications for threshold breaches"
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "Additional Context"
+      description: "Custom repositories to track, team groupings, SLA targets, etc."
+      placeholder: |
+        - Track repos: repo-a, repo-b, repo-c
+        - Team grouping: Platform (repo-a, repo-b), Backend (repo-c)
+        - DORA target: Elite classification
+        - SLA: Code scanning MTTR < 7 days

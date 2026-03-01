@@ -1,0 +1,300 @@
+# =============================================================================
+# RHDH Three Horizons — Dynamic Plugins Configuration (Consolidated)
+# All 9 portal plugins: Catalog, API Docs, Scaffolder, TechDocs,
+#   Lightspeed (Azure OpenAI), Notifications, RBAC, User Settings, Topology
+#
+# Usage: Apply as a ConfigMap or merge into Helm values under
+#        global.dynamic.plugins
+# =============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhdh-dynamic-plugins-config
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: rhdh
+    app.kubernetes.io/component: dynamic-plugins
+    app.kubernetes.io/part-of: three-horizons-platform
+    app.kubernetes.io/managed-by: helm
+data:
+  dynamic-plugins.yaml: |
+    includes:
+      - dynamic-plugins.default.yaml
+
+    plugins:
+      # ════════════════════════════════════════════════════════════════════
+      # 1. CATALOG — Entity browser with search, filters, entity table
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog
+        disabled: false
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+        disabled: false
+        pluginConfig:
+          catalog:
+            providers:
+              github:
+                providerId:
+                  organization: ${GITHUB_ORG}
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+        disabled: false
+        pluginConfig:
+          catalog:
+            providers:
+              githubOrg:
+                id: production
+                githubUrl: https://github.com
+                orgs:
+                  - ${GITHUB_ORG}
+                schedule:
+                  frequency:
+                    minutes: 60
+                  initialDelay:
+                    seconds: 15
+                  timeout:
+                    minutes: 15
+
+      # ════════════════════════════════════════════════════════════════════
+      # 2. API DOCS — Swagger / AsyncAPI documentation viewer
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/backstage-plugin-api-docs
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              backstage.plugin-api-docs:
+                dynamicRoutes:
+                  - path: /api-docs
+                    importName: ApiExplorerPage
+                    menuItem:
+                      icon: ExtensionIcon
+                      text: APIs
+
+      # ════════════════════════════════════════════════════════════════════
+      # 3. SCAFFOLDER — Template gallery (Create page)
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder
+        disabled: false
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+        disabled: false
+
+      # ════════════════════════════════════════════════════════════════════
+      # 4. TECHDOCS — Documentation with MkDocs backend
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              backstage.plugin-techdocs:
+                dynamicRoutes:
+                  - path: /docs
+                    importName: TechDocsIndexPage
+                    menuItem:
+                      icon: LibraryBooksIcon
+                      text: Docs
+                  - path: /docs/:namespace/:kind/:name/*
+                    importName: TechDocsReaderPage
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend
+        disabled: false
+        pluginConfig:
+          techdocs:
+            builder: local
+            generator:
+              runIn: local
+            publisher:
+              type: local
+
+      # ════════════════════════════════════════════════════════════════════
+      # 5. LIGHTSPEED — AI Chat with Azure OpenAI
+      # Provider: azure-openai
+      # Endpoint: ${AZURE_OPENAI_ENDPOINT}
+      # API Key:  ${AZURE_OPENAI_KEY}
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/redhat-plugin-developer-lightspeed
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              red-hat-developer-hub.backstage-plugin-lightspeed:
+                dynamicRoutes:
+                  - path: /lightspeed
+                    importName: LightspeedPage
+                    menuItem:
+                      icon: ChatIcon
+                      text: Lightspeed
+
+      - package: ./dynamic-plugins/dist/redhat-plugin-developer-lightspeed-backend
+        disabled: false
+        pluginConfig:
+          lightspeed:
+            servers:
+              - id: azure-openai-default
+                url: ${AZURE_OPENAI_ENDPOINT}
+                token: ${AZURE_OPENAI_KEY}
+
+      # ════════════════════════════════════════════════════════════════════
+      # 6. NOTIFICATIONS — Event feed / notification center
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/backstage-plugin-notifications
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              backstage.plugin-notifications:
+                dynamicRoutes:
+                  - path: /notifications
+                    importName: NotificationsPage
+                    menuItem:
+                      config:
+                        props:
+                          titleCounterEnabled: true
+                          webNotificationsEnabled: false
+                      importName: NotificationsSidebarItem
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
+        disabled: false
+
+      # ════════════════════════════════════════════════════════════════════
+      # 7. RBAC — Admin UI for role-based access control
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              janus-idp.backstage-plugin-rbac:
+                dynamicRoutes:
+                  - path: /admin/rbac
+                    importName: RbacPage
+                    menuItem:
+                      icon: AdminPanelSettingsIcon
+                      text: Administration
+
+      # ════════════════════════════════════════════════════════════════════
+      # 8. USER SETTINGS — Profile and preferences page
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/backstage-plugin-user-settings
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              backstage.plugin-user-settings:
+                dynamicRoutes:
+                  - path: /settings
+                    importName: UserSettingsPage
+                    menuItem:
+                      icon: SettingsIcon
+                      text: Settings
+
+      # ════════════════════════════════════════════════════════════════════
+      # 9. TOPOLOGY — Kubernetes topology visualization
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              janus-idp.backstage-plugin-topology:
+                mountPoints:
+                  - mountPoint: entity.page.kubernetes/cards
+                    importName: TopologyPage
+                    config:
+                      if:
+                        allOf:
+                          - isKind: component
+                          - hasAnnotation: backstage.io/kubernetes-id
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              backstage.plugin-kubernetes:
+                mountPoints:
+                  - mountPoint: entity.page.kubernetes/cards
+                    importName: EntityKubernetesContent
+                    config:
+                      if:
+                        anyOf:
+                          - hasAnnotation: backstage.io/kubernetes-id
+                          - hasAnnotation: backstage.io/kubernetes-namespace
+                      layout:
+                        gridColumn: 1 / -1
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+        disabled: false
+        pluginConfig:
+          kubernetes:
+            serviceLocatorMethod:
+              type: multiTenant
+            clusterLocatorMethods:
+              - type: config
+                clusters: []
+
+      # ════════════════════════════════════════════════════════════════════
+      # SEARCH — Backend for Catalog search (PostgreSQL)
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/backstage-plugin-search
+        disabled: false
+
+      - package: ./dynamic-plugins/dist/backstage-plugin-search-backend-module-pg
+        disabled: false
+
+      # ════════════════════════════════════════════════════════════════════
+      # HOME PAGE — Dynamic Home Page with Three Horizons layout
+      # ════════════════════════════════════════════════════════════════════
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
+        disabled: false
+        pluginConfig:
+          dynamicPlugins:
+            frontend:
+              default.main-menu-items:
+                menuItems:
+                  default.home:
+                    icon: home
+                    priority: 100
+                    title: Home
+                  default.catalog:
+                    icon: category
+                    priority: 90
+                    title: Catalog
+                  default.apis:
+                    icon: extension
+                    priority: 80
+                    title: APIs
+                  default.docs:
+                    icon: docs
+                    priority: 60
+                    title: Docs
+              red-hat-developer-hub.backstage-plugin-dynamic-home-page:
+                dynamicRoutes:
+                  - path: /
+                    importName: DynamicHomePage
+                  - path: /home
+                    importName: DynamicHomePage
+
+      # ════════════════════════════════════════════════════════════════════
+      # DISABLED PLUGINS — Known issues (runtime-validated)
+      # ════════════════════════════════════════════════════════════════════
+
+      # Segment analytics — CSP violations from cdn.segment.com
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
+        disabled: true
+
+      # Signals — WebSocket /api/signals fails without backend support
+      - package: ./dynamic-plugins/dist/backstage-plugin-signals
+        disabled: true
+      - package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
+        disabled: true
+
+      # Adoption Insights — 'digest' TypeError (crypto context issue)
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-adoption-insights
+        disabled: true
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-analytics-module-adoption-insights-dynamic
+        disabled: true
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-adoption-insights-backend-dynamic
+        disabled: true
