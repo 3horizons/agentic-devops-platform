@@ -15,7 +15,7 @@ tools:
   - edit/createDirectory
   - search/listDirectory
   - todo
-user-invokable: true
+user-invocable: true
 handoffs:
   - label: "Implement Plugin"
     agent: platform

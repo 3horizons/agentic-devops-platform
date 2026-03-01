@@ -179,7 +179,7 @@ networking → security → aks-cluster → databases
 
 ## Agent System
 
-### 17 Copilot Chat Agents
+### 18 Copilot Chat Agents
 
 Located in `.github/agents/`. Each agent uses YAML frontmatter with `tools`, `infer`, `skills`, `handoffs` and a three-tier boundary system (ALWAYS / ASK FIRST / NEVER).
 
@@ -202,6 +202,7 @@ Located in `.github/agents/`. Each agent uses YAML frontmatter with `tools`, `in
 | `@ado-integration` | `@ado-integration Migrate from ADO` | Azure DevOps PAT, repos, pipelines, boards |
 | `@hybrid-scenarios` | `@hybrid-scenarios Scenario A` | GitHub + ADO coexistence (scenarios A/B/C) |
 | `@azure-portal-deploy` | `@azure-portal-deploy Provision AKS` | Azure portal AKS, Key Vault, PostgreSQL, ACR |
+| `@engineering-intelligence` | `@engineering-intelligence Collect DORA metrics` | DORA metrics, Copilot analytics, GHAS security posture, developer productivity |
 
 ### Key Orchestration Flows
 
@@ -211,9 +212,10 @@ Security:     @reviewer → @security → @devops (remediate) → @test
 Templates:    @platform → @template-engineer → @devops → @security
 Multi-file:   Any agent → @context-architect → @test → @docs
 Hybrid:       @github-integration + @ado-integration → @hybrid-scenarios → @deploy
+Intelligence: @engineering-intelligence → @platform (RHDH dashboard) → @sre (SLO correlation)
 ```
 
-### 13 MCP Servers
+### 14 MCP Servers
 
 Defined in `mcp-servers/mcp-config.json`. Access matrix in `mcp-servers/USAGE.md`.
 

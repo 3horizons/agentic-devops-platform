@@ -215,9 +215,10 @@ Security:     @reviewer → @security → @devops (remediate) → @test
 Templates:    @platform → @template-engineer → @devops → @security
 Multi-file:   Any agent → @context-architect → @test → @docs
 Hybrid:       @github-integration + @ado-integration → @hybrid-scenarios → @deploy
+Intelligence: @engineering-intelligence → @platform (RHDH dashboard) → @sre (SLO correlation)
 ```
 
-### 13 MCP Servers
+### 14 MCP Servers
 
 Defined in `mcp-servers/mcp-config.json`. Access matrix in `mcp-servers/USAGE.md`.
 
@@ -408,7 +409,7 @@ In `policies/terraform/azure.rego`, enforced via Conftest in CI:
 
 - `scripts/migration/ado-to-github-migration.sh` — ADO → GitHub migration in 6 phases
 
-## Golden Paths (22 RHDH Templates)
+## Golden Paths (23 RHDH Templates)
 
 ### H1 Foundation (6)
 
@@ -418,9 +419,9 @@ basic-cicd, security-baseline, documentation-site, web-application, new-microser
 
 microservice (full), api-microservice, event-driven-microservice, data-pipeline, batch-job, api-gateway, gitops-deployment, ado-to-github-migration (6-phase), reusable-workflows
 
-### H3 Innovation (7)
+### H3 Innovation (8)
 
-foundry-agent, sre-agent-integration, mlops-pipeline, multi-agent-system, copilot-extension, rag-application, ai-evaluation-pipeline
+foundry-agent, sre-agent-integration, mlops-pipeline, multi-agent-system, copilot-extension, rag-application, ai-evaluation-pipeline, engineering-intelligence-dashboard
 
 ## Security Model
 
