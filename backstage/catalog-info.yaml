@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: three-horizons-examples
+  description: Three Horizons catalog entities
+spec:
+  targets:
+    - ./examples/org.yaml
+    - ./examples/entities.yaml
