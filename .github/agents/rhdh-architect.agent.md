@@ -11,12 +11,11 @@ tools:
   - search/textSearch
   - web/fetch
   - agent/runSubagent
-  - agent/askQuestions
   - edit/createFile
   - edit/createDirectory
   - search/listDirectory
   - todo
-user-invokable: true
+user-invocable: true
 handoffs:
   - label: "Implement Plugin"
     agent: platform
@@ -88,18 +87,18 @@ You think in terms of **composability**: every UI element is either a native Bac
 ## Skill Set
 
 ### 1. RHDH Plugin Design
-> **Reference:** [RHDH Plugin Design Skill](skills/rhdh-plugin-design/SKILL.md)
+> **Reference:** [RHDH Plugin Design Skill](../skills/rhdh-plugin-design/SKILL.md)
 - Use this skill for all plugin architecture decisions
 - Contains the complete dynamic plugin wiring reference, Backstage API catalog, and component patterns
 - Includes the Three Horizons Portal reference analysis
 
 ### 2. RHDH Official Documentation
-> **Reference:** [RHDH Official Documentation Guide](../../RHDH_Official_Documentation_Guide.md)
+> **Reference:** [RHDH Official Documentation Guide](../../docs/official-docs/rhdh/RHDH_Official_Documentation_Guide.md)
 - Comprehensive reference compiled from 31 official Red Hat documentation PDFs
 - Covers installation, configuration, dynamic plugins, catalog, templates, TechDocs, RBAC, and all supported plugins
 
 ### 3. Three Horizons Implementation Plan
-> **Reference:** [Implementation Plan](../../RHDH_Three_Horizons_Portal_Implementation_Plan.md)
+> **Reference:** [Implementation Plan](../../docs/RHDH_Three_Horizons_Portal_Implementation_Plan.md)
 - The master plan mapping each portal page to RHDH configuration and custom plugin tasks
 - Agent assignment matrix and deployment timeline
 

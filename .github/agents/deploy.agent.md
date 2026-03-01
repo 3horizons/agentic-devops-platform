@@ -45,6 +45,10 @@ handoffs:
     agent: template-engineer
     prompt: "Fix or create Golden Path templates for service scaffolding."
     send: false
+  - label: "Verify Portal Architecture"
+    agent: rhdh-architect
+    prompt: "Validate portal plugin architecture and dynamic-plugins-config before deployment."
+    send: false
   - label: "Documentation"
     agent: docs
     prompt: "Update deployment documentation with current status and procedures."

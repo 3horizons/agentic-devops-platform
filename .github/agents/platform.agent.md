@@ -32,6 +32,10 @@ handoffs:
     agent: engineering-intelligence
     prompt: "Collect and visualize engineering metrics (DORA, Copilot, Security) for the RHDH portal."
     send: false
+  - label: "Plugin Architecture"
+    agent: rhdh-architect
+    prompt: "Design custom RHDH plugin architecture, frontend wiring strategy, and component specs."
+    send: false
 ---
 
 # Platform Agent

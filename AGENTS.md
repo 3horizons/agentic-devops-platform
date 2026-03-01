@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-based AI assistant system that operates directly within VS Code / GitHub Copilot Chat. The platform includes 17 specialized agents for interactive development assistance.
+The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-based AI assistant system that operates directly within VS Code / GitHub Copilot Chat. The platform includes 19 specialized agents for interactive development assistance.
 
 ## Architecture
 
@@ -37,6 +37,8 @@ The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-ba
 | **Hybrid Scenarios** | [hybrid-scenarios.agent.md](.github/agents/hybrid-scenarios.agent.md) | GitHub + ADO coexistence scenarios A/B/C, dual auth, hybrid templates |
 | **Template Engineer** | [template-engineer.agent.md](.github/agents/template-engineer.agent.md) | Software Template expert for RHDH, Golden Path creation, devcontainer configs |
 | **Context Architect** | [context-architect.agent.md](.github/agents/context-architect.agent.md) | Multi-file change planning/execution, dependency tracing, codebase context mapping |
+| **Engineering Intelligence** | [engineering-intelligence.agent.md](.github/agents/engineering-intelligence.agent.md) | DORA metrics, Copilot analytics, GHAS security posture, developer productivity |
+| **RHDH Architect** | [rhdh-architect.agent.md](.github/agents/rhdh-architect.agent.md) | RHDH/Backstage plugin architecture, frontend wiring, component specs, ADRs |
 
 ### How to Use
 
@@ -103,7 +105,7 @@ The 15 skills in [.github/skills/](.github/skills/) provide domain-specific know
 
 ## Agent Orchestration & Handoffs
 
-All 17 agents are interconnected via YAML `handoffs:` in their frontmatter. Key orchestration flows:
+All 19 agents are interconnected via YAML `handoffs:` in their frontmatter. Key orchestration flows:
 
 ### Deployment Flow
 ```
@@ -145,6 +147,15 @@ Any agent → @context-architect → @test → @docs
 ### Hybrid Integration Flow
 ```
 @github-integration + @ado-integration → @hybrid-scenarios → @deploy
+```
+
+### RHDH Portal Customization Flow
+```
+@rhdh-architect → @platform → @deploy → @sre
+       ↓
+   @template-engineer
+   @devops (CI/CD)
+   @security (RBAC)
 ```
 
 ### Entry Points (user-invoked)

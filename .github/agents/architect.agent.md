@@ -28,6 +28,10 @@ handoffs:
     agent: platform
     prompt: "Configure the RHDH portal for this architecture."
     send: false
+  - label: "RHDH Plugin Design"
+    agent: rhdh-architect
+    prompt: "Design custom RHDH dynamic plugin architecture and frontend wiring for this solution."
+    send: false
 ---
 
 # Architect Agent
