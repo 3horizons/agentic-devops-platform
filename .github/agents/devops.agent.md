@@ -6,6 +6,9 @@ tools:
   - edit/editFiles
   - execute/runInTerminal
   - read/problems
+  - read/readFile
+  - search/fileSearch
+  - web/fetch
 user-invocable: true
 handoffs:
   - label: "Security Review"
@@ -77,6 +80,12 @@ You are a **DevOps Specialist** responsible for the "Inner Loop" (CI) and "Outer
 > **Reference:** [RHDH Operations Skill](../skills/rhdh-operations/SKILL.md)
 - Consult for GitOps deployment patterns, ArgoCD sync strategies for RHDH, and upgrade procedures.
 - Covers release notes, deployment best practices, and environment promotion strategies.
+
+### 7. ARO (Azure Red Hat OpenShift) Deployment
+> **Reference:** [ARO Deployment Skill](../skills/aro-deployment/SKILL.md)
+- Consult before deploying or managing RHDH on ARO (OpenShift).
+- Covers ARO vs AKS differences, `oc` CLI, Routes, Operators (OLM), and SecurityContextConstraints.
+- **MCP Servers:** Use `openshift` MCP for `oc` commands, `argocd` MCP for GitOps operations.
 
 ## ⛔ Boundaries
 

@@ -156,6 +156,50 @@
         "https://github.com/backstage/backstage/tree/master/plugins/mcp-actions-backend",
         "https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations"
       ]
+    },
+    "openshift": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-bash"],
+      "description": "OpenShift CLI operations for ARO (Azure Red Hat OpenShift) deployments",
+      "env": {
+        "KUBECONFIG": "${KUBECONFIG}"
+      },
+      "capabilities": [
+        "oc login — authenticate to OpenShift/ARO cluster",
+        "oc project — switch between OpenShift projects (namespaces)",
+        "oc new-project — create new OpenShift project",
+        "oc get routes — list OpenShift Routes (equivalent to Ingress)",
+        "oc get deploymentconfigs — list DeploymentConfigs",
+        "oc get buildconfigs — list BuildConfigs",
+        "oc get operators — list installed Operators (OLM)",
+        "oc get csv — list ClusterServiceVersions (operator status)",
+        "oc adm top — resource usage (nodes, pods)",
+        "oc apply — apply manifests",
+        "oc create route — create OpenShift Route",
+        "oc logs — view pod logs",
+        "oc get events — cluster events for troubleshooting"
+      ]
+    },
+    "argocd": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-bash"],
+      "description": "ArgoCD CLI for GitOps deployment operations",
+      "env": {
+        "ARGOCD_SERVER": "${ARGOCD_SERVER}",
+        "ARGOCD_AUTH_TOKEN": "${ARGOCD_AUTH_TOKEN}"
+      },
+      "capabilities": [
+        "argocd app list — list all ArgoCD applications",
+        "argocd app get — get application details and sync status",
+        "argocd app sync — trigger application sync",
+        "argocd app diff — show diff between live and desired state",
+        "argocd app history — show deployment history",
+        "argocd app wait — wait for application sync to complete",
+        "argocd app rollback — rollback to previous revision",
+        "argocd repo add — add Git repository to ArgoCD",
+        "argocd repo list — list configured repositories",
+        "argocd cluster add — register Kubernetes cluster"
+      ]
     }
   }
 }

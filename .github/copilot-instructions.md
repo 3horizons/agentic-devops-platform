@@ -217,13 +217,17 @@ Intelligence: @engineering-intelligence → @platform (RHDH dashboard) → @sre 
 RHDH Portal: @rhdh-architect → @platform → @deploy → @sre
 ```
 
-### 14 MCP Servers
+### 16 MCP Servers
 
 Defined in `mcp-servers/mcp-config.json`. Access matrix in `mcp-servers/USAGE.md`.
 
-**Read-only (always allowed)**: `az resource list/show`, `kubectl get`, `gh pr/issue view`, `helm list`, `terraform state list/show`
+**Core (14):** azure, github, terraform, kubernetes, helm, docker, git, bash, filesystem, defender, purview, entra, copilot, engineering-intelligence, backstage
 
-**Requires confirmation**: `terraform apply/destroy`, `kubectl apply/delete`, `helm install/upgrade/uninstall`, `az resource delete`, `az aks scale`
+**New (2):** `openshift` (oc CLI for ARO deployments), `argocd` (ArgoCD CLI for GitOps)
+
+**Read-only (always allowed)**: `az resource list/show`, `kubectl get`, `oc get`, `gh pr/issue view`, `helm list`, `terraform state list/show`, `argocd app list/get`
+
+**Requires confirmation**: `terraform apply/destroy`, `kubectl apply/delete`, `oc apply/delete`, `helm install/upgrade/uninstall`, `az resource delete`, `az aks scale`, `az aro create/delete`, `argocd app sync`
 
 **Forbidden (never)**: `kubectl delete namespace production`, `terraform destroy -auto-approve`, `kubectl get secret -o yaml`, `az keyvault secret show --query value`, `az role assignment create --role Owner`
 
@@ -482,6 +486,10 @@ foundry-agent, sre-agent-integration, mlops-pipeline, multi-agent-system, copilo
 - `rhdh-auth-rbac` — Authentication providers, RBAC policies, permissions
 - `rhdh-catalog-templates` — Software Catalog, Templates, TechDocs, GitHub integration, Scorecards
 - `rhdh-operations` — Release notes, GitOps patterns, DX best practices, upgrades
+
+### ARO (Azure Red Hat OpenShift) Support
+
+The platform supports deployment on both **AKS** and **ARO**. ARO-specific skill (`aro-deployment`) covers provisioning, RHDH Operator install, and ARO vs AKS differences. Additional CLIs: `oc` >= 4.14 (conditional), `oras` >= 1.1 (for custom plugins).
 
 ### New Features (in `new-features/`)
 

@@ -116,6 +116,7 @@ The 15 skills in [.github/skills/](.github/skills/) provide domain-specific know
 | `rhdh-catalog-templates` | Software Catalog, Templates, TechDocs, GitHub integration, Scorecards | `@template-engineer`, `@platform`, `@engineering-intelligence`, `@docs` |
 | `rhdh-operations` | Release notes, GitOps patterns, DX best practices, upgrades | `@sre`, `@devops`, `@deploy`, `@docs` |
 | `rhdh-plugin-design` | Custom plugin architecture, frontend wiring, Backstage APIs | `@rhdh-architect` |
+| `aro-deployment` | ARO (Azure Red Hat OpenShift) provisioning, RHDH Operator install, ARO vs AKS | `@deploy`, `@azure-portal-deploy`, `@sre`, `@devops`, `@platform`, `@onboarding` |
 
 ## Agent Orchestration & Handoffs
 
@@ -125,7 +126,7 @@ All 19 agents are interconnected via YAML `handoffs:` in their frontmatter. Key 
 ```
 @onboarding → @architect → @terraform → @deploy → @sre
                                            ↓
-                              @azure-portal-deploy
+                              @azure-portal-deploy (AKS or ARO)
                               @github-integration
                               @ado-integration
 ```

@@ -14,16 +14,19 @@ description: CLI tool prerequisites validation and setup
 
 ## Required CLI Tools
 
-| Tool | Minimum Version | Purpose |
-|------|-----------------|---------|
-| az | 2.50.0 | Azure CLI |
-| terraform | 1.5.0 | Infrastructure as Code |
-| kubectl | 1.28.0 | Kubernetes CLI |
-| helm | 3.12.0 | Kubernetes package manager |
-| gh | 2.30.0 | GitHub CLI |
-| argocd | 2.8.0 | ArgoCD CLI |
-| jq | 1.6 | JSON processor |
-| yq | 4.0.0 | YAML processor |
+| Tool | Minimum Version | Purpose | Required |
+|------|-----------------|---------|----------|
+| az | 2.50.0 | Azure CLI | Always |
+| terraform | 1.5.0 | Infrastructure as Code | Always |
+| kubectl | 1.28.0 | Kubernetes CLI | Always |
+| helm | 3.12.0 | Kubernetes package manager | Always |
+| gh | 2.30.0 | GitHub CLI | Always |
+| argocd | 2.8.0 | ArgoCD CLI (GitOps) | Always |
+| jq | 1.6 | JSON processor | Always |
+| yq | 4.0.0 | YAML processor | Always |
+| oc | 4.14.0 | OpenShift CLI (ARO deployments) | When DEPLOY_TARGET=aro |
+| oras | 1.1.0 | OCI Registry (custom dynamic plugin push) | When building custom plugins |
+| ansible | 2.16.0 | Ansible Automation (RHDH Tech Preview) | Optional |
 
 ## Validation Script
 
@@ -33,6 +36,7 @@ set -euo pipefail
 
 # Check required tools
 TOOLS=("az" "terraform" "kubectl" "helm" "gh" "argocd" "jq" "yq")
+OPTIONAL_TOOLS=("oc" "oras" "ansible")
 MISSING=()
 
 for tool in "${TOOLS[@]}"; do
@@ -54,6 +58,8 @@ echo "All prerequisites satisfied"
 ### macOS (Homebrew)
 ```bash
 brew install azure-cli terraform kubectl helm gh argocd jq yq
+# ARO/OpenShift tools (conditional)
+brew install openshift-cli oras ansible
 ```
 
 ### Ubuntu/Debian

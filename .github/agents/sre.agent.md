@@ -5,6 +5,9 @@ tools:
   - search/codebase
   - execute/runInTerminal
   - read/problems
+  - read/readFile
+  - search/fileSearch
+  - web/fetch
 user-invocable: true
 handoffs:
   - label: "Deploy Fix"
@@ -79,6 +82,12 @@ You are a **Site Reliability Engineer (SRE)**. You focus on **SLOs**, **Error Bu
 > **Reference:** [RHDH Operations Skill](../skills/rhdh-operations/SKILL.md)
 - **ALWAYS** consult before planning upgrades, writing runbooks, or troubleshooting operational issues.
 - Covers release notes, GitOps deployment patterns, and DX best practices.
+
+### 8. ARO (Azure Red Hat OpenShift) Troubleshooting
+> **Reference:** [ARO Deployment Skill](../skills/aro-deployment/SKILL.md)
+- Consult for ARO-specific troubleshooting (`oc get events`, `oc adm top`, `oc logs`, SCC issues).
+- Covers ARO vs AKS differences, Operator status checks, and Route diagnostics.
+- **MCP Servers:** Use `openshift` MCP for `oc` commands on ARO clusters.
 
 ## ⛔ Boundaries
 

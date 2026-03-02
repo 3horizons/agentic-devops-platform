@@ -6,6 +6,8 @@ tools:
   - edit/editFiles
   - read/problems
   - web/githubRepo
+  - read/readFile
+  - search/fileSearch
 user-invocable: true
 handoffs:
   - label: "Technical Review"

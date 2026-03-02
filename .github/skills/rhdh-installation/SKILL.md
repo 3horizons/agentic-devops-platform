@@ -37,6 +37,12 @@ This skill provides the official Red Hat documentation for installing, setting u
 |----------|------|--------|
 | **Developer Guide** | [a-developers-guide-to-red-hat-developer-hub-and-janus-_-red-hat-developer.md](../../../docs/official-docs/rhdh/markdown/a-developers-guide-to-red-hat-developer-hub-and-janus-_-red-hat-developer.md) | Janus IDP, development workflow, plugin ecosystem overview |
 
+### ARO (Azure Red Hat OpenShift) Deployment
+
+For ARO-specific deployment instructions (Operator install, Routes, SCC, pull-secret management), see the dedicated skill:
+
+> **Reference:** [ARO Deployment Skill](../aro-deployment/SKILL.md)
+
 ## Quick Reference: AKS Installation
 
 ### Prerequisites

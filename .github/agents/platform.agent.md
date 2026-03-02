@@ -6,6 +6,10 @@ tools:
   - edit/editFiles
   - execute/runInTerminal
   - read/problems
+  - read/readFile
+  - search/fileSearch
+  - search/textSearch
+  - web/fetch
 user-invocable: true
 handoffs:
   - label: "GitOps Deployment"
@@ -79,6 +83,11 @@ You are a **Platform Engineer** focused on Developer Experience (DevEx). You mai
 > **Reference:** [RHDH Auth & RBAC Skill](../skills/rhdh-auth-rbac/SKILL.md)
 - **ALWAYS** consult before configuring authentication providers or RBAC policies.
 - Covers GitHub OAuth, Azure AD SSO, permission framework, role definitions.
+
+### 7. ARO (Azure Red Hat OpenShift) Deployment
+> **Reference:** [ARO Deployment Skill](../skills/aro-deployment/SKILL.md)
+- Consult for ARO-specific portal configuration (Routes, Operators, SCC).
+- Covers ARO vs AKS differences and RHDH Operator install on OpenShift.
 
 ## 🧱 Template Structure
 All Golden Paths must follow this structure:

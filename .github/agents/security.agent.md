@@ -4,6 +4,9 @@ description: Specialist in Security Compliance, Vulnerability Management, and Ze
 tools:
   - search/codebase
   - read/problems
+  - execute/runInTerminal
+  - read/readFile
+  - search/fileSearch
 user-invocable: true
 handoffs:
   - label: "Remediate Findings"

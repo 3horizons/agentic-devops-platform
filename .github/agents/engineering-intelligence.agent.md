@@ -5,6 +5,8 @@ tools:
   - search/codebase
   - execute/runInTerminal
   - read/problems
+  - read/readFile
+  - web/fetch
 user-invocable: true
 handoffs:
   - label: "Deploy Dashboard"
