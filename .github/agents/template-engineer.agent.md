@@ -112,6 +112,14 @@ You are the bridge between an existing codebase and a self-service Golden Path. 
 > **Reference:** [Codespaces Plugin](https://www.npmjs.com/package/@adityasinghal26/plugin-github-codespaces)
 > **Reference:** [Coder Dev Containers Plugin](https://github.com/coder/backstage-plugins/blob/main/plugins/backstage-plugin-devcontainers-react/README.md)
 
+### 4. Required CLI Tools for Plugin Development
+> **Reference:** [Prerequisites Skill](../skills/prerequisites/SKILL.md) — Categories 2 (Container & Runtime) and 9 (Plugin Development)
+- **Node.js** >= 18 and **npm** >= 9 — required for `npx`, plugin builds, and MCP server execution.
+- **@janus-idp/cli** — `npm install -g @janus-idp/cli` — required for `package export-dynamic-plugin`.
+- **oras** >= 1.1 — `brew install oras` — required for pushing OCI artifacts to ACR.
+- **docker** >= 24 — required for building custom RHDH images and testing plugins locally.
+- **@backstage/create-app** — used via `npx` (no global install) for scaffolding new plugins.
+
 ## 🧱 Template Anatomy
 
 Every template produced by this agent MUST follow this structure:

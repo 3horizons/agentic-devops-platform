@@ -1,11 +1,8 @@
 ---
 name: terraform
 description: Specialist in Azure Infrastructure as Code (IaC) using Terraform.
-tools:
-  - search/codebase
-  - edit/editFiles
-  - execute/runInTerminal
-  - read/problems
+tools: execute/runInTerminal, read/problems, edit/editFiles, search/codebase, 'com.microsoft/azure/*', 'microsoft/markitdown/*', 'microsoftdocs/mcp/*', 'azure-mcp/*', chrisdias.promptboost/promptBoost, ms-azuretools.vscode-azure-github-copilot/azure_get_azure_verified_module, ms-azuretools.vscode-azure-github-copilot/azure_recommend_custom_modes, ms-azuretools.vscode-azure-github-copilot/azure_query_azure_resource_graph, ms-azuretools.vscode-azure-github-copilot/azure_get_auth_context, ms-azuretools.vscode-azure-github-copilot/azure_set_auth_context, ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_template_tags, ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_templates_for_tag, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, ms-vscode.vscode-websearchforcopilot/websearch
+
 user-invocable: true
 handoffs:
   - label: "Security Deep Dive"

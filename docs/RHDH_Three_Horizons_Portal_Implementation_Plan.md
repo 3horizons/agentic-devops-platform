@@ -6,20 +6,19 @@
 
 ## Executive Summary
 
-The Three Horizons Portal reference template contains **13 pages/tabs** (11 original + Copilot Metrics + GHAS Metrics). After analyzing each against RHDH 1.8 capabilities and the 31 official documentation PDFs, the implementation breaks down as follows:
+The Three Horizons Portal reference template contains **11 pages/tabs**. After analyzing each against RHDH 1.8 capabilities and the 31 official documentation PDFs, the implementation breaks down as follows:
 
 | Category | Pages | Effort |
 |----------|-------|--------|
 | **Native Config Only** | Catalog, APIs, Create, Docs, Lightspeed, Notifications, Administration, Settings | ~60% of work |
-| **Custom Plugin Required** | Home Page, My Group, Copilot Metrics, GHAS Metrics | ~40% of work |
+| **Custom Plugin Required** | Home Page, My Group | ~30% of work |
 | **Branding + Theme** | All pages (sidebar, color bar, Microsoft palette) | ~10% of work |
 
 **Primary Agents (ordered by involvement):**
 
 | Agent | Role in This Plan |
 |-------|-------------------|
-| `@rhdh-architect` | **NEW** — RHDH plugin architect, frontend wiring, component specs, ADRs |
-| `@architect` | Azure Solution Architect (WAF, cloud infra — used only for Azure decisions) |
+| `@architect` | Overall design, plugin architecture, Three Horizons mapping |
 | `@platform` | RHDH configuration, catalog setup, dynamic plugin enablement |
 | `@template-engineer` | Golden Path templates for Create page, scaffolder actions |
 | `@devops` | CI/CD pipeline for custom plugins, GitOps deployment |
@@ -41,7 +40,7 @@ The Three Horizons Portal reference template contains **13 pages/tabs** (11 orig
 ## Phase 0: Architecture & Foundation
 
 ### 0.1 — Design Plugin Architecture
-**Agent:** `@rhdh-architect`
+**Agent:** `@architect`
 **Description:** Design the overall architecture for the Three Horizons Portal customization, including:
 - Decide which RHDH frontend plugin wiring mechanisms to use (`dynamicRoutes`, `mountPoints`, `menuItems`, `entityTabs`)
 - Define the Custom Home Page Plugin component architecture (React + Backstage APIs)
@@ -102,13 +101,13 @@ app:
 
 **Native support:** ~70% (logo, colors, sidebar). The 4-color gradient bar requires a custom theme extension or CSS injection in the Custom Home Page plugin.
 
-**Handoff:** → `@rhdh-architect` (verify design compliance)
+**Handoff:** → `@architect` (verify design compliance)
 
 ---
 
 ### 1.2 — Sidebar Navigation Configuration
 **Agent:** `@platform`
-**Description:** Configure the sidebar menu items to match the reference template's 13-page navigation.
+**Description:** Configure the sidebar menu items to match the reference template's 11-page navigation.
 
 **Configuration via `dynamic-plugins-config.yaml` → `menuItems`:**
 
@@ -121,8 +120,6 @@ app:
 | Learning Paths | `SchoolIcon` | `/learning-paths` | Custom or TechDocs route |
 | Create | `CreateComponentIcon` | `/create` | Native (Scaffolder) |
 | Docs | `LibraryBooksIcon` | `/docs` | Native (TechDocs) |
-| Copilot Metrics | `AssessmentIcon` | `/copilot-metrics` | Custom Plugin (GitHub API) |
-| GHAS Metrics | `SecurityIcon` | `/ghas-metrics` | Custom Plugin (GitHub API) |
 | Lightspeed | `ChatIcon` | `/lightspeed` | Dynamic Plugin (Lightspeed) |
 | Notifications | `NotificationsIcon` | `/notifications` | Dynamic Plugin (Notifications) |
 | Administration | `AdminPanelSettingsIcon` | `/admin` | Native (RBAC UI) |
@@ -300,7 +297,7 @@ dynamicPlugins:
 ## Phase 3: Custom Plugins Development
 
 ### 3.1 — Custom Home Page Plugin
-**Agent:** `@rhdh-architect` (design) → `@platform` (develop) → `@devops` (CI/CD)
+**Agent:** `@architect` (design) → `@platform` (develop) → `@devops` (CI/CD)
 **Priority:** 🔴 HIGH — This is the centerpiece of the customization.
 
 **Description:** Create a custom RHDH dynamic plugin that replaces the default home page with the Three Horizons Portal home page design.
@@ -363,7 +360,7 @@ dynamicPlugins:
 ---
 
 ### 3.2 — Custom My Group Dashboard Plugin
-**Agent:** `@rhdh-architect` (design) → `@platform` (develop) → `@devops` (CI/CD)
+**Agent:** `@architect` (design) → `@platform` (develop) → `@devops` (CI/CD)
 **Priority:** 🟡 MEDIUM
 
 **Description:** Create a custom plugin showing team-scoped dashboard with member list and owned components.
@@ -387,197 +384,7 @@ dynamicPlugins:
 
 ---
 
-### 3.3 — Custom Copilot Metrics Plugin
-**Agent:** `@rhdh-architect` (design) → `@platform` (develop) → `@devops` (CI/CD)
-**Priority:** 🔴 HIGH — Key value metric for GitHub Copilot adoption visibility.
-
-**Description:** Create a custom RHDH dynamic plugin that displays GitHub Copilot usage metrics for the organization using the GitHub Copilot Metrics REST API (GA — Feb 2026).
-
-**Architecture:** This plugin requires **both frontend and backend**:
-- **Backend proxy plugin** → Proxies requests to GitHub REST API with org-level PAT authentication
-- **Frontend plugin** → React dashboard consuming the backend proxy
-
-**Components to build (React):**
-
-| Component | Description | Data Source |
-|-----------|-------------|-------------|
-| `ActiveUsersCard` | Total active users + engaged users, daily trend | `GET /orgs/{org}/copilot/metrics` → `total_active_users`, `total_engaged_users` |
-| `AcceptanceRateChart` | Line chart: suggestions accepted vs rejected over 30 days | `copilot_ide_code_completions` nested data |
-| `LanguageBreakdown` | Table: lines suggested/accepted per programming language | `copilot_ide_code_completions.languages[]` |
-| `IdeUsageChart` | Pie/bar chart: usage by editor (VS Code, JetBrains, Neovim) | `copilot_ide_code_completions.editors[]` |
-| `TeamComparison` | Table: per-team seat usage and engagement rates | `GET /orgs/{org}/team/{slug}/copilot/metrics` (one call per team) |
-| `ChatUsageStats` | Cards: IDE chat, dotcom chat, PR summary generation counts | `copilot_ide_chat`, `copilot_dotcom_chat`, `copilot_dotcom_pull_requests` |
-| `TrendSparklines` | Sparkline charts for key metrics (30-day mini trends) | Aggregate from daily metrics array |
-| `SeatUtilization` | Gauge chart: assigned seats vs active seats | `GET /orgs/{org}/copilot/billing` |
-
-**Backend proxy approach:**
-```yaml
-# app-config.yaml — proxy to GitHub API
-proxy:
-  endpoints:
-    /copilot-metrics:
-      target: https://api.github.com
-      headers:
-        Authorization: "Bearer ${GITHUB_COPILOT_METRICS_PAT}"
-        Accept: "application/vnd.github+json"
-        X-GitHub-Api-Version: "2022-11-28"
-      pathRewrite:
-        /api/proxy/copilot-metrics/org: /orgs/${GITHUB_ORG}/copilot/metrics
-        /api/proxy/copilot-metrics/billing: /orgs/${GITHUB_ORG}/copilot/billing
-```
-
-**Alternative: Custom backend plugin** (more flexible):
-```
-plugins/
-└── copilot-metrics/
-    ├── copilot-metrics-frontend/        # React dashboard
-    │   ├── src/
-    │   │   ├── plugin.ts
-    │   │   ├── components/
-    │   │   │   ├── CopilotMetricsPage.tsx
-    │   │   │   ├── ActiveUsersCard.tsx
-    │   │   │   ├── AcceptanceRateChart.tsx
-    │   │   │   ├── LanguageBreakdown.tsx
-    │   │   │   ├── IdeUsageChart.tsx
-    │   │   │   ├── TeamComparison.tsx
-    │   │   │   ├── ChatUsageStats.tsx
-    │   │   │   ├── TrendSparklines.tsx
-    │   │   │   └── SeatUtilization.tsx
-    │   │   └── api/
-    │   │       └── CopilotMetricsApi.ts     # API client interface
-    │   └── dev/
-    │       └── index.tsx
-    └── copilot-metrics-backend/         # GitHub API proxy
-        ├── src/
-        │   ├── plugin.ts
-        │   ├── router.ts                   # Express routes
-        │   └── github-client.ts            # GitHub REST API client
-        └── package.json
-```
-
-**GitHub API Requirements:**
-- PAT with `manage_billing:copilot` or `read:org` scope
-- Org must have Copilot Metrics API access policy enabled
-- Only returns data for days with 5+ active Copilot seats
-- Data available up to 100 days, processed once daily
-
-**Plugin wiring (`dynamic-plugins-config.yaml`):**
-```yaml
-dynamicPlugins:
-  frontend:
-    copilot-metrics-frontend:
-      dynamicRoutes:
-        - path: /copilot-metrics
-          importName: CopilotMetricsPage
-          menuItem:
-            icon: AssessmentIcon
-            text: Copilot Metrics
-```
-
-**Estimated effort:** 4-6 days (frontend 3-4 days, backend proxy 1-2 days)
-**Handoff:** → `@test` (unit tests), → `@reviewer` (code review), → `@devops` (build pipeline), → `@security` (PAT scope review)
-
----
-
-### 3.4 — Custom GHAS Metrics Plugin
-**Agent:** `@rhdh-architect` (design) → `@platform` (develop) → `@devops` (CI/CD)
-**Priority:** 🔴 HIGH — Critical for DevSecOps visibility and security posture tracking.
-
-**Description:** Create a custom RHDH dynamic plugin that displays GitHub Advanced Security metrics for the organization, covering code scanning, secret scanning, Dependabot, and GHAS billing/coverage.
-
-**Architecture:** This plugin requires **both frontend and backend**:
-- **Backend proxy plugin** → Proxies + aggregates requests to multiple GitHub REST API endpoints with org-level PAT authentication
-- **Frontend plugin** → React dashboard consuming the backend proxy
-
-**Components to build (React):**
-
-| Component | Description | Data Source |
-|-----------|-------------|-------------|
-| `CodeScanningCard` | Summary: open/fixed/dismissed alerts by severity (critical/high/medium/low) | `GET /orgs/{org}/code-scanning/alerts` with state filters |
-| `SecretScanningCard` | Summary: open/resolved alerts, validity status (active/inactive/unknown) | `GET /orgs/{org}/secret-scanning/alerts` with state+validity filters |
-| `DependabotAlertsCard` | Summary: open alerts by severity + ecosystem (npm, pip, maven, etc.) | `GET /repos/{owner}/{repo}/dependabot/alerts` (aggregated across repos) |
-| `GhasCommittersCard` | Total GHAS-licensed committers, per-repo breakdown | `GET /orgs/{org}/settings/billing/advanced-security` |
-| `SecurityTrendChart` | 30-day line chart: alerts opened vs closed over time | Computed from created_at/fixed_at on code-scanning + secret-scanning alerts |
-| `SeverityBreakdown` | Donut chart: critical/high/medium/low distribution | Code scanning alerts grouped by `rule.security_severity_level` |
-| `MttrMetrics` | Mean Time To Remediate cards (by severity tier) | Computed: avg(fixed_at - created_at) for closed alerts |
-| `PushProtectionCard` | Push protection bypass events count + recent bypasses | Secret scanning push protection data |
-| `RepoCoverageTable` | Table: repos with GHAS enabled vs total, coverage percentage | Billing API per-repo breakdown |
-
-**Backend proxy approach:**
-```yaml
-# app-config.yaml — proxy to GitHub API
-proxy:
-  endpoints:
-    /ghas-metrics:
-      target: https://api.github.com
-      headers:
-        Authorization: "Bearer ${GITHUB_GHAS_METRICS_PAT}"
-        Accept: "application/vnd.github+json"
-        X-GitHub-Api-Version: "2022-11-28"
-      pathRewrite:
-        /api/proxy/ghas-metrics/code-scanning: /orgs/${GITHUB_ORG}/code-scanning/alerts
-        /api/proxy/ghas-metrics/secret-scanning: /orgs/${GITHUB_ORG}/secret-scanning/alerts
-        /api/proxy/ghas-metrics/billing: /orgs/${GITHUB_ORG}/settings/billing/advanced-security
-```
-
-**Alternative: Custom backend plugin** (recommended — needs aggregation logic):
-```
-plugins/
-└── ghas-metrics/
-    ├── ghas-metrics-frontend/           # React dashboard
-    │   ├── src/
-    │   │   ├── plugin.ts
-    │   │   ├── components/
-    │   │   │   ├── GhasMetricsPage.tsx
-    │   │   │   ├── CodeScanningCard.tsx
-    │   │   │   ├── SecretScanningCard.tsx
-    │   │   │   ├── DependabotAlertsCard.tsx
-    │   │   │   ├── GhasCommittersCard.tsx
-    │   │   │   ├── SecurityTrendChart.tsx
-    │   │   │   ├── SeverityBreakdown.tsx
-    │   │   │   ├── MttrMetrics.tsx
-    │   │   │   ├── PushProtectionCard.tsx
-    │   │   │   └── RepoCoverageTable.tsx
-    │   │   └── api/
-    │   │       └── GhasMetricsApi.ts      # API client interface
-    │   └── dev/
-    │       └── index.tsx
-    └── ghas-metrics-backend/            # GitHub API proxy + aggregation
-        ├── src/
-        │   ├── plugin.ts
-        │   ├── router.ts                  # Express routes
-        │   ├── github-client.ts           # GitHub REST API client
-        │   └── aggregator.ts              # Aggregation logic (MTTR calc, repo rollup)
-        └── package.json
-```
-
-**GitHub API Requirements:**
-- PAT with `security_events` scope (code scanning + secret scanning)
-- PAT with `repo` scope (Dependabot alerts — repo-level only)
-- PAT with `admin:org` scope (billing/advanced-security endpoint)
-- Dependabot alerts are repo-level → backend must iterate repos and aggregate
-- Secret scanning validity requires GHEC or GHES 3.6+
-- Code scanning supports tool_name filter (CodeQL, ESLint, etc.)
-
-**Plugin wiring (`dynamic-plugins-config.yaml`):**
-```yaml
-dynamicPlugins:
-  frontend:
-    ghas-metrics-frontend:
-      dynamicRoutes:
-        - path: /ghas-metrics
-          importName: GhasMetricsPage
-          menuItem:
-            icon: SecurityIcon
-            text: GHAS Metrics
-```
-
-**Estimated effort:** 5-7 days (frontend 3-4 days, backend proxy + aggregation 2-3 days)
-**Handoff:** → `@test` (unit tests), → `@reviewer` (code review), → `@devops` (build pipeline), → `@security` (PAT scope review)
-
----
-
-### 3.5 — Learning Paths Page (Custom or TechDocs)
+### 3.3 — Learning Paths Page (Custom or TechDocs)
 **Agent:** `@docs` → `@platform`
 **Priority:** 🟢 LOW (can be approximated with TechDocs)
 
@@ -644,7 +451,7 @@ jobs:
 3. Update `rbac-policy.csv` with role definitions
 4. Run `helm upgrade --install backstage backstage/backstage --values values-aks.yaml`
 5. Verify pods are running
-6. Validate all 13 pages are accessible
+6. Validate all 11 pages are accessible
 
 **Handoff:** → `@sre` (monitoring setup), → `@onboarding` (user guides)
 
@@ -681,7 +488,7 @@ jobs:
 
 **Tasks:**
 - Create "Getting Started" guide for the new portal
-- Record walkthrough of all 13 pages
+- Record walkthrough of all 11 pages
 - Set up "first-day" Golden Path template execution flow
 
 ---
@@ -694,7 +501,7 @@ jobs:
 - Unit tests for Custom Home Page Plugin components
 - Unit tests for My Group Dashboard Plugin components
 - Integration tests: Catalog API, Scaffolder API, TechDocs
-- E2E smoke test: Navigate all 13 pages, execute a template, view docs
+- E2E smoke test: Navigate all 11 pages, execute a template, view docs
 
 ---
 
@@ -715,7 +522,7 @@ jobs:
 
 ```
 Week 1:  Phase 0 (Architecture) + Phase 1 (Branding)
-         @rhdh-architect → @platform → @security
+         @architect → @platform → @security
 
 Week 2:  Phase 2.1-2.4 (Catalog, APIs, Create, Docs)
          @platform → @template-engineer → @docs → @github-integration
@@ -724,7 +531,7 @@ Week 3:  Phase 2.5-2.8 (Lightspeed, Notifications, Admin, Settings)
          @platform → @security
 
 Week 4:  Phase 3.1 (Custom Home Page Plugin)
-         @rhdh-architect → @platform → @test → @reviewer
+         @architect → @platform → @test → @reviewer
 
 Week 5:  Phase 3.2-3.3 (My Group + Learning Paths)
          @platform → @docs → @test → @reviewer
@@ -739,8 +546,7 @@ Week 6:  Phase 4 (CI/CD + Deploy) + Phase 5 (Polish)
 
 | Agent | Phases | Primary Tasks |
 |-------|--------|---------------|
-| `@rhdh-architect` | 0.1, 3.1, 3.2, 3.3 | **Plugin architecture**, component specs, ADRs, wiring strategy, Copilot Metrics design |
-| `@architect` | — | Azure WAF/cloud architecture (not used in portal customization) |
+| `@architect` | 0.1, 3.1, 3.2 | Architecture design, plugin component design, ADR |
 | `@platform` | 1.1, 1.2, 2.1-2.8, 3.1, 3.2 | **PRIMARY AGENT** — All RHDH config + custom plugin development |
 | `@template-engineer` | 2.3 | Create 6 Golden Path templates |
 | `@devops` | 4.1 | CI/CD pipeline for plugins, GitOps |
@@ -763,28 +569,8 @@ Week 6:  Phase 4 (CI/CD + Deploy) + Phase 5 (Polish)
 
 To begin implementation immediately:
 
-1. **`@rhdh-architect`** → "Design the plugin architecture for the Three Horizons Portal customization. Analyze the reference template (three-horizons-portal.html), produce ADRs for the Custom Home Page Plugin and My Group Dashboard Plugin, generate component specs, and create the dynamic-plugins-config.yaml wiring. Use your rhdh-plugin-design skill and gap analysis reference."
+1. **`@architect`** → "Design the plugin architecture for the Three Horizons Portal customization, including Custom Home Page Plugin and My Group Dashboard Plugin. Produce an ADR."
 
-2. **`@platform`** → "Configure RHDH branding in app-config.yaml with Microsoft colors (#0078D4 primary, #1B1B1F sidebar) and set up the 13-page sidebar navigation. Use the branding config from the rhdh-architect assets."
+2. **`@platform`** → "Configure RHDH branding in app-config.yaml with Microsoft colors (#0078D4 primary, #1B1B1F sidebar) and set up the 11-page sidebar navigation."
 
 3. **`@template-engineer`** → "Create the 6 Golden Path templates: Microservice, Frontend App, Data Pipeline, ML Model Service, API Gateway, Event-Driven Service."
-
-## Orchestration Chain
-
-```
-@rhdh-architect (designs plugins + config)
-    ↓ hands off specs to
-@deploy (orchestrates the full deployment)
-    ↓ activates in sequence
-    ├── @azure-portal-deploy → infrastructure
-    ├── @platform → RHDH config + custom plugin implementation
-    ├── @template-engineer → Golden Path templates
-    ├── @github-integration → GitHub App + discovery
-    ├── @devops → CI/CD pipeline for plugins
-    ├── @security → RBAC review
-    ├── @docs → TechDocs content
-    ├── @test → plugin tests
-    ├── @reviewer → code review
-    ├── @sre → monitoring + SLOs
-    └── @onboarding → user guides
-```

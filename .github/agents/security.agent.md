@@ -1,12 +1,8 @@
 ---
 name: security
 description: Specialist in Security Compliance, Vulnerability Management, and Zero Trust.
-tools:
-  - search/codebase
-  - read/problems
-  - execute/runInTerminal
-  - read/readFile
-  - search/fileSearch
+tools: execute/runInTerminal, read/problems, read/readFile, search/codebase, search/fileSearch, 'azure-ai-foundry/mcp-foundry/*', 'azure/aks-mcp/*', 'com.microsoft/azure/*', 'github/*', 'microsoftdocs/mcp/*', 'azure-mcp/*', chrisdias.promptboost/promptBoost, ms-azuretools.vscode-azure-github-copilot/azure_get_azure_verified_module, ms-azuretools.vscode-azure-github-copilot/azure_recommend_custom_modes, ms-azuretools.vscode-azure-github-copilot/azure_query_azure_resource_graph, ms-azuretools.vscode-azure-github-copilot/azure_get_auth_context, ms-azuretools.vscode-azure-github-copilot/azure_set_auth_context, ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_template_tags, ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_templates_for_tag, ms-azuretools.vscode-azureresourcegroups/azureActivityLog, ms-azuretools.vscode-containers/containerToolsConfig, ms-ossdata.vscode-pgsql/pgsql_listServers, ms-ossdata.vscode-pgsql/pgsql_connect, ms-ossdata.vscode-pgsql/pgsql_disconnect, ms-ossdata.vscode-pgsql/pgsql_open_script, ms-ossdata.vscode-pgsql/pgsql_visualizeSchema, ms-ossdata.vscode-pgsql/pgsql_query, ms-ossdata.vscode-pgsql/pgsql_modifyDatabase, ms-ossdata.vscode-pgsql/database, ms-ossdata.vscode-pgsql/pgsql_listDatabases, ms-ossdata.vscode-pgsql/pgsql_describeCsv, ms-ossdata.vscode-pgsql/pgsql_bulkLoadCsv, ms-ossdata.vscode-pgsql/pgsql_getDashboardContext, ms-ossdata.vscode-pgsql/pgsql_getMetricData, ms-ossdata.vscode-pgsql/pgsql_migration_oracle_app, ms-ossdata.vscode-pgsql/pgsql_migration_show_report, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, ms-vscode.vscode-websearchforcopilot/websearch, ms-windows-ai-studio.windows-ai-studio/aitk_get_ai_model_guidance, ms-windows-ai-studio.windows-ai-studio/aitk_get_agent_model_code_sample, ms-windows-ai-studio.windows-ai-studio/aitk_get_tracing_code_gen_best_practices, ms-windows-ai-studio.windows-ai-studio/aitk_get_evaluation_code_gen_best_practices, ms-windows-ai-studio.windows-ai-studio/aitk_convert_declarative_agent_to_code, ms-windows-ai-studio.windows-ai-studio/aitk_evaluation_agent_runner_best_practices, ms-windows-ai-studio.windows-ai-studio/aitk_evaluation_planner, ms-windows-ai-studio.windows-ai-studio/aitk_get_custom_evaluator_guidance, ms-windows-ai-studio.windows-ai-studio/check_panel_open, ms-windows-ai-studio.windows-ai-studio/get_table_schema, ms-windows-ai-studio.windows-ai-studio/data_analysis_best_practice, ms-windows-ai-studio.windows-ai-studio/read_rows, ms-windows-ai-studio.windows-ai-studio/read_cell, ms-windows-ai-studio.windows-ai-studio/export_panel_data, ms-windows-ai-studio.windows-ai-studio/get_trend_data, ms-windows-ai-studio.windows-ai-studio/aitk_list_foundry_models, ms-windows-ai-studio.windows-ai-studio/aitk_agent_as_server, ms-windows-ai-studio.windows-ai-studio/aitk_add_agent_debug, ms-windows-ai-studio.windows-ai-studio/aitk_gen_windows_ml_web_demo, parasoft.vscode-cpptest/get_violations_from_ide, parasoft.vscode-cpptest/run_static_analysis
+
 user-invocable: true
 handoffs:
   - label: "Remediate Findings"
@@ -69,6 +65,15 @@ You are a **Security Engineer** obsessed with **Zero Trust** and Compliance (ISO
 - **ALWAYS** consult before reviewing or recommending authentication providers or RBAC policies for RHDH.
 - Covers GitHub OAuth, Azure AD SSO, OIDC, SAML, permission framework, CSV policies, role definitions.
 - Validates that guest access is disabled in production, admin roles are restricted, and secrets are in Key Vault.
+
+### 6. Security Scanning CLI Tools
+> **Reference:** [Prerequisites Skill](../skills/prerequisites/SKILL.md) — Category 6 (Security Scanning)
+- **tfsec** — Terraform security scanner (via pre-commit hook or standalone).
+- **checkov** >= 3.1 — `pip install checkov` — IaC security scanner (Terraform, Kubernetes, Docker).
+- **gitleaks** >= 8.18 — `brew install gitleaks` — git repository secret scanner.
+- **detect-secrets** >= 1.4 — `pip install detect-secrets` — baseline-based secret detector.
+- **conftest** >= 0.46 — `brew install conftest` — OPA policy testing for Terraform plans.
+- Run `./scripts/validate-prerequisites.sh --dev` to verify all scanning tools are installed.
 
 ## ⛔ Boundaries
 

@@ -1,9 +1,8 @@
 ---
 name: reviewer
 description: Specialist in Code Quality, Best Practices, and Constructive Feedback.
-tools:
-  - search/codebase
-  - read/problems
+tools: vscode, execute, read, agent, edit, search, web, 'com.microsoft/azure/*', 'microsoft/markitdown/*', 'microsoftdocs/mcp/*', browser, 'azure-mcp/*', chrisdias.promptboost/promptBoost, ms-azuretools.vscode-azure-github-copilot/azure_get_azure_verified_module, ms-azuretools.vscode-azure-github-copilot/azure_recommend_custom_modes, ms-azuretools.vscode-azure-github-copilot/azure_query_azure_resource_graph, ms-azuretools.vscode-azure-github-copilot/azure_get_auth_context, ms-azuretools.vscode-azure-github-copilot/azure_set_auth_context, ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_template_tags, ms-azuretools.vscode-azure-github-copilot/azure_get_dotnet_templates_for_tag, ms-azuretools.vscode-azureresourcegroups/azureActivityLog, ms-azuretools.vscode-containers/containerToolsConfig, ms-ossdata.vscode-pgsql/pgsql_listServers, ms-ossdata.vscode-pgsql/pgsql_connect, ms-ossdata.vscode-pgsql/pgsql_disconnect, ms-ossdata.vscode-pgsql/pgsql_open_script, ms-ossdata.vscode-pgsql/pgsql_visualizeSchema, ms-ossdata.vscode-pgsql/pgsql_query, ms-ossdata.vscode-pgsql/pgsql_modifyDatabase, ms-ossdata.vscode-pgsql/database, ms-ossdata.vscode-pgsql/pgsql_listDatabases, ms-ossdata.vscode-pgsql/pgsql_describeCsv, ms-ossdata.vscode-pgsql/pgsql_bulkLoadCsv, ms-ossdata.vscode-pgsql/pgsql_getDashboardContext, ms-ossdata.vscode-pgsql/pgsql_getMetricData, ms-ossdata.vscode-pgsql/pgsql_migration_oracle_app, ms-ossdata.vscode-pgsql/pgsql_migration_show_report, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, ms-vscode.vscode-websearchforcopilot/websearch, todo
+
 user-invocable: true
 handoffs:
   - label: "Security Deep Dive"

@@ -1,12 +1,9 @@
 ---
 name: ado-integration
 description: "Azure DevOps integration specialist — configures ADO PAT, repository discovery, pipeline creation, boards integration, and Copilot Standalone licensing for developer portals."
-tools:
-  - search/codebase
-  - edit/editFiles
-  - execute/runInTerminal
-  - read/problems
-user-invokable: true
+tools: execute/runInTerminal, read/problems, edit/editFiles, search/codebase, 'github/*', 'microsoft/azure-devops-mcp/*', 'azure-mcp/*', chrisdias.promptboost/promptBoost, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, ms-vscode.vscode-websearchforcopilot/websearch
+
+user-invocable: true
 handoffs:
   - label: "Hybrid Scenario"
     agent: hybrid-scenarios

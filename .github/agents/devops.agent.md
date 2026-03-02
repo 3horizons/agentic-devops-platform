@@ -87,6 +87,13 @@ You are a **DevOps Specialist** responsible for the "Inner Loop" (CI) and "Outer
 - Covers ARO vs AKS differences, `oc` CLI, Routes, Operators (OLM), and SecurityContextConstraints.
 - **MCP Servers:** Use `openshift` MCP for `oc` commands, `argocd` MCP for GitOps operations.
 
+### 8. Container & CI/CD CLI Tools
+> **Reference:** [Prerequisites Skill](../skills/prerequisites/SKILL.md) — Categories 2 (Container), 5 (Quality), 7 (K8s Validation)
+- **docker** >= 24 — container builds, image scanning, local testing.
+- **conftest** >= 0.46 — OPA policy testing for Terraform plans in CI (`conftest test --policy policies/ tfplan.json`).
+- **kubeconform** >= 0.6.4 — Kubernetes manifest validation in CI (`kubeconform -kubernetes-version 1.29.0`).
+- **pre-commit** >= 3.6 — git hooks framework (run: `pre-commit install` then `pre-commit run --all-files`).
+
 ## ⛔ Boundaries
 
 | Action | Policy | Note |
