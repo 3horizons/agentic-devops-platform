@@ -50,6 +50,10 @@ jobs:
         working-directory: plugins/${{ matrix.plugin }}
         run: npm install --legacy-peer-deps
 
+      - name: Generate type declarations
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npx tsc --declaration --emitDeclarationOnly --declarationDir dist-types
+
       - name: Build plugin
         working-directory: plugins/${{ matrix.plugin }}
         run: npm run build
@@ -111,6 +115,10 @@ jobs:
       - name: Install dependencies
         working-directory: plugins/ghas-metrics-backend
         run: npm install --legacy-peer-deps
+
+      - name: Generate type declarations
+        working-directory: plugins/ghas-metrics-backend
+        run: npx tsc --declaration --emitDeclarationOnly --declarationDir dist-types
 
       - name: Build plugin
         working-directory: plugins/ghas-metrics-backend
