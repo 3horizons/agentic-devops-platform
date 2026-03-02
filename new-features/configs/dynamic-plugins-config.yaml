@@ -280,7 +280,7 @@ data:
       # ════════════════════════════════════════════════════════════════════
       # CUSTOM — Three Horizons Home Page
       # ════════════════════════════════════════════════════════════════════
-      - package: oci://acrbackstagedemo.azurecr.io/plugins/home-three-horizons:latest
+      - package: oci://acrbackstagedemo.azurecr.io/plugins/home-three-horizons:latest!home-three-horizons
         disabled: false
         pluginConfig:
           dynamicPlugins:
@@ -296,7 +296,7 @@ data:
       # ════════════════════════════════════════════════════════════════════
       # CUSTOM — My Group Dashboard
       # ════════════════════════════════════════════════════════════════════
-      - package: oci://acrbackstagedemo.azurecr.io/plugins/my-group-dashboard:latest
+      - package: oci://acrbackstagedemo.azurecr.io/plugins/my-group-dashboard:latest!my-group-dashboard
         disabled: false
         pluginConfig:
           dynamicPlugins:
@@ -312,7 +312,7 @@ data:
       # ════════════════════════════════════════════════════════════════════
       # CUSTOM — Copilot Metrics Dashboard
       # ════════════════════════════════════════════════════════════════════
-      - package: oci://acrbackstagedemo.azurecr.io/plugins/copilot-metrics:latest
+      - package: oci://acrbackstagedemo.azurecr.io/plugins/copilot-metrics:latest!copilot-metrics
         disabled: false
         pluginConfig:
           dynamicPlugins:
@@ -328,7 +328,7 @@ data:
       # ════════════════════════════════════════════════════════════════════
       # CUSTOM — GHAS Metrics Dashboard (Frontend)
       # ════════════════════════════════════════════════════════════════════
-      - package: oci://acrbackstagedemo.azurecr.io/plugins/ghas-metrics:latest
+      - package: oci://acrbackstagedemo.azurecr.io/plugins/ghas-metrics:latest!ghas-metrics
         disabled: false
         pluginConfig:
           dynamicPlugins:
@@ -344,7 +344,7 @@ data:
       # ════════════════════════════════════════════════════════════════════
       # CUSTOM — GHAS Metrics Backend (Aggregation)
       # ════════════════════════════════════════════════════════════════════
-      - package: oci://acrbackstagedemo.azurecr.io/plugins/ghas-metrics-backend:latest
+      - package: oci://acrbackstagedemo.azurecr.io/plugins/ghas-metrics-backend:latest!ghas-metrics-backend
         disabled: false
 
       # ════════════════════════════════════════════════════════════════════

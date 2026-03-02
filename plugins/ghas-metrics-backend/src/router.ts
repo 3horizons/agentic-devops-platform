@@ -14,7 +14,10 @@ export function createRouter(options: RouterOptions): Router {
   const router = Router();
 
   const token =
-    config.getOptionalString('proxy.endpoints./github-security.headers.Authorization')?.replace('Bearer ', '') ?? '';
+    process.env.GITHUB_SECURITY_TOKEN ??
+    process.env.GITHUB_TOKEN ??
+    config.getOptionalString("ghasMetrics.githubToken") ??
+    "";
 
   const aggregator = new GhasAggregator(token, logger);
   const mttrCalc = new MttrCalculator(token, logger);

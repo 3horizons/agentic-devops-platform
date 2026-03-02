@@ -68,6 +68,8 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+dist-dynamic/
+dist-types/
 downloads/
 eggs/
 .eggs/
@@ -118,6 +120,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.tsbuildinfo
 
 # =============================================================================
 # IDE / EDITORS

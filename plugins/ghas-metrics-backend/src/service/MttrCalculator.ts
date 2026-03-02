@@ -72,7 +72,7 @@ export class MttrCalculator {
 
   private async computeSecretScanningMttr(
     org: string,
-    since: string,
+    _since: string,
   ): Promise<number> {
     try {
       const response = await fetch(

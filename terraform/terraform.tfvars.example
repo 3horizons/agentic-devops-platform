@@ -28,10 +28,10 @@ domain_name           = "internal.local"    # Base domain for platform services
 
 # --- DEPLOYMENT MODE ----------------------------------------------------------
 # express   = Minimal (dev/testing, ~$50-100/month)
-# standard  = Production-ready (HA, monitoring, ~$500-1000/month)
+# standard  = Production-ready (HA, monitoring, ~$500-1000/month) [AKS default: min=5, max=10]
 # enterprise = Full HA + multi-zone + DR (~$3000+/month)
 
-deployment_mode = "express"
+deployment_mode = "standard"
 
 # --- H1 FOUNDATION (always deployed: networking, aks, security) ---------------
 

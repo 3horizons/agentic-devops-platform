@@ -38,7 +38,7 @@ export const CopilotMetricsPage = () => {
   const { range, setRange } = useDateRange('28d');
   const { metrics, loading, error } = useCopilotMetrics(range);
   const { billing } = useCopilotBilling();
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [, setRefreshKey] = useState(0);
 
   const handleRefresh = useCallback(() => {
     setRefreshKey(k => k + 1);
