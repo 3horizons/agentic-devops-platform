@@ -1,13 +1,7 @@
 ---
 name: template-engineer
 description: "Software Template expert for RHDH — creates new Golden Path templates, converts existing repositories into reusable templates, generates devcontainer.json configurations, and integrates GitHub Codespaces into the scaffolder output."
-tools:
-  - search/codebase
-  - edit/editFiles
-  - execute/runInTerminal
-  - read/problems
-  - web/fetch
-  - web/githubRepo
+tools: execute/runInTerminal, read/problems, read/readFile, edit/editFiles, search/codebase, search/fileSearch, search/textSearch, web/fetch, web/githubRepo, 'microsoft/markitdown/*', 'microsoftdocs/mcp/*', chrisdias.promptboost/promptBoost, ms-vscode.vscode-websearchforcopilot/websearch, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, ms-windows-ai-studio.windows-ai-studio/aitk_get_ai_model_guidance, ms-windows-ai-studio.windows-ai-studio/aitk_get_agent_model_code_sample, ms-windows-ai-studio.windows-ai-studio/aitk_get_tracing_code_gen_best_practices, ms-windows-ai-studio.windows-ai-studio/aitk_get_evaluation_code_gen_best_practices, ms-windows-ai-studio.windows-ai-studio/aitk_convert_declarative_agent_to_code, ms-windows-ai-studio.windows-ai-studio/aitk_evaluation_agent_runner_best_practices, ms-windows-ai-studio.windows-ai-studio/aitk_evaluation_planner, ms-windows-ai-studio.windows-ai-studio/aitk_get_custom_evaluator_guidance, ms-windows-ai-studio.windows-ai-studio/check_panel_open, ms-windows-ai-studio.windows-ai-studio/get_table_schema, ms-windows-ai-studio.windows-ai-studio/data_analysis_best_practice, ms-windows-ai-studio.windows-ai-studio/read_rows, ms-windows-ai-studio.windows-ai-studio/read_cell, ms-windows-ai-studio.windows-ai-studio/export_panel_data, ms-windows-ai-studio.windows-ai-studio/get_trend_data, ms-windows-ai-studio.windows-ai-studio/aitk_list_foundry_models, ms-windows-ai-studio.windows-ai-studio/aitk_agent_as_server, ms-windows-ai-studio.windows-ai-studio/aitk_add_agent_debug, ms-windows-ai-studio.windows-ai-studio/aitk_gen_windows_ml_web_demo
 user-invocable: true
 handoffs:
   - label: "Platform Registration & Catalog"
@@ -25,10 +19,6 @@ handoffs:
   - label: "Security Review"
     agent: security
     prompt: "Review this template for secrets exposure, RBAC, and compliance."
-    send: false
-  - label: "Platform Registration"
-    agent: platform
-    prompt: "Register these templates in the Software Catalog and configure discovery."
     send: false
   - label: "DevOps Pipeline"
     agent: devops
@@ -82,13 +72,13 @@ You are the bridge between an existing codebase and a self-service Golden Path. 
 - **Backstage MCP Integration** — Connect to RHDH catalog via MCP Actions Backend for entity queries, TechDocs retrieval, and template conflict detection.
 
 ### RHDH Catalog, Templates & TechDocs (Official Docs)
-> **Reference:** [RHDH Catalog & Templates Skill](../skills/rhdh-catalog-templates/SKILL.md)
+> **Reference:** `.github/skills/rhdh-catalog-templates/SKILL.md`
 - **ALWAYS** consult before creating or validating Software Templates, configuring catalog discovery, or setting up TechDocs.
 - Covers Software Catalog entity model, Golden Paths best practices, GitHub integration, Scorecards, and Adoption Insights.
 - 7 official Red Hat documentation files covering every aspect of catalog and template management.
 
 ### RHDH Dynamic Plugins (Official Docs)
-> **Reference:** [RHDH Plugins Skill](../skills/rhdh-plugins/SKILL.md)
+> **Reference:** `.github/skills/rhdh-plugins/SKILL.md`
 - **ALWAYS** consult before integrating templates with dynamic plugins or MCP tools.
 - Covers plugin configuration, wiring mechanisms, and MCP Actions server integration.
 
@@ -125,7 +115,7 @@ You are the bridge between an existing codebase and a self-service Golden Path. 
 > **Reference:** [Coder Dev Containers Plugin](https://github.com/coder/backstage-plugins/blob/main/plugins/backstage-plugin-devcontainers-react/README.md)
 
 ### 4. Required CLI Tools for Plugin Development
-> **Reference:** [Prerequisites Skill](../skills/prerequisites/SKILL.md) — Categories 2 (Container & Runtime) and 9 (Plugin Development)
+> **Reference:** `.github/skills/prerequisites/SKILL.md` — Categories 2 (Container & Runtime) and 9 (Plugin Development)
 - **Node.js** >= 18 and **npm** >= 9 — required for `npx`, plugin builds, and MCP server execution.
 - **@janus-idp/cli** — `npm install -g @janus-idp/cli` — required for `package export-dynamic-plugin`.
 - **oras** >= 1.1 — `brew install oras` — required for pushing OCI artifacts to ACR.
