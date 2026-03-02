@@ -60,30 +60,30 @@ az provider register -n Microsoft.Authorization
 ### Create ARO Cluster
 ```bash
 # Create resource group
-az group create --name rg-aro-3horizons --location brazilsouth
+az group create --name rg-3horizons-dev --location centralus
 
 # Create VNet and subnets
 az network vnet create \
-  --resource-group rg-aro-3horizons \
+  --resource-group rg-3horizons-dev \
   --name vnet-aro \
   --address-prefixes 10.0.0.0/22
 
 az network vnet subnet create \
-  --resource-group rg-aro-3horizons \
+  --resource-group rg-3horizons-dev \
   --vnet-name vnet-aro \
   --name master-subnet \
   --address-prefixes 10.0.0.0/23
 
 az network vnet subnet create \
-  --resource-group rg-aro-3horizons \
+  --resource-group rg-3horizons-dev \
   --vnet-name vnet-aro \
   --name worker-subnet \
   --address-prefixes 10.0.2.0/23
 
 # Create ARO cluster
 az aro create \
-  --resource-group rg-aro-3horizons \
-  --name aro-3horizons \
+  --resource-group rg-3horizons-dev \
+  --name aro-3horizons-dev \
   --vnet vnet-aro \
   --master-subnet master-subnet \
   --worker-subnet worker-subnet \
@@ -95,18 +95,18 @@ az aro create \
 ### Connect to ARO
 ```bash
 # Get credentials
-az aro list-credentials --name aro-3horizons --resource-group rg-aro-3horizons
+az aro list-credentials --name aro-3horizons-dev --resource-group rg-3horizons-dev
 
 # Get API server URL
-API_SERVER=$(az aro show --name aro-3horizons --resource-group rg-aro-3horizons \
+API_SERVER=$(az aro show --name aro-3horizons-dev --resource-group rg-3horizons-dev \
   --query apiserverProfile.url -o tsv)
 
 # Login with oc
 oc login "$API_SERVER" -u kubeadmin -p <password>
 
 # Or get kubeconfig for kubectl
-az aro get-admin-kubeconfig --name aro-3horizons \
-  --resource-group rg-aro-3horizons --file ~/.kube/aro-config
+az aro get-admin-kubeconfig --name aro-3horizons-dev \
+  --resource-group rg-3horizons-dev --file ~/.kube/aro-config
 export KUBECONFIG=~/.kube/aro-config
 ```
 
@@ -180,7 +180,7 @@ helm install rhdh redhat-developer/backstage \
 
 ## Troubleshooting Checklist
 
-- [ ] ARO cluster provisioning: `az aro show --name aro-3horizons -g rg-aro-3horizons --query provisioningState`
+- [ ] ARO cluster provisioning: `az aro show --name aro-3horizons-dev -g rg-3horizons-dev --query provisioningState`
 - [ ] oc login: `oc whoami` returns current user
 - [ ] Pull secret configured: `oc get secret rhdh-pull-secret -n rhdh`
 - [ ] RHDH Operator installed: `oc get csv -n rhdh | grep developer-hub`

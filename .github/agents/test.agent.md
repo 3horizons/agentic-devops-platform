@@ -25,6 +25,22 @@ handoffs:
     agent: security
     prompt: "Review tests for security coverage and add security-focused tests."
     send: false
+  - label: "Deploy Tests"
+    agent: deploy
+    prompt: "Run post-deployment validation tests."
+    send: false
+  - label: "Template Tests"
+    agent: template-engineer
+    prompt: "Validate Golden Path template scaffolding output."
+    send: false
+  - label: "Infrastructure Tests"
+    agent: terraform
+    prompt: "Run Terratest infrastructure validation tests."
+    send: false
+  - label: "Plugin Tests"
+    agent: rhdh-architect
+    prompt: "Design test strategy for custom RHDH dynamic plugins."
+    send: false
 ---
 
 # Test Agent

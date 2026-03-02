@@ -209,6 +209,10 @@ azureauth.json
 .github-token
 github-token.txt
 
+# Red Hat / OpenShift pull secrets
+pull-secret*.txt
+pull-secret*.json
+
 # =============================================================================
 # LOGS / TEMP FILES
 # =============================================================================

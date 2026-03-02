@@ -39,6 +39,18 @@ handoffs:
     agent: engineering-intelligence
     prompt: "Analyze CI/CD health metrics, DORA scores, and pipeline performance dashboards."
     send: false
+  - label: "SRE Observability"
+    agent: sre
+    prompt: "Set up observability and monitoring for deployed services."
+    send: false
+  - label: "Infrastructure Changes"
+    agent: terraform
+    prompt: "Modify Terraform infrastructure modules for pipeline requirements."
+    send: false
+  - label: "Azure Infrastructure"
+    agent: azure-portal-deploy
+    prompt: "Provision or update Azure AKS/ARO infrastructure for CI/CD needs."
+    send: false
 ---
 
 # DevOps Agent

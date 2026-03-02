@@ -28,6 +28,22 @@ handoffs:
     agent: security
     prompt: "The user needs to configure security policies and compliance."
     send: false
+  - label: "Azure Infrastructure"
+    agent: azure-portal-deploy
+    prompt: "Provision AKS or ARO cluster and supporting Azure services."
+    send: false
+  - label: "Documentation"
+    agent: docs
+    prompt: "Help the user understand project documentation and guides."
+    send: false
+  - label: "Portal Architecture"
+    agent: rhdh-architect
+    prompt: "Guide the user through RHDH portal architecture and plugin options."
+    send: false
+  - label: "Template Setup"
+    agent: template-engineer
+    prompt: "Help the user create their first Golden Path template."
+    send: false
 ---
 
 # Onboarding Agent

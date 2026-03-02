@@ -28,6 +28,26 @@ handoffs:
     agent: ado-integration
     prompt: "Configure Azure DevOps for the provisioned infrastructure."
     send: false
+  - label: "Portal Configuration"
+    agent: platform
+    prompt: "Configure RHDH portal and catalog on the provisioned AKS or ARO cluster."
+    send: false
+  - label: "Post-Deploy Health"
+    agent: sre
+    prompt: "Verify platform health, observability, and SLOs after infrastructure provisioning."
+    send: false
+  - label: "User Onboarding"
+    agent: onboarding
+    prompt: "Guide users through first-time setup on the newly provisioned infrastructure."
+    send: false
+  - label: "Portal Architecture"
+    agent: rhdh-architect
+    prompt: "Design custom RHDH plugins and portal architecture for the provisioned environment."
+    send: false
+  - label: "Engineering Metrics"
+    agent: engineering-intelligence
+    prompt: "Set up engineering intelligence dashboards on the provisioned infrastructure."
+    send: false
 ---
 
 # Azure Portal Deploy Agent
@@ -94,27 +114,27 @@ You are an **Azure Infrastructure Engineer** specializing in deploying the RHDH 
 
 ### AKS Cluster
 ```bash
-az aks create --resource-group rg-portal --name aks-portal \
+az aks create --resource-group rg-3horizons-dev --name aks-3horizons-dev \
   --node-count 3 --node-vm-size Standard_D4s_v5 \
   --enable-managed-identity --enable-workload-identity \
-  --enable-oidc-issuer --attach-acr <acr-name> \
+  --enable-oidc-issuer --attach-acr acr3horizonsdev \
   --location centralus --generate-ssh-keys
 ```
 
 ### Key Vault + CSI Driver
 ```bash
-az keyvault create --name kv-portal --resource-group rg-portal \
+az keyvault create --name kv-3horizons-dev --resource-group rg-3horizons-dev \
   --enable-rbac-authorization true
 az aks enable-addons --addons azure-keyvault-secrets-provider \
-  --name aks-portal --resource-group rg-portal
+  --name aks-3horizons-dev --resource-group rg-3horizons-dev
 ```
 
 ### PostgreSQL
 ```bash
-az postgres flexible-server create --resource-group rg-portal \
-  --name psql-portal --location centralus \
-  --admin-user portal --admin-password <pwd> \
-  --sku-name Standard_B2ms --storage-size 32 --version 15
+az postgres flexible-server create --resource-group rg-3horizons-dev \
+  --name psql-3horizons-dev --location centralus \
+  --admin-user rhdhadmin --admin-password <pwd> \
+  --sku-name Standard_B2ms --storage-size 32 --version 16
 ```
 
 ## Helm Deployment

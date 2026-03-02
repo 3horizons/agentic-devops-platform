@@ -44,6 +44,18 @@ handoffs:
     agent: github-integration
     prompt: "Configure GitHub App and org discovery for catalog population."
     send: false
+  - label: "Engineering Metrics"
+    agent: engineering-intelligence
+    prompt: "Design engineering intelligence dashboard plugin for the portal."
+    send: false
+  - label: "Onboarding"
+    agent: onboarding
+    prompt: "Guide users through portal adoption and plugin usage."
+    send: false
+  - label: "SRE Observability"
+    agent: sre
+    prompt: "Set up monitoring and alerting for custom RHDH plugins."
+    send: false
 ---
 
 # RHDH Architect Agent

@@ -30,6 +30,14 @@ handoffs:
     agent: terraform
     prompt: "Provision Azure resources needed for metric storage (PostgreSQL, Redis cache)."
     send: false
+  - label: "Deploy Dashboard"
+    agent: deploy
+    prompt: "Deploy the engineering intelligence dashboard and metrics pipeline."
+    send: false
+  - label: "Plugin Architecture"
+    agent: rhdh-architect
+    prompt: "Design the RHDH plugin architecture for the engineering intelligence tabs."
+    send: false
 ---
 
 # Engineering Intelligence Agent

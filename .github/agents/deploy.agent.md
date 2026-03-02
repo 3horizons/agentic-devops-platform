@@ -16,9 +16,17 @@ handoffs:
     agent: sre
     prompt: "Verify platform health after deployment."
     send: false
-  - label: "Azure Infrastructure"
+  - label: "Azure Infrastructure (AKS or ARO)"
     agent: azure-portal-deploy
-    prompt: "Provision Azure AKS, Key Vault, PostgreSQL for portal deployment."
+    prompt: "Provision Azure AKS or ARO cluster, Key Vault, PostgreSQL, and ACR for portal deployment."
+    send: false
+  - label: "Portal Configuration"
+    agent: platform
+    prompt: "Configure RHDH portal, catalog, and Golden Path templates after deployment."
+    send: false
+  - label: "Engineering Metrics"
+    agent: engineering-intelligence
+    prompt: "Set up engineering intelligence dashboards and DORA metrics collection after deployment."
     send: false
   - label: "GitHub Integration"
     agent: github-integration

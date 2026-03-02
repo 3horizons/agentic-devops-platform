@@ -33,6 +33,18 @@ handoffs:
     agent: rhdh-architect
     prompt: "Design custom RHDH plugin architecture, frontend wiring strategy, and component specs."
     send: false
+  - label: "SRE Observability"
+    agent: sre
+    prompt: "Set up monitoring, SLOs, and observability for the RHDH portal."
+    send: false
+  - label: "User Onboarding"
+    agent: onboarding
+    prompt: "Guide new teams through portal adoption and first template usage."
+    send: false
+  - label: "Azure Infrastructure"
+    agent: azure-portal-deploy
+    prompt: "Provision or update Azure AKS/ARO infrastructure for the portal."
+    send: false
 ---
 
 # Platform Agent

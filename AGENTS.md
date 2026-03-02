@@ -122,13 +122,33 @@ The 15 skills in [.github/skills/](.github/skills/) provide domain-specific know
 
 All 19 agents are interconnected via YAML `handoffs:` in their frontmatter. Key orchestration flows:
 
-### Deployment Flow
+### Deployment Flow (AKS + ARO)
 ```
 @onboarding → @architect → @terraform → @deploy → @sre
                                            ↓
-                              @azure-portal-deploy (AKS or ARO)
-                              @github-integration
-                              @ado-integration
+                         ┌─────────────────┴─────────────────┐
+                         │                                   │
+              @azure-portal-deploy              @github-integration
+                    ↓                            @ado-integration
+             ┌──────┴──────┐                     @hybrid-scenarios
+             │             │
+          AKS (Helm)   ARO (Operator)
+             │             │
+             ↓             ↓
+          @platform → @sre (health check)
+             ↓
+      @engineering-intelligence (dashboards)
+```
+
+### Post-Deploy Verification Flow
+```
+@deploy → @sre (health check)
+            ↓
+     @engineering-intelligence (DORA metrics)
+            ↓
+     @platform (catalog + templates)
+            ↓
+     @onboarding (user adoption)
 ```
 
 ### Security Flow
@@ -138,15 +158,20 @@ All 19 agents are interconnected via YAML `handoffs:` in their frontmatter. Key 
            @terraform (IaC fixes)
            @sre (incident response)
            @context-architect (multi-file fixes)
+           @deploy (redeploy with fixes)
+           @platform (RBAC policies)
 ```
 
 ### Template Flow
 ```
 @platform → @template-engineer → @devops (CI/CD) → @security (review)
                     ↓
+              @rhdh-architect (plugin design)
               @github-integration
               @ado-integration
               @hybrid-scenarios
+              @test (template validation)
+              @deploy (register templates)
 ```
 
 ### Multi-File Change Flow
@@ -168,18 +193,31 @@ Any agent → @context-architect → @test → @docs
 ```
 @rhdh-architect → @platform → @deploy → @sre
        ↓
-   @template-engineer
-   @devops (CI/CD)
-   @security (RBAC)
+   @template-engineer (templates)
+   @devops (CI/CD for plugins)
+   @security (RBAC policies)
+   @engineering-intelligence (dashboard plugins)
+   @onboarding (adoption guides)
+```
+
+### Engineering Intelligence Flow
+```
+@engineering-intelligence → @rhdh-architect (plugin design)
+                          → @platform (register dashboards)
+                          → @deploy (deploy pipeline)
+                          → @sre (SLO correlation)
+                          → @devops (scheduled workflows)
 ```
 
 ### Entry Points (user-invoked)
 | Agent | When to use |
 |-------|-------------|
 | `@onboarding` | First time setup, getting started |
-| `@deploy` | Full platform deployment |
+| `@deploy` | Full platform deployment (AKS or ARO) |
 | `@architect` | Design decisions, ADRs |
 | `@context-architect` | Multi-file codebase changes |
+| `@azure-portal-deploy` | Azure infrastructure provisioning (AKS/ARO) |
+| `@engineering-intelligence` | DORA metrics, Copilot analytics, security posture |
 
 ## Related Documentation
 

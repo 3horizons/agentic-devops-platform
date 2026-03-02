@@ -22,6 +22,18 @@ handoffs:
     agent: platform
     prompt: "Update RHDH portal documentation and TechDocs."
     send: false
+  - label: "Deploy Documentation"
+    agent: deploy
+    prompt: "Deploy documentation updates to the platform."
+    send: false
+  - label: "Plugin Docs"
+    agent: rhdh-architect
+    prompt: "Document custom RHDH plugin architecture and APIs."
+    send: false
+  - label: "Template Docs"
+    agent: template-engineer
+    prompt: "Document Golden Path templates and scaffolding guides."
+    send: false
 ---
 
 # Docs Agent

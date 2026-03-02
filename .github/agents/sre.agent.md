@@ -25,6 +25,14 @@ handoffs:
     agent: engineering-intelligence
     prompt: "Correlate incident data with DORA MTTR metrics and engineering productivity trends."
     send: false
+  - label: "Portal Health"
+    agent: platform
+    prompt: "Investigate RHDH portal health, catalog issues, or plugin errors."
+    send: false
+  - label: "Azure Infrastructure Recovery"
+    agent: azure-portal-deploy
+    prompt: "Recover or reprovision Azure AKS/ARO infrastructure after an incident."
+    send: false
 ---
 
 # SRE Agent
@@ -49,14 +57,14 @@ You are a **Site Reliability Engineer (SRE)**. You focus on **SLOs**, **Error Bu
 - Use `kubectl top`, `logs`, and `events`.
 
 ### 3. Azure Monitor (Full Stack)
-- **Container Insights** enabled on AKS `aks-backstage-demo`.
-- **Log Analytics Workspace:** `law-backstage-demo` (eastus2).
-- **Application Insights:** `appi-backstage-demo` — tracks HTTP requests, dependencies, exceptions.
-- **Azure Managed Prometheus:** `prometheus-backstage-demo` — stores AKS metrics long-term.
-- **Azure Managed Grafana:** `grafana-backstage-demo` — `https://grafana-backstage-demo-dhazhmaeeyeph0cq.eus2.grafana.azure.com`
+- **Container Insights** enabled on AKS `aks-3horizons-dev`.
+- **Log Analytics Workspace:** `law-3horizons-dev` (centralus).
+- **Application Insights:** `appi-3horizons-dev` — tracks HTTP requests, dependencies, exceptions.
+- **Azure Managed Prometheus:** `prometheus-3horizons-dev` — stores AKS metrics long-term.
+- **Azure Managed Grafana:** `grafana-3horizons-dev`
   - Data sources: Azure Managed Prometheus, Azure Monitor (App Insights + Log Analytics).
 - **Metric Alerts:** CPU > 85%, Memory > 85% (Severity 2).
-- **Action Group:** `ag-backstage-sre` → GitHub webhook for SRE issue creation.
+- **Action Group:** `ag-3horizons-sre` → GitHub webhook for SRE issue creation.
 
 ### 4. Azure Defender for Cloud
 - Defender for Containers enabled on AKS (runtime threat protection).

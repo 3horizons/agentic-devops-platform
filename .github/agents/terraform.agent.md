@@ -21,6 +21,14 @@ handoffs:
     agent: architect
     prompt: "Review this infrastructure design against the architecture."
     send: false
+  - label: "Azure Portal Provisioning"
+    agent: azure-portal-deploy
+    prompt: "Provision Azure resources via az CLI when Terraform is not the right tool."
+    send: false
+  - label: "Test Infrastructure"
+    agent: test
+    prompt: "Run Terratest infrastructure tests for the changed modules."
+    send: false
 ---
 
 # Terraform Agent
