@@ -16,11 +16,15 @@ import { DependabotAlertsCard } from './DependabotAlertsCard';
 import { GhasCommittersCard } from './GhasCommittersCard';
 import { SeverityBreakdown } from './SeverityBreakdown';
 import { MttrMetricsComponent } from './MttrMetrics';
+import { PushProtectionCard } from './PushProtectionCard';
+import { RepoCoverageTable } from './RepoCoverageTable';
 import { useCodeScanningAlerts } from '../hooks/useCodeScanningAlerts';
 import { useSecretScanningAlerts } from '../hooks/useSecretScanningAlerts';
 import { useDependabotSummary } from '../hooks/useDependabotSummary';
 import { useGhasBilling } from '../hooks/useGhasBilling';
 import { useMttrMetrics } from '../hooks/useMttrMetrics';
+import { usePushProtectionStats } from '../hooks/usePushProtectionStats';
+import { useRepoCoverage } from '../hooks/useRepoCoverage';
 import { DateRange, DATE_RANGE_LABELS, MS_COLORS } from '../api/types';
 
 const useStyles = makeStyles({
@@ -74,8 +78,10 @@ export const GhasMetricsPage = () => {
   const { summary: depSummary, loading: depLoading } = useDependabotSummary();
   const { billing, loading: billingLoading } = useGhasBilling();
   const { mttr } = useMttrMetrics(range);
+  const { stats: pushStats, loading: pushLoading } = usePushProtectionStats();
+  const { repos: coverageRepos, loading: coverageLoading } = useRepoCoverage();
 
-  const loading = codeLoading || secretLoading || depLoading || billingLoading;
+  const loading = codeLoading || secretLoading || depLoading || billingLoading || pushLoading || coverageLoading;
 
   const ranges: DateRange[] = ['7d', '14d', '28d', '90d'];
 
@@ -138,11 +144,21 @@ export const GhasMetricsPage = () => {
 
               {/* Charts Row */}
               <Grid container spacing={2} style={{ marginTop: 16 }}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <SeverityBreakdown alerts={codeOpen} />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <MttrMetricsComponent mttr={mttr} />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <PushProtectionCard stats={pushStats} />
+                </Grid>
+              </Grid>
+
+              {/* Coverage Row */}
+              <Grid container spacing={2} style={{ marginTop: 16 }}>
+                <Grid item xs={12}>
+                  <RepoCoverageTable repos={coverageRepos} />
                 </Grid>
               </Grid>
             </>

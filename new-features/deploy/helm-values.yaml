@@ -18,7 +18,7 @@ upstream:
     image:
       registry: registry.redhat.io
       repository: rhdh/rhdh-hub-rhel9
-      tag: '1.4'
+      tag: '1.8'
 
     replicas: 1
 

@@ -59,5 +59,27 @@ export function createRouter(options: RouterOptions): Router {
     }
   });
 
+  router.get('/org/:org/push-protection', async (req, res) => {
+    try {
+      const { org } = req.params;
+      const stats = await aggregator.getPushProtectionStats(org);
+      res.json(stats);
+    } catch (error) {
+      logger.error('Push protection stats failed', error as Error);
+      res.status(500).json({ error: 'Push protection stats failed' });
+    }
+  });
+
+  router.get('/org/:org/coverage', async (req, res) => {
+    try {
+      const { org } = req.params;
+      const repos = await aggregator.getRepoCoverage(org);
+      res.json(repos);
+    } catch (error) {
+      logger.error('Repo coverage failed', error as Error);
+      res.status(500).json({ error: 'Repo coverage failed' });
+    }
+  });
+
   return router;
 }

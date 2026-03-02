@@ -6,7 +6,9 @@ import {
   GhasBilling,
   MttrMetrics,
   DateRange,
+  RepoCoverage,
 } from './types';
+import { PushProtectionStats } from '../components/PushProtectionCard';
 
 const PROXY_BASE = '/api/proxy/github-security';
 const BACKEND_BASE = '/api/ghas-metrics';
@@ -118,6 +120,50 @@ export async function fetchGhasBilling(
   }
 
   const data: GhasBilling = await response.json();
+  setCache(cacheKey, data);
+  return data;
+}
+
+/** Fetch push protection stats (from backend module) */
+export async function fetchPushProtectionStats(
+  fetchApi: FetchApi,
+  org: string,
+): Promise<PushProtectionStats> {
+  const cacheKey = `push-protection-${org}`;
+  const cached = getCached<PushProtectionStats>(cacheKey);
+  if (cached) return cached;
+
+  const response = await fetchApi.fetch(
+    `${BACKEND_BASE}/org/${encodeURIComponent(org)}/push-protection`,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Push Protection API error: ${response.status}`);
+  }
+
+  const data: PushProtectionStats = await response.json();
+  setCache(cacheKey, data);
+  return data;
+}
+
+/** Fetch per-repo GHAS coverage (from backend module) */
+export async function fetchRepoCoverage(
+  fetchApi: FetchApi,
+  org: string,
+): Promise<RepoCoverage[]> {
+  const cacheKey = `repo-coverage-${org}`;
+  const cached = getCached<RepoCoverage[]>(cacheKey);
+  if (cached) return cached;
+
+  const response = await fetchApi.fetch(
+    `${BACKEND_BASE}/org/${encodeURIComponent(org)}/coverage`,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Repo Coverage API error: ${response.status}`);
+  }
+
+  const data: RepoCoverage[] = await response.json();
   setCache(cacheKey, data);
   return data;
 }
