@@ -480,6 +480,18 @@ foundry-agent, sre-agent-integration, mlops-pipeline, multi-agent-system, copilo
 - **Developer Lightspeed**: Native AI chat with Llama Stack + RAG + BYOM support
 - **Enterprise Support**: Red Hat commercial backing
 
+### Official Documentation (31 Markdown Files)
+
+**All 31 official RHDH 1.8 documentation PDFs are converted to Markdown** and available in `docs/official-docs/rhdh/markdown/`. Agents **MUST** consult these docs before recommending, troubleshooting, executing, configuring, installing, customizing, or integrating any RHDH component.
+
+**6 domain-specific skills** in `.github/skills/` segment the docs by topic:
+- `rhdh-installation` — Install, setup, first instance, sizing
+- `rhdh-configuration` — app-config.yaml, branding, monitoring, telemetry, audit
+- `rhdh-plugins` — Dynamic plugins, wiring, MCP tools, AI connectors, Orchestrator
+- `rhdh-auth-rbac` — Authentication providers, RBAC policies, permissions
+- `rhdh-catalog-templates` — Software Catalog, Templates, TechDocs, GitHub integration, Scorecards
+- `rhdh-operations` — Release notes, GitOps patterns, DX best practices, upgrades
+
 ### New Features (in `new-features/`)
 
 - `configs/` — Dynamic plugin configurations, RBAC policies, Helm values

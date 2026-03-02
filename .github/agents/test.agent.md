@@ -2,10 +2,13 @@
 name: test
 description: Specialist in Testing, QA, TDD, and coverage analysis.
 tools:
-  - search/codebase
-  - edit/editFiles
   - execute/runInTerminal
   - read/problems
+  - edit/editFiles
+  - search/codebase
+  - microsoft/markitdown/*
+  - playwright/*
+  - microsoftdocs/mcp/*
 user-invocable: true
 handoffs:
   - label: "Code Review"

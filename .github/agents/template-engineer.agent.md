@@ -69,6 +69,17 @@ You are the bridge between an existing codebase and a self-service Golden Path. 
 - **Template Validation** — Validate YAML syntax, Nunjucks expressions, step ordering, action availability, and output references.
 - **Backstage MCP Integration** — Connect to RHDH catalog via MCP Actions Backend for entity queries, TechDocs retrieval, and template conflict detection.
 
+### RHDH Catalog, Templates & TechDocs (Official Docs)
+> **Reference:** [RHDH Catalog & Templates Skill](../skills/rhdh-catalog-templates/SKILL.md)
+- **ALWAYS** consult before creating or validating Software Templates, configuring catalog discovery, or setting up TechDocs.
+- Covers Software Catalog entity model, Golden Paths best practices, GitHub integration, Scorecards, and Adoption Insights.
+- 7 official Red Hat documentation files covering every aspect of catalog and template management.
+
+### RHDH Dynamic Plugins (Official Docs)
+> **Reference:** [RHDH Plugins Skill](../skills/rhdh-plugins/SKILL.md)
+- **ALWAYS** consult before integrating templates with dynamic plugins or MCP tools.
+- Covers plugin configuration, wiring mechanisms, and MCP Actions server integration.
+
 ### 0. RHDH MCP Actions (Backstage MCP Server)
 > **Reference:** [MCP in RHDH — Chat with your catalog](https://developers.redhat.com/articles/2025/11/10/mcp-red-hat-developer-hub-chat-your-catalog)
 > **Reference:** [Backstage MCP Actions Backend](https://github.com/backstage/backstage/tree/master/plugins/mcp-actions-backend)

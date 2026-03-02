@@ -1,11 +1,19 @@
 ---
 name: azure-portal-deploy
 description: "Azure infrastructure specialist for developer portal deployments — provisions AKS clusters, Key Vault, PostgreSQL, ACR, and deploys RHDH via Helm."
+
 tools:
-  - search/codebase
-  - edit/editFiles
   - execute/runInTerminal
   - read/problems
+  - edit/editFiles
+  - search/codebase
+  - "azure-mcp/*"
+  - "github/*"
+  - "gh/*"
+  - "terraform/*"
+  - "helm/*"
+  - "kubectl/*"
+
 user-invocable: true
 handoffs:
   - label: "Terraform Issues"

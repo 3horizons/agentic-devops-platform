@@ -92,12 +92,28 @@ You think in terms of **composability**: every UI element is either a native Bac
 - Contains the complete dynamic plugin wiring reference, Backstage API catalog, and component patterns
 - Includes the Three Horizons Portal reference analysis
 
-### 2. RHDH Official Documentation
+### 2. RHDH Dynamic Plugins (Official Docs)
+> **Reference:** [RHDH Plugins Skill](../skills/rhdh-plugins/SKILL.md)
+- **ALWAYS** consult before proposing plugin architecture, wiring strategies, or MCP tool integration.
+- Covers plugin configuration syntax, Dynamic Plugins Reference, OCI artifacts, AI connectors, and Orchestrator.
+- 8 official Red Hat documentation files covering every aspect of dynamic plugin management.
+
+### 3. RHDH Configuration & Customization (Official Docs)
+> **Reference:** [RHDH Configuration Skill](../skills/rhdh-configuration/SKILL.md)
+- **ALWAYS** consult before proposing branding, theming, or app-config.yaml changes.
+- Covers ConfigMaps, logging, telemetry, audit logs, and customization options.
+
+### 4. RHDH Authentication & RBAC (Official Docs)
+> **Reference:** [RHDH Auth & RBAC Skill](../skills/rhdh-auth-rbac/SKILL.md)
+- **ALWAYS** consult before designing auth flows or RBAC policies.
+- Covers GitHub OAuth, Azure AD SSO, permission framework, CSV policies, role definitions.
+
+### 5. RHDH Official Documentation Guide
 > **Reference:** [RHDH Official Documentation Guide](../../docs/official-docs/rhdh/RHDH_Official_Documentation_Guide.md)
 - Comprehensive reference compiled from 31 official Red Hat documentation PDFs
-- Covers installation, configuration, dynamic plugins, catalog, templates, TechDocs, RBAC, and all supported plugins
+- Use as index to find the right doc for any RHDH topic
 
-### 3. Three Horizons Implementation Plan
+### 6. Three Horizons Implementation Plan
 > **Reference:** [Implementation Plan](../../docs/RHDH_Three_Horizons_Portal_Implementation_Plan.md)
 - The master plan mapping each portal page to RHDH configuration and custom plugin tasks
 - Agent assignment matrix and deployment timeline

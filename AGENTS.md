@@ -103,6 +103,20 @@ The 15 skills in [.github/skills/](.github/skills/) provide domain-specific know
 | `validation-scripts` | Validation scripts for deployments |
 | `deploy-orchestration` | End-to-end platform deployment orchestration |
 
+### RHDH Official Documentation Skills
+
+6 domain-specific skills sourced from 31 official Red Hat documentation PDFs (RHDH 1.8), converted to Markdown and stored in `docs/official-docs/rhdh/markdown/`. Agents **MUST** consult these before performing any RHDH-related action.
+
+| Skill | Description | Agents |
+|-------|-------------|--------|
+| `rhdh-installation` | Installation, setup, AKS/OCP deployment, sizing | `@deploy`, `@onboarding`, `@platform`, `@sre` |
+| `rhdh-configuration` | app-config.yaml, branding, theming, logging, telemetry, audit | `@platform`, `@rhdh-architect`, `@sre`, `@deploy` |
+| `rhdh-plugins` | Dynamic plugins, wiring, MCP tools, AI connectors, Orchestrator | `@rhdh-architect`, `@platform`, `@template-engineer`, `@devops` |
+| `rhdh-auth-rbac` | Authentication providers, RBAC policies, permissions | `@security`, `@platform`, `@rhdh-architect`, `@deploy` |
+| `rhdh-catalog-templates` | Software Catalog, Templates, TechDocs, GitHub integration, Scorecards | `@template-engineer`, `@platform`, `@engineering-intelligence`, `@docs` |
+| `rhdh-operations` | Release notes, GitOps patterns, DX best practices, upgrades | `@sre`, `@devops`, `@deploy`, `@docs` |
+| `rhdh-plugin-design` | Custom plugin architecture, frontend wiring, Backstage APIs | `@rhdh-architect` |
+
 ## Agent Orchestration & Handoffs
 
 All 19 agents are interconnected via YAML `handoffs:` in their frontmatter. Key orchestration flows:

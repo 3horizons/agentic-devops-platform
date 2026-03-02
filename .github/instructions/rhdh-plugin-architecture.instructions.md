@@ -206,3 +206,12 @@ oras push myacr.azurecr.io/plugins/{name}:{version} dist-dynamic/*
 - Respect RBAC: check permissions before rendering admin-only components
 - Sanitize any user input rendered in the UI (XSS prevention)
 - Never make direct K8s API calls from frontend — use backend-for-frontend proxy
+
+## Official RHDH Documentation
+
+**ALWAYS** consult these official docs before designing, implementing, or reviewing custom dynamic plugins:
+
+- **Dynamic Plugins Reference:** [RHDH Plugins Skill](../skills/rhdh-plugins/SKILL.md) — plugin configuration, wiring mechanisms, MCP tools, AI connectors
+- **Auth & RBAC:** [RHDH Auth & RBAC Skill](../skills/rhdh-auth-rbac/SKILL.md) — permission framework, role definitions, provider configuration
+- **Plugin Design Patterns:** [RHDH Plugin Design Skill](../skills/rhdh-plugin-design/SKILL.md) — architecture patterns, Backstage API catalog, component specs
+- **Full Documentation Index:** `docs/official-docs/rhdh/markdown/` — 31 official Red Hat documents converted to Markdown

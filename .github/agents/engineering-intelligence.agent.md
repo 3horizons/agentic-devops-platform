@@ -102,6 +102,16 @@ You believe in **data-driven engineering leadership**: no vanity metrics, only a
 > **Reference:** [GitHub CLI Skill](../skills/github-cli/SKILL.md)
 - `gh api` for authenticated API calls
 
+### 7. RHDH Dynamic Plugins (Official Docs)
+> **Reference:** [RHDH Plugins Skill](../skills/rhdh-plugins/SKILL.md)
+- Consult before designing RHDH dashboard plugins or proposing plugin architecture for metrics visualization.
+- Covers dynamic plugin configuration, wiring mechanisms, and MCP tools integration.
+
+### 8. RHDH Catalog & Adoption Insights (Official Docs)
+> **Reference:** [RHDH Catalog & Templates Skill](../skills/rhdh-catalog-templates/SKILL.md)
+- Consult for Adoption Insights metrics, Scorecards, and catalog entity analytics.
+- Covers Software Catalog, TechDocs, and GitHub integration patterns.
+
 ## 📊 GitHub APIs Reference
 
 ### REST API v3

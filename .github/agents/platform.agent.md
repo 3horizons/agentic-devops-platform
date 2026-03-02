@@ -60,6 +60,26 @@ You are a **Platform Engineer** focused on Developer Experience (DevEx). You mai
 > **Reference:** [Kubectl Skill](../skills/kubectl-cli/SKILL.md)
 - Check RHDH pod status and logs.
 
+### 3. RHDH Configuration & Customization (Official Docs)
+> **Reference:** [RHDH Configuration Skill](../skills/rhdh-configuration/SKILL.md)
+- **ALWAYS** consult before modifying app-config.yaml, branding, theming, or monitoring settings.
+- Covers ConfigMaps, environment variables, logging, telemetry, and audit logs.
+
+### 4. RHDH Dynamic Plugins (Official Docs)
+> **Reference:** [RHDH Plugins Skill](../skills/rhdh-plugins/SKILL.md)
+- **ALWAYS** consult before enabling, configuring, or troubleshooting dynamic plugins.
+- Covers plugin wiring (dynamicRoutes, mountPoints, menuItems, entityTabs), MCP tools, and AI connectors.
+
+### 5. RHDH Catalog, Templates & TechDocs (Official Docs)
+> **Reference:** [RHDH Catalog & Templates Skill](../skills/rhdh-catalog-templates/SKILL.md)
+- **ALWAYS** consult before configuring catalog discovery, TechDocs, GitHub integration, or Scorecards.
+- Covers Software Catalog, Golden Paths, Adoption Insights.
+
+### 6. RHDH Authentication & RBAC (Official Docs)
+> **Reference:** [RHDH Auth & RBAC Skill](../skills/rhdh-auth-rbac/SKILL.md)
+- **ALWAYS** consult before configuring authentication providers or RBAC policies.
+- Covers GitHub OAuth, Azure AD SSO, permission framework, role definitions.
+
 ## 🧱 Template Structure
 All Golden Paths must follow this structure:
 ```
