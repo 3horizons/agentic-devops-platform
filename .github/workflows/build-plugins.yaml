@@ -48,7 +48,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: plugins/${{ matrix.plugin }}
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build plugin
         working-directory: plugins/${{ matrix.plugin }}
@@ -110,7 +110,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: plugins/ghas-metrics-backend
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build plugin
         working-directory: plugins/ghas-metrics-backend
@@ -126,7 +126,7 @@ jobs:
 
       - name: Export dynamic plugin
         working-directory: plugins/ghas-metrics-backend
-        run: npx @janus-idp/cli package export-dynamic-plugin
+        run: npm run export-dynamic-plugin
 
       - name: Install ORAS CLI
         uses: oras-project/setup-oras@v1
