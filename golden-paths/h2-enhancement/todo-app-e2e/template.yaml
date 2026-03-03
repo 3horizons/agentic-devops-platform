@@ -135,6 +135,13 @@ spec:
         protectDefaultBranch: true
         requireCodeOwnerReviews: true
 
+    - id: create-environment
+      name: Create dev environment
+      action: github:environment:create
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        name: dev
+
     - id: register
       name: Register in catalog
       action: catalog:register
@@ -163,16 +170,12 @@ spec:
           **Azure region:** ${{ parameters.azureRegion }}
 
           **To guarantee successful Azure IaC provisioning:**
-           1. Create a Microsoft Entra app registration for GitHub Actions OIDC.
-           2. Add a federated credential in the app registration for this repository (`repo:<owner>/<repo>:ref:refs/heads/main`).
-           3. Assign least-privilege Azure RBAC to the service principal at subscription or resource-group scope:
-             - `Contributor`
-             - `User Access Administrator` (only if workflow must assign RBAC)
-           4. Create GitHub Actions secrets:
-             - `AZURE_CLIENT_ID`
-             - `AZURE_TENANT_ID`
-             - `AZURE_SUBSCRIPTION_ID`
-           5. Run workflow `iac-dev.yml` with `apply=true`.
+           1. Azure OIDC is pre-configured for the `3horizons` organization (App Registration: `three-horizons-github-oidc`).
+           2. Add these repository secrets (Settings → Secrets → Actions):
+             - `AZURE_CLIENT_ID` = `add2c1fb-8b2f-46a7-afae-4c924b746cc6`
+             - `AZURE_TENANT_ID` = `2fdc24aa-9deb-40a8-a662-d7f5ad81f447`
+             - `AZURE_SUBSCRIPTION_ID` = `39dd2bc7-f160-4fa3-bc0f-847cfde46eb8`
+           3. Run workflow `iac-dev.yml` with `apply=true`.
 
            **Identity note:** ensure the selected owner (`User` or `Group`) exists in the Software Catalog.
 

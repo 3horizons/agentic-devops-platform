@@ -84,11 +84,11 @@ global:
       - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
         disabled: false
 
-      # ── ArgoCD (backend + Red Hat frontend) ──
+      # ── ArgoCD (disabled — ArgoCD not installed) ──
       - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
-        disabled: false
+        disabled: true
       - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
-        disabled: false
+        disabled: true
 
       # ── Topology (K8s visual topology on entity page) ──
       - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
