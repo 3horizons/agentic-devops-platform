@@ -34,15 +34,15 @@ upstream:
     appConfig:
       app:
         title: "Three Horizons"
-        baseUrl: "http://rhdh.20.221.80.117.nip.io"
+        baseUrl: http://rhdh.20.221.80.117.nip.io
 
       backend:
-        baseUrl: "http://rhdh.20.221.80.117.nip.io"
+        baseUrl: http://rhdh.20.221.80.117.nip.io
         listen:
           port: 7007
           host: 0.0.0.0
         cors:
-          origin: "http://rhdh.20.221.80.117.nip.io"
+          origin: http://rhdh.20.221.80.117.nip.io
         database:
           client: pg
           connection:
@@ -54,15 +54,43 @@ upstream:
               require: true
               rejectUnauthorized: false
 
+      signInPage: github
+
       auth:
-        environment: development
+        environment: production
         providers:
-          guest:
-            dangerouslyAllowOutsideDevelopment: true
+          github:
+            production:
+              clientId: ${AUTH_GITHUB_CLIENT_ID}
+              clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+              signIn:
+                resolvers:
+                  - resolver: usernameMatchingUserEntityName
+
+      integrations:
+        github:
+          - host: github.com
+            apps:
+              - appId: ${GITHUB_APP_ID}
+                clientId: ${GITHUB_APP_CLIENT_ID}
+                clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+                webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
+                privateKey: ${GITHUB_APP_PRIVATE_KEY}
 
       catalog:
         rules:
           - allow: [Component, System, API, Resource, Location, Template]
+        providers:
+          githubOrg:
+            default:
+              id: production
+              orgUrl: https://github.com/3horizons
+              token: ${GITHUB_TOKEN}
+              schedule:
+                frequency:
+                  minutes: 30
+                timeout:
+                  minutes: 3
         locations:
           - type: url
             target: https://github.com/3horizons/agentic-devops-platform/blob/main/backstage/catalog-info.yaml
