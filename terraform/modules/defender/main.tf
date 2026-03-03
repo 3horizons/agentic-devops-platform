@@ -107,10 +107,10 @@ locals {
   effective_compliance = length(var.regulatory_compliance_standards) > 0 ? var.regulatory_compliance_standards : local.compliance_by_profile[var.sizing_profile]
 
   common_tags = merge(var.tags, {
-    "three-horizons/customer"    = var.customer_name
-    "three-horizons/environment" = var.environment
-    "three-horizons/component"   = "defender-for-cloud"
-    "three-horizons/sizing"      = var.sizing_profile
+    "three-horizons-customer"    = var.customer_name
+    "three-horizons-environment" = var.environment
+    "three-horizons-component"   = "defender-for-cloud"
+    "three-horizons-sizing"      = var.sizing_profile
   })
 }
 

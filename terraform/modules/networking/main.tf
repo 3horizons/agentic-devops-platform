@@ -23,9 +23,9 @@ locals {
   name_prefix = "${var.customer_name}-${var.environment}"
 
   common_tags = merge(var.tags, {
-    "three-horizons/customer"    = var.customer_name
-    "three-horizons/environment" = var.environment
-    "three-horizons/component"   = "networking"
+    "three-horizons-customer"    = var.customer_name
+    "three-horizons-environment" = var.environment
+    "three-horizons-component"   = "networking"
   })
 
   # Private DNS zones for Azure services
@@ -65,14 +65,12 @@ resource "azurerm_subnet" "aks_nodes" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = [var.subnet_config.aks_nodes_cidr]
 
-  # Required for Azure CNI Overlay
-  delegation {
-    name = "aks-delegation"
-    service_delegation {
-      name    = "Microsoft.ContainerService/managedClusters"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-    }
-  }
+  service_endpoints = [
+    "Microsoft.KeyVault",
+    "Microsoft.Storage",
+    "Microsoft.ContainerRegistry",
+    "Microsoft.Sql",
+  ]
 }
 
 # AKS Pods Subnet (for Azure CNI with dynamic IP allocation)

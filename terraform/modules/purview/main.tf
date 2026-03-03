@@ -116,10 +116,10 @@ locals {
   }
 
   common_tags = merge(var.tags, {
-    "three-horizons/customer"    = var.customer_name
-    "three-horizons/environment" = var.environment
-    "three-horizons/component"   = "purview-governance"
-    "three-horizons/sizing"      = var.sizing_profile
+    "three-horizons-customer"    = var.customer_name
+    "three-horizons-environment" = var.environment
+    "three-horizons-component"   = "purview-governance"
+    "three-horizons-sizing"      = var.sizing_profile
   })
 }
 

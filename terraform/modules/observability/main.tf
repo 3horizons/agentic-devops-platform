@@ -22,9 +22,9 @@ locals {
   name_prefix = "${var.customer_name}-${var.environment}"
 
   common_tags = merge(var.tags, {
-    "three-horizons/customer"    = var.customer_name
-    "three-horizons/environment" = var.environment
-    "three-horizons/component"   = "observability"
+    "three-horizons-customer"    = var.customer_name
+    "three-horizons-environment" = var.environment
+    "three-horizons-component"   = "observability"
   })
 }
 
@@ -422,7 +422,7 @@ resource "kubernetes_namespace" "grafana_dashboards" {
     name = "grafana-dashboards"
 
     labels = {
-      "three-horizons/component" = "observability"
+      "three-horizons-component" = "observability"
     }
   }
 }

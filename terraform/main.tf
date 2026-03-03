@@ -125,12 +125,12 @@ locals {
   name_prefix = "${var.customer_name}-${var.environment}"
 
   common_tags = merge(var.tags, {
-    "three-horizons/customer"        = var.customer_name
-    "three-horizons/environment"     = var.environment
-    "three-horizons/deployment-mode" = var.deployment_mode
-    "three-horizons/platform-type"   = var.platform_type
-    "three-horizons/managed-by"      = "terraform"
-    "three-horizons/version"         = "1.0.0"
+    "three-horizons-customer"        = var.customer_name
+    "three-horizons-environment"     = var.environment
+    "three-horizons-deployment-mode" = var.deployment_mode
+    "three-horizons-platform-type"   = var.platform_type
+    "three-horizons-managed-by"      = "terraform"
+    "three-horizons-version"         = "1.0.0"
   })
 
   # Deployment mode configurations
@@ -239,10 +239,10 @@ module "security" {
     soft_delete_retention_days    = 90
     purge_protection_enabled      = var.environment == "prod"
     enable_rbac_authorization     = true
-    public_network_access_enabled = false
+    public_network_access_enabled = true  # Required for Terraform provisioning; restrict post-deploy
     network_acls = {
       bypass                     = "AzureServices"
-      default_action             = "Deny"
+      default_action             = "Allow"  # Allow during provisioning; tighten post-deploy
       ip_rules                   = []
       virtual_network_subnet_ids = [module.networking.subnet_ids.aks_nodes]
     }
@@ -284,7 +284,7 @@ module "aks" {
   location            = var.location
   resource_group_name = azurerm_resource_group.main.name
 
-  kubernetes_version = "1.29"
+  kubernetes_version = "1.33"
 
   network_config = {
     vnet_id         = module.networking.vnet_id

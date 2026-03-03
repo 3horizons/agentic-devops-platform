@@ -9,7 +9,7 @@ tools:
 user-invocable: true
 handoffs:
   - label: "Architecture Design"
-    agent: architect
+    agent: context-architect
     prompt: "The user needs to adapt the architecture for their specific needs."
     send: false
   - label: "Infrastructure Config"

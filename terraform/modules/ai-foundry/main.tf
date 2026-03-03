@@ -24,10 +24,10 @@ locals {
   name_prefix = "${var.customer_name}-${var.environment}"
 
   common_tags = merge(var.tags, {
-    "three-horizons/customer"    = var.customer_name
-    "three-horizons/environment" = var.environment
-    "three-horizons/component"   = "ai-foundry"
-    "three-horizons/horizon"     = "H3"
+    "three-horizons-customer"    = var.customer_name
+    "three-horizons-environment" = var.environment
+    "three-horizons-component"   = "ai-foundry"
+    "three-horizons-horizon"     = "H3"
   })
 }
 
