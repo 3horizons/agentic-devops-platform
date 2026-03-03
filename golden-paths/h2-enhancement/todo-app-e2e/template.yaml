@@ -169,10 +169,15 @@ spec:
           **Azure region:** ${{ parameters.azureRegion }}
 
           **Azure IaC is ready to use:**
-           - Azure OIDC pre-configured (App Registration: `three-horizons-github-oidc`)
            - Organization secrets `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` inherited automatically
            - Environment `dev` created in the repository
            - Run workflow `iac-dev.yml` with `apply=true` to provision Azure resources
+
+          **One-time OIDC bootstrap (required per new repo):**
+          create a federated credential with subject `repo:<owner>/<repo>:environment:dev` in app `three-horizons-github-oidc`.
+
+          Example:
+          `az ad app federated-credential create --id <APP_OBJECT_ID> --parameters '{"name":"github-${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}-dev","issuer":"https://token.actions.githubusercontent.com","subject":"repo:${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}/${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}:environment:dev","audiences":["api://AzureADTokenExchange"]}'`
 
            **Identity note:** ensure the selected owner (`User` or `Group`) exists in the Software Catalog.
 

@@ -45,7 +45,19 @@ Azure secrets are inherited from the `3horizons` organization:
 - `AZURE_TENANT_ID` — Microsoft Entra tenant
 - `AZURE_SUBSCRIPTION_ID` — Target Azure subscription
 
-No manual secret configuration is needed. The OIDC federated credential is configured for all repos in the org using environment `dev`.
+No manual secret configuration is needed for these three secrets.
+
+For OIDC login to Azure, each new repository needs a one-time federated credential in app `three-horizons-github-oidc` with subject:
+
+`repo:${{ values.repoOwner }}/${{ values.repoName }}:environment:dev`
+
+Example (run by tenant/app admin):
+
+```bash
+az ad app federated-credential create \
+	--id <APP_OBJECT_ID> \
+	--parameters "{\"name\":\"github-${{ values.repoName }}-dev\",\"issuer\":\"https://token.actions.githubusercontent.com\",\"subject\":\"repo:${{ values.repoOwner }}/${{ values.repoName }}:environment:dev\",\"audiences\":[\"api://AzureADTokenExchange\"]}"
+```
 
 Optional variable:
 
