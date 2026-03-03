@@ -1,11 +1,11 @@
-"""${{ values.agentName }} — Azure AI Foundry Agent"""
+"""${{ values.agentName }} — Microsoft Foundry Agent"""
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 import os
 
 
 def create_agent():
-    """Create and configure the AI Foundry agent."""
+    """Create and configure the Microsoft Foundry agent."""
     credential = DefaultAzureCredential()
     project = AIProjectClient(
         credential=credential,

@@ -18,7 +18,7 @@ An enterprise-grade **Agentic DevOps Platform** that combines Infrastructure as 
 
 - **H1 Foundation**: Core Azure infrastructure (AKS, networking, databases, security, DR)
 - **H2 Enhancement**: Platform services (ArgoCD, RHDH, observability, Golden Paths, runners)
-- **H3 Innovation**: AI capabilities (Azure AI Foundry, Copilot agents, MCP servers, Developer Lightspeed)
+- **H3 Innovation**: AI capabilities (Microsoft Foundry, Copilot agents, MCP servers, Developer Lightspeed)
 
 ## Technology Stack
 
@@ -30,7 +30,7 @@ An enterprise-grade **Agentic DevOps Platform** that combines Infrastructure as 
 - **Azure Key Vault** with RBAC, soft delete, purge protection
 - **PostgreSQL Flexible Server** v16 with geo-redundant backup
 - **Redis Cache** with TLS 1.2+ enforcement
-- **Azure AI Foundry** with GPT-4o, GPT-4o-mini, text-embedding-3-large, AI Search, Content Safety
+- **Microsoft Foundry** with o3, gpt-4.1, gpt-4o, gpt-4o-mini, text-embedding-3-large, AI Search, Content Safety. Claude models (Opus 4.6, Sonnet 4.6) available via Marketplace in eastus2/swedencentral.
 - **Microsoft Purview** for data governance
 - **Microsoft Defender** for containers and cloud posture
 - **Azure Backup Vault** for disaster recovery
@@ -147,8 +147,8 @@ The root `main.tf` uses a `deployment_mode` variable with three presets:
 customer_name          # 3-20 lowercase alphanumeric, e.g. "contoso"
 environment            # "dev" | "staging" | "prod"
 azure_subscription_id  # Azure subscription
-azure_tenant_id        # Azure AD tenant
-admin_group_id         # Azure AD admin group
+azure_tenant_id        # Microsoft Entra ID tenant
+admin_group_id         # Microsoft Entra ID admin group
 github_org             # GitHub organization
 github_token           # GitHub PAT (sensitive)
 ```
@@ -162,7 +162,7 @@ enable_argocd              = true    # GitOps
 enable_external_secrets    = true    # ESO
 enable_observability       = true    # Prometheus/Grafana
 enable_github_runners      = false   # Self-hosted runners
-enable_ai_foundry          = false   # Azure AI (H3)
+enable_ai_foundry          = false   # Microsoft Foundry (H3)
 enable_defender            = false   # Microsoft Defender
 enable_purview             = false   # Data governance
 enable_cost_management     = false   # Budget alerts
@@ -188,7 +188,7 @@ Located in `.github/agents/`. Each agent uses YAML frontmatter with `tools`, `in
 
 | Agent | Invoke | Domain |
 |-------|--------|--------|
-| `@architect` | `@architect Design a microservice` | System architecture, AI Foundry, multi-agent design |
+| `@architect` | `@architect Design a microservice` | System architecture, Microsoft Foundry, multi-agent design |
 | `@platform` | `@platform Register a Golden Path` | RHDH portal, IDP, developer experience |
 | `@devops` | `@devops Set up GitOps` | CI/CD, pipelines, GitOps, MLOps |
 | `@sre` | `@sre Create runbook` | Observability, SLOs, incident response |
@@ -285,7 +285,7 @@ Scopes: terraform, k8s, argocd, agents, golden-paths, scripts, docs
 |------|---------|
 | `config/apm.yml` | Agent Package Manager manifest (dependencies, instructions, prompts, agents, compilation targets for VSCode/Claude/Codex) |
 | `config/sizing-profiles.yaml` | T-shirt sizing (Small/Medium/Large/XLarge) with detailed infra specs per profile |
-| `config/region-availability.yaml` | Azure region matrix with Tier 1/2 support and LGPD deployment patterns |
+| `config/region-availability.yaml` | Azure region matrix with Tier 1/2 support, AI model availability per region, quota requirements per deployment mode, and deployment patterns. **Agents MUST consult before recommending any Azure service in a region.** |
 | `.pre-commit-config.yaml` | 14 pre-commit hooks (terraform, shell, K8s, YAML, markdown, secrets) |
 | `.tflint.hcl` | TFLint rules (Azure-specific) |
 | `.yamllint.yml` | YAML lint rules (200 char max, comments allowed) |
@@ -443,7 +443,7 @@ foundry-agent, sre-agent-integration, mlops-pipeline, multi-agent-system, copilo
 - **Workload Identity** for all AKS workloads (no static secrets)
 - **Managed Identity** for all Azure services
 - **OIDC Federation** for GitHub Actions
-- **Azure AD SSO** for RHDH, ArgoCD, Grafana
+- **Microsoft Entra ID SSO** for RHDH, ArgoCD, Grafana
 - **GitHub OAuth** for RHDH authentication
 
 ### Network
@@ -470,7 +470,7 @@ foundry-agent, sre-agent-integration, mlops-pipeline, multi-agent-system, copilo
 
 ### Compliance
 
-- **Primary regions**: `centralus` (main), `eastus` (DR), `eastus2` (AI Foundry)
+- **Primary regions**: `centralus` (main), `eastus` (DR), `eastus2` (Microsoft Foundry)
 - **LGPD**: Available as opt-in compliance when deploying to `brazilsouth`
 - **SOC 2**: Audit trails, access controls, monitoring
 - **PCI-DSS**: Network segmentation, encryption
@@ -567,5 +567,5 @@ cd tests/terraform && go test -v ./modules/...
 7. **Golden Paths are RHDH Software Templates**: They follow Backstage template format with `template.yaml`, `skeleton/`, and parameters
 8. **Observability is comprehensive**: 50+ alert rules, 40+ recording rules, 3 dashboards — changes should maintain this coverage
 9. **Policy as Code is enforced**: OPA policies for Terraform (Conftest in CI) and Gatekeeper constraints for K8s runtime — all code must comply
-10. **US-primary**: Default region is `centralus` (Central US). DR region: `eastus`. AI Foundry uses `eastus2` for model availability. LGPD compliance available as opt-in with `brazilsouth`
+10. **US-primary**: Default region is `centralus` (Central US). DR region: `eastus`. Microsoft Foundry uses `eastus2` for model availability. LGPD compliance available as opt-in with `brazilsouth`
 11. **Engineering Intelligence is Faros AI-inspired**: The `@engineering-intelligence` agent provides DORA metrics, Copilot analytics, GHAS security posture, and developer productivity dashboards — all sourced from GitHub APIs and displayed as RHDH dynamic plugin tabs

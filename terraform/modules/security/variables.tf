@@ -23,7 +23,7 @@ variable "resource_group_name" {
 }
 
 variable "tenant_id" {
-  description = "Azure AD tenant ID"
+  description = "Microsoft Entra ID tenant ID"
   type        = string
 }
 
@@ -63,7 +63,7 @@ variable "key_vault_config" {
 }
 
 variable "admin_group_id" {
-  description = "Azure AD group ID for Key Vault administrators"
+  description = "Microsoft Entra ID group ID for Key Vault administrators"
   type        = string
 }
 

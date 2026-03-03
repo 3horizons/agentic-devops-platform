@@ -115,10 +115,10 @@ The Platform Engineering team maintains a weekly on-call rotation with primary a
 | ---- | ------- | ------ |
 | PagerDuty | Alert routing and escalation | Platform team members |
 | Slack `#platform-incidents` | Incident communication | All engineers |
-| Grafana | Dashboard investigation | SSO via Azure AD |
+| Grafana | Dashboard investigation | SSO via Microsoft Entra ID |
 | Prometheus | Metric queries | Port-forward or ingress |
 | Jaeger | Distributed trace analysis | Port-forward or ingress |
-| Azure Portal | Infrastructure investigation | Azure AD RBAC |
+| Azure Portal | Infrastructure investigation | Microsoft Entra ID RBAC |
 | `@sre` Copilot Agent | Automated analysis and runbook suggestions | GitHub Copilot |
 
 ---

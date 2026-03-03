@@ -1869,7 +1869,7 @@ min_versions:
 ## Prerequisites
 - kubectl installed and configured
 - KUBECONFIG set to valid config
-- kubelogin for Azure AD authentication
+- kubelogin for Microsoft Entra ID authentication
 - Appropriate RBAC permissions
 
 ## Commands
@@ -2358,11 +2358,11 @@ agents:
     handoffs:
       - label: "Configure MLOps"
         agent: mlops-pipeline
-        prompt: "Setup ML pipelines using AI Foundry resources."
+        prompt: "Setup ML pipelines using Microsoft Foundry resources."
         context: [ai_foundry_workspace, openai_endpoint]
       - label: "Enable Multi-Agent"
         agent: multi-agent
-        prompt: "Configure multi-agent orchestration with AI Foundry."
+        prompt: "Configure multi-agent orchestration with Microsoft Foundry."
         context: [openai_api_key, embeddings_endpoint]
 
   sre-agent:
@@ -2728,7 +2728,7 @@ Every agent MUST include this section:
 
 #### H3 Innovation Agents
 
-**14. AI Foundry Agent**
+**14. Microsoft Foundry Agent**
 
 ```markdown
 ## Boundaries

@@ -120,7 +120,7 @@ Options:
 Horizons:
     h1  Foundation   - AKS, networking, security, CI/CD
     h2  Enhancement  - ArgoCD, RHDH, GitOps, observability
-    h3  Innovation   - AI Foundry, agents, MLOps
+    h3  Innovation   - Microsoft Foundry, agents, MLOps
 
 Examples:
     $0                            # Deploy all horizons to dev
@@ -402,15 +402,15 @@ deploy_h3_innovation() {
     
     if [[ "$DRY_RUN" == "true" ]]; then
         log INFO "[DRY-RUN] Would deploy H3 Innovation components:"
-        log INFO "  - Azure AI Foundry"
+        log INFO "  - Microsoft Foundry"
         log INFO "  - AI model deployments"
         log INFO "  - Agent infrastructure"
         log INFO "  - MLOps pipelines"
         return 0
     fi
     
-    # Deploy AI Foundry
-    log INFO "Deploying Azure AI Foundry..."
+    # Deploy Microsoft Foundry
+    log INFO "Deploying Microsoft Foundry..."
     cd "${ACCELERATOR_ROOT}/terraform/modules/ai-foundry"
     terraform init -upgrade
     terraform apply -auto-approve \

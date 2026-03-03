@@ -191,7 +191,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy AI Foundry Resources
+      - name: Deploy Microsoft Foundry Resources
         if: needs.prepare.outputs.dry_run == 'false'
         working-directory: terraform/modules/ai-foundry
         run: |

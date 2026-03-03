@@ -64,7 +64,7 @@ These counts are live values sourced from the Backstage Catalog API.
 
 **Horizon Cards (3 cards in a row)**
 - **H1 -- Foundation** (Blue accent): Core platform capabilities including IDP Portal, GitHub integration, Templates, and CI/CD.
-- **H2 -- Enhancement** (Green accent): Intelligent automation including Copilot, AI Foundry, MCP, and Lightspeed.
+- **H2 -- Enhancement** (Green accent): Intelligent automation including Copilot, Microsoft Foundry, MCP, and Lightspeed.
 - **H3 -- Innovation** (Yellow accent): Autonomous operations including Agents, Self-Healing, and Predictive systems.
 
 Each card includes descriptive tags. Clicking a card filters the catalog to entities tagged with the corresponding horizon.
@@ -461,7 +461,7 @@ A search bar at the top enables full-text search across all published TechDocs.
 | Track | Color | Topics |
 |-------|-------|--------|
 | **Platform Fundamentals** | Blue | Catalog usage, template authoring, TechDocs publishing, CI/CD integration, portal navigation |
-| **AI-Powered Development** | Green | GitHub Copilot best practices, MCP server configuration, Azure AI Foundry usage, Lightspeed chat |
+| **AI-Powered Development** | Green | GitHub Copilot best practices, MCP server configuration, Microsoft Foundry usage, Lightspeed chat |
 | **Cloud-Native Architecture** | Yellow | Kubernetes patterns, Azure services, Infrastructure as Code (Terraform), microservice design |
 | **Security & Compliance** | Red | Workload Identity, RBAC configuration, secrets management (Key Vault + ESO), compliance automation (LGPD, SOC2) |
 
@@ -552,7 +552,7 @@ Each notification includes:
 
 ### What It Shows
 
-Developer Lightspeed is an AI-powered chat assistant integrated directly into the portal. It is powered by Azure AI Foundry (GPT-4o) and provides conversational assistance for development tasks, architecture questions, and platform guidance.
+Developer Lightspeed is an AI-powered chat assistant integrated directly into the portal. It is powered by Microsoft Foundry (GPT-4o) and provides conversational assistance for development tasks, architecture questions, and platform guidance.
 
 ### Key Features and Interactions
 

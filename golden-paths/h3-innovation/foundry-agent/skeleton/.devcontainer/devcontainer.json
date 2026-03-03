@@ -1,5 +1,5 @@
 {
-  "name": "AI Foundry Agent",
+  "name": "Microsoft Foundry Agent",
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
   "features": {
     "ghcr.io/devcontainers/features/azure-cli:1": {},

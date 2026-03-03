@@ -90,7 +90,7 @@ Secrets are organized with a consistent naming convention:
 | `dev-rhdh-database-password` | RHDH PostgreSQL password in dev |
 | `prod-argocd-github-token` | ArgoCD GitHub token in production |
 | `staging-redis-connection-string` | Redis connection string in staging |
-| `prod-ai-foundry-api-key` | Azure AI Foundry API key in production |
+| `prod-ai-foundry-api-key` | Microsoft Foundry API key in production |
 | `prod-backend-auth-secret` | RHDH backend authentication secret |
 | `prod-github-app-client-secret` | GitHub App OAuth client secret |
 
@@ -398,7 +398,7 @@ These are the secrets stored in Key Vault for core platform services:
 | `*-postgres-password` | RHDH, services | PostgreSQL connection password |
 | `*-redis-connection-string` | Services | Redis connection string |
 | `*-argocd-github-token` | ArgoCD | GitHub repo access |
-| `*-ai-foundry-api-key` | Lightspeed | Azure AI Foundry API key |
+| `*-ai-foundry-api-key` | Lightspeed | Microsoft Foundry API key |
 | `*-grafana-admin-password` | Grafana | Admin dashboard access |
 
 ---

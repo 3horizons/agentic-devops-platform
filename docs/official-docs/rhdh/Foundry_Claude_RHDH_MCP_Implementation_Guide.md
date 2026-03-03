@@ -1,6 +1,6 @@
 # Three Horizons Developer Hub — Full Implementation Guide
 
-## Azure AI Foundry (Claude Sonnet 4.6 Extended Thinking) + RHDH 1.8 MCP + 10 MCP Servers + Agentic DevOps Platform
+## Microsoft Foundry (Claude Sonnet 4.6 Extended Thinking) + RHDH 1.8 MCP + 10 MCP Servers + Agentic DevOps Platform
 
 **Version:** 2.0
 **Date:** March 2026
@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary
 
-This guide covers the **end-to-end implementation** of the Three Horizons Developer Hub — an AI-powered Internal Developer Portal built on Red Hat Developer Hub (RHDH) 1.8, orchestrated by **Azure AI Foundry Agent Service** using **Claude Sonnet 4.6 Extended Thinking** as the reasoning backbone, connected via the **Model Context Protocol (MCP)**.
+This guide covers the **end-to-end implementation** of the Three Horizons Developer Hub — an AI-powered Internal Developer Portal built on Red Hat Developer Hub (RHDH) 1.8, orchestrated by **Microsoft Foundry Agent Service** using **Claude Sonnet 4.6 Extended Thinking** as the reasoning backbone, connected via the **Model Context Protocol (MCP)**.
 
 The implementation involves **16 specialized agents**, **4 custom plugins**, **6 Golden Path templates**, **13 portal pages**, and a full CI/CD pipeline — all automated via GitHub Copilot agent mode.
 
@@ -19,7 +19,7 @@ The implementation involves **16 specialized agents**, **4 custom plugins**, **6
 
 | Layer | Components | Technology |
 |-------|-----------|------------|
-| **AI Backbone** | Foundry Agent with Claude Sonnet 4.6 Extended Thinking | Azure AI Foundry Agent Service |
+| **AI Backbone** | Foundry Agent with Claude Sonnet 4.6 Extended Thinking | Microsoft Foundry Agent Service |
 | **MCP Transport** | Streamable HTTP + SSE endpoints | RHDH mcp-actions-backend plugin |
 | **Developer Portal** | 13 pages (8 native + 4 custom + 1 topology) | RHDH 1.8 on OpenShift/AKS |
 | **Custom Plugins** | Home Page, My Group, Copilot Metrics, GHAS Metrics | React + TypeScript + Backstage APIs |
@@ -302,7 +302,7 @@ dynamicPlugins:
 
 ---
 
-## 5. Azure AI Foundry Integration — Claude Sonnet 4.6 Extended Thinking
+## 5. Microsoft Foundry Integration — Claude Sonnet 4.6 Extended Thinking
 
 ### 5.1 Architecture
 
@@ -311,7 +311,7 @@ Developer Clients (VS Code, Cursor, Continue)
         │
         │ Natural language query
         ▼
-Azure AI Foundry Agent Service
+Microsoft Foundry Agent Service
         │
         │ Claude Sonnet 4.6 Extended Thinking reasoning + tool selection
         ▼
@@ -503,7 +503,7 @@ The 3horizons platform connects to **10 MCP servers** that collectively cover th
 |---|------------|-------------------|-----------|-----------|
 | 1 | **RHDH MCP** | RHDH 1.8 built-in (3 OCI packages) | Streamable HTTP | `fetch-catalog-entities`, `fetch-techdocs`, `analyze-techdocs-coverage`, `retrieve-techdocs-content` |
 | 2 | **GitHub MCP** | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | stdio / SSE | `create_repository`, `push_files`, `create_pull_request`, `search_code`, `list_issues` |
-| 3 | **Azure MCP** | [microsoft/mcp](https://github.com/microsoft/mcp) | Streamable HTTP | 40+ Azure services: AKS, ACR, KeyVault, Monitor, Log Analytics, AI Foundry |
+| 3 | **Azure MCP** | [microsoft/mcp](https://github.com/microsoft/mcp) | Streamable HTTP | 40+ Azure services: AKS, ACR, KeyVault, Monitor, Log Analytics, Microsoft Foundry |
 | 4 | **Azure DevOps MCP** | [microsoft/azure-devops-mcp](https://github.com/microsoft/azure-devops-mcp) (GA) | stdio / SSE | 9 domains: `work-items`, `repositories`, `pipelines`, `wiki`, `search`, `test-plans`, `advanced-security` |
 | 5 | **Terraform MCP** | [hashicorp/terraform-mcp-server](https://github.com/hashicorp/terraform-mcp-server) | Streamable HTTP / SSE | `resolveProviderDocID`, `getProviderDocs`, `resolveModuleID`, `getModuleDocs`, workspace CRUD, create runs |
 | 6 | **Figma MCP** | [Figma Official](https://developers.figma.com/docs/figma-mcp-server/) | Local / Remote | `get_design_context`, `get_screenshot`, `get_metadata`, `generate_diagram`, `get_code_connect_map` |
@@ -802,7 +802,7 @@ Week 8:  Phase 6 — Polish, Security Audit, Onboarding
 
 Context: We are customizing RHDH 1.8 to match the Three Horizons Developer Hub
 reference template. The portal has 13 pages, 4 custom plugins, MCP integration
-with Azure AI Foundry (Claude Sonnet 4.6 Extended Thinking), and 6 Golden Path templates.
+with Microsoft Foundry (Claude Sonnet 4.6 Extended Thinking), and 6 Golden Path templates.
 
 Execution mode: Phase-by-Phase (pause at each validation gate for approval).
 
@@ -834,7 +834,7 @@ Tasks:
    - Configure externalAccess with static Bearer token (subject: mcp-clients)
    - Store token in Key Vault
 
-3. Create Azure AI Foundry Agent:
+3. Create Microsoft Foundry Agent:
    - Model: claude-sonnet-4-5-20250929
    - McpToolDefinition pointing to /api/mcp-actions/v1
    - Allowed tools: fetch-catalog-entities, fetch-techdocs,
@@ -956,10 +956,10 @@ three-horizons-portal/
 ## 15. Sources
 
 - [Red Hat Developer Hub 1.8 — MCP Tools Official Documentation](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.8/html/interacting_with_model_context_protocol_tools_for_red_hat_developer_hub/index)
-- [Azure AI Foundry — Connect to MCP Server Endpoint](https://learn.microsoft.com/en-us/azure/ai-foundry/agents/how-to/tools-classic/model-context-protocol)
-- [Introducing MCP in Azure AI Foundry — Microsoft Blog](https://devblogs.microsoft.com/foundry/integrating-azure-ai-agents-mcp/)
+- [Microsoft Foundry — Connect to MCP Server Endpoint](https://learn.microsoft.com/en-us/azure/ai-foundry/agents/how-to/tools-classic/model-context-protocol)
+- [Introducing MCP in Microsoft Foundry — Microsoft Blog](https://devblogs.microsoft.com/foundry/integrating-azure-ai-agents-mcp/)
 - [Foundry MCP Server (Preview) in the Cloud](https://devblogs.microsoft.com/foundry/announcing-foundry-mcp-server-preview-speeding-up-ai-dev-with-microsoft-foundry/)
-- [Azure AI Foundry Model Catalog](https://azure.microsoft.com/en-us/products/ai-foundry/models)
+- [Microsoft Foundry Model Catalog](https://azure.microsoft.com/en-us/products/ai-foundry/models)
 - [What's New in Microsoft Foundry — Dec 2025 & Jan 2026](https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-dec-2025-jan-2026/)
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/specification)
 - [MCP in Red Hat Developer Hub — Chat with Your Catalog](https://developers.redhat.com/articles/2025/11/10/mcp-red-hat-developer-hub-chat-your-catalog)

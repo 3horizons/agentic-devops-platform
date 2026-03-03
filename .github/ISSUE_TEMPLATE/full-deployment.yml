@@ -49,7 +49,7 @@ body:
         ┌─────────────────────────────────────────────────────────────┐
         │ PHASE 4: H3 Innovation                                      │
         ├─────────────────────────────────────────────────────────────┤
-        │ ☐ AI Foundry                                                │
+        │ ☐ Microsoft Foundry                                                │
         │ ☐ MLOps Pipelines                                           │
         │ ☐ Multi-Agent Systems                                       │
         │ ☐ SRE Agent Integration                                     │
@@ -151,7 +151,7 @@ body:
           required: true
         - label: "H2: Enhancement (GitOps, RHDH, observability)"
           required: true
-        - label: "H3: Innovation (AI Foundry, MLOps)"
+        - label: "H3: Innovation (Microsoft Foundry, MLOps)"
 
   - type: checkboxes
     id: optional_components
@@ -160,7 +160,7 @@ body:
       options:
         - label: "Enable Defender for Cloud"
         - label: "Enable Purview Governance"
-        - label: "Enable AI Foundry"
+        - label: "Enable Microsoft Foundry"
         - label: "Enable Private Cluster"
         - label: "Enable Geo-Replication for ACR"
 

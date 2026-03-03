@@ -186,7 +186,7 @@ resource "azurerm_federated_identity_credential" "external_secrets" {
 }
 
 # =============================================================================
-# AZURE AD APPLICATION FOR GITHUB SSO (Optional)
+# MICROSOFT ENTRA ID APPLICATION FOR GITHUB SSO (Optional)
 # =============================================================================
 
 resource "azuread_application" "github_sso" {
@@ -247,7 +247,7 @@ resource "azuread_application_password" "github_sso" {
   }
 }
 
-# Store Azure AD app credentials in Key Vault
+# Store Microsoft Entra ID app credentials in Key Vault
 resource "azurerm_key_vault_secret" "aad_client_id" {
   name         = "aad-client-id"
   value        = azuread_application.github_sso.client_id

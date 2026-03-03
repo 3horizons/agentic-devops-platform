@@ -91,7 +91,7 @@ variable "cluster_issuer" {
 }
 
 variable "azure_ad_admin_group_id" {
-  description = "Azure AD group ID for admin access (optional)"
+  description = "Microsoft Entra ID group ID for admin access (optional)"
   type        = string
   default     = ""
 }

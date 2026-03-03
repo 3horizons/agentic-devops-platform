@@ -1,8 +1,8 @@
 // =============================================================================
-// THREE HORIZONS ACCELERATOR - AI FOUNDRY MODULE TESTS
+// THREE HORIZONS ACCELERATOR - MICROSOFT FOUNDRY MODULE TESTS
 // =============================================================================
 //
-// Unit and integration tests for the Terraform AI Foundry module.
+// Unit and integration tests for the Terraform Microsoft Foundry module.
 //
 // Run with: go test -v -run TestAIFoundry ./modules/
 //
@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestAIFoundryModuleBasic tests basic AI Foundry configuration
+// TestAIFoundryModuleBasic tests basic Microsoft Foundry configuration
 func TestAIFoundryModuleBasic(t *testing.T) {
 	t.Parallel()
 

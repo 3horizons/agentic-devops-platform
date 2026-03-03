@@ -20,7 +20,7 @@ The Three Horizons Accelerator uses **GitHub Copilot Chat Agents** — a role-ba
 
 | Agent | File | Role |
 |-------|------|------|
-| **Architect** | [architect.agent.md](.github/agents/architect.agent.md) | System architecture, AI Foundry, multi-agent design |
+| **Architect** | [architect.agent.md](.github/agents/architect.agent.md) | System architecture, Microsoft Foundry, multi-agent design |
 | **DevOps** | [devops.agent.md](.github/agents/devops.agent.md) | CI/CD, GitOps, MLOps, Golden Paths, pipelines |
 | **Docs** | [docs.agent.md](.github/agents/docs.agent.md) | Documentation generation and maintenance |
 | **Onboarding** | [onboarding.agent.md](.github/agents/onboarding.agent.md) | New team member onboarding and guidance |
@@ -87,7 +87,7 @@ The 15 skills in [.github/skills/](.github/skills/) provide domain-specific know
 
 | Skill | Description |
 |-------|-------------|
-| `ai-foundry-operations` | Azure AI Foundry and OpenAI operations |
+| `ai-foundry-operations` | Microsoft Foundry and OpenAI operations |
 | `argocd-cli` | ArgoCD CLI for GitOps workflows |
 | `azure-cli` | Azure CLI resource management |
 | `azure-infrastructure` | Azure infrastructure patterns |

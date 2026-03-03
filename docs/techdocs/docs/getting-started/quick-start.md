@@ -5,12 +5,12 @@ Get up and running with the Three Horizons Developer Hub in five steps. This gui
 ## Prerequisites
 
 - GitHub account with organization membership
-- Azure AD credentials (for SSO login)
+- Microsoft Entra ID credentials (for SSO login)
 - Access granted by your team admin in the RHDH RBAC policies
 
 ## Step 1: Access the Portal
 
-Navigate to the RHDH portal URL provided by your Platform Engineering team. Sign in using GitHub OAuth or Azure AD SSO. On first login, you will be assigned the **Developer** role by default.
+Navigate to the RHDH portal URL provided by your Platform Engineering team. Sign in using GitHub OAuth or Microsoft Entra ID SSO. On first login, you will be assigned the **Developer** role by default.
 
 ```
 https://developer-hub.<your-domain>.com

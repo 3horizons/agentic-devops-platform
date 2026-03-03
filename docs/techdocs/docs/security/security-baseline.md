@@ -225,7 +225,7 @@ spec:
 All AKS workloads authenticate to Azure services using Workload Identity Federation. No static service principal secrets are used anywhere in the platform.
 
 ```
-AKS Pod --> Kubernetes Service Account --> OIDC Issuer --> Azure AD
+AKS Pod --> Kubernetes Service Account --> OIDC Issuer --> Microsoft Entra ID
                                                             |
                                                             v
                                                     Managed Identity
@@ -255,11 +255,11 @@ All Azure services use system-assigned managed identities:
 | Service | Auth Method | Provider |
 |---------|-------------|----------|
 | RHDH Portal | GitHub OAuth | GitHub App |
-| ArgoCD | Azure AD SSO | OIDC |
-| Grafana | Azure AD SSO | OAuth 2.0 |
+| ArgoCD | Microsoft Entra ID SSO | OIDC |
+| Grafana | Microsoft Entra ID SSO | OAuth 2.0 |
 | GitHub Actions | OIDC Federation | Workload Identity |
-| AKS workloads | Workload Identity | Azure AD |
-| Azure PaaS | Managed Identity | Azure AD |
+| AKS workloads | Workload Identity | Microsoft Entra ID |
+| Azure PaaS | Managed Identity | Microsoft Entra ID |
 
 ### Prohibited Identity Practices
 
@@ -375,7 +375,7 @@ The platform is designed to support the following compliance frameworks:
 ### LGPD Considerations
 
 - Default deployment region is `brazilsouth` for Brazilian data protection compliance
-- AI Foundry uses `eastus2` for model availability (no PII data sent)
+- Microsoft Foundry uses `eastus2` for model availability (no PII data sent)
 - Region availability matrix in `config/region-availability.yaml`
 - Tier 1 regions support full platform deployment
 - Tier 2 regions support limited services

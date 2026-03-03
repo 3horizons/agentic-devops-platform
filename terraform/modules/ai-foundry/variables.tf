@@ -1,5 +1,5 @@
 # =============================================================================
-# THREE HORIZONS ACCELERATOR - AI FOUNDRY MODULE VARIABLES
+# THREE HORIZONS ACCELERATOR - MICROSOFT FOUNDRY MODULE VARIABLES
 # =============================================================================
 
 variable "customer_name" {
@@ -37,7 +37,7 @@ variable "private_dns_zone_ids" {
 }
 
 variable "openai_config" {
-  description = "Azure OpenAI configuration"
+  description = "Microsoft Foundry OpenAI configuration"
   type = object({
     enabled  = bool
     sku_name = string
@@ -54,9 +54,23 @@ variable "openai_config" {
     sku_name = "S0"
     models = [
       {
+        name          = "o3"
+        model_name    = "o3"
+        model_version = "2025-04-16"
+        capacity      = 30
+        rai_policy    = "Microsoft.Default"
+      },
+      {
+        name          = "gpt-4.1"
+        model_name    = "gpt-4.1"
+        model_version = "2025-04-14"
+        capacity      = 30
+        rai_policy    = "Microsoft.Default"
+      },
+      {
         name          = "gpt-4o"
         model_name    = "gpt-4o"
-        model_version = "2024-05-13"
+        model_version = "2024-08-06"
         capacity      = 30
         rai_policy    = "Microsoft.Default"
       },

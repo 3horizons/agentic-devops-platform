@@ -80,7 +80,7 @@ Llama Stack (Orchestration Layer)
 
 ## Azure OpenAI Models
 
-Lightspeed uses Azure AI Foundry models deployed in the `eastus2` region (selected for model availability):
+Lightspeed uses Microsoft Foundry models deployed in the `eastus2` region (selected for model availability):
 
 | Model | Deployment Name | Purpose | Token Limit |
 | ----- | --------------- | ------- | ----------- |
@@ -100,7 +100,7 @@ Model selection is automatic based on query complexity:
 
 ### Prerequisites
 
-- Azure AI Foundry deployed (`enable_ai_foundry = true` in Terraform)
+- Microsoft Foundry deployed (`enable_ai_foundry = true` in Terraform)
 - GPT-4o and embedding model deployments active
 - Azure AI Search index populated with platform documentation
 - API credentials stored in Azure Key Vault

@@ -62,7 +62,7 @@ variable "data_sources" {
 }
 
 variable "admin_group_id" {
-  description = "Azure AD group ID for Purview administrators"
+  description = "Microsoft Entra ID group ID for Purview administrators"
   type        = string
 }
 

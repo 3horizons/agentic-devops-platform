@@ -36,7 +36,7 @@
     <rect x="410" y="96" width="160" height="80" rx="8" fill="#fff" stroke="#e74c3c" stroke-width="1.2"/>
     <rect x="590" y="96" width="160" height="80" rx="8" fill="#fff" stroke="#e74c3c" stroke-width="1.2"/>
   </g>
-  <text x="130" y="131" text-anchor="middle" font-size="13" font-weight="600" fill="#2c3e50">AI Foundry</text>
+  <text x="130" y="131" text-anchor="middle" font-size="13" font-weight="600" fill="#2c3e50">Microsoft Foundry</text>
   <text x="130" y="151" text-anchor="middle" font-size="12" fill="#7f8c8d">Agents</text>
   <text x="310" y="131" text-anchor="middle" font-size="13" font-weight="600" fill="#2c3e50">SRE Agent</text>
   <text x="310" y="151" text-anchor="middle" font-size="12" fill="#7f8c8d">Integration</text>

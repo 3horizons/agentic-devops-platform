@@ -124,16 +124,16 @@ fi
 # H3 INNOVATION CHECKS
 # =============================================================================
 if [[ "$PHASE" == "h3" || "$PHASE" == "all" ]]; then
-  header "H3: AI Foundry"
+  header "H3: Microsoft Foundry"
   if az cognitiveservices account list --query "[?contains(name,'oai')]" -o tsv &>/dev/null 2>&1; then
     AI_COUNT=$(az cognitiveservices account list --query "length([?contains(name,'oai')])" -o tsv 2>/dev/null || echo 0)
     if [[ "$AI_COUNT" -gt 0 ]]; then
-      pass "AI Foundry: $AI_COUNT account(s) found"
+      pass "Microsoft Foundry: $AI_COUNT account(s) found"
     else
-      warn "AI Foundry: No accounts found (may not be enabled)"
+      warn "Microsoft Foundry: No accounts found (may not be enabled)"
     fi
   else
-    warn "Could not check AI Foundry (requires az login)"
+    warn "Could not check Microsoft Foundry (requires az login)"
   fi
 fi
 

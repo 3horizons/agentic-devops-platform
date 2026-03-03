@@ -8,7 +8,7 @@ The platform follows a maturity-based delivery model organized into three horizo
 
 - **H1 -- Foundation**: Core Azure infrastructure including AKS clusters, networking, databases, security, and disaster recovery. This is your production-ready baseline.
 - **H2 -- Enhancement**: Platform services such as ArgoCD for GitOps, RHDH for the developer portal, observability with Prometheus and Grafana, Golden Path templates, and self-hosted GitHub runners.
-- **H3 -- Innovation**: AI capabilities including Azure AI Foundry, GitHub Copilot agents, MCP servers for AI-tool communication, and Developer Lightspeed for in-portal AI chat.
+- **H3 -- Innovation**: AI capabilities including Microsoft Foundry, GitHub Copilot agents, MCP servers for AI-tool communication, and Developer Lightspeed for in-portal AI chat.
 
 ## What RHDH Provides
 

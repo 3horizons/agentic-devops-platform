@@ -141,7 +141,7 @@ variable "enable_vertical_pod_autoscaler" {
 }
 
 variable "admin_group_ids" {
-  description = "Azure AD group IDs for cluster admin access"
+  description = "Microsoft Entra ID group IDs for cluster admin access"
   type        = list(string)
   default     = []
 }

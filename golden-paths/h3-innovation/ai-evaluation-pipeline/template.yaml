@@ -9,7 +9,7 @@ metadata:
     - Quality metrics (accuracy, latency, cost)
     - A/B testing infrastructure
     - Responsible AI evaluations
-    - Integration with Azure AI Foundry
+    - Integration with Microsoft Foundry
   tags:
     - ai
     - mlops

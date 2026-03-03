@@ -7,7 +7,7 @@
 # Features:
 #   - HA deployment (3 replicas)
 #   - GitHub SSO integration
-#   - RBAC with Azure AD groups
+#   - RBAC with Microsoft Entra ID groups
 #   - ApplicationSet controller
 #   - Notifications (Slack, Teams)
 #   - Prometheus metrics

@@ -28,12 +28,12 @@ variable "aks_cluster_id" {
 }
 
 variable "grafana_admin_group_id" {
-  description = "Azure AD group ID for Grafana admins"
+  description = "Microsoft Entra ID group ID for Grafana admins"
   type        = string
 }
 
 variable "grafana_viewer_group_id" {
-  description = "Azure AD group ID for Grafana viewers"
+  description = "Microsoft Entra ID group ID for Grafana viewers"
   type        = string
   default     = ""
 }

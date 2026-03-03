@@ -46,7 +46,7 @@ instructions:
     
   - path: .apm/instructions/ai-deployment.instructions.md
     applyTo: "**/ai-foundry/**"
-    description: AI Foundry deployment guidelines
+    description: Microsoft Foundry deployment guidelines
 
   - path: .apm/instructions/engineering-intelligence.instructions.md
     applyTo: "**/engineering-intelligence/**,**/dashboards/**,**/metrics/**"
@@ -64,7 +64,7 @@ prompts:
     
   - path: .apm/prompts/configure-ai-foundry.prompt.md
     name: configure-ai-foundry
-    description: Deploy Azure AI Foundry
+    description: Deploy Microsoft Foundry
     
   - path: .apm/prompts/health-check.prompt.md
     name: health-check

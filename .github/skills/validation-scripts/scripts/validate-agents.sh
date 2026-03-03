@@ -90,7 +90,7 @@ declare -A EXPECTED_AGENTS=(
     ["h2-enhancement/golden-paths-agent.md"]="Golden Paths Agent"
     ["h2-enhancement/github-runners-agent.md"]="GitHub Runners Agent"
     # H3 Innovation
-    ["h3-innovation/ai-foundry-agent.md"]="AI Foundry Agent"
+    ["h3-innovation/ai-foundry-agent.md"]="Microsoft Foundry Agent"
     ["h3-innovation/mlops-pipeline-agent.md"]="MLOps Pipeline Agent"
     ["h3-innovation/sre-agent-setup.md"]="SRE Agent Setup"
     ["h3-innovation/multi-agent-setup.md"]="Multi-Agent Setup"

@@ -7,7 +7,7 @@ This guide walks through the complete onboarding process for new teams joining t
 Before starting the onboarding process, ensure your team has:
 
 - **GitHub Organization membership** -- Request access from your org admin
-- **Azure AD accounts** -- Provisioned through your IT department
+- **Microsoft Entra ID accounts** -- Provisioned through your IT department
 - **Azure subscription access** -- At minimum, Reader role for your resource group
 - **CLI tools installed** -- Run the prerequisite validation script:
 
@@ -41,7 +41,7 @@ gh auth status
 ## Step 2: Portal Login and Role Assignment
 
 1. Navigate to the RHDH portal URL
-2. Sign in using GitHub OAuth (recommended) or Azure AD SSO
+2. Sign in using GitHub OAuth (recommended) or Microsoft Entra ID SSO
 3. Your role is assigned by the Platform Engineering team via CSV-based RBAC policies:
    - **Admin** -- Full platform management capabilities
    - **Developer** -- Create components, browse catalog, use templates

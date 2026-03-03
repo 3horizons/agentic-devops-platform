@@ -116,7 +116,7 @@ resource "azurerm_kubernetes_cluster" "main" {
   workload_identity_enabled = var.enable_workload_identity
 
   # ==========================================================================
-  # AZURE AD INTEGRATION
+  # MICROSOFT ENTRA ID INTEGRATION
   # ==========================================================================
   azure_active_directory_role_based_access_control {
     managed            = true

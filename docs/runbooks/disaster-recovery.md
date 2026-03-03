@@ -191,7 +191,7 @@ az snapshot create -g <rg> -n evidence-snapshot --source <disk-id>
 # Rotate all secrets in Key Vault
 ./scripts/rotate-all-secrets.sh
 
-# Revoke Azure AD tokens
+# Revoke Microsoft Entra ID tokens
 az ad app credential reset --id <app-id>
 
 # 4. COMMUNICATE - Notify security team, management, legal

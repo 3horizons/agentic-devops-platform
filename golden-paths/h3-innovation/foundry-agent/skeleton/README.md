@@ -4,7 +4,7 @@ ${{values.description}}
 
 ## Overview
 
-Autonomous AI Agent powered by Azure AI Foundry with tools, RAG, and orchestration.
+Autonomous AI Agent powered by Microsoft Foundry with tools, RAG, and orchestration.
 
 | Property | Value |
 |----------|-------|
@@ -24,7 +24,7 @@ Autonomous AI Agent powered by Azure AI Foundry with tools, RAG, and orchestrati
 
 ## Architecture
 
-![AI Foundry Agent](../../../../../docs/assets/gp-foundry-agent.svg)
+![Microsoft Foundry Agent](../../../../../docs/assets/gp-foundry-agent.svg)
 
 ## Tools
 
@@ -74,5 +74,5 @@ Environment variables:
 
 ## Links
 
-- [Azure AI Foundry](https://docs.microsoft.com/azure/ai-services/)
+- [Microsoft Foundry](https://docs.microsoft.com/azure/ai-services/)
 - [Azure AI Agent Service](https://learn.microsoft.com/azure/ai-services/agents/)

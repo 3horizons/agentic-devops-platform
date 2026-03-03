@@ -243,7 +243,7 @@ The repository has a comprehensive MCP configuration in mcp-servers/mcp-config.j
 
   defender                Security scanning       az security assessment, alerts
 
-  entra                   Azure AD ops            az ad app, sp, group, user
+  entra                   Microsoft Entra ID ops            az ad app, sp, group, user
   -----------------------------------------------------------------------------------------
 
 ## Best Practice Compliance

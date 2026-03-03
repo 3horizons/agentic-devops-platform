@@ -12,7 +12,7 @@ description: Kubernetes CLI operations for AKS cluster management
 ## Prerequisites
 - kubectl installed and configured
 - KUBECONFIG set to valid config
-- kubelogin for Azure AD authentication
+- kubelogin for Microsoft Entra ID authentication
 - Appropriate RBAC permissions
 
 ## Commands

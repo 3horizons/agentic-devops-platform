@@ -101,7 +101,7 @@ agentic-devops-platform/
 │
 ├── .github/agents/                 # 17 Copilot Chat Agents
 │   ├── ado-integration.agent.md     # Azure DevOps integration
-│   ├── architect.agent.md          # System architecture, AI Foundry
+│   ├── architect.agent.md          # System architecture, Microsoft Foundry
 │   ├── azure-portal-deploy.agent.md # Azure AKS portal deployment
 │   ├── context-architect.agent.md  # Multi-file change planning
 │   ├── deploy.agent.md             # Deployment orchestration
@@ -121,7 +121,7 @@ agentic-devops-platform/
 ├── terraform/                      # 15 Infrastructure as Code modules
 │   ├── main.tf                     # Root module
 │   └── modules/
-│       ├── ai-foundry/             # Azure AI Foundry
+│       ├── ai-foundry/             # Microsoft Foundry
 │       ├── aks-cluster/            # Azure Kubernetes Service
 │       ├── argocd/                 # ArgoCD GitOps
 │       ├── container-registry/     # ACR
@@ -245,7 +245,7 @@ terraform apply -var-file=environments/dev.tfvars -var="enable_h2=true"
 - Prometheus + Grafana + Loki
 - GitHub Actions Runners
 
-### Step 3: Deploy AI Foundry (H3)
+### Step 3: Deploy Microsoft Foundry (H3)
 
 ```bash
 # Requires H1 and H2
@@ -254,7 +254,7 @@ terraform apply -var-file=environments/dev.tfvars -var="enable_h3=true"
 
 **Resources created in H3:**
 
-- Azure AI Foundry
+- Microsoft Foundry
 - Azure OpenAI (GPT-4o, o1)
 - AI Search (Vector)
 - Cosmos DB (Vector Store)
@@ -318,7 +318,7 @@ kubectl apply -f golden-paths/h1-foundation/basic-cicd/template.yaml
 
 | Template | Use Case |
 |----------|----------|
-| `foundry-agent` | AI Foundry agents |
+| `foundry-agent` | Microsoft Foundry agents |
 | `sre-agent-integration` | SRE automation |
 | `mlops-pipeline` | Complete ML pipeline |
 | `multi-agent-system` | Multi-agent orchestration |
@@ -556,7 +556,7 @@ For questions, issues, or suggestions, open an issue on GitHub:
 
 - [Azure AKS](https://docs.microsoft.com/azure/aks/)
 - [ArgoCD](https://argo-cd.readthedocs.io/)
-- [Azure AI Foundry](https://azure.microsoft.com/products/ai-foundry/)
+- [Microsoft Foundry](https://azure.microsoft.com/products/ai-foundry/)
 - [GitHub Actions](https://docs.github.com/actions)
 - [External Secrets Operator](https://external-secrets.io/)
 

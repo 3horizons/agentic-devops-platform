@@ -105,7 +105,7 @@ You think in terms of **composability**: every UI element is either a native Bac
 ### 4. RHDH Authentication & RBAC (Official Docs)
 > **Reference:** [RHDH Auth & RBAC Skill](../skills/rhdh-auth-rbac/SKILL.md)
 - **ALWAYS** consult before designing auth flows or RBAC policies.
-- Covers GitHub OAuth, Azure AD SSO, permission framework, CSV policies, role definitions.
+- Covers GitHub OAuth, Microsoft Entra ID SSO, permission framework, CSV policies, role definitions.
 
 ### 5. RHDH Official Documentation Guide
 > **Reference:** [RHDH Official Documentation Guide](../../docs/official-docs/rhdh/RHDH_Official_Documentation_Guide.md)

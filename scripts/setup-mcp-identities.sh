@@ -9,7 +9,7 @@
 # Identities created:
 #   1. Entra ID Admin Security Group
 #   2. MCP Azure/AKS Service Principal (Reader + AKS RBAC Writer)
-#   3. MCP AI Foundry Service Principal (Cognitive Services OpenAI User)
+#   3. MCP Microsoft Foundry Service Principal (Cognitive Services OpenAI User)
 #   4. MCP Backstage Bearer Token (stored in Key Vault)
 #   5. MCP ArgoCD API Token placeholder
 #   6. MCP GitHub PAT validation
@@ -207,9 +207,9 @@ create_mcp_azure_sp() {
     fi
 }
 
-# --- 3. Create MCP AI Foundry Service Principal ---
+# --- 3. Create MCP Microsoft Foundry Service Principal ---
 create_mcp_ai_foundry_sp() {
-    log_step "3/6 — MCP AI Foundry Service Principal"
+    log_step "3/6 — MCP Microsoft Foundry Service Principal"
 
     local app_name="${ORG_CODE}-${PROJECT_NAME}-mcp-ai-foundry"
     local scope="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}"
@@ -351,7 +351,7 @@ AZURE_TENANT_ID=${TENANT_ID}
 # --- MCP Azure/AKS Server (SP: ${ORG_CODE}-${PROJECT_NAME}-mcp-azure) ---
 MCP_AZURE_CLIENT_ID=${MCP_AZURE_CLIENT_ID:-}
 
-# --- MCP AI Foundry Server (SP: ${ORG_CODE}-${PROJECT_NAME}-mcp-ai-foundry) ---
+# --- MCP Microsoft Foundry Server (SP: ${ORG_CODE}-${PROJECT_NAME}-mcp-ai-foundry) ---
 MCP_AI_FOUNDRY_CLIENT_ID=${MCP_AI_CLIENT_ID:-}
 
 # --- MCP Backstage Server (Bearer Token) ---
@@ -411,7 +411,7 @@ print_summary() {
         printf "  %-4s %-35s %-15s %s\n" "1" "Admin Group" "Entra ID Group" "${ADMIN_GROUP_ID:-N/A}"
     fi
     printf "  %-4s %-35s %-15s %s\n" "2" "MCP Azure/AKS SP" "App Reg + SP" "${MCP_AZURE_CLIENT_ID:-N/A}"
-    printf "  %-4s %-35s %-15s %s\n" "3" "MCP AI Foundry SP" "App Reg + SP" "${MCP_AI_CLIENT_ID:-N/A}"
+    printf "  %-4s %-35s %-15s %s\n" "3" "MCP Microsoft Foundry SP" "App Reg + SP" "${MCP_AI_CLIENT_ID:-N/A}"
     printf "  %-4s %-35s %-15s %s\n" "4" "MCP Backstage Token" "Bearer Token" "(in .env.mcp)"
     printf "  %-4s %-35s %-15s %s\n" "5" "MCP ArgoCD Token" "API Token" "(post-deploy)"
     printf "  %-4s %-35s %-15s %s\n" "6" "MCP GitHub Token" "PAT/gh auth" "(GITHUB_TOKEN)"
@@ -422,7 +422,7 @@ print_summary() {
     echo "    - Reader (Resource Group)"
     echo "    - Azure Kubernetes Service Cluster User Role"
     echo "    - Azure Kubernetes Service RBAC Writer"
-    echo "  MCP AI Foundry SP:"
+    echo "  MCP Microsoft Foundry SP:"
     echo "    - Cognitive Services OpenAI User"
     echo "    - Reader (Resource Group)"
     echo ""

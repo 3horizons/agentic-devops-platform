@@ -47,7 +47,7 @@ Azure CLI operations for cloud resource management.
 - `az acr` - Container Registry operations
 - `az keyvault` - Key Vault operations
 - `az network` - Network operations
-- `az ad` - Azure AD operations
+- `az ad` - Microsoft Entra ID operations
 - `az security` - Security operations
 - `az purview` - Data governance
 
@@ -192,7 +192,7 @@ backend:
 - [RHDH Catalog MCP Extras](https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/software-catalog-mcp-extras)
 
 ### entra
-Microsoft Entra ID (Azure AD) operations.
+Microsoft Entra ID (Microsoft Entra ID) operations.
 
 **Capabilities:**
 - `az ad app` - Application registration

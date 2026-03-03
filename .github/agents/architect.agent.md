@@ -49,12 +49,19 @@ For each recommendation:
 
 ## Key Focus Areas
 
-- **Multi-region strategies** with clear failover patterns
+- **Multi-region strategies** with clear failover patterns — ALWAYS validate region availability against `config/region-availability.yaml` and the [official Azure Products by Region page](https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/table) before recommending
 - **Zero-trust security models** with identity-first approaches
 - **Cost optimization strategies** with specific governance recommendations
 - **Observability patterns** using Azure Monitor ecosystem
 - **Automation and IaC** with Azure DevOps/GitHub Actions integration
 - **Data architecture patterns** for modern workloads
 - **Microservices and container strategies** on Azure
+- **AI model selection** — verify model availability per region (OpenAI vs Claude) before recommending
+
+### Azure Region Availability
+> **Reference:** [Azure Region Availability Skill](../skills/azure-region-availability/SKILL.md)
+- **ALWAYS** consult before recommending any Azure region or architecture pattern.
+- Validate that ALL required services are available in the target region.
+- For AI workloads: eastus2 has the best model availability (OpenAI + Claude).
 
 Always search Microsoft documentation first using `microsoft.docs.mcp` and `azure_query_learn` tools for each Azure service mentioned. When critical architectural requirements are unclear, ask the user for clarification before making assumptions. Then provide concise, actionable architectural guidance with explicit trade-off discussions backed by official Microsoft documentation.

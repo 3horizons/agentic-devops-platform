@@ -68,9 +68,9 @@ export const HORIZONS: HorizonData[] = [
     title: 'H2 — Enhancement',
     subtitle: 'Intelligence & Automation',
     description:
-      'AI-powered development with Copilot, Lightspeed chat, MCP servers, Azure AI Foundry, and automated testing.',
+      'AI-powered development with Copilot, Lightspeed chat, MCP servers, Microsoft Foundry, and automated testing.',
     color: MS_COLORS.green,
-    tags: ['Copilot', 'Lightspeed', 'MCP', 'AI Foundry', 'Testing'],
+    tags: ['Copilot', 'Lightspeed', 'MCP', 'Microsoft Foundry', 'Testing'],
     route: '/catalog?filters[tag]=h2-enhancement',
   },
   {

@@ -19,7 +19,7 @@ AI Model Evaluation Pipeline for automated testing, benchmarking, and quality as
 - Quality metrics (accuracy, latency, cost)
 - A/B testing infrastructure
 - Responsible AI evaluations
-- Integration with Azure AI Foundry
+- Integration with Microsoft Foundry
 - Drift detection and monitoring
 
 ## Pipeline Structure
@@ -75,5 +75,5 @@ Environment variables:
 
 ## Links
 
-- [Azure AI Foundry](https://docs.microsoft.com/azure/ai-services/)
+- [Microsoft Foundry](https://docs.microsoft.com/azure/ai-services/)
 - [Responsible AI](https://www.microsoft.com/ai/responsible-ai)

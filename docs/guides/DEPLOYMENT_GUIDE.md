@@ -161,7 +161,7 @@ The platform is organized into three "horizons" (layers), each building on the p
 
 | Component | What It Does | Why We Need It |
 | :--- | :--- | :--- |
-| **AI Foundry** | Azure OpenAI Service | GPT-4, embeddings, AI models |
+| **Microsoft Foundry** | Azure OpenAI Service | GPT-4, embeddings, AI models |
 | **MLOps Pipelines** | ML model lifecycle | Train, deploy, monitor ML models |
 | **Intelligent Agents** | AI-powered automation | Automate complex tasks with AI |
 
@@ -255,7 +255,7 @@ project:
 > **How to Find Your Tenant ID:**
 >
 > 1. Go to [Azure Portal](https://portal.azure.com)
-> 2. Search for "Microsoft Entra ID" (formerly Azure AD)
+> 2. Search for "Microsoft Entra ID" (formerly Microsoft Entra ID)
 > 3. Click on "Overview"
 > 4. Copy the "Tenant ID" value
 
@@ -635,7 +635,7 @@ echo "✓ Additional permissions granted!"
 **If you get "Principal not found" error:**
 
 ```bash
-# Wait 30 seconds for Azure AD replication, then retry
+# Wait 30 seconds for Microsoft Entra ID replication, then retry
 sleep 30
 az role assignment create \
   --assignee "$SP_OBJECT_ID" \
@@ -1065,7 +1065,7 @@ enable_h1 = true
 # H2 Enhancement: ArgoCD, Observability, RHDH (recommended)
 enable_h2 = true
 
-# H3 Innovation: AI Foundry, Azure OpenAI (optional)
+# H3 Innovation: Microsoft Foundry, Azure OpenAI (optional)
 # Recommendation: Start with false, enable after H1+H2 are stable
 enable_h3 = false
 
@@ -2057,7 +2057,7 @@ Gatekeeper:
 
 > ✅ **If all checks pass, H2 is complete!**
 >
-> You can skip to Step 9 if you don't need H3 (AI Foundry).
+> You can skip to Step 9 if you don't need H3 (Microsoft Foundry).
 
 ---
 
@@ -2121,16 +2121,16 @@ terraform apply h3-innovation.tfplan
 
 **Wait for deployment (5-10 minutes).**
 
-### 8.4 Verify AI Foundry
+### 8.4 Verify Microsoft Foundry
 
 ```bash
-# Get AI Foundry details
+# Get Microsoft Foundry details
 cd terraform
 AI_NAME=$(terraform output -raw ai_foundry_name 2>/dev/null || echo "Not found")
 RG_NAME=$(terraform output -raw resource_group_name)
 cd ..
 
-echo "AI Foundry Account: $AI_NAME"
+echo "Microsoft Foundry Account: $AI_NAME"
 echo "Resource Group: $RG_NAME"
 
 # List model deployments
@@ -2274,7 +2274,7 @@ H2 Enhancement:
 [ ] Gatekeeper enforcing policies
 
 H3 Innovation (if enabled):
-[ ] AI Foundry account created
+[ ] Microsoft Foundry account created
 [ ] Model deployments succeeded
 [ ] API calls returning responses
 
@@ -2372,7 +2372,7 @@ Create a document with your deployment details:
 
 **Solution:**
 
-1. Ask your Azure AD administrator for "Application Administrator" role
+1. Ask your Microsoft Entra ID administrator for "Application Administrator" role
 2. Or ask them to create the Service Principal for you
 
 ### Issue: "Resource provider is not registered"

@@ -9,7 +9,7 @@ Managed database services including PostgreSQL Flexible Server and Azure Cache f
 - Private endpoint connectivity
 - High availability configuration
 - Automated backups with geo-redundancy
-- Azure AD authentication
+- Microsoft Entra ID authentication
 - Key Vault secrets integration
 - Performance tuning configurations
 

@@ -73,7 +73,7 @@ You are a **Deployment Orchestrator** responsible for guiding users through the 
 1. **PRIMARY — Azure Copilot + Azure MCP** (ALWAYS use first):
    - `azure-mcp/*` and `com.microsoft/azure/*` for Azure resource operations
    - `ms-azuretools.vscode-azure-github-copilot/*` for Azure Copilot assisted operations
-   - `azure-ai-foundry/mcp-foundry/*` for AI Foundry operations
+   - `azure-ai-foundry/mcp-foundry/*` for Microsoft Foundry operations
    - `azure/aks-mcp/*` for AKS cluster operations
 
 2. **SECONDARY — CLI Guardrail** (use ONLY when MCP is unavailable or for automation):
@@ -143,6 +143,13 @@ You are a **Deployment Orchestrator** responsible for guiding users through the 
 > **Reference:** [ARO Deployment Skill](../skills/aro-deployment/SKILL.md)
 - **ALWAYS** consult before deploying on ARO (OpenShift) instead of AKS.
 - Covers ARO provisioning (`az aro create`), RHDH Operator install, Routes, and SCC.
+
+### 10. Azure Region Availability & Quota Validation
+> **Reference:** [Azure Region Availability Skill](../skills/azure-region-availability/SKILL.md)
+- **ALWAYS** consult BEFORE recommending any Azure region or provisioning resources.
+- Validate service availability, AI model support, and compute quotas against `config/region-availability.yaml`.
+- Use MCP tools (`azure-mcp/quota`, `com.microsoft/azure/quota`) for runtime quota verification.
+- If a service is unavailable in the target region, suggest alternatives from the config.
 - **MCP Servers:** Use `openshift` MCP for `oc` commands, `argocd` MCP for GitOps.
 
 ## 🎯 Four Deployment Options
@@ -178,6 +185,7 @@ Complete manual guide with copy-paste commands for each step.
 | Action | Policy | Note |
 |--------|--------|------|
 | **Run validation scripts** | ✅ **ALWAYS** | Run before and after each phase |
+| **Validate region availability** | ✅ **ALWAYS** | Check config + MCP quotas before provisioning |
 | **Run `terraform plan`** | ✅ **ALWAYS** | Always safe to preview |
 | **Run `terraform apply`** | ⚠️ **ASK FIRST** | Show plan output, get explicit confirmation |
 | **Run `kubectl` read commands** | ✅ **ALWAYS** | get, describe, logs are safe |
@@ -194,10 +202,16 @@ Complete manual guide with copy-paste commands for each step.
 ## 🔄 Task Decomposition
 When user requests a deployment, follow this exact sequence:
 
+0. **Validate Region & Quotas** — BEFORE anything else:
+   - Consult `config/region-availability.yaml` to verify the target region is Tier 1 or Tier 2
+   - Use MCP tools (`azure-mcp/quota`) to check vCPU quotas (DSv5 family) match the deployment mode
+   - Verify all required services are available (AKS, PostgreSQL, Redis, Key Vault, ACR, Microsoft Foundry if H3)
+   - If AI models needed (H3): verify model availability in ai_region (eastus2 recommended for full support + Claude)
+   - If any check fails: show the validation table (✅/❌/⚠️) and suggest alternative regions
 1. **Portal Setup** — Run `./scripts/setup-portal.sh` wizard to collect:
    - Portal name (client branding)
    - Portal type: **Backstage** (AKS)
-   - Azure subscription + region (Central US or East US)
+   - Azure subscription + validated region from Step 0
    - GitHub organization + App credentials
    - Template repository URL
 2. **Ask** — Which environment? Which horizons? Any specific options?

@@ -272,27 +272,27 @@ fi
 
 # --- Phase 7: Deploy H3 Innovation -------------------------------------------
 if [[ "$LAST_PHASE" -lt 8 ]] && [[ "$HORIZON" == "h3" || "$HORIZON" == "all" ]]; then
-  phase 7 "Deploy H3 Innovation (AI Foundry)"
+  phase 7 "Deploy H3 Innovation (Microsoft Foundry)"
   cd "$TERRAFORM_DIR"
 
   if grep -q 'enable_ai_foundry.*=.*true' "environments/${ENVIRONMENT}.tfvars"; then
-    echo -e "  ${GREEN}✓${NC} AI Foundry enabled in configuration"
+    echo -e "  ${GREEN}✓${NC} Microsoft Foundry enabled in configuration"
     if $DRY_RUN; then
-      echo -e "  ${BLUE}Running terraform plan for AI Foundry...${NC}"
+      echo -e "  ${BLUE}Running terraform plan for Microsoft Foundry...${NC}"
       terraform plan \
         -var-file="environments/${ENVIRONMENT}.tfvars" \
         -target=module.ai_foundry 2>&1 | tail -5
       echo -e "  ${YELLOW}DRY RUN — skipping H3 apply${NC}"
     else
-      echo -e "  ${BLUE}Applying AI Foundry module...${NC}"
+      echo -e "  ${BLUE}Applying Microsoft Foundry module...${NC}"
       terraform apply \
         -var-file="environments/${ENVIRONMENT}.tfvars" \
         -target=module.ai_foundry \
         $(if $AUTO_APPROVE; then echo "-auto-approve"; fi)
-      echo -e "  ${GREEN}\u2713${NC} AI Foundry deployed via Terraform"
+      echo -e "  ${GREEN}\u2713${NC} Microsoft Foundry deployed via Terraform"
     fi
   else
-    echo -e "  ${YELLOW}!${NC} AI Foundry disabled in ${ENVIRONMENT}.tfvars"
+    echo -e "  ${YELLOW}!${NC} Microsoft Foundry disabled in ${ENVIRONMENT}.tfvars"
     echo "  To enable: set enable_ai_foundry = true and re-run"
   fi
 

@@ -34,7 +34,7 @@ Required versions:
 
 - [ ] Azure subscription with Contributor access
 - [ ] GitHub organization admin (for initial setup)
-- [ ] Azure AD permissions for app registrations
+- [ ] Microsoft Entra ID permissions for app registrations
 - [ ] Key Vault access policies
 
 ## Pre-Deployment Checklist
@@ -124,7 +124,7 @@ kubectl apply -f argocd/secrets/cluster-secret-store.yaml
 **Estimated Time**: 35-45 minutes
 
 ```bash
-# 1. Enable AI Foundry module
+# 1. Enable Microsoft Foundry module
 # In terraform.tfvars:
 # enable_ai_foundry = true
 

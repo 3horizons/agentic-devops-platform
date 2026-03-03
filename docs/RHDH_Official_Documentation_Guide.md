@@ -181,7 +181,7 @@ Both Operator and Helm are supported on AKS. Key considerations:
 
 - Use an Azure-managed PostgreSQL or enable the local DB
 - Configure Ingress or use Azure Application Gateway
-- Set up Azure AD / Entra ID for authentication
+- Set up Microsoft Entra ID / Entra ID for authentication
 - For monitoring, use Azure Monitor (see Section 21)
 
 ### 3.4 Amazon EKS
@@ -312,7 +312,7 @@ RHDH supports multiple authentication providers configured in `app-config.yaml` 
 |----------|-----------|-------|
 | **GitHub** | `github` | OAuth App or GitHub App |
 | **GitLab** | `gitlab` | OAuth Application |
-| **Microsoft Entra ID** | `microsoft` | Azure AD / Entra ID |
+| **Microsoft Entra ID** | `microsoft` | Microsoft Entra ID / Entra ID |
 | **Keycloak / OIDC** | `oidc` | Generic OpenID Connect |
 | **SAML** | `saml` | Enterprise SSO |
 | **Google** | `google` | Google Workspace |

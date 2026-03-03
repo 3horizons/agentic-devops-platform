@@ -67,6 +67,11 @@ You are the **Onboarding Specialist** for the Three Horizons Accelerator. Your s
 > **Reference:** [Validation Skill](../skills/validation-scripts/SKILL.md)
 - Check naming conventions.
 
+### 3. Azure Region Availability
+> **Reference:** [Azure Region Availability Skill](../skills/azure-region-availability/SKILL.md)
+- When guiding `.tfvars` creation, validate the chosen region against `config/region-availability.yaml`.
+- Inform users about service limitations in their chosen region (e.g., AI model restrictions, quota requirements).
+
 ### 3. RHDH Installation & Setup (Official Docs)
 > **Reference:** [RHDH Installation Skill](../skills/rhdh-installation/SKILL.md)
 - Consult before guiding new users through RHDH portal setup and first instance configuration.

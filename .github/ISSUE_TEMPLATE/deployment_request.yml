@@ -83,7 +83,7 @@ body:
         - label: "H1 - Foundation (AKS, Networking, Security, ACR, Databases)"
           required: true
         - label: "H2 - Enhancement (ArgoCD, RHDH, Observability, Golden Paths)"
-        - label: "H3 - Innovation (AI Foundry, SRE Agent, MLOps)"
+        - label: "H3 - Innovation (Microsoft Foundry, SRE Agent, MLOps)"
 
   - type: checkboxes
     id: features
@@ -103,7 +103,7 @@ body:
       label: Authentication Method
       description: How will users authenticate?
       options:
-        - Entra ID (Azure AD) - Recommended for enterprises
+        - Entra ID (Microsoft Entra ID) - Recommended for enterprises
         - GitHub OAuth - For GitHub-centric orgs
     validations:
       required: true

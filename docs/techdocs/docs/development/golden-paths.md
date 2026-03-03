@@ -43,7 +43,7 @@ A Golden Path is an opinionated, well-supported way to build and deploy a specif
 
 | Template | Description |
 |----------|-------------|
-| **foundry-agent** | Azure AI Foundry agent with tool calling and RAG |
+| **foundry-agent** | Microsoft Foundry agent with tool calling and RAG |
 | **sre-agent-integration** | SRE automation agent with runbook execution |
 | **mlops-pipeline** | ML training and deployment pipeline with model registry |
 | **multi-agent-system** | Multi-agent orchestration with handoff patterns |

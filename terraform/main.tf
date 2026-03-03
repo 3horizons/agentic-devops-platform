@@ -9,7 +9,7 @@
 #   2. Security (Key Vault, managed identities)
 #   3. AKS Cluster
 #   4. Databases (PostgreSQL, Redis)
-#   5. AI Foundry (OpenAI, AI Search, Content Safety)
+#   5. Microsoft Foundry (OpenAI, AI Search, Content Safety)
 #   6. Observability (Prometheus, Grafana)
 #   7. ArgoCD (GitOps controller)
 #
@@ -390,7 +390,7 @@ module "databases" {
 }
 
 # =============================================================================
-# MODULE: AI FOUNDRY (H3)
+# MODULE: MICROSOFT FOUNDRY (H3)
 # =============================================================================
 
 module "ai_foundry" {
@@ -415,9 +415,23 @@ module "ai_foundry" {
     sku_name = "S0"
     models = [
       {
+        name          = "o3"
+        model_name    = "o3"
+        model_version = "2025-04-16"
+        capacity      = var.deployment_mode == "enterprise" ? 60 : 30
+        rai_policy    = "Microsoft.Default"
+      },
+      {
+        name          = "gpt-4.1"
+        model_name    = "gpt-4.1"
+        model_version = "2025-04-14"
+        capacity      = var.deployment_mode == "enterprise" ? 60 : 30
+        rai_policy    = "Microsoft.Default"
+      },
+      {
         name          = "gpt-4o"
         model_name    = "gpt-4o"
-        model_version = "2024-05-13"
+        model_version = "2024-08-06"
         capacity      = var.deployment_mode == "enterprise" ? 60 : 30
         rai_policy    = "Microsoft.Default"
       },

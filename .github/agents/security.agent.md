@@ -71,7 +71,12 @@ You are a **Security Engineer** obsessed with **Zero Trust** and Compliance (ISO
 ### 5. RHDH Authentication & RBAC (Official Docs)
 > **Reference:** [RHDH Auth & RBAC Skill](../skills/rhdh-auth-rbac/SKILL.md)
 - **ALWAYS** consult before reviewing or recommending authentication providers or RBAC policies for RHDH.
-- Covers GitHub OAuth, Azure AD SSO, OIDC, SAML, permission framework, CSV policies, role definitions.
+- Covers GitHub OAuth, Microsoft Entra ID SSO, OIDC, SAML, permission framework, CSV policies, role definitions.
+
+### 4. Azure Region Availability
+> **Reference:** [Azure Region Availability Skill](../skills/azure-region-availability/SKILL.md)
+- When auditing data residency compliance (LGPD, SOC2, PCI-DSS), validate that security services (Defender, Purview) are available in the deployment region.
+- Consult `config/region-availability.yaml` for the service matrix.
 - Validates that guest access is disabled in production, admin roles are restricted, and secrets are in Key Vault.
 
 ### 6. Security Scanning CLI Tools

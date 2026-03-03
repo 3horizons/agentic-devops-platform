@@ -6,7 +6,7 @@ ArgoCD GitOps deployment on AKS with HA support, GitHub SSO, and notifications.
 
 - ArgoCD HA deployment (3 replicas)
 - GitHub SSO integration via Dex
-- RBAC with Azure AD groups
+- RBAC with Microsoft Entra ID groups
 - ApplicationSet controller
 - Slack/Teams notifications
 - Prometheus metrics

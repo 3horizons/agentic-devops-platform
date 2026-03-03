@@ -91,7 +91,7 @@
   <rect x="350" y="685" width="90" height="35" rx="5" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>
   <text x="395" y="707" text-anchor="middle" font-size="9" fill="#fff">Redis</text>
   <rect x="450" y="685" width="90" height="35" rx="5" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>
-  <text x="495" y="707" text-anchor="middle" font-size="9" fill="#fff">AI Foundry</text>
+  <text x="495" y="707" text-anchor="middle" font-size="9" fill="#fff">Microsoft Foundry</text>
   <rect x="550" y="685" width="90" height="35" rx="5" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>
   <text x="595" y="707" text-anchor="middle" font-size="9" fill="#fff">Defender</text>
   <rect x="650" y="685" width="90" height="35" rx="5" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>

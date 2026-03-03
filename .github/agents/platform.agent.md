@@ -102,7 +102,12 @@ You are a **Platform Engineer** focused on Developer Experience (DevEx). You mai
 ### 6. RHDH Authentication & RBAC (Official Docs)
 > **Reference:** [RHDH Auth & RBAC Skill](../skills/rhdh-auth-rbac/SKILL.md)
 - **ALWAYS** consult before configuring authentication providers or RBAC policies.
-- Covers GitHub OAuth, Azure AD SSO, permission framework, role definitions.
+- Covers GitHub OAuth, Microsoft Entra ID SSO, permission framework, role definitions.
+
+### 7. Azure Region Availability
+> **Reference:** [Azure Region Availability Skill](../skills/azure-region-availability/SKILL.md)
+- When recommending Azure services for Golden Paths or RHDH configuration, validate that all required services are available in the deployment region.
+- Check `config/region-availability.yaml` for service matrices and AI model availability.
 
 ### 7. ARO (Azure Red Hat OpenShift) Deployment
 > **Reference:** [ARO Deployment Skill](../skills/aro-deployment/SKILL.md)

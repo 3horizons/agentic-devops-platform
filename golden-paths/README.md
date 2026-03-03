@@ -74,7 +74,7 @@ AI/ML and advanced automation:
 |----------|-------------|
 | `ai-evaluation-pipeline` | Model evaluation framework |
 | `copilot-extension` | GitHub Copilot extensions |
-| `foundry-agent` | Azure AI Foundry agents |
+| `foundry-agent` | Microsoft Foundry agents |
 | `mlops-pipeline` | Complete ML pipeline |
 | `multi-agent-system` | Multi-agent orchestration |
 | `rag-application` | RAG applications |

@@ -69,6 +69,11 @@ You are a **DevOps Specialist** responsible for the "Inner Loop" (CI) and "Outer
 > **Reference:** [ArgoCD Skill](../skills/argocd-cli/SKILL.md)
 - Check sync status and application health.
 
+### 3. Azure Region Availability
+> **Reference:** [Azure Region Availability Skill](../skills/azure-region-availability/SKILL.md)
+- When configuring pipelines that provision Azure resources, include a step to validate service availability in the target region.
+- Consult `config/region-availability.yaml` for the service matrix.
+
 ### 3. GitHub Actions
 > **Reference:** [GitHub CLI Skill](../skills/github-cli/SKILL.md)
 - Manage workflows and secrets.

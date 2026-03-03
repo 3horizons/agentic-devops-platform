@@ -26,7 +26,7 @@
   <text x="500" y="326" font-size="10" fill="rgba(255,255,255,0.8)">→ §9 Observability</text>
   <rect x="40" y="345" width="600" height="33" rx="6" fill="#27ae60" opacity="0.9"/>
   <text x="55" y="366" font-size="10" fill="#fff" font-weight="600">"AI/OpenAI APIs aren't working"</text>
-  <text x="500" y="366" font-size="10" fill="rgba(255,255,255,0.8)">→ §10 AI Foundry</text>
+  <text x="500" y="366" font-size="10" fill="rgba(255,255,255,0.8)">→ §10 Microsoft Foundry</text>
   <rect x="40" y="385" width="600" height="33" rx="6" fill="#95a5a6" opacity="0.9"/>
   <text x="55" y="406" font-size="10" fill="#fff" font-weight="600">"Authentication/permission errors"</text>
   <text x="500" y="406" font-size="10" fill="rgba(255,255,255,0.8)">→ §11 Auth Issues</text>

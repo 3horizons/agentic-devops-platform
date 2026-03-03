@@ -36,7 +36,7 @@ This skill provides guidance for deploying the Three Horizons platform on **ARO 
 | **Security** | Pod Security Standards | SecurityContextConstraints (SCC) |
 | **Package Mgmt** | Helm only | Helm + Operators (OLM) |
 | **RHDH Install** | Helm chart | Operator (preferred) or Helm |
-| **Auth** | External (Azure AD, GitHub) | Built-in OAuth + External |
+| **Auth** | External (Microsoft Entra ID, GitHub) | Built-in OAuth + External |
 | **Container Registry** | ACR pull secret | Red Hat Registry + ACR |
 | **Namespaces** | Namespaces | Projects (= namespaces with isolation) |
 | **Monitoring** | Azure Monitor + Prometheus | Built-in Prometheus + Grafana |

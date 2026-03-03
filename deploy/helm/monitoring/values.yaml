@@ -136,7 +136,7 @@ grafana:
       root_url: https://grafana.${DNS_ZONE_NAME}
     auth.azuread:
       enabled: true
-      name: Azure AD
+      name: Microsoft Entra ID
       allow_sign_up: true
       client_id: ${GRAFANA_CLIENT_ID}
       client_secret: ${GRAFANA_CLIENT_SECRET}

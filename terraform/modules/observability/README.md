@@ -62,8 +62,8 @@ module "observability" {
 | resource_group_name | Resource group name | `string` | n/a | yes |
 | location | Azure region | `string` | n/a | yes |
 | aks_cluster_id | AKS cluster ID | `string` | n/a | yes |
-| grafana_admin_group_id | Azure AD group for Grafana admins | `string` | n/a | yes |
-| grafana_viewer_group_id | Azure AD group for Grafana viewers | `string` | `""` | no |
+| grafana_admin_group_id | Microsoft Entra ID group for Grafana admins | `string` | n/a | yes |
+| grafana_viewer_group_id | Microsoft Entra ID group for Grafana viewers | `string` | `""` | no |
 | enable_container_insights | Enable Container Insights | `bool` | `true` | no |
 | retention_days | Log retention days | `number` | `30` | no |
 | log_analytics_workspace_id | Existing Log Analytics workspace | `string` | `""` | no |

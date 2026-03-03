@@ -252,7 +252,7 @@ dex:
       cpu: 100m
       memory: 128Mi
 
-  # Entra ID configuration (Azure AD)
+  # Entra ID configuration (Microsoft Entra ID)
   env:
     - name: AZURE_TENANT_ID
       valueFrom:

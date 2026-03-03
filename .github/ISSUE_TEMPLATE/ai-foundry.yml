@@ -1,13 +1,13 @@
-name: "🤖 H3: AI Foundry Setup"
-description: "Deploy Azure AI Foundry with models and RAG infrastructure"
-title: "[AI] Deploy AI Foundry infrastructure"
+name: "🤖 H3: Microsoft Foundry Setup"
+description: "Deploy Microsoft Foundry with models and RAG infrastructure"
+title: "[AI] Deploy Microsoft Foundry infrastructure"
 labels: ["h3-innovation", "ai-foundry", "copilot-agent"]
 assignees: []
 body:
   - type: markdown
     attributes:
       value: |
-        ## Azure AI Foundry Deployment
+        ## Microsoft Foundry Deployment
         This issue triggers the **ai-foundry-agent**.
 
   - type: dropdown
@@ -26,7 +26,7 @@ body:
     id: azure_region
     attributes:
       label: "AI Workloads Region"
-      description: "Region for AI Foundry (check model availability)"
+      description: "Region for Microsoft Foundry (check model availability)"
       options:
         - "eastus2 - East US 2 (Full AI support, recommended)"
         - "eastus - East US (Good AI support)"

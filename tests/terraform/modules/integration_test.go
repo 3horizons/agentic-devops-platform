@@ -127,7 +127,7 @@ func TestIntegrationH2Enhancement(t *testing.T) {
 func TestIntegrationH3Innovation(t *testing.T) {
 	t.Parallel()
 
-	// Test AI Foundry module
+	// Test Microsoft Foundry module
 	t.Run("ai-foundry", func(t *testing.T) {
 		t.Parallel()
 

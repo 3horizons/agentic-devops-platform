@@ -775,7 +775,7 @@ kubectl get secret my-app-secrets -n my-app -o jsonpath='{.data.DATABASE_PASSWOR
 
 ### 7.2 Adding a New User
 
-**Step 1: Add to Azure AD Group**
+**Step 1: Add to Microsoft Entra ID Group**
 
 ```bash
 # Get user's Object ID
@@ -803,9 +803,9 @@ metadata:
   name: team-alpha-access
   namespace: team-alpha
 subjects:
-  # Bind to Azure AD group
+  # Bind to Microsoft Entra ID group
   - kind: Group
-    name: "team-alpha-developers"  # Azure AD group name
+    name: "team-alpha-developers"  # Microsoft Entra ID group name
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
@@ -830,7 +830,7 @@ kubectl auth can-i create pods -n other-team
 ### 7.3 Removing User Access
 
 ```bash
-# Remove from Azure AD group
+# Remove from Microsoft Entra ID group
 az ad group member remove \
   --group "Platform-Operators" \
   --member-id "user-object-id"

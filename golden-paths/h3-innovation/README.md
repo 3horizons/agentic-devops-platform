@@ -8,7 +8,7 @@ AI/ML and advanced automation templates for innovative workloads.
 |----------|-------------|------------|
 | `ai-evaluation-pipeline` | Model evaluation framework | Complex |
 | `copilot-extension` | GitHub Copilot extensions | Medium |
-| `foundry-agent` | Azure AI Foundry agents | Complex |
+| `foundry-agent` | Microsoft Foundry agents | Complex |
 | `mlops-pipeline` | Complete ML pipeline | Complex |
 | `multi-agent-system` | Multi-agent orchestration | Complex |
 | `rag-application` | RAG application scaffold | Complex |
@@ -34,7 +34,7 @@ Creates GitHub Copilot extension with:
 
 ### foundry-agent
 
-Creates Azure AI Foundry agent with:
+Creates Microsoft Foundry agent with:
 - Agent definition
 - Tool integrations
 - Prompt templates
@@ -83,7 +83,7 @@ H3 templates typically require:
 
 Select any template from the RHDH portal under "Create" → "Choose a Template" → "H3 Innovation".
 
-Ensure H3 infrastructure (AI Foundry) is deployed before using these templates.
+Ensure H3 infrastructure (Microsoft Foundry) is deployed before using these templates.
 
 ## Related Documentation
 

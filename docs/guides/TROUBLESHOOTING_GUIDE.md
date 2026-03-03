@@ -17,7 +17,7 @@
 7. [Networking Issues](#7-networking-issues)
 8. [External Secrets Issues](#8-external-secrets-issues)
 9. [Observability Issues](#9-observability-issues)
-10. [AI Foundry Issues](#10-ai-foundry-issues)
+10. [Microsoft Foundry Issues](#10-ai-foundry-issues)
 11. [Authentication and Authorization Issues](#11-authentication-and-authorization-issues)
 12. [Performance Issues](#12-performance-issues)
 13. [Error Message Reference](#13-error-message-reference)
@@ -441,7 +441,7 @@ Unable to connect to the server: dial tcp 10.0.0.1:443: i/o timeout
 >
 > 1. Reads `~/.kube/config` for cluster information
 > 2. Connects to the AKS API server
-> 3. Authenticates using Azure AD (for managed clusters)
+> 3. Authenticates using Microsoft Entra ID (for managed clusters)
 >
 > Connection failures happen when any of these steps fail.
 
@@ -1463,7 +1463,7 @@ kubectl get configmap container-azm-ms-agentconfig -n kube-system -o yaml
 
 ---
 
-## 10. AI Foundry Issues
+## 10. Microsoft Foundry Issues
 
 ### 10.1 Rate Limit Exceeded (429)
 
@@ -1529,7 +1529,7 @@ Error: Model 'gpt-4o' is not available in region 'brazilsouth'
 
 ![Model Availability](../assets/ts-model-availability.svg)
 
-**Solution:** Deploy AI Foundry in East US 2:
+**Solution:** Deploy Microsoft Foundry in East US 2:
 
 ```hcl
 module "ai_foundry" {
@@ -1623,7 +1623,7 @@ kubectl create rolebinding my-access \
   --user=user@example.com \
   --namespace=default
 
-# Option 3: Check Azure AD group membership
+# Option 3: Check Microsoft Entra ID group membership
 az ad group member list --group "AKS-Admins" --output table
 ```
 

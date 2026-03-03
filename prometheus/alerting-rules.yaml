@@ -234,7 +234,7 @@ groups:
     interval: 30s
     rules:
       # -----------------------------------------------------------------------
-      # AI Foundry
+      # Microsoft Foundry
       # -----------------------------------------------------------------------
       - alert: AIFoundryHighLatency
         expr: |
@@ -247,7 +247,7 @@ groups:
           horizon: h3
           component: ai-foundry
         annotations:
-          summary: "High AI Foundry latency for model {{ $labels.model }}"
+          summary: "High Microsoft Foundry latency for model {{ $labels.model }}"
           description: "P95 latency for model {{ $labels.model }} is above 10 seconds."
 
       - alert: AIFoundryHighErrorRate
@@ -262,7 +262,7 @@ groups:
           horizon: h3
           component: ai-foundry
         annotations:
-          summary: "High AI Foundry error rate for {{ $labels.model }}"
+          summary: "High Microsoft Foundry error rate for {{ $labels.model }}"
           description: "Error rate for model {{ $labels.model }} is above 5%."
 
       - alert: AIFoundryTokenLimitApproaching

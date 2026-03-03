@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Infrastructure (H1 Foundation)
 - 15 Terraform modules for Azure infrastructure
   - aks-cluster: Azure Kubernetes Service with Workload Identity
-  - ai-foundry: Azure AI Foundry (OpenAI, AI Search)
+  - ai-foundry: Microsoft Foundry (OpenAI, AI Search)
   - argocd: ArgoCD GitOps controller
   - container-registry: Azure Container Registry with geo-replication
   - cost-management: Cost analysis and budgets

@@ -1,10 +1,10 @@
-# AI Foundry Module
+# Microsoft Foundry Module
 
-Azure AI Foundry integration for H3 Innovation workloads - a comprehensive enterprise AI platform.
+Microsoft Foundry integration for H3 Innovation workloads - a comprehensive enterprise AI platform.
 
 ## Overview
 
-Azure AI Foundry is a unified hub for building, deploying, and managing AI solutions at scale. This module provisions the core Azure AI services that power the platform:
+Microsoft Foundry is a unified hub for building, deploying, and managing AI solutions at scale. This module provisions the core Azure AI services that power the platform:
 
 - **Multiple AI Providers:** Azure OpenAI (GPT-4, GPT-4o), with support for Anthropic Claude, Meta Llama, Mistral
 - **AI Search:** Semantic search, vector embeddings, and knowledge retrieval

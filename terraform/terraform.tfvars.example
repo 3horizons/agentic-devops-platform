@@ -23,7 +23,7 @@ location              = "centralus"         # Azure region (centralus or eastus)
 platform_type         = "aks"               # aks | aro
 azure_subscription_id = ""                  # az account show --query id -o tsv
 azure_tenant_id       = ""                  # az account show --query tenantId -o tsv
-admin_group_id        = ""                  # Azure AD group for admins
+admin_group_id        = ""                  # Microsoft Entra ID group for admins
 github_org            = ""                  # GitHub organization name
 domain_name           = "internal.local"    # Base domain for platform services
 

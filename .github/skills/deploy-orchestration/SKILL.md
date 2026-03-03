@@ -161,7 +161,7 @@ kubectl logs -n argocd -l app.kubernetes.io/name=argocd-server
 
 ### Rollback H3 only
 ```bash
-# Disable AI Foundry
+# Disable Microsoft Foundry
 # Set enable_ai_foundry = false in tfvars
 terraform plan -var-file=environments/<env>.tfvars -out=rollback.tfplan
 terraform apply rollback.tfplan

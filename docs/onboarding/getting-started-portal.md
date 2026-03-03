@@ -12,7 +12,7 @@ The **Three Horizons Developer Hub** is your organization's Internal Developer P
 The portal is organized around the **Three Horizons maturity model**:
 
 - **Horizon 1 -- Foundation**: Core platform services, CI/CD pipelines, infrastructure provisioning, and developer onboarding.
-- **Horizon 2 -- Enhancement**: Intelligent automation with GitHub Copilot, AI Foundry integration, MCP servers, and Developer Lightspeed.
+- **Horizon 2 -- Enhancement**: Intelligent automation with GitHub Copilot, Microsoft Foundry integration, MCP servers, and Developer Lightspeed.
 - **Horizon 3 -- Innovation**: Autonomous agents, self-healing systems, predictive operations, and multi-agent orchestration.
 
 Whether you are a developer shipping microservices, a team lead monitoring Copilot adoption, or a security engineer reviewing GHAS posture, this portal has a dedicated view for you.
@@ -75,7 +75,7 @@ Four metric cards display live counts pulled from the catalog:
 Three cards represent the Three Horizons model:
 
 - **Horizon 1 -- Foundation** (Blue): IDP Portal, GitHub, Templates, CI/CD.
-- **Horizon 2 -- Enhancement** (Green): Copilot, AI Foundry, MCP, Lightspeed.
+- **Horizon 2 -- Enhancement** (Green): Copilot, Microsoft Foundry, MCP, Lightspeed.
 - **Horizon 3 -- Innovation** (Yellow): Agents, Self-Healing, Predictive.
 
 Clicking a horizon card navigates you to the relevant catalog filter for that maturity tier.
@@ -158,7 +158,7 @@ Follow this guided tour to familiarize yourself with the portal:
 1. Click **Learning Paths** in the sidebar.
 2. Browse the available learning tracks:
    - **Platform Fundamentals** -- catalog, templates, TechDocs, CI/CD.
-   - **AI-Powered Development** -- Copilot, MCP servers, AI Foundry.
+   - **AI-Powered Development** -- Copilot, MCP servers, Microsoft Foundry.
    - **Cloud-Native Architecture** -- Kubernetes, Azure, IaC, microservices.
    - **Security & Compliance** -- identity, RBAC, secrets, compliance.
 3. Open a track that interests you and read through the first section.

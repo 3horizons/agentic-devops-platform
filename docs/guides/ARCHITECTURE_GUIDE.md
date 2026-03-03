@@ -92,7 +92,7 @@ The Three Horizons model organizes the platform into three layers with different
 | **Key Vault** | Azure Key Vault | Secrets and certificates | Yes |
 | **VNet** | Azure Virtual Network | Network isolation | Yes |
 | **NSG** | Network Security Groups | Firewall rules | Yes |
-| **Managed Identity** | Azure AD Managed Identity | Passwordless auth | Yes |
+| **Managed Identity** | Microsoft Entra ID Managed Identity | Passwordless auth | Yes |
 | **Defender** | Defender for Cloud | Threat protection | Recommended |
 | **Purview** | Microsoft Purview | Data governance | Optional |
 | **PostgreSQL** | Azure Database for PostgreSQL | Relational database | Optional |
@@ -115,7 +115,7 @@ The Three Horizons model organizes the platform into three layers with different
 
 | Component | Technology | Purpose | Required? |
 |-----------|------------|---------|-----------|
-| **AI Foundry** | Azure OpenAI | LLM capabilities | Optional |
+| **Microsoft Foundry** | Azure OpenAI | LLM capabilities | Optional |
 | **GPT-4o** | OpenAI GPT-4o | Text generation | Optional |
 | **Embeddings** | text-embedding-3 | Vector embeddings | Optional |
 | **Agents** | Custom implementations | Intelligent automation | Optional |
@@ -235,7 +235,7 @@ NSGs act as firewalls at the subnet level:
 > 💡 **What is Workload Identity?**
 >
 > Workload Identity allows Kubernetes pods to authenticate to Azure services
-> using Azure AD tokens, without needing secrets or passwords.
+> using Microsoft Entra ID tokens, without needing secrets or passwords.
 
 ![Workload Identity](../assets/arch-workload-identity.svg)
 
@@ -297,11 +297,11 @@ NSGs act as firewalls at the subnet level:
 
 ## 9. AI/ML Architecture
 
-### 9.1 AI Foundry Integration
+### 9.1 Microsoft Foundry Integration
 
-> 💡 **What is Azure AI Foundry?**
+> 💡 **What is Microsoft Foundry?**
 >
-> Azure AI Foundry is a comprehensive enterprise AI platform that goes far beyond just Azure OpenAI.
+> Microsoft Foundry is a comprehensive enterprise AI platform that goes far beyond just Azure OpenAI.
 > It provides a unified hub for building, deploying, and managing AI solutions at scale, including:
 >
 > - **Multiple AI Model Providers:** Azure OpenAI (GPT-4, GPT-4o), Anthropic Claude, Meta Llama, Mistral, and more
@@ -311,7 +311,7 @@ NSGs act as firewalls at the subnet level:
 > - **MLOps Integration:** Model versioning, deployment pipelines, and monitoring
 > - **Enterprise Security:** Private endpoints, managed identities, and compliance certifications
 
-![AI Foundry Architecture](../assets/arch-ai-foundry.svg)
+![Microsoft Foundry Architecture](../assets/arch-ai-foundry.svg)
 
 ### 9.2 Model Selection Guide
 
@@ -441,7 +441,7 @@ This Architecture Guide covered:
 5. **Security:** Zero trust implementation and secret management
 6. **GitOps:** ArgoCD workflow and application model
 7. **Observability:** Prometheus, Grafana, and alerting
-8. **AI/ML:** Azure AI Foundry - enterprise AI hub with multiple model providers and agent capabilities
+8. **AI/ML:** Microsoft Foundry - enterprise AI hub with multiple model providers and agent capabilities
 9. **Agents:** 17 Copilot Chat Agents for development assistance
 10. **Data Flows:** How deployments and secret access work
 11. **ADRs:** Key architecture decisions and rationale

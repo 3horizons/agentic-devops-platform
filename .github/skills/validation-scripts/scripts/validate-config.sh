@@ -299,17 +299,57 @@ validate_quotas() {
         return
     fi
     
-    print_section "Azure Quotas"
+    print_section "Azure Quotas & Region Availability"
     
     local region=$(parse_tfvars "azure_region")
     local deployment_mode=$(parse_tfvars "deployment_mode")
     
-    # Determine required vCPUs based on deployment mode
-    local required_vcpus=32
+    # --- Region availability check ---
+    local config_file="config/region-availability.yaml"
+    if [[ -f "$config_file" ]]; then
+        if command -v yq &>/dev/null; then
+            local tier=$(yq ".regions.${region}.tier // \"unknown\"" "$config_file" 2>/dev/null)
+            if [[ "$tier" == "1" ]]; then
+                check_pass "Region $region is Tier 1 (full platform support)"
+            elif [[ "$tier" == "2" ]]; then
+                check_warn "Region $region is Tier 2 (partial support) — check service matrix"
+            else
+                check_warn "Region $region not found in region-availability.yaml — verify at https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/table"
+            fi
+        else
+            check_info "yq not installed — skipping config-based region validation"
+        fi
+    else
+        check_info "Region availability config not found at $config_file"
+    fi
+    
+    # --- Service provider availability check ---
+    local required_providers=(
+        "Microsoft.ContainerService"
+        "Microsoft.DBforPostgreSQL"
+        "Microsoft.Cache"
+        "Microsoft.KeyVault"
+        "Microsoft.ContainerRegistry"
+        "Microsoft.OperationalInsights"
+    )
+    
+    for provider in "${required_providers[@]}"; do
+        local state=$(az provider show -n "$provider" --query registrationState -o tsv 2>/dev/null)
+        if [[ "$state" == "Registered" ]]; then
+            check_pass "Provider $provider: Registered"
+        elif [[ -n "$state" ]]; then
+            check_warn "Provider $provider: $state (may need registration)"
+        else
+            check_warn "Could not check provider $provider"
+        fi
+    done
+    
+    # --- Determine required vCPUs based on deployment mode ---
+    local required_vcpus=20
     case "$deployment_mode" in
-        "express") required_vcpus=16 ;;
-        "standard") required_vcpus=32 ;;
-        "enterprise") required_vcpus=64 ;;
+        "express") required_vcpus=12 ;;
+        "standard") required_vcpus=20 ;;
+        "enterprise") required_vcpus=40 ;;
     esac
     
     # Check vCPU quota for Dv5 family

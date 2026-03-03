@@ -253,7 +253,7 @@ Add to each scaffolded README.md:
 | documentation-site | Node.js | node:20 | MkDocs, techdocs-core |
 | gitops-deployment | Terraform | base:ubuntu | ArgoCD CLI, Helm, kubectl |
 | rag-application | AI/ML | python:3.11 | Azure AI SDK, LangChain |
-| foundry-agent | AI/ML | python:3.11 | Azure AI Foundry SDK |
+| foundry-agent | AI/ML | python:3.11 | Microsoft Foundry SDK |
 | mlops-pipeline | AI/ML | python:3.11 | MLflow, Azure ML SDK |
 | copilot-extension | Node.js | node:20 | TypeScript, Octokit |
 | multi-agent-system | AI/ML | python:3.11 | Semantic Kernel, AutoGen |

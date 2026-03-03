@@ -1,6 +1,6 @@
 ---
 name: rhdh-auth-rbac
-description: "RHDH authentication and authorization reference — covers GitHub OAuth, Azure AD SSO, RBAC policies, permission framework, and role definitions. ALWAYS consult these docs before configuring auth providers or RBAC policies."
+description: "RHDH authentication and authorization reference — covers GitHub OAuth, Microsoft Entra ID SSO, RBAC policies, permission framework, and role definitions. ALWAYS consult these docs before configuring auth providers or RBAC policies."
 ---
 
 # RHDH Authentication & Authorization (RBAC) Skill
@@ -9,12 +9,12 @@ This skill provides the official Red Hat documentation for RHDH authentication a
 
 ## When to Use This Skill
 
-- Configuring authentication providers (GitHub OAuth, Azure AD SSO, OIDC, SAML)
+- Configuring authentication providers (GitHub OAuth, Microsoft Entra ID SSO, OIDC, SAML)
 - Setting up RBAC policies (CSV-based permission policies)
 - Defining roles (Admin, Developer, Team Lead, Viewer)
 - Reviewing or auditing permission policies
 - Troubleshooting login failures or permission denied errors
-- Integrating with identity providers (Keycloak, Azure AD, GitHub)
+- Integrating with identity providers (Keycloak, Microsoft Entra ID, GitHub)
 - Configuring guest access or anonymous access
 - Setting up session management and token handling
 
@@ -45,7 +45,7 @@ auth:
             - resolver: usernameMatchingUserEntityName
 ```
 
-### Azure AD / Microsoft SSO
+### Microsoft Entra ID / Microsoft SSO
 ```yaml
 auth:
   providers:

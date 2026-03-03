@@ -19,7 +19,7 @@ body:
         - "compute - AKS and VMs"
         - "storage - Storage accounts"
         - "database - PostgreSQL and Redis"
-        - "ai - AI Foundry"
+        - "ai - Microsoft Foundry"
         - "networking - Network resources"
     validations:
       required: true

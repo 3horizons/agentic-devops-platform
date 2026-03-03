@@ -2,7 +2,7 @@
 # THREE HORIZONS ACCELERATOR - H3 FOUNDRY AGENT GOLDEN PATH TEMPLATE
 # =============================================================================
 #
-# RHDH Software Template for creating Azure AI Foundry agents.
+# RHDH Software Template for creating Microsoft Foundry agents.
 # Generates autonomous AI agents with tools, RAG, and orchestration.
 #
 # Horizon: H3 - Innovation
@@ -14,9 +14,9 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: h3-foundry-agent
-  title: "H3: Create AI Foundry Agent"
+  title: "H3: Create Microsoft Foundry Agent"
   description: |
-    Create an autonomous AI agent powered by Azure AI Foundry.
+    Create an autonomous AI agent powered by Microsoft Foundry.
     Includes tool definitions, RAG integration, safety controls,
     and deployment to Azure AI Agent Service.
   tags:
@@ -29,7 +29,7 @@ metadata:
   annotations:
     backstage.io/techdocs-ref: dir:.
   links:
-    - title: Azure AI Foundry Documentation
+    - title: Microsoft Foundry Documentation
       url: https://docs.microsoft.com/en-us/azure/ai-services/
     - title: Agent Service Guide
       url: https://learn.microsoft.com/en-us/azure/ai-services/agents/
@@ -586,12 +586,12 @@ spec:
         entityRef: ${{ steps['register-catalog'].output.entityRef }}
       - title: ArgoCD Application
         url: https://argocd.example.com/applications/${{ parameters.agentName }}-dev
-      - title: Azure AI Foundry
+      - title: Microsoft Foundry
         url: https://ai.azure.com
     text:
       - title: AI Agent Created
         content: |
-          ## 🤖 AI Foundry Agent Created!
+          ## 🤖 Microsoft Foundry Agent Created!
           
           **Agent:** ${{ parameters.agentName }}
           **Model:** ${{ parameters.primaryModel }}

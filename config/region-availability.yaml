@@ -1,11 +1,16 @@
 # Azure Region Availability Matrix for Three Horizons Accelerator
 #
 # Overview:
-# This document defines which Azure regions support all services required by the Three Horizons Accelerator, with focus on LATAM deployment options.
+# This document defines which Azure regions support all services required by
+# the Three Horizons Accelerator. Agents MUST consult this file before
+# recommending or provisioning any Azure service in a region.
+#
+# Official Reference (always up-to-date):
+# https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/table
 #
 # Required Services Checklist:
 # - AKS (Standard)
-# - Azure OpenAI / AI Foundry (Standard)
+# - Microsoft Foundry / OpenAI (Standard)
 # - Defender for Cloud (Standard)
 # - Microsoft Purview (Standard)
 # - ACR (Standard/Premium)
@@ -13,9 +18,94 @@
 # - Redis Cache (Basic+)
 # - Key Vault (Standard)
 # - Log Analytics
+# - Azure Managed Grafana
+#
+# Last reviewed: 2026-03
+# Review schedule: Quarterly
+
+official_reference: "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/table"
 
 regions:
   # Tier 1: Full Platform Support
+
+  centralus:
+    display_name: "Central US (Iowa) — Default"
+    data_residency: "United States"
+    tier: 1
+    latency:
+      from_us_east: "~30ms"
+      from_brazil: "~140ms"
+      from_latam: "100-180ms"
+    services:
+      aks: "Full support"
+      microsoft_foundry: "Global Standard only (o3, o4-mini, gpt-4.1, gpt-4o, gpt-4o-mini)"
+      openai_gpt4o: "Available (Global Standard)"
+      openai_o3: "Available (Global Standard)"
+      openai_embeddings: "Not available — use eastus2 for text-embedding-3-large"
+      claude_models: "Not available — use eastus2"
+      defender_cloud: "All plans"
+      purview: "Full support"
+      acr_premium: "With geo-replication"
+      postgresql_flexible: "Full support"
+      redis_cache: "All tiers"
+      key_vault_premium: "HSM available"
+      log_analytics: "Full support"
+      grafana_managed: "Full support"
+      application_gateway: "Standard_v2"
+      ai_search: "Full support (semantic ranker, agentic retrieval)"
+    recommended_for:
+      - "Default primary region (us-centric pattern)"
+      - "US Midwest/Central operations"
+      - "Low-latency US backbone"
+    limitations:
+      - "No Standard regional OpenAI deployments (Global Standard only)"
+      - "No Claude models (use eastus2 as AI region)"
+      - "No text-embedding-3-large (use eastus2)"
+    sizing_availability:
+      small: true
+      medium: true
+      large: true
+      xlarge: "With AI spillover to eastus2"
+
+  eastus:
+    display_name: "East US (Virginia) — DR Region"
+    data_residency: "United States"
+    tier: 1
+    latency:
+      from_us_central: "~30ms"
+      from_brazil: "~120ms"
+      from_latam: "80-150ms"
+    services:
+      aks: "Full support"
+      microsoft_foundry: "Global Standard (o3, o4-mini, gpt-4.1, gpt-4.1-nano, gpt-4.1-mini, o3-mini, gpt-4o, gpt-4o-mini)"
+      openai_gpt4o: "Available (Global Standard)"
+      openai_o3: "Available (Global Standard)"
+      openai_embeddings: "Not available — use eastus2"
+      claude_models: "Not available — use eastus2"
+      defender_cloud: "All plans"
+      purview: "Full support"
+      acr_premium: "With geo-replication"
+      postgresql_flexible: "Full support"
+      redis_cache: "All tiers"
+      key_vault_premium: "HSM available"
+      log_analytics: "Full support"
+      grafana_managed: "Full support"
+      application_gateway: "Standard_v2"
+      ai_search: "Full support (capacity constraints on some tiers)"
+    recommended_for:
+      - "DR region for centralus (us-centric pattern)"
+      - "US East Coast operations"
+      - "Geographic redundancy"
+    limitations:
+      - "No Standard regional OpenAI deployments (Global Standard only)"
+      - "No Claude models (use eastus2)"
+      - "AI Search may have capacity constraints on new services"
+    sizing_availability:
+      small: true
+      medium: true
+      large: true
+      xlarge: true
+
   brazilsouth:
     display_name: "Brazil South (São Paulo)"
     data_residency: "Brazil"
@@ -25,8 +115,11 @@ regions:
       from_latam: "50-150ms"
     services:
       aks: "Full support"
-      ai_foundry: "Limited models (GPT-4, GPT-3.5)"
+      microsoft_foundry: "Limited models (GPT-4, GPT-3.5 only)"
       openai_gpt4o: "Not available (use East US 2)"
+      openai_o3: "Not available (use East US 2)"
+      openai_embeddings: "Not available (use East US 2)"
+      claude_models: "Not available"
       defender_cloud: "All plans"
       purview: "Full support"
       acr_premium: "With geo-replication"
@@ -34,6 +127,7 @@ regions:
       redis_cache: "All tiers"
       key_vault_premium: "HSM available"
       log_analytics: "Full support"
+      grafana_managed: "Full support"
       application_gateway: "Standard_v2"
       front_door: "Standard/Premium"
     recommended_for:
@@ -41,8 +135,9 @@ regions:
       - "LGPD compliance"
       - "Latency-sensitive workloads in Brazil"
     limitations:
-      - "Limited AI model availability"
-      - "Requires East US 2 for GPT-4o/o3 models"
+      - "Very limited AI model availability"
+      - "Requires East US 2 for o3/gpt-4.1/GPT-4o models"
+      - "No Claude models"
     sizing_availability:
       small: true
       medium: true
@@ -58,10 +153,12 @@ regions:
       from_latam: "80-150ms"
     services:
       aks: "Full support"
-      ai_foundry: "Full support (all models)"
-      openai_gpt4o: "Available"
-      openai_o3: "Available"
-      openai_gpt5: "Preview available"
+      microsoft_foundry: "Full support — all OpenAI models (Standard + Global Standard)"
+      openai_gpt4o: "Available (Standard + Global)"
+      openai_o3: "Available (Standard + Global)"
+      openai_gpt41: "Available (Standard + Global)"
+      openai_embeddings: "Available (text-embedding-3-large)"
+      claude_models: "Available (Opus 4.6, Sonnet 4.6, Haiku 4.5) — via Marketplace"
       defender_cloud: "All plans"
       defender_ai: "Full support"
       purview: "Full support"
@@ -70,14 +167,17 @@ regions:
       redis_cache: "All tiers"
       key_vault_premium: "HSM available"
       log_analytics: "Full support"
+      grafana_managed: "Full support"
       application_gateway: "Standard_v2"
       front_door: "Standard/Premium"
       cosmos_db: "All APIs"
+      ai_search: "Full support (semantic ranker, agentic retrieval)"
     recommended_for:
-      - "AI-intensive workloads"
+      - "AI-intensive workloads (best model availability)"
+      - "Claude model deployments (only here or swedencentral)"
       - "Multi-region deployments"
       - "Disaster recovery for Brazil South"
-      - "Full AI Foundry capabilities"
+      - "Full Microsoft Foundry capabilities"
     sizing_availability:
       small: true
       medium: true
@@ -94,8 +194,12 @@ regions:
       from_latam: "50-120ms"
     services:
       aks: "Full support"
-      ai_foundry: "Most models"
-      openai_gpt4o: "Available"
+      microsoft_foundry: "Most models (Standard + Global Standard)"
+      openai_gpt4o: "Available (Standard + Global)"
+      openai_o3: "Available (Standard + Global)"
+      openai_gpt41: "Available (Standard + Global)"
+      openai_embeddings: "Not available — use eastus2"
+      claude_models: "Not available"
       defender_cloud: "All plans"
       purview: "Full support"
       acr_premium: "With geo-replication"
@@ -103,6 +207,7 @@ regions:
       redis_cache: "All tiers"
       key_vault_premium: "HSM available"
       log_analytics: "Full support"
+      grafana_managed: "Full support"
       application_gateway: "Standard_v2"
       front_door: "Standard/Premium"
     recommended_for:
@@ -122,8 +227,10 @@ regions:
     tier: 2
     services:
       aks: "Full support"
-      ai_foundry: "Most models"
+      microsoft_foundry: "Most models (Global Standard)"
       openai_gpt4o: "Limited availability"
+      openai_o3: "Available (Global Standard)"
+      claude_models: "Not available"
       defender_cloud: "All plans"
       purview: "Full support"
     recommended_for:
@@ -132,6 +239,7 @@ regions:
     limitations:
       - "Higher latency from LATAM"
       - "Some AI model restrictions"
+      - "No Claude models"
 
 deployment_patterns:
   brazil_centric:
@@ -208,10 +316,97 @@ metadata:
       id: ai_region
       attributes:
         label: "AI Workloads Region"
-        description: "Region for AI Foundry (may differ for model availability)"
+        description: "Region for Microsoft Foundry (may differ for model availability)"
         options:
           - "same - Same as primary region"
-          - "eastus2 - East US 2 (recommended for full AI)"
+          - "eastus2 - East US 2 (recommended for full AI + Claude)"
           - "southcentralus - South Central US"
       validations:
         required: true
+
+# AI Model Availability Matrix
+# OpenAI models deployed via Terraform (Cognitive Account)
+# Claude models deployed via Microsoft Foundry Marketplace (manual)
+ai_models:
+  openai:
+    o3:
+      eastus2: "Standard + Global Standard"
+      eastus: "Global Standard"
+      centralus: "Global Standard"
+      southcentralus: "Standard + Global Standard"
+      brazilsouth: "Not available"
+    o4_mini:
+      eastus2: "Standard + Global Standard"
+      eastus: "Global Standard"
+      centralus: "Global Standard"
+      southcentralus: "Standard + Global Standard"
+      brazilsouth: "Not available"
+    gpt_4_1:
+      eastus2: "Standard + Global Standard"
+      eastus: "Global Standard"
+      centralus: "Global Standard"
+      southcentralus: "Standard + Global Standard"
+      brazilsouth: "Not available"
+    gpt_4o:
+      eastus2: "Standard + Global Standard"
+      eastus: "Global Standard"
+      centralus: "Global Standard"
+      southcentralus: "Standard + Global Standard"
+      brazilsouth: "Limited"
+    gpt_4o_mini:
+      eastus2: "Standard + Global Standard"
+      eastus: "Global Standard"
+      centralus: "Global Standard"
+      southcentralus: "Standard + Global Standard"
+      brazilsouth: "Limited"
+    text_embedding_3_large:
+      eastus2: "Standard"
+      eastus: "Not available"
+      centralus: "Not available"
+      southcentralus: "Not available"
+      brazilsouth: "Not available"
+  claude:
+    # Requires paid Azure subscription + Azure Marketplace access
+    # Deploy via Foundry Portal, NOT via Terraform
+    claude_opus_4_6:
+      eastus2: "Available (Global Standard)"
+      swedencentral: "Available (Global Standard)"
+      _other: "Not available"
+    claude_sonnet_4_6:
+      eastus2: "Available (Global Standard)"
+      swedencentral: "Available (Global Standard)"
+      _other: "Not available"
+    claude_haiku_4_5:
+      eastus2: "Available (Global Standard)"
+      swedencentral: "Available (Global Standard)"
+      _other: "Not available"
+
+# Quota Requirements by Deployment Mode
+quota_requirements:
+  express:
+    description: "Minimal deployment (3 AKS nodes)"
+    vcpus_regional: 12
+    vcpus_dsv5_family: 12
+    aks_nodes: 3
+    aks_vm_size: "Standard_D4s_v5"
+    postgresql: "Burstable_B2ms"
+    redis: "Basic_C1"
+    ai_model_tpm: 30000
+  standard:
+    description: "Production deployment (5 AKS nodes)"
+    vcpus_regional: 20
+    vcpus_dsv5_family: 20
+    aks_nodes: 5
+    aks_vm_size: "Standard_D4s_v5"
+    postgresql: "GeneralPurpose_D2s_v3"
+    redis: "Standard_C1"
+    ai_model_tpm: 60000
+  enterprise:
+    description: "HA multi-zone deployment (10 AKS nodes)"
+    vcpus_regional: 40
+    vcpus_dsv5_family: 40
+    aks_nodes: 10
+    aks_vm_size: "Standard_D8s_v5"
+    postgresql: "GeneralPurpose_D4s_v3"
+    redis: "Premium_P1"
+    ai_model_tpm: 120000

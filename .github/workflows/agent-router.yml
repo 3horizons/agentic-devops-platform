@@ -350,9 +350,9 @@ The request has been approved. Agent execution will proceed.`
                   stage: 6, 
                   horizon: 'H3', 
                   agent: 'ai-foundry', 
-                  title: `[H3] AI Foundry - ${projectName}`,
+                  title: `[H3] Microsoft Foundry - ${projectName}`,
                   deps: ['gitops', 'observability'],
-                  description: 'Setup Azure AI Foundry and models'
+                  description: 'Setup Microsoft Foundry and models'
                 },
                 { 
                   stage: 7, 

@@ -105,7 +105,7 @@ Development platform and automation.
 
 AI, intelligent automation, and developer experience.
 
-- **AI Foundry** — Azure AI with GPT-4o and embeddings
+- **Microsoft Foundry** — Azure AI with GPT-4o and embeddings
 - **Developer Lightspeed** — AI chat integrated into RHDH (Llama Stack + RAG)
 - **GitHub Copilot Agents** — 17 specialized agents
 - **MCP Servers** — 13 context servers for AI
@@ -128,7 +128,7 @@ AI, intelligent automation, and developer experience.
 | **Azure Key Vault** | Secrets management | RBAC, soft delete, purge protection |
 | **Azure PostgreSQL Flexible** | Relational database | v16 with geo-redundant backup |
 | **Azure Redis Cache** | Distributed cache | TLS 1.2+ enforcement |
-| **Azure AI Foundry** | AI services | GPT-4o, GPT-4o-mini, text-embedding-3-large |
+| **Microsoft Foundry** | AI services | GPT-4o, GPT-4o-mini, text-embedding-3-large |
 | **Azure Virtual Network** | Networking | /16 with dedicated subnets |
 | **Azure Backup Vault** | Disaster Recovery | Geo-redundant |
 | **Microsoft Purview** | Data Governance | Cataloging and classification |
@@ -158,10 +158,10 @@ AI, intelligent automation, and developer experience.
 | **GitHub Copilot** | AI code assistant |
 | **GitHub Copilot Agents** | 17 specialized agents (.agent.md) |
 | **Model Context Protocol (MCP)** | AI-to-tools communication protocol |
-| **Azure AI Foundry** | AI model backend |
+| **Microsoft Foundry** | AI model backend |
 | **Developer Lightspeed** | AI chat in RHDH (Llama Stack + RAG) |
 | **Llama Stack** | LLM inference server |
-| **Python AI SDK** | Azure AI Foundry SDK |
+| **Python AI SDK** | Microsoft Foundry SDK |
 
 ### CI/CD & DevOps
 
@@ -253,7 +253,7 @@ AI, intelligent automation, and developer experience.
 
 ### RF-006: AI and Intelligent Agents
 
-- **RF-006.1** — The system MUST provision Azure AI Foundry with GPT-4o / GPT-4o-mini models and embeddings
+- **RF-006.1** — The system MUST provision Microsoft Foundry with GPT-4o / GPT-4o-mini models and embeddings
 - **RF-006.2** — The system MUST provide 17 specialized GitHub Copilot agents
 - **RF-006.3** — The system MUST configure 13 MCP servers for AI-to-tool communication
 - **RF-006.4** — The system MUST support Developer Lightspeed in RHDH for AI chat
@@ -300,7 +300,7 @@ AI, intelligent automation, and developer experience.
 
 - **RNF-002.1** — API latency MUST be < 500ms at p99 (alerts at > 1s)
 - **RNF-002.2** — RHDH MUST respond in < 5s for catalog operations
-- **RNF-002.3** — AI Foundry alerts MUST trigger when latency > 5s
+- **RNF-002.3** — Microsoft Foundry alerts MUST trigger when latency > 5s
 - **RNF-002.4** — Recording rules MUST pre-calculate latency percentiles (p50, p90, p99)
 
 ### RNF-003: Scalability
@@ -488,7 +488,7 @@ agentic-devops-platform/
 │   │   └── troubleshoot-incident.prompt.md # Troubleshoot incidents
 │   ├── skills/                       # 15 reusable agent skills
 │   │   ├── README.md
-│   │   ├── ai-foundry-operations/    # Azure AI Foundry operations
+│   │   ├── ai-foundry-operations/    # Microsoft Foundry operations
 │   │   ├── argocd-cli/               # ArgoCD CLI operations
 │   │   ├── azure-cli/                # Azure CLI operations
 │   │   ├── azure-infrastructure/     # Azure infrastructure patterns
@@ -799,8 +799,8 @@ The root `main.tf` uses a `deployment_mode` variable with three presets:
 customer_name          # 3-20 lowercase alphanumeric, e.g. "contoso"
 environment            # "dev" | "staging" | "prod"
 azure_subscription_id  # Azure subscription
-azure_tenant_id        # Azure AD tenant
-admin_group_id         # Azure AD admin group
+azure_tenant_id        # Microsoft Entra ID tenant
+admin_group_id         # Microsoft Entra ID admin group
 github_org             # GitHub organization
 github_token           # GitHub PAT (sensitive)
 ```
@@ -877,7 +877,7 @@ Golden Paths are standardized templates registered in Red Hat Developer Hub that
 
 | Template | Description |
 |----------|-------------|
-| **foundry-agent** | AI Foundry agent with Azure OpenAI |
+| **foundry-agent** | Microsoft Foundry agent with Azure OpenAI |
 | **sre-agent-integration** | SRE agent with observability integration |
 | **mlops-pipeline** | MLOps pipeline for model training and deployment |
 | **multi-agent-system** | Multi-agent orchestration system |
@@ -895,7 +895,7 @@ The project defines 17 specialized agents in `.github/agents/` following the `.a
 
 | Agent | Scope | Tools |
 |-------|-------|-------|
-| **@architect** | System design, AI Foundry, multi-agent design | — |
+| **@architect** | System design, Microsoft Foundry, multi-agent design | — |
 | **@platform** | IDP, Golden Paths, Catalog, Onboarding | kubernetes, helm, github |
 | **@devops** | CI/CD, K8s, GitOps, MLOps, Pipelines | kubernetes, helm, github, argocd |
 | **@sre** | Observability, SLOs, Incident Response | prometheus, grafana, kubernetes |
@@ -950,7 +950,7 @@ Hybrid:       @github-integration + @ado-integration → @hybrid-scenarios → @
 
 | Skill | Description |
 |-------|-------------|
-| **ai-foundry-operations** | Azure AI Foundry and OpenAI operations |
+| **ai-foundry-operations** | Microsoft Foundry and OpenAI operations |
 | **argocd-cli** | ArgoCD CLI for GitOps workflows |
 | **azure-cli** | Azure CLI resource management |
 | **azure-infrastructure** | Azure infrastructure patterns |
@@ -1011,7 +1011,7 @@ Hybrid:       @github-integration + @ado-integration → @hybrid-scenarios → @
 | **filesystem** | `fs` | Read, write, list files |
 | **defender** | `defender` | Security scanning, compliance |
 | **purview** | `purview` | Data governance operations |
-| **entra** | `entra` | Azure AD / Entra ID operations |
+| **entra** | `entra` | Microsoft Entra ID / Entra ID operations |
 | **copilot** | `copilot` | GitHub Copilot CLI |
 
 ### 11.2 Access Matrix
@@ -1078,7 +1078,7 @@ Support for multiple repository types (`argocd/repo-credentials.yaml`):
 ### 13.1 Observability Stack
 
 - **Prometheus** — Metrics collection with configured scrape
-- **Grafana** — Dashboards with SSO via Azure AD
+- **Grafana** — Dashboards with SSO via Microsoft Entra ID
 - **Alertmanager** — Alert management and routing
 - **Jaeger** — Distributed tracing
 - **Log Analytics** — Azure-native logging
@@ -1098,7 +1098,7 @@ Support for multiple repository types (`argocd/repo-credentials.yaml`):
 - Grafana unavailable > 5min (warning)
 
 #### AI/Agents (H3)
-- AI Foundry latency > 5s (warning)
+- Microsoft Foundry latency > 5s (warning)
 - Agent failure rate > 10% in 15min (warning)
 - Multi-agent orchestration timeout (warning)
 
@@ -1144,7 +1144,7 @@ Metrics collected from:
 │  │  ┌────────────────────────────────────────┐ │  │
 │  │  │         Identity & Access              │ │  │
 │  │  │  Managed Identity + Workload Identity  │ │  │
-│  │  │  RBAC + Azure AD + Key Vault          │ │  │
+│  │  │  RBAC + Microsoft Entra ID + Key Vault          │ │  │
 │  │  │  ┌──────────────────────────────────┐ │ │  │
 │  │  │  │       Runtime Security          │ │ │  │
 │  │  │  │  Gatekeeper + Defender          │ │ │  │
@@ -1160,7 +1160,7 @@ Metrics collected from:
 
 | Area | Implementation |
 |------|----------------|
-| **Authentication** | Managed Identity, Workload Identity, OIDC Federation, Azure AD SSO, GitHub OAuth |
+| **Authentication** | Managed Identity, Workload Identity, OIDC Federation, Microsoft Entra ID SSO, GitHub OAuth |
 | **Network** | Private Endpoints, NSGs, VNet isolation, no public access |
 | **Data Protection** | TLS 1.2+, AES-256 encryption at rest, Key Vault for secrets |
 | **Container** | Non-root, no privilege escalation, read-only rootfs, approved registries |
@@ -1293,7 +1293,7 @@ Central manifest defining all dependencies, instructions, prompts, agents, and c
 
 T-shirt sizing profiles for infrastructure dimensioning:
 
-| Profile | Devs | AKS Nodes | PostgreSQL | Redis | AI Foundry |
+| Profile | Devs | AKS Nodes | PostgreSQL | Redis | Microsoft Foundry |
 |---------|------|-----------|------------|-------|------------|
 | **Small** | ≤10 | 2 (Standard_D4s_v5) | B_Standard_B2s | Basic C1 | S0 |
 | **Medium** | 10-50 | 3 (Standard_D8s_v5) | GP_Standard_D4s_v3 | Standard C3 | S1 |
@@ -1392,7 +1392,7 @@ The project uses **Terratest** (Go) for infrastructure tests. Each Terraform mod
 | `databases_test.go` | Databases | PostgreSQL version, SSL, Redis config |
 | `security_test.go` | Security | Key Vault, purge protection, RBAC |
 | `argocd_test.go` | ArgoCD | Namespace, Helm values, ingress |
-| `ai_foundry_test.go` | AI Foundry | Model deployments, endpoints |
+| `ai_foundry_test.go` | Microsoft Foundry | Model deployments, endpoints |
 | `observability_test.go` | Observability | Prometheus, Grafana, ServiceMonitors |
 | `github_runners_test.go` | GitHub Runners | Runner deployment, labels |
 | `purview_test.go` | Purview | Account creation, scan rules |
@@ -1424,7 +1424,7 @@ Full deployment with all 15 Terraform modules:
 - **Compute**: AKS, GitHub Runners
 - **Storage**: ACR, PostgreSQL, Redis, Backup Vault
 - **Security**: Key Vault, Managed Identity, Defender
-- **AI**: AI Foundry (GPT-4o, GPT-4o-mini, text-embedding-3-large)
+- **AI**: Microsoft Foundry (GPT-4o, GPT-4o-mini, text-embedding-3-large)
 - **Governance**: Purview, Cost Management
 - **Networking**: VNet, NSGs, Private Endpoints
 
@@ -1447,7 +1447,7 @@ Full deployment with all 15 Terraform modules:
 | ACR | Artifact Registry |
 | Key Vault | Secret Manager |
 | Managed Identity | Workload Identity |
-| AI Foundry | Vertex AI |
+| Microsoft Foundry | Vertex AI |
 
 ### 20.4 On-Premise
 
@@ -1456,7 +1456,7 @@ Full deployment with all 15 Terraform modules:
 | AKS | OpenShift / k3s |
 | ACR | Harbor |
 | Key Vault | HashiCorp Vault |
-| AI Foundry | Ollama / vLLM |
+| Microsoft Foundry | Ollama / vLLM |
 
 ---
 

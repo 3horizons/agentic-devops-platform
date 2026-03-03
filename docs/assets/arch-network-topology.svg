@@ -58,7 +58,7 @@
   <text x="515" y="385" text-anchor="middle" font-size="10" fill="#fff">10.0.4.6 — PostgreSQL PE</text>
   <text x="515" y="400" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.7)">Database</text>
   <rect x="610" y="365" width="170" height="50" rx="5" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)"/>
-  <text x="695" y="385" text-anchor="middle" font-size="10" fill="#fff">10.0.4.7 — AI Foundry PE</text>
+  <text x="695" y="385" text-anchor="middle" font-size="10" fill="#fff">10.0.4.7 — Microsoft Foundry PE</text>
   <text x="695" y="400" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.7)">AI/ML models</text>
 
   <!-- App Gateway Subnet -->

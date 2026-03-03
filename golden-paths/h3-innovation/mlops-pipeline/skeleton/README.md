@@ -20,7 +20,7 @@ Production-grade MLOps pipeline for model training, versioning, and deployment.
 - Automated model deployment
 - A/B testing and canary releases
 - Model monitoring and drift detection
-- Integration with Azure ML and AI Foundry
+- Integration with Azure ML and Microsoft Foundry
 
 ## Pipeline Stages
 

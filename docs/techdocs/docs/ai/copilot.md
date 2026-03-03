@@ -42,7 +42,7 @@ The platform provides 19 specialized Copilot Chat agents in `.github/agents/`. E
 
 | Agent | Invoke With | Domain |
 | ----- | ----------- | ------ |
-| `@architect` | `@architect Design a microservice` | System architecture, AI Foundry, multi-agent design |
+| `@architect` | `@architect Design a microservice` | System architecture, Microsoft Foundry, multi-agent design |
 | `@platform` | `@platform Register a Golden Path` | RHDH portal, IDP, developer experience |
 | `@devops` | `@devops Set up GitOps` | CI/CD, pipelines, GitOps, MLOps |
 | `@sre` | `@sre Create runbook` | Observability, SLOs, incident response |

@@ -34,7 +34,7 @@
   <!-- Database -->
   <rect x="80" y="376" width="540" height="70" rx="10" fill="url(#dbg)" filter="url(#ds)"/>
   <text x="100" y="406" font-size="14" font-weight="700" fill="#fff">AZURE DATABASE (PostgreSQL / SQL)</text>
-  <text x="100" y="426" font-size="10" fill="rgba(255,255,255,0.85)">Private endpoint · Firewall rules · Azure AD authentication · TLS 1.2 enforced</text>
+  <text x="100" y="426" font-size="10" fill="rgba(255,255,255,0.85)">Private endpoint · Firewall rules · Microsoft Entra ID authentication · TLS 1.2 enforced</text>
 
   <!-- Legend -->
   <rect x="80" y="465" width="12" height="12" rx="2" fill="#27ae60"/>

@@ -37,7 +37,7 @@
   <text x="120" y="303" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.7)">(Service Account)</text>
 
   <rect x="290" y="265" width="120" height="50" rx="6" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)"/>
-  <text x="350" y="288" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Azure AD</text>
+  <text x="350" y="288" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Microsoft Entra ID</text>
   <text x="350" y="303" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.7)">(OIDC)</text>
 
   <rect x="520" y="265" width="130" height="50" rx="6" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)"/>
@@ -65,7 +65,7 @@
   <!-- Benefits -->
   <text x="350" y="380" font-size="10" fill="rgba(255,255,255,0.9)">&#10003; No secrets to manage</text>
   <text x="350" y="398" font-size="10" fill="rgba(255,255,255,0.9)">&#10003; Tokens auto-rotate</text>
-  <text x="550" y="380" font-size="10" fill="rgba(255,255,255,0.9)">&#10003; Azure AD handles auth</text>
+  <text x="550" y="380" font-size="10" fill="rgba(255,255,255,0.9)">&#10003; Microsoft Entra ID handles auth</text>
   <text x="550" y="398" font-size="10" fill="rgba(255,255,255,0.9)">&#10003; Full audit trail</text>
 
   <!-- Bottom label -->

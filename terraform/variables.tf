@@ -37,12 +37,12 @@ variable "azure_subscription_id" {
 }
 
 variable "azure_tenant_id" {
-  description = "Azure AD / Entra ID tenant ID"
+  description = "Microsoft Entra ID / Entra ID tenant ID"
   type        = string
 }
 
 variable "admin_group_id" {
-  description = "Azure AD group ID for platform administrators"
+  description = "Microsoft Entra ID group ID for platform administrators"
   type        = string
 }
 
@@ -168,13 +168,13 @@ variable "enable_cost_management" {
 # -----------------------------------------------------------------------------
 
 variable "enable_ai_foundry" {
-  description = "Enable Azure AI Foundry (OpenAI, AI Search, Content Safety)"
+  description = "Enable Microsoft Foundry (OpenAI, AI Search, Content Safety)"
   type        = bool
   default     = false
 }
 
 variable "ai_foundry_location" {
-  description = "Azure region for AI Foundry (use eastus2 for best model availability)"
+  description = "Azure region for Microsoft Foundry (use eastus2 for best model availability + Claude)"
   type        = string
   default     = "eastus2"
 }

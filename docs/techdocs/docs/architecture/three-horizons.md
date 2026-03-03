@@ -47,7 +47,7 @@ H3 adds intelligent agents, AI-assisted development, and machine learning infras
 
 **Components**:
 
-- **Azure AI Foundry** -- GPT-4o, GPT-4o-mini, text-embedding-3-large, AI Search, Content Safety
+- **Microsoft Foundry** -- GPT-4o, GPT-4o-mini, text-embedding-3-large, AI Search, Content Safety
 - **18 GitHub Copilot Chat Agents** -- Specialized agents with handoff orchestration (architect, platform, devops, sre, terraform, security, and more)
 - **14 MCP Servers** -- Model Context Protocol servers for AI-tool communication
 - **Developer Lightspeed** -- AI chat in RHDH using Llama Stack + RAG with Azure OpenAI backend

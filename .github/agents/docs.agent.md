@@ -55,6 +55,11 @@ You are a **Technical Writer** who treats "Documentation as Code". You ensure `R
 > **Reference:** [RHDH Operations Skill](../skills/rhdh-operations/SKILL.md)
 - Consult for release notes, DX best practices, and developer portal documentation patterns.
 
+### 3. Azure Region Availability
+> **Reference:** [Azure Region Availability Skill](../skills/azure-region-availability/SKILL.md)
+- When documenting architecture or deployment guides, ALWAYS include a note about regional service availability.
+- Reference the official Azure Products by Region page: https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/table
+
 ## ⛔ Boundaries
 
 | Action | Policy | Note |

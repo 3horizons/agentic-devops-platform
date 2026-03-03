@@ -596,7 +596,7 @@ kubectl get nodes
 > 💡 **Why This Module Exists**
 >
 > Applications running on Kubernetes need container images. Azure Container Registry (ACR)
-> provides a **private, secure registry** for your images, integrated with Azure AD
+> provides a **private, secure registry** for your images, integrated with Microsoft Entra ID
 > and accessible via private endpoints.
 >
 > Think of ACR as your **private Docker Hub** - only your authorized users and systems
@@ -718,7 +718,7 @@ The AKS module automatically:
 | `resource_group_name` | string | **Yes** | - | Resource group name |
 | `location` | string | **Yes** | - | Azure region |
 | `key_vault_name` | string | **Yes** | - | Key Vault name |
-| `tenant_id` | string | **Yes** | - | Azure AD tenant ID |
+| `tenant_id` | string | **Yes** | - | Microsoft Entra ID tenant ID |
 | `enable_rbac_authorization` | bool | No | `true` | Use RBAC for Key Vault |
 | `private_endpoint_subnet_id` | string | No | `null` | For private access |
 | `private_dns_zone_id` | string | No | `null` | Private DNS zone |
@@ -1191,7 +1191,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 | `version` | string | No | `"0.9.0"` | Helm chart version |
 | `key_vault_name` | string | **Yes** | - | Azure Key Vault name |
 | `key_vault_url` | string | **Yes** | - | Key Vault URL |
-| `tenant_id` | string | **Yes** | - | Azure AD tenant ID |
+| `tenant_id` | string | **Yes** | - | Microsoft Entra ID tenant ID |
 | `workload_identity_client_id` | string | **Yes** | - | Identity for access |
 
 #### Outputs
@@ -1485,9 +1485,9 @@ jobs:
 | `github_app_webhook_secret` | string | **Yes** | - | GitHub App webhook secret (sensitive) |
 | `argocd_url` | string | **Yes** | - | ArgoCD server URL |
 | `argocd_auth_token` | string | **Yes** | - | ArgoCD auth token (sensitive) |
-| `azure_tenant_id` | string | **Yes** | - | Azure AD tenant ID |
-| `azure_client_id` | string | **Yes** | - | Azure AD app client ID |
-| `azure_client_secret` | string | **Yes** | - | Azure AD app client secret (sensitive) |
+| `azure_tenant_id` | string | **Yes** | - | Microsoft Entra ID tenant ID |
+| `azure_client_id` | string | **Yes** | - | Microsoft Entra ID app client ID |
+| `azure_client_secret` | string | **Yes** | - | Microsoft Entra ID app client secret (sensitive) |
 | `key_vault_name` | string | **Yes** | - | Key Vault for secrets |
 | `aks_oidc_issuer_url` | string | **Yes** | - | AKS OIDC issuer URL |
 | `subnet_id` | string | **Yes** | - | Subnet for private endpoints |
@@ -1538,7 +1538,7 @@ module "rhdh" {
   argocd_url        = "https://argocd.${var.customer_name}.com"
   argocd_auth_token = var.argocd_auth_token
 
-  # Azure AD
+  # Microsoft Entra ID
   azure_tenant_id     = data.azurerm_client_config.current.tenant_id
   azure_client_id     = var.rhdh_azure_client_id
   azure_client_secret = var.rhdh_azure_client_secret
@@ -1576,7 +1576,7 @@ These modules add advanced AI/ML capabilities.
 
 ---
 
-### 5.1 AI Foundry Module
+### 5.1 Microsoft Foundry Module
 
 **Path:** `terraform/modules/ai-foundry`
 
@@ -1618,7 +1618,7 @@ These modules add advanced AI/ML capabilities.
 > | GPT-3.5 Turbo | ✅ | ✅ | ✅ |
 > | text-embedding-3-large | ❌ | ✅ | ✅ |
 >
-> **Recommendation:** Deploy AI Foundry in **East US 2** for best model availability.
+> **Recommendation:** Deploy Microsoft Foundry in **East US 2** for best model availability.
 
 #### Model Deployments Configuration
 
@@ -2015,7 +2015,7 @@ When AI capabilities are the priority:
 ```hcl
 # Standard H1/H2 modules...
 
-# AI Foundry with multiple models
+# Microsoft Foundry with multiple models
 module "ai_foundry" {
   source   = "./modules/ai-foundry"
   location = "eastus2"  # Best model availability

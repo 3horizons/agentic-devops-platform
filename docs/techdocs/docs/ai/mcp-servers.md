@@ -236,9 +236,9 @@ The full access matrix is documented in `mcp-servers/USAGE.md`. A summary:
 
 ---
 
-## AI Foundry Integration
+## Microsoft Foundry Integration
 
-The `azure` MCP server provides access to Azure AI Foundry resources deployed by the `ai-foundry` Terraform module:
+The `azure` MCP server provides access to Microsoft Foundry resources deployed by the `ai-foundry` Terraform module:
 
 ### Available Models
 

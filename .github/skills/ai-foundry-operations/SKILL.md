@@ -1,10 +1,10 @@
 ---
 name: ai-foundry-operations
-description: Azure AI Foundry — provisioning, model deployment, RAG configuration, and operational management
+description: Microsoft Foundry — provisioning, model deployment, RAG configuration, and operational management
 ---
 
 ## When to Use
-- Provision Azure AI Foundry resources
+- Provision Microsoft Foundry resources
 - Deploy and manage OpenAI models
 - Configure RAG pipelines with AI Search
 - Monitor token usage and costs
@@ -17,9 +17,9 @@ description: Azure AI Foundry — provisioning, model deployment, RAG configurat
 
 ## Provisioning
 
-### 1. Create AI Foundry Resources (via Terraform)
+### 1. Create Microsoft Foundry Resources (via Terraform)
 ```bash
-# Deploy H3 Innovation layer (includes AI Foundry)
+# Deploy H3 Innovation layer (includes Microsoft Foundry)
 cd terraform
 terraform plan -var-file=environments/dev.tfvars -var="enable_h3=true" -out=tfplan
 terraform apply tfplan
@@ -79,7 +79,7 @@ az cognitiveservices account show \
 
 ### Resource Management
 ```bash
-# List AI Foundry workspaces
+# List Microsoft Foundry workspaces
 az ml workspace list -o table
 
 # Show workspace details

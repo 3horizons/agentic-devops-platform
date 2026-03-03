@@ -7,7 +7,7 @@ Role-Based Access Control is enforced at multiple layers of the Three Horizons p
 ## RBAC Architecture Overview
 
 ```
-Azure AD Groups (source of truth)
+Microsoft Entra ID Groups (source of truth)
         |
         +--> RHDH Portal (Admin, Developer, Viewer)
         |
@@ -20,7 +20,7 @@ Azure AD Groups (source of truth)
         +--> GitHub (org teams, repo permissions)
 ```
 
-Azure AD groups serve as the identity source. Group memberships propagate to all platform layers through OIDC federation, GitHub OAuth, and Kubernetes RBAC bindings.
+Microsoft Entra ID groups serve as the identity source. Group memberships propagate to all platform layers through OIDC federation, GitHub OAuth, and Kubernetes RBAC bindings.
 
 ---
 
@@ -164,7 +164,7 @@ kubectl exec -n rhdh deploy/rhdh-developer-hub -- \
 
 ## Kubernetes RBAC
 
-Kubernetes RBAC is configured per namespace with standard roles. The AKS cluster uses Azure AD integration for authentication, and RBAC is always enabled.
+Kubernetes RBAC is configured per namespace with standard roles. The AKS cluster uses Microsoft Entra ID integration for authentication, and RBAC is always enabled.
 
 ### Standard Namespace Roles
 
@@ -263,15 +263,15 @@ metadata:
 
 ## ArgoCD RBAC
 
-ArgoCD RBAC maps Azure AD groups to project-level permissions. ArgoCD authenticates users via Azure AD SSO (OIDC).
+ArgoCD RBAC maps Microsoft Entra ID groups to project-level permissions. ArgoCD authenticates users via Microsoft Entra ID SSO (OIDC).
 
 ### ArgoCD Roles
 
 | Role | Permissions | Assigned To |
 |------|-------------|-------------|
-| **Platform Admins** | Full access to all projects and applications | `@platform-team` Azure AD group |
-| **Team Leads** | Sync, manage applications within team project | Team lead Azure AD groups |
-| **Developers** | View status, logs, events; no production sync | Developer Azure AD groups |
+| **Platform Admins** | Full access to all projects and applications | `@platform-team` Microsoft Entra ID group |
+| **Team Leads** | Sync, manage applications within team project | Team lead Microsoft Entra ID groups |
+| **Developers** | View status, logs, events; no production sync | Developer Microsoft Entra ID groups |
 | **Read-Only** | View application status only | Stakeholder groups |
 
 ### ArgoCD RBAC Policy
@@ -295,7 +295,7 @@ p, role:developer, applications, sync, dev-*/*, allow
 p, role:developer, applications, sync, staging-*/*, allow
 p, role:developer, applications, sync, prod-*/*, deny
 
-# Map Azure AD groups to ArgoCD roles
+# Map Microsoft Entra ID groups to ArgoCD roles
 g, platform-admins, role:admin
 g, team-alpha-leads, role:team-lead
 g, dev-team, role:developer
@@ -303,13 +303,13 @@ g, dev-team, role:developer
 
 ### ArgoCD SSO Configuration
 
-ArgoCD integrates with Azure AD for single sign-on:
+ArgoCD integrates with Microsoft Entra ID for single sign-on:
 
 ```yaml
 server:
   config:
     oidc.config: |
-      name: Azure AD
+      name: Microsoft Entra ID
       issuer: https://login.microsoftonline.com/${AZURE_TENANT_ID}/v2.0
       clientID: ${ARGOCD_CLIENT_ID}
       clientSecret: ${ARGOCD_CLIENT_SECRET}
@@ -344,9 +344,9 @@ The following role assignments are explicitly forbidden and enforced by policy:
 - **Key Vault Administrator**: Only for initial setup; use Key Vault Secrets User for runtime
 - **Classic Administrator**: Deprecated; never use
 
-### Azure AD Group Management
+### Microsoft Entra ID Group Management
 
-Azure AD groups serve as the identity source for all platform layers:
+Microsoft Entra ID groups serve as the identity source for all platform layers:
 
 ```
 platform-team     --> RHDH Admin, ArgoCD Admin, K8s ClusterAdmin
@@ -417,9 +417,9 @@ argocd admin settings rbac validate --policy-file argocd-rbac.csv
 |-------|-------|------------|
 | User cannot access RHDH catalog | Missing group assignment in CSV | Add `g, user:default/<user>, role:default/developer` |
 | Pod cannot pull images from ACR | Missing AcrPull role on kubelet identity | Verify Terraform `container-registry` module output |
-| ArgoCD sync denied | User not in the correct ArgoCD role group | Add user to the appropriate Azure AD group |
+| ArgoCD sync denied | User not in the correct ArgoCD role group | Add user to the appropriate Microsoft Entra ID group |
 | Cannot access Key Vault secrets | Missing Key Vault role assignment | Verify ESO Managed Identity has `Key Vault Secrets User` role |
-| Kubectl access denied | AKS RBAC not bound to Azure AD group | Create RoleBinding for the Azure AD group |
+| Kubectl access denied | AKS RBAC not bound to Microsoft Entra ID group | Create RoleBinding for the Microsoft Entra ID group |
 
 ### Useful Commands
 

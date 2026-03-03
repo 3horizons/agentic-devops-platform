@@ -1,15 +1,19 @@
 # =============================================================================
-# THREE HORIZONS ACCELERATOR - AI FOUNDRY TERRAFORM MODULE
+# THREE HORIZONS ACCELERATOR - MICROSOFT FOUNDRY TERRAFORM MODULE
 # =============================================================================
 #
-# Deploys Azure AI services for H3 Innovation workloads.
+# Deploys Microsoft Foundry AI services for H3 Innovation workloads.
 #
 # Components:
-#   - Azure OpenAI Service
+#   - Azure OpenAI Service (o3, gpt-4.1, gpt-4o, embeddings)
 #   - Azure AI Search
 #   - Azure AI Content Safety
-#   - Model deployments (GPT-4o, embeddings)
+#   - Model deployments
 #   - Private endpoints
+#
+# Note: Claude models (Opus 4.6, Sonnet 4.6, Haiku 4.5) are available via
+# Microsoft Foundry Marketplace in eastus2/swedencentral. Deploy via Foundry
+# Portal, not Terraform.
 #
 # =============================================================================
 

@@ -1,6 +1,6 @@
 # Infrastructure Architecture
 
-The platform infrastructure is built on Microsoft Azure using Terraform, organized into 15 modules with strict dependency ordering and security-first defaults. All resources target the `brazilsouth` region for LGPD compliance, with `eastus2` used for AI Foundry model availability.
+The platform infrastructure is built on Microsoft Azure using Terraform, organized into 15 modules with strict dependency ordering and security-first defaults. All resources target the `brazilsouth` region for LGPD compliance, with `eastus2` used for Microsoft Foundry model availability.
 
 ## Azure Kubernetes Service (AKS)
 
