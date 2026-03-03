@@ -45,10 +45,11 @@ resource "azurerm_monitor_workspace" "prometheus" {
 # =============================================================================
 
 resource "azurerm_dashboard_grafana" "main" {
-  name                  = substr("amg-${local.name_prefix}", 0, 23)
-  location              = var.location
-  resource_group_name   = var.resource_group_name
-  grafana_major_version = 11
+  name                = substr("amg-${local.name_prefix}", 0, 23)
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  # grafana_major_version omitted — AzureRM v3 only validates 9/10 but Azure now requires 11+
+  # The API will default to the latest supported version (11)
 
   api_key_enabled                   = true
   deterministic_outbound_ip_enabled = true
