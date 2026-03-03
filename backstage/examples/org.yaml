@@ -1,18 +1,7 @@
 # Three Horizons - Organization Entities
----
-apiVersion: backstage.io/v1alpha1
-kind: User
-metadata:
-  name: paulanunes85
-  annotations:
-    github.com/user-login: paulanunes85
-spec:
-  profile:
-    displayName: Paula Silva
-    email: paulanunes85@github.com
-    picture: https://avatars.githubusercontent.com/u/paulanunes85
-  memberOf:
-    - platform-team
+# NOTE: User entities (e.g. paulanunes85) are now provisioned automatically
+# by the GithubMultiOrgEntityProvider from the 3horizons GitHub org.
+# Only define Groups, Domains, and Systems here.
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Group

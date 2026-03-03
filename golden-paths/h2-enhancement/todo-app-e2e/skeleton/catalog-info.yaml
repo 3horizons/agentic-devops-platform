@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.appName }}
+  description: ${{ values.description }}
+  annotations:
+    github.com/project-slug: ${{ values.repoOwner }}/${{ values.repoName }}
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - h2-enhancement
+    - demo
+    - todo-app
+    - azure
+    - terraform
+spec:
+  type: service
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  system: ${{ values.system }}

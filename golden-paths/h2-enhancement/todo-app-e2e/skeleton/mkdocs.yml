@@ -1,0 +1,6 @@
+site_name: ${{ values.appName }} Docs
+site_description: Technical documentation for ${{ values.appName }}
+nav:
+  - Home: docs/index.md
+plugins:
+  - techdocs-core

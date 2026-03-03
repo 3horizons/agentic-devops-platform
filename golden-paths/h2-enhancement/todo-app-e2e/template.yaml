@@ -1,0 +1,179 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: h2-todo-app-e2e
+  title: "H2: Todo App E2E Demo"
+  description: |
+    Golden Path for an end-to-end demo: creates a GitHub repository,
+    publishes a Todo App with Codespaces, and generates Terraform IaC for Azure dev.
+  tags:
+    - h2-enhancement
+    - demo
+    - todo-app
+    - github
+    - azure
+    - iac
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  owner: platform-engineering
+  type: service
+
+  parameters:
+    - title: Application Information
+      required:
+        - appName
+        - owner
+        - description
+      properties:
+        appName:
+          title: Application name
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+          default: todo-app
+          maxLength: 40
+        description:
+          title: Description
+          type: string
+          default: Three Horizons end-to-end demo with Todo App
+          maxLength: 300
+        owner:
+          title: Owner
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              - kind: Group
+              - kind: User
+        system:
+          title: System
+          type: string
+          default: developer-hub
+
+    - title: GitHub Repository
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Target repository
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+        repoVisibility:
+          title: Visibility
+          type: string
+          default: private
+          enum:
+            - private
+            - internal
+            - public
+          enumNames:
+            - Private
+            - Internal
+            - Public
+
+    - title: Azure IaC (Dev Environment)
+      required:
+        - azureRegion
+        - costCenter
+      properties:
+        azureRegion:
+          title: Azure region
+          type: string
+          default: centralus
+          enum:
+            - centralus
+            - eastus
+            - eastus2
+            - southcentralus
+            - brazilsouth
+        environment:
+          title: Environment
+          type: string
+          default: dev
+          enum:
+            - dev
+        costCenter:
+          title: Cost Center
+          type: string
+          default: TH0001
+          pattern: '^[A-Z]{2}[0-9]{4}$'
+        deployToAzureInWorkflow:
+          title: Enable Azure IaC deployment workflow
+          type: boolean
+          default: true
+
+  steps:
+    - id: fetch-base
+      name: Generate Todo App baseline
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          appName: ${{ parameters.appName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          repoOwner: ${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}
+          repoName: ${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}
+          azureRegion: ${{ parameters.azureRegion }}
+          environment: ${{ parameters.environment }}
+          costCenter: ${{ parameters.costCenter }}
+          deployToAzureInWorkflow: ${{ parameters.deployToAzureInWorkflow }}
+
+    - id: publish
+      name: Create GitHub repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        repoVisibility: ${{ parameters.repoVisibility }}
+        description: ${{ parameters.description }}
+        defaultBranch: main
+        protectDefaultBranch: true
+        requireCodeOwnerReviews: true
+
+    - id: register
+      name: Register in catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Created repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
+      - title: Open in Codespaces
+        url: ${{ steps['publish'].output.remoteUrl }}/codespaces
+      - title: Dev IaC Workflow
+        url: ${{ steps['publish'].output.remoteUrl }}/actions/workflows/iac-dev.yml
+    text:
+      - title: E2E demo created successfully
+        content: |
+          ## Todo App ready for end-to-end demo
+
+          **Repository:** ${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}/${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}
+          **IaC environment:** ${{ parameters.environment }}
+          **Azure region:** ${{ parameters.azureRegion }}
+
+          **To guarantee successful Azure IaC provisioning:**
+           1. Create a Microsoft Entra app registration for GitHub Actions OIDC.
+           2. Add a federated credential in the app registration for this repository (`repo:<owner>/<repo>:ref:refs/heads/main`).
+           3. Assign least-privilege Azure RBAC to the service principal at subscription or resource-group scope:
+             - `Contributor`
+             - `User Access Administrator` (only if workflow must assign RBAC)
+           4. Create GitHub Actions secrets:
+             - `AZURE_CLIENT_ID`
+             - `AZURE_TENANT_ID`
+             - `AZURE_SUBSCRIPTION_ID`
+           5. Run workflow `iac-dev.yml` with `apply=true`.
+
+           **Identity note:** ensure the selected owner (`User` or `Group`) exists in the Software Catalog.
+
+          **Codespaces:** use the "Open in Codespaces" link above to launch the dev environment for the created repository.

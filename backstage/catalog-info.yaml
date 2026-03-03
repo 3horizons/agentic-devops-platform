@@ -7,3 +7,4 @@ spec:
   targets:
     - ./examples/org.yaml
     - ./examples/entities.yaml
+    - ../golden-paths/h2-enhancement/todo-app-e2e/template.yaml

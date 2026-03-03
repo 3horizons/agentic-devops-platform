@@ -1,0 +1,60 @@
+name: iac-dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Apply Terraform changes"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+  push:
+    branches:
+      - main
+    paths:
+      - infrastructure/terraform/**
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform Init
+        working-directory: infrastructure/terraform
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: infrastructure/terraform
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: infrastructure/terraform
+        run: terraform plan -var="environment=dev"
+
+      - name: Terraform Apply
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.apply == 'true' }}
+        working-directory: infrastructure/terraform
+        run: terraform apply -auto-approve -var="environment=dev"

@@ -4,7 +4,105 @@
 # =============================================================================
 
 global:
-  host: "rhdh.20.221.80.117.nip.io"
+  host: rhdh.3horizons.ai
+  dynamic:
+    plugins:
+      # ── Catalog Providers (already active) ──
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+        disabled: false
+        pluginConfig:
+          catalog:
+            providers:
+              github:
+                providerId:
+                  organization: 3horizons
+                  schedule:
+                    frequency:
+                      minutes: 30
+                    initialDelay:
+                      seconds: 30
+                    timeout:
+                      minutes: 3
+
+      # ── Scaffolder GitHub Actions (publish:github, github:actions:dispatch) ──
+      - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+        disabled: false
+
+      # ── Kubernetes (backend + frontend) ──
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+        disabled: false
+        pluginConfig:
+          kubernetes:
+            clusterLocatorMethods:
+              - type: config
+                clusters:
+                  - name: ${K8S_CLUSTER_NAME}
+                    url: ${K8S_CLUSTER_URL}
+                    authProvider: serviceAccount
+                    serviceAccountToken: ${K8S_CLUSTER_TOKEN}
+                    skipTLSVerify: true
+            serviceLocatorMethod:
+              type: multiTenant
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+        disabled: false
+
+      # ── GitHub Actions (CI/CD status on entity page) ──
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-github-actions
+        disabled: false
+
+      # ── GitHub Pull Requests (PR tab on entity page) ──
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
+        disabled: false
+
+      # ── GitHub Issues (issues on entity page) ──
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-github-issues
+        disabled: false
+
+      # ── GitHub Insights (repo stats, contributors, languages) ──
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-insights
+        disabled: false
+
+      # ── Security Insights (GHAS code scanning, Dependabot) ──
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-security-insights
+        disabled: false
+
+      # ── Notifications (backend + frontend) ──
+      - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-notifications
+        disabled: false
+
+      # ── Signals (real-time event backbone for notifications) ──
+      - package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-signals
+        disabled: false
+
+      # ── RBAC (admin UI for permission management) ──
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
+        disabled: false
+
+      # ── ArgoCD (backend + Red Hat frontend) ──
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
+        disabled: false
+
+      # ── Topology (K8s visual topology on entity page) ──
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
+        disabled: false
+
+      # ── Bulk Import (mass catalog import from GitHub) ──
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
+        disabled: false
+
+      # ── Tech Radar ──
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
+        disabled: false
 
 route:
   enabled: false
@@ -13,9 +111,13 @@ upstream:
   ingress:
     enabled: true
     className: nginx
-    host: "rhdh.20.221.80.117.nip.io"
+    host: rhdh.3horizons.ai
     annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      enabled: true
+      secretName: rhdh-tls
 
   backstage:
     image:
@@ -34,15 +136,23 @@ upstream:
     appConfig:
       app:
         title: "Three Horizons"
-        baseUrl: http://rhdh.20.221.80.117.nip.io
+        baseUrl: https://rhdh.3horizons.ai
 
       backend:
-        baseUrl: http://rhdh.20.221.80.117.nip.io
+        baseUrl: https://rhdh.3horizons.ai
         listen:
           port: 7007
           host: 0.0.0.0
+        csp:
+          img-src:
+            - "'self'"
+            - "data:"
+            - https://avatars.githubusercontent.com
+            - https://github.com
         cors:
-          origin: http://rhdh.20.221.80.117.nip.io
+          origin: https://rhdh.3horizons.ai
+          methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+          credentials: true
         database:
           client: pg
           connection:
@@ -61,11 +171,12 @@ upstream:
         providers:
           github:
             production:
-              clientId: ${AUTH_GITHUB_CLIENT_ID}
-              clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+              clientId: ${GITHUB_CLIENT_ID}
+              clientSecret: ${GITHUB_CLIENT_SECRET}
               signIn:
                 resolvers:
                   - resolver: usernameMatchingUserEntityName
+                    dangerouslyAllowSignInWithoutUserInCatalog: true
 
       integrations:
         github:
@@ -74,25 +185,36 @@ upstream:
               - appId: ${GITHUB_APP_ID}
                 clientId: ${GITHUB_APP_CLIENT_ID}
                 clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+                webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
                 privateKey: ${GITHUB_APP_PRIVATE_KEY}
 
       catalog:
         rules:
-          - allow: [Component, System, API, Resource, Location, Template]
+          - allow: [Component, System, API, Resource, Location, Template, User, Group, Domain]
         providers:
           githubOrg:
-            default:
-              id: production
-              orgUrl: https://github.com/3horizons
-              token: ${GITHUB_TOKEN}
-              schedule:
-                frequency:
-                  minutes: 30
-                timeout:
-                  minutes: 3
+            id: production
+            githubUrl: https://github.com
+            orgs:
+              - 3horizons
+            schedule:
+              frequency:
+                minutes: 30
+              initialDelay:
+                seconds: 15
+              timeout:
+                minutes: 3
         locations:
           - type: url
             target: https://github.com/3horizons/agentic-devops-platform/blob/main/backstage/catalog-info.yaml
+
+      permission:
+        enabled: true
+        rbac:
+          admin:
+            users:
+              - name: user:default/paulanunes85
+            superAdminRole: true
 
   postgresql:
     enabled: false
