@@ -66,7 +66,12 @@ jobs:
           }
           JSON
 
-          az ad app federated-credential create --id "${APP_OBJECT_ID}" --parameters /tmp/federated-credential.json 1>/dev/null
+          if ! az ad app federated-credential create --id "${APP_OBJECT_ID}" --parameters /tmp/federated-credential.json 1>/dev/null; then
+            echo "::error::Failed to create federated credential for ${TARGET_OWNER}/${TARGET_REPO}."
+            echo "::error::The identity behind AZURE_CLIENT_ID needs Entra permission to manage application credentials (for example: Application Administrator or Cloud Application Administrator)."
+            echo "::error::Required subject: ${SUBJECT}"
+            exit 1
+          fi
 
           echo "Created federated credential ${SAFE_NAME}"
           echo "Subject: ${SUBJECT}"
