@@ -24,6 +24,7 @@ permissions:
 jobs:
   bootstrap-federated-credential:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Azure login (OIDC)
         uses: azure/login@v2
