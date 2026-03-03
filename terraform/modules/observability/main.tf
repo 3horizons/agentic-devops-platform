@@ -48,7 +48,7 @@ resource "azurerm_dashboard_grafana" "main" {
   name                  = substr("amg-${local.name_prefix}", 0, 23)
   location              = var.location
   resource_group_name   = var.resource_group_name
-  grafana_major_version = 10
+  grafana_major_version = 11
 
   api_key_enabled                   = true
   deterministic_outbound_ip_enabled = true
