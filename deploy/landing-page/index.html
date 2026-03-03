@@ -3,68 +3,625 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three Horizons — Developer Hub</title>
+    <title>Three Horizons — Agentic DevOps Platform</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 23 23'><rect x='1' y='1' width='10' height='10' fill='%23F25022'/><rect x='12' y='1' width='10' height='10' fill='%237FBA00'/><rect x='1' y='12' width='10' height='10' fill='%2300A4EF'/><rect x='12' y='12' width='10' height='10' fill='%23FFB900'/></svg>">
     <style>
+
 :root {
-    --ms-blue: #00A4EF; --ms-green: #7FBA00; --ms-yellow: #FFB900; --ms-red: #F25022; --ms-dark-blue: #0078D4;
-    --bg-primary: #FFFFFF; --bg-secondary: #F8F9FA; --text-primary: #1B1B1F; --text-secondary: #5C5C5C; --text-tertiary: #9A9A9A; --text-inverse: #FFFFFF;
-    --border-light: #E8E8E8; --border-lighter: #F0F0F0;
+    --ms-blue: #00A4EF;
+    --ms-green: #7FBA00;
+    --ms-yellow: #FFB900;
+    --ms-red: #F25022;
+    --ms-dark-blue: #0078D4;
+
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-tertiary: #F3F5F7;
+    --text-primary: #1B1B1F;
+    --text-secondary: #5C5C5C;
+    --text-tertiary: #9A9A9A;
+    --text-inverse: #FFFFFF;
+    --border-light: #E8E8E8;
+    --border-lighter: #F0F0F0;
+
     --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    --fs-xs: 11px; --fs-sm: 12px; --fs-base: 14px; --fs-md: 15px; --fs-lg: 18px; --fs-xl: 24px; --fs-2xl: 32px; --fs-hero: 42px;
+    --font-mono: 'Cascadia Code', 'Consolas', monospace;
+    --fs-xs: 16px; --fs-sm: 17px; --fs-base: 19px; --fs-md: 22px;
+    --fs-lg: 28px; --fs-xl: 36px; --fs-2xl: 48px; --fs-hero: 68px;
+
     --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-xl: 32px; --sp-2xl: 48px;
-    --r-sm: 6px; --r-md: 8px; --r-lg: 12px;
-    --sh-md: 0 4px 12px rgba(0,0,0,0.08); --sh-hover: 0 8px 20px rgba(0,0,0,0.12);
+    --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px;
+
+    --sh-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --sh-md: 0 4px 12px rgba(0,0,0,0.08);
+    --sh-lg: 0 8px 24px rgba(0,0,0,0.10);
+    --sh-hover: 0 8px 20px rgba(0,0,0,0.12);
+
     --color-bar-h: 4px;
     --color-bar: linear-gradient(to right, var(--ms-red) 0%, var(--ms-red) 25%, var(--ms-green) 25%, var(--ms-green) 50%, var(--ms-blue) 50%, var(--ms-blue) 75%, var(--ms-yellow) 75%, var(--ms-yellow) 100%);
-    --t-fast: 0.15s ease; --t-base: 0.25s ease;
+
+    --t-fast: 0.15s ease; --t-base: 0.25s ease; --t-slow: 0.4s ease;
 }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; background: var(--bg-primary); font-family: var(--font-family); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; }
+body { width: 100%; background: var(--bg-primary); font-family: var(--font-family); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+
+/* Color Bar */
 .color-bar { position: fixed; top: 0; left: 0; width: 100%; height: var(--color-bar-h); background: var(--color-bar); z-index: 1000; }
-body { padding-top: var(--color-bar-h); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-.login-box { width: 100%; max-width: 460px; padding: var(--sp-lg); text-align: center; }
-.login-logo { margin-bottom: var(--sp-xl); animation: fadeIn 0.6s ease; }
-.login-logo svg { width: 68px; height: 68px; }
+
+/* Tags */
+.tag { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.3px; }
+.tag-blue { background: rgba(0,164,239,0.12); color: var(--ms-blue); }
+.tag-green { background: rgba(127,186,0,0.12); color: #5A9400; }
+.tag-yellow { background: rgba(255,185,0,0.12); color: #B58200; }
+.tag-red { background: rgba(242,80,34,0.12); color: var(--ms-red); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: var(--sp-sm); padding: 10px var(--sp-lg); border-radius: var(--r-md); font-size: var(--fs-base); font-weight: 600; font-family: var(--font-family); cursor: pointer; transition: all var(--t-base); border: none; text-decoration: none; }
+.btn-primary { background: var(--ms-blue); color: var(--text-inverse); }
+.btn-primary:hover { background: var(--ms-dark-blue); box-shadow: var(--sh-md); }
+.btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-light); }
+.btn-outline:hover { background: var(--bg-secondary); }
+.btn-github { background: #24292e; color: #FFF; }
+.btn-github:hover { background: #2f363d; }
+
+/* ─── HERO / LOGIN SECTION ─── */
+.hero-section { padding-top: var(--color-bar-h); display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; }
+.login-box { width: 100%; max-width: 1100px; padding: var(--sp-2xl) var(--sp-xl); text-align: center; }
+.login-logo { margin-bottom: var(--sp-lg); animation: fadeIn 0.6s ease; }
+.login-logo img { height: 140px; }
 .login-title { font-size: var(--fs-hero); font-weight: 700; margin-bottom: var(--sp-sm); animation: fadeIn 0.6s ease 0.1s both; }
-.login-sub { font-size: var(--fs-md); color: var(--text-secondary); margin-bottom: var(--sp-xs); animation: fadeIn 0.6s ease 0.15s both; }
+.login-sub { font-size: var(--fs-md); color: var(--text-secondary); margin-bottom: var(--sp-md); animation: fadeIn 0.6s ease 0.15s both; }
 .login-tag { font-size: var(--fs-sm); color: var(--text-tertiary); margin-bottom: var(--sp-2xl); animation: fadeIn 0.6s ease 0.2s both; }
-.login-btn { width: 100%; height: 52px; background: #24292e; color: #FFF; border: none; border-radius: var(--r-md); font-size: var(--fs-md); font-weight: 600; font-family: var(--font-family); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all var(--t-base); box-shadow: var(--sh-md); animation: fadeIn 0.6s ease 0.3s both; text-decoration: none; }
+.login-btn { width: 100%; max-width: 560px; margin: 0 auto; height: 64px; background: #24292e; color: #FFF; border: none; border-radius: var(--r-md); font-size: var(--fs-md); font-weight: 600; font-family: var(--font-family); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all var(--t-base); box-shadow: var(--sh-md); animation: fadeIn 0.6s ease 0.3s both; }
 .login-btn:hover { background: #2f363d; box-shadow: var(--sh-hover); transform: translateY(-2px); }
 .login-btn svg { width: 20px; height: 20px; }
 .login-info { font-size: var(--fs-sm); color: var(--text-tertiary); margin: var(--sp-lg) 0 var(--sp-2xl); line-height: 1.6; animation: fadeIn 0.6s ease 0.4s both; }
-.login-horizons { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-md); margin-bottom: var(--sp-2xl); }
-.lh-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-md); padding: 18px 14px; border-top: 3px solid; transition: all var(--t-base); }
+.login-horizons { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); margin-bottom: var(--sp-xl); }
+.lh-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-md); padding: 28px 24px; border-top: 3px solid; transition: all var(--t-base); }
 .lh-card:nth-child(1) { border-top-color: var(--ms-blue); animation: fadeIn 0.5s ease 0.5s both; }
 .lh-card:nth-child(2) { border-top-color: var(--ms-green); animation: fadeIn 0.5s ease 0.6s both; }
 .lh-card:nth-child(3) { border-top-color: var(--ms-yellow); animation: fadeIn 0.5s ease 0.7s both; }
 .lh-card:hover { transform: translateY(-3px); box-shadow: var(--sh-hover); }
-.lh-icon { font-size: 26px; margin-bottom: var(--sp-sm); }
-.lh-title { font-size: var(--fs-sm); font-weight: 700; margin-bottom: 3px; }
-.lh-desc { font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.4; }
+.lh-icon { font-size: 38px; margin-bottom: var(--sp-sm); }
+.lh-title { font-size: var(--fs-base); font-weight: 700; margin-bottom: 6px; }
+.lh-desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.5; }
 .login-footer { font-size: var(--fs-xs); color: var(--text-tertiary); border-top: 1px solid var(--border-lighter); padding-top: var(--sp-lg); animation: fadeIn 0.6s ease 0.8s both; }
+.login-footer img { height: 20px; opacity: 0.6; margin-bottom: var(--sp-sm); }
+.scroll-hint { margin-top: var(--sp-xl); animation: fadeIn 0.6s ease 1s both; }
+.scroll-hint a { color: var(--ms-blue); text-decoration: none; font-size: var(--fs-sm); font-weight: 600; display: inline-flex; align-items: center; gap: var(--sp-xs); }
+.scroll-hint a:hover { text-decoration: underline; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 540px) { .login-title { font-size: var(--fs-2xl); } .login-horizons { grid-template-columns: 1fr; } }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+/* ─── CONTENT SECTIONS ─── */
+.section { padding: var(--sp-2xl) var(--sp-xl); max-width: 1320px; margin: 0 auto; }
+.section-alt { background: var(--bg-secondary); }
+.section-full { padding: var(--sp-2xl) var(--sp-xl); }
+.section-label { display: inline-flex; align-items: center; gap: var(--sp-sm); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: var(--sp-sm); }
+.section-label .line { width: 20px; height: 2px; }
+.section-heading { font-size: var(--fs-2xl); font-weight: 700; margin-bottom: var(--sp-sm); }
+.section-desc { font-size: var(--fs-md); color: var(--text-secondary); line-height: 1.7; max-width: 780px; margin-bottom: var(--sp-xl); }
+
+/* Stats Row */
+.stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-md); margin-bottom: var(--sp-2xl); }
+.stat-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); text-align: center; border-top: 3px solid; transition: all var(--t-base); }
+.stat-card:hover { box-shadow: var(--sh-hover); transform: translateY(-2px); }
+.stat-val { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--sp-xs); }
+.stat-label { font-size: var(--fs-xs); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Evolution */
+.evo-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); }
+.evo-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); border-top: 4px solid; transition: all var(--t-base); position: relative; }
+.evo-card:hover { box-shadow: var(--sh-hover); transform: translateY(-3px); }
+.evo-era { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: var(--sp-xs); }
+.evo-card h3 { font-size: var(--fs-lg); font-weight: 700; margin-bottom: var(--sp-sm); }
+.evo-card p { font-size: var(--fs-base); color: var(--text-secondary); line-height: 1.6; }
+
+/* Horizons Detail */
+.hz-detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); }
+.hz-detail { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); border-top: 4px solid; transition: all var(--t-base); }
+.hz-detail:hover { box-shadow: var(--sh-hover); transform: translateY(-3px); }
+.hz-detail .hz-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: var(--sp-xs); }
+.hz-detail h3 { font-size: var(--fs-lg); font-weight: 700; margin-bottom: var(--sp-sm); }
+.hz-detail p { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--sp-md); }
+.hz-pills { display: flex; flex-wrap: wrap; gap: var(--sp-xs); }
+
+/* Agents */
+.agent-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-md); }
+.agent-group { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); transition: all var(--t-base); }
+.agent-group:hover { box-shadow: var(--sh-hover); }
+.agent-group h4 { font-size: var(--fs-base); font-weight: 700; margin-bottom: var(--sp-sm); display: flex; align-items: center; gap: var(--sp-sm); }
+.agent-group h4 .icon { width: 28px; height: 28px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-size: var(--fs-sm); flex-shrink: 0; }
+.agent-chips { display: flex; flex-wrap: wrap; gap: var(--sp-xs); }
+.agent-chip { padding: 4px 10px; border-radius: var(--r-sm); font-size: var(--fs-xs); font-family: var(--font-mono); font-weight: 500; background: var(--bg-secondary); border: 1px solid var(--border-light); color: var(--text-secondary); transition: all var(--t-fast); }
+.agent-chip:hover { background: rgba(0,164,239,0.08); border-color: rgba(0,164,239,0.3); color: var(--ms-blue); }
+
+/* Flows */
+.flow-tabs { display: flex; gap: var(--sp-xs); flex-wrap: wrap; margin-bottom: var(--sp-md); }
+.flow-tab { padding: 8px 16px; border-radius: var(--r-md); font-size: var(--fs-sm); font-weight: 600; border: 1px solid var(--border-light); background: var(--bg-primary); color: var(--text-secondary); cursor: pointer; transition: all var(--t-fast); font-family: var(--font-family); }
+.flow-tab.active, .flow-tab:hover { background: var(--ms-blue); color: #fff; border-color: var(--ms-blue); }
+.flow-display { padding: var(--sp-lg); border: 1px solid var(--border-light); border-radius: var(--r-lg); background: var(--bg-primary); }
+.flow-chain { display: flex; align-items: center; gap: var(--sp-sm); flex-wrap: wrap; }
+.flow-node { padding: 8px 14px; border-radius: var(--r-sm); font-size: var(--fs-sm); font-weight: 600; font-family: var(--font-mono); border: 1px solid var(--border-light); background: var(--bg-secondary); }
+.flow-arrow { color: var(--ms-blue); font-size: var(--fs-lg); font-weight: 700; }
+
+/* Composition table */
+.comp-table { width: 100%; border-collapse: collapse; }
+.comp-table th { background: var(--bg-secondary); color: var(--text-secondary); font-weight: 600; text-align: left; padding: 12px var(--sp-md); border-bottom: 2px solid var(--border-light); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.5px; }
+.comp-table td { padding: 12px var(--sp-md); border-bottom: 1px solid var(--border-lighter); font-size: var(--fs-base); color: var(--text-secondary); }
+.comp-table td:first-child { font-weight: 600; color: var(--text-primary); }
+.comp-table tr:hover td { background: var(--bg-secondary); }
+
+/* Differentiators */
+.diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); }
+.diff-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); transition: all var(--t-base); }
+.diff-card:hover { box-shadow: var(--sh-hover); transform: translateY(-3px); }
+.diff-icon { width: 44px; height: 44px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: var(--sp-md); }
+.diff-card h4 { font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-xs); }
+.diff-card p { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
+
+/* Architecture layers */
+.arch-layers { display: flex; flex-direction: column; gap: var(--sp-sm); }
+.arch-layer { display: flex; align-items: center; gap: var(--sp-lg); padding: var(--sp-md) var(--sp-lg); border: 1px solid var(--border-light); border-radius: var(--r-md); background: var(--bg-primary); transition: all var(--t-base); border-left: 3px solid; }
+.arch-layer:hover { box-shadow: var(--sh-md); transform: translateX(3px); }
+.arch-layer .layer-name { font-weight: 700; min-width: 180px; font-size: var(--fs-base); }
+.arch-layer .layer-tech { display: flex; flex-wrap: wrap; gap: var(--sp-xs); }
+.layer-tag { padding: 3px 8px; border-radius: var(--r-sm); font-size: var(--fs-xs); font-weight: 500; background: var(--bg-secondary); border: 1px solid var(--border-light); color: var(--text-secondary); font-family: var(--font-mono); }
+
+/* Teams */
+.teams-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-lg); }
+.team-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--r-lg); padding: var(--sp-lg); transition: all var(--t-base); text-align: center; }
+.team-card:hover { box-shadow: var(--sh-hover); transform: translateY(-3px); }
+.team-icon { font-size: 32px; margin-bottom: var(--sp-sm); }
+.team-card h4 { font-size: var(--fs-md); font-weight: 700; margin-bottom: var(--sp-sm); }
+.team-card ul { list-style: none; text-align: left; }
+.team-card li { font-size: var(--fs-sm); color: var(--text-secondary); padding: 4px 0 4px 16px; position: relative; }
+.team-card li::before { content: ''; position: absolute; left: 0; top: 50%; width: 6px; height: 6px; border-radius: 50%; transform: translateY(-50%); }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--border-light); padding: var(--sp-xl) var(--sp-xl); text-align: center; font-size: var(--fs-sm); color: var(--text-tertiary); background: var(--bg-secondary); }
+.site-footer a { color: var(--ms-blue); text-decoration: none; }
+.site-footer img { height: 24px; opacity: 0.6; margin-bottom: var(--sp-sm); }
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(20px); transition: all 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 900px) {
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .evo-row, .hz-detail-grid, .diff-grid, .teams-grid { grid-template-columns: 1fr; }
+    .agent-groups { grid-template-columns: 1fr; }
+    .arch-layer { flex-direction: column; align-items: flex-start; gap: var(--sp-sm); }
+    .arch-layer .layer-name { min-width: auto; }
+}
+@media (max-width: 540px) {
+    .login-title { font-size: var(--fs-2xl); }
+    .login-horizons { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
     </style>
 </head>
 <body>
 <div class="color-bar"></div>
-<div class="login-box">
-    <div class="login-logo"><svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg></div>
-    <h1 class="login-title">Three Horizons</h1>
-    <p class="login-sub">Developer Hub</p>
-    <p class="login-tag">Powered by Red Hat® Developer Hub</p>
-    <a class="login-btn" href="https://rhdh.3horizons.ai">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-        Sign in with GitHub
-    </a>
-    <p class="login-info"></p>
-    <div class="login-horizons">
-        <div class="lh-card"><div class="lh-icon">🔨</div><div class="lh-title">Foundation</div><div class="lh-desc">Core infrastructure & CI/CD</div></div>
-        <div class="lh-card"><div class="lh-icon">⚡</div><div class="lh-title">Intelligence</div><div class="lh-desc">AI-powered dev tools</div></div>
-        <div class="lh-card"><div class="lh-icon">🚀</div><div class="lh-title">Autonomy</div><div class="lh-desc">Self-healing operations</div></div>
+
+<!-- ═══════════════════════ HERO / LOGIN ═══════════════════════ -->
+<div class="hero-section">
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="https://raw.githubusercontent.com/3horizons/agentic-devops-platform/main/images-logos/Three-Horizon-Logo.png" alt="Three Horizons — Microsoft® + GitHub® + Red Hat®" />
+        </div>
+        <h1 class="login-title">Three Horizons</h1>
+        <p class="login-sub">Agentic DevOps Platform</p>
+        <p class="login-tag">Powered by Red Hat® Developer Hub</p>
+
+        <button class="login-btn" onclick="window.location.href='https://rhdh.3horizons.ai/'">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            Sign in with GitHub
+        </button>
+        <div class="login-horizons" style="margin-top:var(--sp-2xl)">
+            <div class="lh-card">
+                <div class="lh-icon">&#9889;</div>
+                <div class="lh-title">H1 Foundation</div>
+                <div class="lh-desc">Core infrastructure, AKS, networking, security & DR</div>
+            </div>
+            <div class="lh-card">
+                <div class="lh-icon">&#9881;</div>
+                <div class="lh-title">H2 Enhancement</div>
+                <div class="lh-desc">ArgoCD, RHDH, observability, Golden Paths</div>
+            </div>
+            <div class="lh-card">
+                <div class="lh-icon">&#129302;</div>
+                <div class="lh-title">H3 Innovation</div>
+                <div class="lh-desc">AI Foundry, 18 agents, MCP servers, Lightspeed</div>
+            </div>
+        </div>
+
+        <div class="login-footer">
+            Microsoft® &bull; GitHub® &bull; Red Hat®
+        </div>
+
+        <div class="scroll-hint">
+            <a href="#platform-overview">Explore the platform &#8595;</a>
+        </div>
     </div>
-    <div class="login-footer">Microsoft · GitHub · Red Hat</div>
 </div>
+
+<!-- ═══════════════ COLOR BAR DIVIDER ═══════════════ -->
+<div style="height:var(--color-bar-h);background:var(--color-bar)"></div>
+
+<!-- ═══════════════════════ PLATFORM STATS ═══════════════════════ -->
+<div class="section-alt" id="platform-overview">
+    <div class="section">
+        <div class="reveal">
+            <div class="section-label" style="color:var(--ms-blue)"><span class="line" style="background:var(--ms-blue);display:inline-block;width:20px;height:2px"></span> Platform at a Glance</div>
+            <h2 class="section-heading">Enterprise-Grade Agentic DevOps</h2>
+            <p class="section-desc">An enterprise-grade platform combining Infrastructure as Code, GitOps, AI Agents, and an Internal Developer Platform to accelerate software delivery.</p>
+        </div>
+        <div class="stats-row reveal">
+            <div class="stat-card" style="border-top-color:var(--ms-red)"><div class="stat-val" style="color:var(--ms-red)">949+</div><div class="stat-label">Files</div></div>
+            <div class="stat-card" style="border-top-color:var(--ms-green)"><div class="stat-val" style="color:var(--ms-green)">105K</div><div class="stat-label">Lines of Code</div></div>
+            <div class="stat-card" style="border-top-color:var(--ms-blue)"><div class="stat-val" style="color:var(--ms-blue)">18</div><div class="stat-label">AI Agents</div></div>
+            <div class="stat-card" style="border-top-color:var(--ms-yellow)"><div class="stat-val" style="color:var(--ms-yellow)">23</div><div class="stat-label">Golden Paths</div></div>
+            <div class="stat-card" style="border-top-color:var(--ms-red)"><div class="stat-val" style="color:var(--ms-red)">15</div><div class="stat-label">Terraform Modules</div></div>
+        </div>
+        <div style="text-align:center" class="reveal">
+            <img src="https://raw.githubusercontent.com/3horizons/agentic-devops-platform/main/images-logos/agentic-picture.png" alt="Agentic DevOps" style="max-height:200px;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.08))" />
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ EVOLUTION ═══════════════════════ -->
+<div class="section" id="evolution">
+    <div class="reveal">
+        <div class="section-label" style="color:var(--ms-red)"><span class="line" style="background:var(--ms-red);display:inline-block;width:20px;height:2px"></span> Evolution</div>
+        <h2 class="section-heading">The DevOps Evolution</h2>
+        <p class="section-desc">From manual operations to AI-powered autonomous delivery — three generations of software engineering.</p>
+    </div>
+    <div class="evo-row reveal">
+        <div class="evo-card" style="border-top-color:var(--ms-red)">
+            <div class="evo-era" style="color:var(--ms-red)">Generation 1</div>
+            <h3>DevOps</h3>
+            <p>CI/CD pipelines, infrastructure automation, containers, monitoring. Manual decisions and human-triggered deployments.</p>
+        </div>
+        <div class="evo-card" style="border-top-color:var(--ms-yellow)">
+            <div class="evo-era" style="color:var(--ms-yellow)">Generation 2</div>
+            <h3>DevSecOps</h3>
+            <p>Security integrated into every pipeline stage. Shift-left testing, compliance as code, GHAS scanning, zero-trust by default.</p>
+        </div>
+        <div class="evo-card" style="border-top-color:var(--ms-green)">
+            <div class="evo-era" style="color:var(--ms-green)">Generation 3</div>
+            <h3>Agentic DevOps</h3>
+            <p>AI agents that observe, reason, and act autonomously. Multi-agent orchestration, self-healing systems, intelligent deployment decisions.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ COMPOSITION ═══════════════════════ -->
+<div class="section-alt">
+    <div class="section">
+        <div class="reveal">
+            <div class="section-label" style="color:var(--ms-green)"><span class="line" style="background:var(--ms-green);display:inline-block;width:20px;height:2px"></span> Composition</div>
+            <h2 class="section-heading">Four Layers of Composition</h2>
+            <p class="section-desc">Not a product — a reference architecture that composes existing Microsoft assets into a unified platform story.</p>
+        </div>
+        <table class="comp-table reveal">
+            <thead><tr><th>Layer</th><th>What It Contains</th><th>Examples</th></tr></thead>
+            <tbody>
+                <tr><td style="color:var(--ms-blue)">Products</td><td>Microsoft® products already in market</td><td>GitHub® Copilot, GitHub® Actions, AKS, Azure AI Foundry, Defender for Cloud</td></tr>
+                <tr><td style="color:var(--ms-green)">Agents</td><td>AI-powered autonomous capabilities</td><td>SRE Agent, GitHub® Copilot Agents, Copilot for Security, Agent HQ</td></tr>
+                <tr><td style="color:var(--ms-yellow)">Framework</td><td>Prescriptive maturity model for scoring</td><td>AI Maturity: 3 Pillars x 5 Levels, Scoring Criteria v2.3, Gap Analysis</td></tr>
+                <tr><td style="color:var(--ms-red)">Integration</td><td>Glue narrative: products to journey</td><td>Inner loop, CI/CD, Platform Engineering, AI Apps, end-to-end observability</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ═══════════════════════ THREE HORIZONS DETAIL ═══════════════════════ -->
+<div class="section" id="horizons">
+    <div class="reveal">
+        <div class="section-label" style="color:var(--ms-yellow)"><span class="line" style="background:var(--ms-yellow);display:inline-block;width:20px;height:2px"></span> Three Horizons</div>
+        <h2 class="section-heading">Maturity Model</h2>
+        <p class="section-desc">A progressive journey from foundation to innovation, each horizon building on the previous.</p>
+    </div>
+    <div class="hz-detail-grid reveal">
+        <div class="hz-detail" style="border-top-color:var(--ms-blue)">
+            <div class="hz-label" style="color:var(--ms-blue)">H1 — Foundation</div>
+            <h3>Core Infrastructure</h3>
+            <p>Enterprise-grade Azure infrastructure with AKS, networking, databases, security, and disaster recovery.</p>
+            <div class="hz-pills">
+                <span class="tag tag-blue">AKS 1.29+</span>
+                <span class="tag tag-blue">Terraform</span>
+                <span class="tag tag-blue">Key Vault</span>
+                <span class="tag tag-blue">PostgreSQL</span>
+                <span class="tag tag-blue">Calico</span>
+                <span class="tag tag-blue">Defender</span>
+            </div>
+        </div>
+        <div class="hz-detail" style="border-top-color:var(--ms-green)">
+            <div class="hz-label" style="color:var(--ms-green)">H2 — Enhancement</div>
+            <h3>Platform Services</h3>
+            <p>GitOps with ArgoCD, Red Hat® Developer Hub as IDP, full observability stack, Golden Paths, and self-hosted runners.</p>
+            <div class="hz-pills">
+                <span class="tag tag-green">ArgoCD</span>
+                <span class="tag tag-green">RHDH 1.8</span>
+                <span class="tag tag-green">Prometheus</span>
+                <span class="tag tag-green">Grafana</span>
+                <span class="tag tag-green">Gatekeeper</span>
+                <span class="tag tag-green">ESO</span>
+            </div>
+        </div>
+        <div class="hz-detail" style="border-top-color:var(--ms-yellow)">
+            <div class="hz-label" style="color:#B58200">H3 — Innovation</div>
+            <h3>AI Capabilities</h3>
+            <div style="margin-bottom:var(--sp-sm)"><img src="https://raw.githubusercontent.com/3horizons/agentic-devops-platform/main/images-logos/logo-github-copilot.png" alt="GitHub® Copilot" style="height:40px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.08))" /></div>
+            <p>Microsoft® Azure AI Foundry with GPT-4o, 18 GitHub® Copilot agents, MCP servers, and Developer Lightspeed.</p>
+            <div class="hz-pills">
+                <span class="tag tag-yellow">AI Foundry</span>
+                <span class="tag tag-yellow">GPT-4o</span>
+                <span class="tag tag-yellow">18 Agents</span>
+                <span class="tag tag-yellow">MCP</span>
+                <span class="tag tag-yellow">Lightspeed</span>
+                <span class="tag tag-yellow">RAG</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ AGENTS ═══════════════════════ -->
+<div class="section-alt" id="agents">
+    <div class="section">
+        <div class="reveal">
+            <div class="section-label" style="color:var(--ms-red)"><span class="line" style="background:var(--ms-red);display:inline-block;width:20px;height:2px"></span> Agent Ecosystem</div>
+            <h2 class="section-heading">18 Specialized AI Agents</h2>
+            <p class="section-desc">Each agent is an expert in its domain, collaborating through intelligent handoffs to deliver end-to-end automation.</p>
+            <div style="display:flex;align-items:center;gap:var(--sp-lg);margin-bottom:var(--sp-lg);flex-wrap:wrap">
+                <img src="https://raw.githubusercontent.com/3horizons/agentic-devops-platform/main/images-logos/github-copilot-multiples.png" alt="GitHub® Copilot Agents" style="height:72px;filter:drop-shadow(0 2px 10px rgba(0,0,0,0.08))" />
+                <img src="https://raw.githubusercontent.com/3horizons/agentic-devops-platform/main/images-logos/logo-ai-copilot.png" alt="AI Copilot" style="height:52px;filter:drop-shadow(0 2px 10px rgba(0,0,0,0.08))" />
+                <img src="https://raw.githubusercontent.com/3horizons/agentic-devops-platform/main/images-logos/logo-ai-microsoft.png" alt="Microsoft® AI" style="height:52px;filter:drop-shadow(0 2px 10px rgba(0,0,0,0.08))" />
+            </div>
+        </div>
+        <div class="agent-groups reveal">
+            <div class="agent-group">
+                <h4><span class="icon" style="background:rgba(0,164,239,0.1);color:var(--ms-blue)">&#9670;</span> Foundation</h4>
+                <div class="agent-chips">
+                    <span class="agent-chip">@architect</span><span class="agent-chip">@docs</span><span class="agent-chip">@test</span><span class="agent-chip">@sre</span><span class="agent-chip">@terraform</span><span class="agent-chip">@reviewer</span><span class="agent-chip">@security</span>
+                </div>
+            </div>
+            <div class="agent-group">
+                <h4><span class="icon" style="background:rgba(127,186,0,0.1);color:var(--ms-green)">&#9654;</span> Delivery</h4>
+                <div class="agent-chips">
+                    <span class="agent-chip">@onboarding</span><span class="agent-chip">@devops</span><span class="agent-chip">@deploy</span>
+                </div>
+            </div>
+            <div class="agent-group">
+                <h4><span class="icon" style="background:rgba(242,80,34,0.1);color:var(--ms-red)">&#9632;</span> Azure Infrastructure</h4>
+                <div class="agent-chips">
+                    <span class="agent-chip">@azure-portal-deploy</span>
+                </div>
+            </div>
+            <div class="agent-group">
+                <h4><span class="icon" style="background:rgba(255,185,0,0.1);color:var(--ms-yellow)">&#9733;</span> Portal &amp; Shared Services</h4>
+                <div class="agent-chips">
+                    <span class="agent-chip">@template-engineer</span><span class="agent-chip">@platform</span><span class="agent-chip">@hybrid-scenarios</span><span class="agent-chip">@github-integration</span><span class="agent-chip">@ado-integration</span>
+                </div>
+            </div>
+            <div class="agent-group">
+                <h4><span class="icon" style="background:rgba(0,164,239,0.1);color:var(--ms-blue)">&#8984;</span> Intelligence &amp; Architecture</h4>
+                <div class="agent-chips">
+                    <span class="agent-chip">@engineering-intelligence</span><span class="agent-chip">@context-architect</span><span class="agent-chip">@rhdh-architect</span>
+                </div>
+            </div>
+            <div class="agent-group">
+                <h4><span class="icon" style="background:rgba(127,186,0,0.1);color:var(--ms-green)">&#9881;</span> 16 MCP Servers</h4>
+                <div class="agent-chips">
+                    <span class="agent-chip">azure</span><span class="agent-chip">github</span><span class="agent-chip">terraform</span><span class="agent-chip">kubernetes</span><span class="agent-chip">helm</span><span class="agent-chip">docker</span><span class="agent-chip">argocd</span><span class="agent-chip">openshift</span><span class="agent-chip">backstage</span><span class="agent-chip">defender</span><span class="agent-chip">purview</span><span class="agent-chip">eng-intelligence</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ ORCHESTRATION FLOWS ═══════════════════════ -->
+<div class="section" id="flows">
+    <div class="reveal">
+        <div class="section-label" style="color:var(--ms-green)"><span class="line" style="background:var(--ms-green);display:inline-block;width:20px;height:2px"></span> Orchestration</div>
+        <h2 class="section-heading">Agent Handoff Flows</h2>
+        <p class="section-desc">Agents collaborate through intelligent handoffs, each contributing their expertise to complete complex workflows.</p>
+    </div>
+    <div class="reveal">
+        <div class="flow-tabs" id="flowTabs">
+            <button class="flow-tab active" data-flow="deploy">Deployment</button>
+            <button class="flow-tab" data-flow="security">Security</button>
+            <button class="flow-tab" data-flow="templates">Templates</button>
+            <button class="flow-tab" data-flow="incident">Incident</button>
+            <button class="flow-tab" data-flow="hybrid">Hybrid</button>
+            <button class="flow-tab" data-flow="intelligence">Intelligence</button>
+        </div>
+        <div class="flow-display"><div class="flow-chain" id="flowChain"></div></div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ DIFFERENTIATORS ═══════════════════════ -->
+<div class="section-alt" id="differentiators">
+    <div class="section">
+        <div class="reveal">
+            <div class="section-label" style="color:var(--ms-blue)"><span class="line" style="background:var(--ms-blue);display:inline-block;width:20px;height:2px"></span> Why This Platform</div>
+            <h2 class="section-heading">Key Differentiators</h2>
+        </div>
+        <div class="diff-grid reveal">
+            <div class="diff-card">
+                <div class="diff-icon" style="background:rgba(0,164,239,0.08);color:var(--ms-blue)">&#9783;</div>
+                <h4>Unified Developer Portal</h4>
+                <p>Red Hat® Developer Hub as single pane of glass — software catalog, Golden Paths, TechDocs, Scorecards, and AI chat in one place.</p>
+            </div>
+            <div class="diff-card">
+                <div class="diff-icon" style="background:rgba(127,186,0,0.08);color:var(--ms-green)">&#9889;</div>
+                <h4>Complete Automation</h4>
+                <p>From Terraform plan to ArgoCD sync — zero manual steps. GitOps with App-of-Apps pattern, sync waves, and self-healing.</p>
+            </div>
+            <div class="diff-card">
+                <div class="diff-icon" style="background:rgba(255,185,0,0.08);color:var(--ms-yellow)">&#9878;</div>
+                <h4>Multi-Platform Flexibility</h4>
+                <p>Deploy on AKS or ARO. Supports GitHub® and Azure DevOps coexistence with hybrid scenarios (A/B/C patterns).</p>
+            </div>
+            <div class="diff-card">
+                <div class="diff-icon" style="background:rgba(242,80,34,0.08);color:var(--ms-red)">&#9881;</div>
+                <h4>AI-Powered Engineering</h4>
+                <p>18 agents with intelligent handoffs, 16 MCP servers, Developer Lightspeed, and DORA metrics correlation.</p>
+            </div>
+            <div class="diff-card">
+                <div class="diff-icon" style="background:rgba(0,164,239,0.08);color:var(--ms-blue)">&#9729;</div>
+                <h4>Three Horizons Journey</h4>
+                <p>Start with H1 infrastructure, advance through H2 platform, reach H3 AI innovation — at your own pace.</p>
+            </div>
+            <div class="diff-card">
+                <div class="diff-icon" style="background:rgba(127,186,0,0.08);color:var(--ms-green)">&#9888;</div>
+                <h4>Security by Default</h4>
+                <p>Zero-trust, Workload Identity, private endpoints, OPA Gatekeeper, GHAS scanning — security is never optional.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ ARCHITECTURE ═══════════════════════ -->
+<div class="section" id="architecture">
+    <div class="reveal">
+        <div class="section-label" style="color:var(--ms-blue)"><span class="line" style="background:var(--ms-blue);display:inline-block;width:20px;height:2px"></span> Architecture</div>
+        <h2 class="section-heading">Platform Layers</h2>
+        <p class="section-desc">Eight composable layers from application runtime to monitoring — each independently configurable.</p>
+    </div>
+    <div class="arch-layers reveal">
+        <div class="arch-layer" style="border-left-color:var(--ms-blue)"><div class="layer-name">Application Platform</div><div class="layer-tech"><span class="layer-tag">AKS</span><span class="layer-tag">ARO</span><span class="layer-tag">ACA</span><span class="layer-tag">Azure Arc</span></div></div>
+        <div class="arch-layer" style="border-left-color:var(--ms-green)"><div class="layer-name">Tools &amp; Agents</div><div class="layer-tech"><span class="layer-tag">MCP</span><span class="layer-tag">Playwright</span><span class="layer-tag">Semantic Kernel</span><span class="layer-tag">Agent Framework</span></div></div>
+        <div class="arch-layer" style="border-left-color:var(--ms-yellow)"><div class="layer-name">Engineering Systems</div><div class="layer-tech"><span class="layer-tag">AI Foundry</span><span class="layer-tag">GitHub® Platform</span><span class="layer-tag">Azure DevOps</span></div></div>
+        <div class="arch-layer" style="border-left-color:var(--ms-red)"><div class="layer-name">IaC &amp; Configuration</div><div class="layer-tech"><span class="layer-tag">Terraform</span><span class="layer-tag">Red Hat® Ansible</span><span class="layer-tag">Helm</span></div></div>
+        <div class="arch-layer" style="border-left-color:var(--ms-blue)"><div class="layer-name">Developer Platform API</div><div class="layer-tech"><span class="layer-tag">Templates</span><span class="layer-tag">Entity Graph</span><span class="layer-tag">Platform Orchestrator</span></div></div>
+        <div class="arch-layer" style="border-left-color:var(--ms-green)"><div class="layer-name">Self-Service Foundation</div><div class="layer-tech"><span class="layer-tag">Dev Box</span><span class="layer-tag">API Center</span><span class="layer-tag">Service Catalog</span><span class="layer-tag">GitHub® Actions</span><span class="layer-tag">ArgoCD/Flux</span></div></div>
+        <div class="arch-layer" style="border-left-color:var(--ms-yellow)"><div class="layer-name">Monitoring &amp; Observability</div><div class="layer-tech"><span class="layer-tag">Azure Monitor</span><span class="layer-tag">App Insights</span><span class="layer-tag">Log Analytics</span><span class="layer-tag">Prometheus</span><span class="layer-tag">Grafana</span></div></div>
+        <div class="arch-layer" style="border-left-color:var(--ms-red)"><div class="layer-name">Security &amp; Compliance</div><div class="layer-tech"><span class="layer-tag">Defender</span><span class="layer-tag">GHAS</span><span class="layer-tag">Sentinel</span><span class="layer-tag">Key Vault</span><span class="layer-tag">Purview</span></div></div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ TEAMS ═══════════════════════ -->
+<div class="section-alt">
+    <div class="section">
+        <div class="reveal">
+            <div class="section-label" style="color:var(--ms-yellow)"><span class="line" style="background:var(--ms-yellow);display:inline-block;width:20px;height:2px"></span> Built For</div>
+            <h2 class="section-heading">Every Team Benefits</h2>
+        </div>
+        <div class="teams-grid reveal">
+            <div class="team-card">
+                <div class="team-icon">&#128187;</div>
+                <h4>Developer Teams</h4>
+                <ul>
+                    <li style="--dot:var(--ms-blue)">Self-service Golden Paths for new services in minutes</li>
+                    <li style="--dot:var(--ms-blue)">AI-assisted coding with GitHub® Copilot + 18 specialized agents</li>
+                    <li style="--dot:var(--ms-blue)">Inner loop with Dev Box + Codespaces</li>
+                    <li style="--dot:var(--ms-blue)">TechDocs and API catalog in RHDH</li>
+                </ul>
+            </div>
+            <div class="team-card">
+                <div class="team-icon">&#9881;</div>
+                <h4>Platform Teams</h4>
+                <ul>
+                    <li style="--dot:var(--ms-green)">Red Hat® Developer Hub as single developer portal</li>
+                    <li style="--dot:var(--ms-green)">HashiCorp® Terraform modules with guardrails</li>
+                    <li style="--dot:var(--ms-green)">GitOps with ArgoCD App-of-Apps</li>
+                    <li style="--dot:var(--ms-green)">DORA metrics + GitHub® Copilot analytics</li>
+                </ul>
+            </div>
+            <div class="team-card">
+                <div class="team-icon">&#128200;</div>
+                <h4>Business Leaders</h4>
+                <ul>
+                    <li style="--dot:var(--ms-yellow)">AI Maturity scoring with gap analysis</li>
+                    <li style="--dot:var(--ms-yellow)">Cost management dashboards + budget alerts</li>
+                    <li style="--dot:var(--ms-yellow)">Compliance (SOC 2, PCI-DSS, CIS)</li>
+                    <li style="--dot:var(--ms-yellow)">Measurable DORA improvements</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<div class="section" id="get-started" style="text-align:center">
+    <div class="reveal" style="border:1px solid var(--border-light);border-radius:var(--r-xl);padding:var(--sp-2xl);background:var(--bg-primary);box-shadow:var(--sh-lg);position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:var(--color-bar-h);background:var(--color-bar)"></div>
+        <h2 style="font-size:var(--fs-2xl);font-weight:700;margin-bottom:var(--sp-sm)">Start Your Agentic Journey</h2>
+        <p style="color:var(--text-secondary);margin-bottom:var(--sp-xl);max-width:500px;margin-left:auto;margin-right:auto">Begin with H1 Foundation, advance through H2 Platform Services, and reach H3 AI Innovation — at your own pace.</p>
+        <div style="display:flex;gap:var(--sp-sm);justify-content:center;flex-wrap:wrap">
+            <a href="https://github.com/3horizons/agentic-devops-platform/fork" class="btn btn-primary">&#9654; Deploy Express Mode</a>
+            <a href="https://github.com/3horizons/agentic-devops-platform/blob/main/README.md" class="btn btn-outline">&#128218; View Documentation</a>
+            <a href="https://github.com/3horizons/agentic-devops-platform" class="btn btn-github"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="width:16px;height:16px"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg> GitHub Repository</a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ COLOR BAR DIVIDER ═══════════════ -->
+<div style="height:var(--color-bar-h);background:var(--color-bar)"></div>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<div class="site-footer">
+    <img src="https://raw.githubusercontent.com/3horizons/agentic-devops-platform/main/images-logos/Three-Horizon-Logo.png" alt="Microsoft® + GitHub® + Red Hat®" /><br/>
+    <p style="margin-bottom:var(--sp-xs)"><strong>Agentic DevOps Platform</strong> — Three Horizons Implementation Accelerator v4.0</p>
+    <p>Microsoft® + GitHub® + Red Hat® &nbsp;|&nbsp; <a href="https://github.com/3horizons/agentic-devops-platform/blob/main/README.md">Documentation</a> &nbsp;|&nbsp; <a href="https://github.com/3horizons/agentic-devops-platform">GitHub®</a> &nbsp;|&nbsp; <a href="#">Support</a></p>
+    <p style="margin-top:var(--sp-sm);font-size:var(--fs-xs)">Microsoft® Confidential &bull; Americas Software GBB</p>
+</div>
+
+<script>
+// Scroll Reveal
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Flow Tabs
+const flows = {
+    deploy: ['@onboarding','@architect','@terraform','@deploy','@sre'],
+    security: ['@reviewer','@security','@devops','@test'],
+    templates: ['@platform','@template-engineer','@devops','@security'],
+    incident: ['@sre','@context-architect','@devops','@deploy'],
+    hybrid: ['@github-integration','@ado-integration','@hybrid-scenarios','@deploy'],
+    intelligence: ['@engineering-intelligence','@platform','@sre']
+};
+function renderFlow(key) {
+    const chain = document.getElementById('flowChain');
+    chain.innerHTML = '';
+    flows[key].forEach((agent, i) => {
+        const node = document.createElement('span');
+        node.className = 'flow-node';
+        node.textContent = agent;
+        chain.appendChild(node);
+        if (i < flows[key].length - 1) {
+            const arrow = document.createElement('span');
+            arrow.className = 'flow-arrow';
+            arrow.innerHTML = '&#8594;';
+            chain.appendChild(arrow);
+        }
+    });
+}
+document.querySelectorAll('.flow-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.flow-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderFlow(tab.dataset.flow);
+    });
+});
+renderFlow('deploy');
+
+// Fix team card bullet colors
+document.querySelectorAll('.team-card li').forEach(li => {
+    const dot = getComputedStyle(li).getPropertyValue('--dot').trim() || 'var(--ms-blue)';
+    li.style.setProperty('--dot-color', dot);
+});
+// Apply bullet colors via style
+const style = document.createElement('style');
+style.textContent = '.team-card li::before { background: var(--dot, var(--ms-blue)); }';
+document.head.appendChild(style);
+</script>
 </body>
 </html>
