@@ -1,4 +1,5 @@
 {
     "workbench.browser.enableChatTools": true,
-    "chat.agent.thinkingStyle": "collapsedPreview"
+    "chat.agent.thinkingStyle": "collapsedPreview",
+    "ansible.mcpServer.enabled": true
 }
