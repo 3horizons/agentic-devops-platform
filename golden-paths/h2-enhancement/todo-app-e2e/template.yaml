@@ -151,14 +151,14 @@ spec:
   output:
     links:
       - title: Created repository
-        url: ${{ steps['publish'].output.remoteUrl }}
+        url: https://github.com/${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}/${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}
       - title: Open in Catalog
         icon: catalog
         entityRef: ${{ steps['register'].output.entityRef }}
       - title: Open in Codespaces
-        url: ${{ steps['publish'].output.remoteUrl }}/codespaces
+        url: https://github.com/${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}/${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}/codespaces
       - title: Dev IaC Workflow
-        url: ${{ steps['publish'].output.remoteUrl }}/actions/workflows/iac-dev.yml
+        url: https://github.com/${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}/${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}/actions/workflows/iac-dev.yml
     text:
       - title: E2E demo created successfully
         content: |
