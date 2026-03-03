@@ -11,8 +11,8 @@ variable "project_name" {
   description = "Project or workload name (e.g., 'threehorizons')"
   type        = string
   validation {
-    condition     = can(regex("^[a-z0-9]{2,10}$", var.project_name))
-    error_message = "Project name must be 2-10 lowercase alphanumeric characters."
+    condition     = can(regex("^[a-z0-9]{2,15}$", var.project_name))
+    error_message = "Project name must be 2-15 lowercase alphanumeric characters."
   }
 }
 

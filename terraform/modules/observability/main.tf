@@ -45,7 +45,7 @@ resource "azurerm_monitor_workspace" "prometheus" {
 # =============================================================================
 
 resource "azurerm_dashboard_grafana" "main" {
-  name                  = "grafana-${local.name_prefix}"
+  name                  = substr("amg-${local.name_prefix}", 0, 23)
   location              = var.location
   resource_group_name   = var.resource_group_name
   grafana_major_version = 10
@@ -208,6 +208,7 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "recording_rules" {
 # =============================================================================
 
 resource "azurerm_monitor_alert_prometheus_rule_group" "alerts" {
+  count               = length(var.alert_email_receivers) > 0 ? 1 : 0
   name                = "AlertRules-${local.name_prefix}"
   location            = var.location
   resource_group_name = var.resource_group_name

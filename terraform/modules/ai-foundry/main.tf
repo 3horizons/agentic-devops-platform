@@ -304,7 +304,7 @@ resource "azurerm_key_vault_secret" "content_safety_key" {
 # =============================================================================
 
 resource "azurerm_monitor_diagnostic_setting" "openai" {
-  count = var.openai_config.enabled && var.log_analytics_workspace_id != "" ? 1 : 0
+  count = var.openai_config.enabled ? 1 : 0
 
   name                       = "openai-diagnostics"
   target_resource_id         = azurerm_cognitive_account.openai[0].id
@@ -328,7 +328,7 @@ resource "azurerm_monitor_diagnostic_setting" "openai" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "search" {
-  count = var.ai_search_config.enabled && var.log_analytics_workspace_id != "" ? 1 : 0
+  count = var.ai_search_config.enabled ? 1 : 0
 
   name                       = "search-diagnostics"
   target_resource_id         = azurerm_search_service.main[0].id

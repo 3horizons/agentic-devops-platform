@@ -90,26 +90,26 @@ provider "github" {
 }
 
 provider "kubernetes" {
-  host                   = module.aks.kube_config.host
-  client_certificate     = base64decode(module.aks.kube_config.client_certificate)
-  client_key             = base64decode(module.aks.kube_config.client_key)
-  cluster_ca_certificate = base64decode(module.aks.kube_config.cluster_ca_certificate)
+  host                   = module.aks.host
+  client_certificate     = module.aks.client_certificate
+  client_key             = module.aks.client_key
+  cluster_ca_certificate = module.aks.cluster_ca_certificate
 }
 
 provider "helm" {
   kubernetes {
-    host                   = module.aks.kube_config.host
-    client_certificate     = base64decode(module.aks.kube_config.client_certificate)
-    client_key             = base64decode(module.aks.kube_config.client_key)
-    cluster_ca_certificate = base64decode(module.aks.kube_config.cluster_ca_certificate)
+    host                   = module.aks.host
+    client_certificate     = module.aks.client_certificate
+    client_key             = module.aks.client_key
+    cluster_ca_certificate = module.aks.cluster_ca_certificate
   }
 }
 
 provider "kubectl" {
-  host                   = module.aks.kube_config.host
-  client_certificate     = base64decode(module.aks.kube_config.client_certificate)
-  client_key             = base64decode(module.aks.kube_config.client_key)
-  cluster_ca_certificate = base64decode(module.aks.kube_config.cluster_ca_certificate)
+  host                   = module.aks.host
+  client_certificate     = module.aks.client_certificate
+  client_key             = module.aks.client_key
+  cluster_ca_certificate = module.aks.cluster_ca_certificate
   load_config_file       = false
 }
 
@@ -335,8 +335,6 @@ module "aks" {
 
   admin_group_ids = [var.admin_group_id]
 
-  private_dns_zone_id = module.networking.private_dns_zone_ids.aks
-
   tags = local.common_tags
 
   depends_on = [module.networking]
@@ -455,7 +453,7 @@ module "ai_foundry" {
   }
 
   key_vault_id               = module.security.key_vault_id
-  log_analytics_workspace_id = module.observability[0].log_analytics_workspace_id
+  log_analytics_workspace_id = try(module.observability[0].log_analytics_workspace_id, "")
 
   tags = local.common_tags
 
@@ -542,7 +540,7 @@ module "container_registry" {
   subnet_id           = module.networking.subnet_ids.private_endpoints
   private_dns_zone_id = module.networking.private_dns_zone_ids.acr
 
-  aks_kubelet_identity_object_id = module.aks.kubelet_identity.object_id
+  aks_kubelet_identity_object_id = module.aks.kubelet_identity
 
   tags = local.common_tags
 

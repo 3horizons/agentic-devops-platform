@@ -273,9 +273,10 @@ resource "azurerm_key_vault_secret" "aad_client_secret" {
 # =============================================================================
 
 resource "azurerm_monitor_diagnostic_setting" "key_vault" {
+  count                      = lookup(var.tags, "log_analytics_workspace_id", "") != "" ? 1 : 0
   name                       = "kv-diagnostics"
   target_resource_id         = azurerm_key_vault.main.id
-  log_analytics_workspace_id = var.tags["log_analytics_workspace_id"] != null ? var.tags["log_analytics_workspace_id"] : null
+  log_analytics_workspace_id = var.tags["log_analytics_workspace_id"]
 
   enabled_log {
     category = "AuditEvent"
