@@ -80,9 +80,9 @@ resource "azurerm_postgresql_flexible_server" "main" {
     }
   }
 
-  # Private access via delegated subnet
-  delegated_subnet_id = var.subnet_id
-  private_dns_zone_id = var.private_dns_zone_ids.postgres
+  # For dev/staging: public access with firewall rules (no VNet delegation needed)
+  # For prod: use delegated subnet + private DNS (requires dedicated subnet)
+  public_network_access_enabled = !local.is_prod
 
   # Maintenance window
   maintenance_window {
@@ -106,6 +106,16 @@ resource "azurerm_postgresql_flexible_server" "main" {
       high_availability[0].standby_availability_zone
     ]
   }
+}
+
+# Allow Azure services to access PostgreSQL (dev/staging only)
+resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_azure_services" {
+  count = var.postgresql_config.enabled && !local.is_prod ? 1 : 0
+
+  name             = "AllowAzureServices"
+  server_id        = azurerm_postgresql_flexible_server.main[0].id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "0.0.0.0"
 }
 
 # PostgreSQL Databases
