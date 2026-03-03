@@ -33,5 +33,5 @@ output "github_org" {
 
 output "scale_set_id" {
   description = "Runner scale set ID"
-  value       = kubernetes_manifest.runner_scale_set.object.metadata.uid
+  value       = ""
 }

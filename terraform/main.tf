@@ -537,15 +537,12 @@ module "container_registry" {
   location            = var.location
   resource_group_name = azurerm_resource_group.main.name
 
-  sku                       = var.deployment_mode == "express" ? "Standard" : "Premium"
-  zone_redundancy_enabled   = var.deployment_mode == "enterprise"
-  admin_enabled             = false
-  public_network_access_enabled = var.deployment_mode == "express"
+  sku = var.deployment_mode == "express" ? "Standard" : "Premium"
 
   subnet_id           = module.networking.subnet_ids.private_endpoints
   private_dns_zone_id = module.networking.private_dns_zone_ids.acr
 
-  aks_kubelet_identity_id = module.aks.kubelet_identity.object_id
+  aks_kubelet_identity_object_id = module.aks.kubelet_identity.object_id
 
   tags = local.common_tags
 
@@ -560,10 +557,14 @@ module "external_secrets" {
   source = "./modules/external-secrets"
   count  = var.enable_external_secrets ? 1 : 0
 
-  namespace        = "external-secrets"
-  chart_version    = "0.9.9"
-  key_vault_name   = module.security.keyvault_name
-  tenant_id        = var.azure_tenant_id
+  customer_name       = var.customer_name
+  environment         = var.environment
+  location            = var.location
+  resource_group_name = azurerm_resource_group.main.name
+  aks_cluster_name    = module.aks.cluster_name
+  namespace           = "external-secrets"
+  key_vault_id        = module.security.key_vault_id
+  key_vault_uri       = module.security.key_vault_uri
 
   tags = local.common_tags
 
@@ -578,14 +579,13 @@ module "github_runners" {
   source = "./modules/github-runners"
   count  = var.enable_github_runners ? 1 : 0
 
-  namespace                   = "github-runners"
-  github_org                  = var.github_org
-  github_app_id               = var.github_app_id
-  github_app_installation_id  = var.github_app_installation_id
-  github_app_private_key      = var.github_app_private_key
-  runner_scale_set_name       = "arc-runners"
-  min_runners                 = 1
-  max_runners                 = var.deployment_mode == "enterprise" ? 10 : 5
+  customer_name              = var.customer_name
+  environment                = var.environment
+  namespace                  = "github-runners"
+  github_org                 = var.github_org
+  github_app_id              = var.github_app_id
+  github_app_installation_id = var.github_app_installation_id
+  github_app_private_key     = var.github_app_private_key
 
   tags = local.common_tags
 
@@ -600,16 +600,12 @@ module "defender" {
   source = "./modules/defender"
   count  = var.enable_defender ? 1 : 0
 
-  customer_name       = var.customer_name
-  environment         = var.environment
-  location            = var.location
-  resource_group_name = azurerm_resource_group.main.name
-
-  enable_container_plan     = true
-  enable_servers_plan       = var.deployment_mode == "enterprise"
-  enable_storage_plan       = var.deployment_mode == "enterprise"
-  enable_key_vault_plan     = true
-  enable_dns_plan           = false
+  subscription_id            = var.azure_subscription_id
+  customer_name              = var.customer_name
+  environment                = var.environment
+  sizing_profile             = var.deployment_mode == "enterprise" ? "large" : "medium"
+  log_analytics_workspace_id = var.enable_observability ? module.observability[0].log_analytics_workspace_id : ""
+  security_contact_email     = length(var.alert_emails) > 0 ? var.alert_emails[0] : "security@${var.domain_name}"
 
   tags = local.common_tags
 }
@@ -630,6 +626,15 @@ module "purview" {
   subnet_id           = module.networking.subnet_ids.private_endpoints
   admin_group_id      = var.admin_group_id
 
+  private_dns_zone_ids = {
+    purview        = try(module.networking.private_dns_zone_ids.purview, "")
+    purview_studio = try(module.networking.private_dns_zone_ids.purview_studio, "")
+    storage_blob   = try(module.networking.private_dns_zone_ids.storage_blob, "")
+    storage_queue  = try(module.networking.private_dns_zone_ids.storage_queue, "")
+    servicebus     = try(module.networking.private_dns_zone_ids.servicebus, "")
+    eventhub       = try(module.networking.private_dns_zone_ids.eventhub, "")
+  }
+
   tags = local.common_tags
 
   depends_on = [module.networking]
@@ -643,11 +648,12 @@ module "cost_management" {
   source = "./modules/cost-management"
   count  = var.enable_cost_management ? 1 : 0
 
+  customer_name       = var.customer_name
+  environment         = var.environment
+  location            = var.location
   resource_group_name = azurerm_resource_group.main.name
-  subscription_id     = var.azure_subscription_id
-  budget_amount       = var.budget_amount
-  alert_thresholds    = [50, 75, 90, 100]
-  alert_emails        = var.alert_emails
+  monthly_budget      = var.budget_amount
+  alert_email_addresses = var.alert_emails
 
   tags = local.common_tags
 }
@@ -660,16 +666,13 @@ module "disaster_recovery" {
   source = "./modules/disaster-recovery"
   count  = var.enable_disaster_recovery ? 1 : 0
 
-  customer_name       = var.customer_name
-  environment         = var.environment
-  resource_group_name = azurerm_resource_group.main.name
-
-  primary_location   = var.location
-  secondary_location = var.dr_location
-
-  enable_aks_dr               = var.deployment_mode == "enterprise"
-  enable_database_replication = true
-  enable_storage_replication  = true
+  customer_name               = var.customer_name
+  environment                 = var.environment
+  primary_location            = var.location
+  primary_region_short        = module.naming.region_code
+  primary_resource_group_name = azurerm_resource_group.main.name
+  dr_location                 = var.dr_location
+  dr_region_short             = "eus"
 
   tags = local.common_tags
 }

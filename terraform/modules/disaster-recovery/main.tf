@@ -69,12 +69,7 @@ resource "azurerm_recovery_services_vault" "main" {
   storage_mode_type = var.storage_redundancy
 
   # Immutability (for compliance)
-  dynamic "immutability" {
-    for_each = var.enable_immutability ? [1] : []
-    content {
-      state = "Unlocked"
-    }
-  }
+  immutability = var.enable_immutability ? "Unlocked" : null
 
   # Encryption
   dynamic "encryption" {

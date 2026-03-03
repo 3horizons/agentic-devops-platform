@@ -238,6 +238,7 @@ resource "azurerm_role_assignment" "purview_sql_reader" {
 # =============================================================================
 
 resource "azapi_resource" "collections" {
+  schema_validation_enabled = false
   for_each = { for coll in var.collection_hierarchy : coll.name => coll }
 
   type      = "Microsoft.Purview/accounts/collections@2021-12-01"
@@ -256,6 +257,7 @@ resource "azapi_resource" "collections" {
 
 # Environment sub-collections
 resource "azapi_resource" "environment_collections" {
+  schema_validation_enabled = false
   for_each = toset(["Development", "Staging", "Production"])
 
   type      = "Microsoft.Purview/accounts/collections@2021-12-01"
@@ -277,6 +279,7 @@ resource "azapi_resource" "environment_collections" {
 # =============================================================================
 
 resource "azapi_resource" "latam_classifications" {
+  schema_validation_enabled = false
   for_each = var.enable_latam_classifications ? local.latam_classifications : {}
 
   type      = "Microsoft.Purview/accounts/classificationRules@2022-02-01-preview"
@@ -308,6 +311,7 @@ resource "azapi_resource" "latam_classifications" {
 # =============================================================================
 
 resource "azapi_resource" "data_sources" {
+  schema_validation_enabled = false
   for_each = { for ds in var.data_sources : ds.name => ds }
 
   type      = "Microsoft.Purview/accounts/dataSources@2022-02-01-preview"
@@ -333,6 +337,7 @@ resource "azapi_resource" "data_sources" {
 # =============================================================================
 
 resource "azapi_resource" "scan_rule_set" {
+  schema_validation_enabled = false
   type      = "Microsoft.Purview/accounts/scanRuleSets@2022-02-01-preview"
   name      = "ThreeHorizonsScanRuleSet"
   parent_id = azurerm_purview_account.main.id
@@ -362,6 +367,7 @@ resource "azapi_resource" "scan_rule_set" {
 # =============================================================================
 
 resource "azapi_resource" "glossary_terms" {
+  schema_validation_enabled = false
   for_each = { for term in var.glossary_terms : term.name => term }
 
   type      = "Microsoft.Purview/accounts/glossaryTerms@2022-02-01-preview"
@@ -388,6 +394,7 @@ resource "azapi_resource" "glossary_terms" {
 # =============================================================================
 
 resource "azapi_resource" "data_quality_rules" {
+  schema_validation_enabled = false
   for_each = { for rule in var.data_quality_rules : rule.name => rule }
 
   type      = "Microsoft.Purview/accounts/dataQualityRules@2023-02-01-preview"

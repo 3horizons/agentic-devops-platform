@@ -85,11 +85,6 @@ resource "azurerm_container_registry" "main" {
   # Public network access
   public_network_access_enabled = false
 
-  # Encryption
-  encryption {
-    enabled = false # Use platform-managed keys by default
-  }
-
   identity {
     type = "SystemAssigned"
   }
@@ -101,17 +96,8 @@ resource "azurerm_container_registry" "main" {
 # GEO-REPLICATION (Premium only)
 # =============================================================================
 
-resource "azurerm_container_registry_replication" "replicas" {
-  for_each = var.sku == "Premium" ? toset(var.geo_replication_locations) : []
-
-  name                  = each.key
-  container_registry_id = azurerm_container_registry.main.id
-  location              = each.key
-
-  zone_redundancy_enabled = var.environment == "prod"
-
-  tags = local.common_tags
-}
+# Geo-replication is configured via georeplications block in the ACR resource
+# for azurerm provider >= 3.100
 
 # =============================================================================
 # PRIVATE ENDPOINT

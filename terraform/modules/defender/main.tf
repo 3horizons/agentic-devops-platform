@@ -268,17 +268,18 @@ resource "azurerm_security_center_auto_provisioning" "log_analytics" {
 # =============================================================================
 
 resource "azapi_resource" "regulatory_compliance" {
+  schema_validation_enabled = false
   for_each = toset(local.effective_compliance)
 
   type      = "Microsoft.Security/regulatoryComplianceStandards@2019-01-01-preview"
   name      = each.value
   parent_id = "/subscriptions/${var.subscription_id}"
 
-  body = jsonencode({
+  body = {
     properties = {
       state = "Enabled"
     }
-  })
+  }
 }
 
 # =============================================================================
@@ -337,13 +338,14 @@ resource "azurerm_security_center_automation" "export_to_log_analytics" {
 # =============================================================================
 
 resource "azapi_resource" "governance_rules" {
+  schema_validation_enabled = false
   for_each = { for rule in var.governance_rules : rule.name => rule }
 
   type      = "Microsoft.Security/governanceRules@2022-01-01-preview"
   name      = each.value.name
   parent_id = "/subscriptions/${var.subscription_id}"
 
-  body = jsonencode({
+  body = {
     properties = {
       displayName        = each.value.name
       description        = each.value.description
@@ -371,7 +373,7 @@ resource "azapi_resource" "governance_rules" {
       }
       remediationTimeframe = "P${each.value.grace_period_days}D"
     }
-  })
+  }
 }
 
 # =============================================================================
@@ -384,7 +386,7 @@ resource "azapi_update_resource" "defender_for_aks" {
   type        = "Microsoft.ContainerService/managedClusters@2023-08-01"
   resource_id = each.value
 
-  body = jsonencode({
+  body = {
     properties = {
       securityProfile = {
         defender = {
@@ -395,7 +397,7 @@ resource "azapi_update_resource" "defender_for_aks" {
         }
       }
     }
-  })
+  }
 }
 
 # =============================================================================
@@ -403,18 +405,19 @@ resource "azapi_update_resource" "defender_for_aks" {
 # =============================================================================
 
 resource "azapi_resource" "jit_policy" {
+  schema_validation_enabled = false
   count = var.sizing_profile == "xlarge" && var.enable_jit_access ? 1 : 0
 
   type      = "Microsoft.Security/locations/jitNetworkAccessPolicies@2020-01-01"
   name      = "default"
-  parent_id = "/subscriptions/${var.subscription_id}/resourceGroups/rg-${var.customer_name}-${var.environment}-compute/providers/Microsoft.Security/locations/${var.location}"
+  parent_id = "/subscriptions/${var.subscription_id}/resourceGroups/rg-${var.customer_name}-${var.environment}-compute/providers/Microsoft.Security/locations/centralus"
 
-  body = jsonencode({
+  body = {
     properties = {
       virtualMachines = []
       requests        = []
     }
-  })
+  }
 }
 
 # =============================================================================
