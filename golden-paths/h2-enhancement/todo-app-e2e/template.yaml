@@ -127,7 +127,6 @@ spec:
       name: Create GitHub repository
       action: publish:github
       input:
-        allowedHosts: ['github.com']
         repoUrl: ${{ parameters.repoUrl }}
         repoVisibility: ${{ parameters.repoVisibility }}
         description: ${{ parameters.description }}
