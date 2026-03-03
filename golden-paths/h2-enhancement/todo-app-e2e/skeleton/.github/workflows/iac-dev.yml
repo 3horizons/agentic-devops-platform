@@ -31,13 +31,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Azure login (OIDC)
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -51,12 +44,35 @@ jobs:
         working-directory: infrastructure/terraform
         run: terraform validate
 
+      - name: Azure login (OIDC)
+        id: azure_login
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        continue-on-error: true
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: OIDC guidance (when not configured yet)
+        if: ${{ github.event_name == 'workflow_dispatch' && steps.azure_login.outcome != 'success' }}
+        run: |
+          echo "::warning::Azure OIDC is not configured for this repository/environment yet."
+          echo "::warning::Create federated credential subject: repo:${GITHUB_REPOSITORY}:environment:dev"
+
+      - name: Stop apply when OIDC is missing
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.apply == 'true' && steps.azure_login.outcome != 'success' }}
+        run: |
+          echo "Apply requested but OIDC login failed. Configure federated credential and retry."
+          exit 1
+
       - name: Terraform Plan
+        if: ${{ github.event_name == 'workflow_dispatch' && steps.azure_login.outcome == 'success' }}
         working-directory: infrastructure/terraform
         run: terraform plan -var="environment=dev"
 
       - name: Terraform Apply
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.apply == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.apply == 'true' && steps.azure_login.outcome == 'success' }}
         working-directory: infrastructure/terraform
         run: terraform apply -auto-approve -var="environment=dev"
 {% endraw %}

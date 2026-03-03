@@ -39,6 +39,13 @@ terraform plan -var="environment=${{ values.environment }}" -var="location=${{ v
 
 Workflow: `.github/workflows/iac-dev.yml`
 
+Behavior:
+
+- On `push` to `main` (Terraform path changes): runs `init` and `validate` only.
+- On manual dispatch (`workflow_dispatch`):
+	- `apply=false` runs validation and attempts Azure login/plan when OIDC is configured.
+	- `apply=true` requires Azure OIDC to be configured; otherwise workflow stops with clear guidance.
+
 Azure secrets are inherited from the `3horizons` organization:
 
 - `AZURE_CLIENT_ID` — App Registration for GitHub Actions OIDC
