@@ -1,9 +1,10 @@
+{% raw %}
 locals {
   resource_suffix = "${var.app_name}-${var.environment}"
   common_tags = {
     environment = var.environment
     project     = var.app_name
-    owner       = "${{ values.owner }}"
+    owner       = "{% endraw %}${{ values.owner }}{% raw %}"
     cost-center = var.cost_center
     managed-by  = "terraform"
   }
@@ -24,3 +25,4 @@ resource "azurerm_storage_account" "app" {
   min_tls_version          = "TLS1_2"
   tags                     = local.common_tags
 }
+{% endraw %}

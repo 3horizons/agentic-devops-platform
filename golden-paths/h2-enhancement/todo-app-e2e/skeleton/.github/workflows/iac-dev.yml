@@ -1,3 +1,4 @@
+{% raw %}
 name: iac-dev
 
 on:
@@ -58,3 +59,4 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.apply == 'true' }}
         working-directory: infrastructure/terraform
         run: terraform apply -auto-approve -var="environment=dev"
+{% endraw %}
