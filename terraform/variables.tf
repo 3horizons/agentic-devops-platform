@@ -79,9 +79,20 @@ variable "deployment_mode" {
 }
 
 variable "location" {
-  description = "Azure region for deployment"
+  description = "Azure region for deployment (centralus recommended, eastus as alternative)"
   type        = string
-  default     = "brazilsouth"
+  default     = "centralus"
+}
+
+variable "platform_type" {
+  description = "Platform type: aks (Azure Kubernetes Service) or aro (Azure Red Hat OpenShift)"
+  type        = string
+  default     = "aks"
+
+  validation {
+    condition     = contains(["aks", "aro"], var.platform_type)
+    error_message = "Platform type must be aks or aro."
+  }
 }
 
 variable "tags" {
@@ -179,9 +190,9 @@ variable "enable_disaster_recovery" {
 }
 
 variable "dr_location" {
-  description = "Azure region for disaster recovery"
+  description = "Azure region for disaster recovery (should differ from primary location)"
   type        = string
-  default     = "eastus2"
+  default     = "eastus"
 }
 
 # -----------------------------------------------------------------------------

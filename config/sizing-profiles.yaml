@@ -286,7 +286,7 @@ profiles:
     multi_region: true
 
     regions:
-      primary: "brazilsouth"
+      primary: "centralus"
       secondary: "eastus"
 
     infrastructure:

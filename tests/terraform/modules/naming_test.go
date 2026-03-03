@@ -29,7 +29,7 @@ func TestNamingModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name": "contoso",
 			"environment":   "dev",
-			"region":        "brazilsouth",
+			"region":        "centralus",
 			"project":       "platform",
 		},
 		NoColor: true,
@@ -76,7 +76,7 @@ func TestNamingModuleRegionCodes(t *testing.T) {
 		region       string
 		expectedCode string
 	}{
-		{"brazilsouth", "brz"},
+		{"centralus", "cus"},
 		{"eastus", "eus"},
 		{"eastus2", "eu2"},
 		{"westus", "wus"},
@@ -127,7 +127,7 @@ func TestNamingModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name": "test",
 					"environment":   env,
-					"region":        "brazilsouth",
+					"region":        "centralus",
 					"project":       "test",
 				},
 				NoColor: true,
@@ -157,7 +157,7 @@ func TestNamingModuleValidation(t *testing.T) {
 			vars: map[string]interface{}{
 				"customer_name": "contoso",
 				"environment":   "dev",
-				"region":        "brazilsouth",
+				"region":        "centralus",
 				"project":       "platform",
 			},
 			shouldError: false,
@@ -167,7 +167,7 @@ func TestNamingModuleValidation(t *testing.T) {
 			vars: map[string]interface{}{
 				"customer_name": "contoso",
 				"environment":   "invalid",
-				"region":        "brazilsouth",
+				"region":        "centralus",
 				"project":       "platform",
 			},
 			shouldError: true,
@@ -177,7 +177,7 @@ func TestNamingModuleValidation(t *testing.T) {
 			vars: map[string]interface{}{
 				"customer_name": "this-is-a-very-long-customer-name-that-exceeds-limits",
 				"environment":   "dev",
-				"region":        "brazilsouth",
+				"region":        "centralus",
 				"project":       "platform",
 			},
 			shouldError: true,
@@ -214,7 +214,7 @@ func TestNamingModuleOutputConsistency(t *testing.T) {
 	vars := map[string]interface{}{
 		"customer_name": "consistency",
 		"environment":   "dev",
-		"region":        "brazilsouth",
+		"region":        "centralus",
 		"project":       "test",
 	}
 
@@ -259,7 +259,7 @@ func TestNamingModuleAzureCompliance(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name": "azure",
 			"environment":   "prod",
-			"region":        "brazilsouth",
+			"region":        "centralus",
 			"project":       "compliance",
 		},
 		NoColor: true,

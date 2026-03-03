@@ -82,10 +82,10 @@ locals {
 # =============================================================================
 
 output "resource_group" {
-  description = "Resource Group name (rg-)"
-  value       = "rg-${local.base_prefix}"
+  description = "Resource Group name (rg-) with platform type suffix"
+  value       = "rg-${local.base_prefix}-${var.platform_type}"
   # Rules: 1-90 chars, alphanumeric, underscore, hyphen, period, parenthesis
-  # Cannot end with period
+  # Includes platform type (aks/aro) for clarity
 }
 
 output "management_group" {

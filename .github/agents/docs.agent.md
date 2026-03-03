@@ -1,17 +1,12 @@
 ---
 name: docs
 description: Specialist in Documentation, Technical Writing, and Knowledge Management.
-tools:
-  - search/codebase
-  - edit/editFiles
-  - read/problems
-  - web/githubRepo
-  - read/readFile
-  - search/fileSearch
+tools: vscode, execute, read, agent, edit, search, web, browser, azure-mcp/search, com.microsoft/azure/search, 'microsoft/markitdown/*', 'microsoftdocs/mcp/*', todo
+
 user-invocable: true
 handoffs:
   - label: "Technical Review"
-    agent: architect
+    agent: SE: Architect
     prompt: "Review this ADR for technical accuracy."
     send: false
   - label: "Multi-File Doc Updates"

@@ -26,7 +26,7 @@ func TestExternalSecretsModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "testeso",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-eso",
 			"aks_cluster_name":    "aks-test-eso",
 			"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -70,7 +70,7 @@ func TestExternalSecretsModuleRBAC(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "rbactest",
 					"environment":         "prod",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-eso-rbac",
 					"aks_cluster_name":    "aks-test-eso-rbac",
 					"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -108,7 +108,7 @@ func TestExternalSecretsModuleMetrics(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":              "metricstest",
 					"environment":                "prod",
-					"location":                   "brazilsouth",
+					"location":                   "centralus",
 					"resource_group_name":        "rg-test-eso-metrics",
 					"aks_cluster_name":           "aks-test-eso-metrics",
 					"key_vault_id":               "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -146,7 +146,7 @@ func TestExternalSecretsModulePushSecrets(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":        "pushtest",
 					"environment":          "prod",
-					"location":             "brazilsouth",
+					"location":             "centralus",
 					"resource_group_name":  "rg-test-eso-push",
 					"aks_cluster_name":     "aks-test-eso-push",
 					"key_vault_id":         "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -171,7 +171,7 @@ func TestExternalSecretsModuleExampleSecret(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":         "exampletest",
 			"environment":           "dev",
-			"location":              "brazilsouth",
+			"location":              "centralus",
 			"resource_group_name":   "rg-test-eso-example",
 			"aks_cluster_name":      "aks-test-eso-example",
 			"key_vault_id":          "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -197,7 +197,7 @@ func TestExternalSecretsModuleNodeSelector(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "nodetest",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-eso-node",
 			"aks_cluster_name":    "aks-test-eso-node",
 			"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -240,7 +240,7 @@ func TestExternalSecretsModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "envtest",
 					"environment":         env,
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-eso-" + env,
 					"aks_cluster_name":    "aks-test-eso-" + env,
 					"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",

@@ -293,3 +293,6 @@ argocd-credentials.txt
 *.generated.*
 
 
+
+# MCP identity credentials (generated)
+.env.mcp

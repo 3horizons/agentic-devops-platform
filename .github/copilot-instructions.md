@@ -221,6 +221,8 @@ RHDH Portal: @rhdh-architect → @platform → @deploy → @sre
 
 Defined in `mcp-servers/mcp-config.json`. Access matrix in `mcp-servers/USAGE.md`.
 
+**Tool Hierarchy (MCP-First Policy):** Azure Copilot + Azure MCP (`azure-mcp/*`, `com.microsoft/azure/*`) are the **PRIMARY** methods for Azure operations. CLI scripts in `scripts/` serve as **guardrails** for validation only. Agents MUST prefer MCP tools over direct CLI when available.
+
 **Core (14):** azure, github, terraform, kubernetes, helm, docker, git, bash, filesystem, defender, purview, entra, copilot, engineering-intelligence, backstage
 
 **New (2):** `openshift` (oc CLI for ARO deployments), `argocd` (ArgoCD CLI for GitOps)
@@ -461,7 +463,8 @@ foundry-agent, sre-agent-integration, mlops-pipeline, multi-agent-system, copilo
 
 ### Compliance
 
-- **LGPD**: Primary region brazilsouth
+- **Primary regions**: `centralus` (main), `eastus` (DR), `eastus2` (AI Foundry)
+- **LGPD**: Available as opt-in compliance when deploying to `brazilsouth`
 - **SOC 2**: Audit trails, access controls, monitoring
 - **PCI-DSS**: Network segmentation, encryption
 - **CIS Benchmarks**: Azure + Kubernetes hardening
@@ -557,5 +560,5 @@ cd tests/terraform && go test -v ./modules/...
 7. **Golden Paths are RHDH Software Templates**: They follow Backstage template format with `template.yaml`, `skeleton/`, and parameters
 8. **Observability is comprehensive**: 50+ alert rules, 40+ recording rules, 3 dashboards — changes should maintain this coverage
 9. **Policy as Code is enforced**: OPA policies for Terraform (Conftest in CI) and Gatekeeper constraints for K8s runtime — all code must comply
-10. **Brazil-first**: Default region is `brazilsouth` for LGPD compliance, AI Foundry uses `eastus2` for model availability
+10. **US-primary**: Default region is `centralus` (Central US). DR region: `eastus`. AI Foundry uses `eastus2` for model availability. LGPD compliance available as opt-in with `brazilsouth`
 11. **Engineering Intelligence is Faros AI-inspired**: The `@engineering-intelligence` agent provides DORA metrics, Copilot analytics, GHAS security posture, and developer productivity dashboards — all sourced from GitHub APIs and displayed as RHDH dynamic plugin tabs

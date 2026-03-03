@@ -27,9 +27,10 @@ body:
     attributes:
       label: "Primary Azure Region"
       options:
-        - "brazilsouth - Brazil South (São Paulo)"
+        - "centralus - Central US (Iowa)"
+        - "eastus - East US (Virginia)"
         - "eastus2 - East US 2 (Virginia)"
-        - "southcentralus - South Central US (Texas)"
+        - "brazilsouth - Brazil South (São Paulo)"
     validations:
       required: true
 

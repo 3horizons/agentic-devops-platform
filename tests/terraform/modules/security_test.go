@@ -26,7 +26,7 @@ func TestSecurityModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "testsec",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-security",
 			"tenant_id":           "00000000-0000-0000-0000-000000000000",
 			"admin_group_id":      "00000000-0000-0000-0000-000000000001",
@@ -56,7 +56,7 @@ func TestSecurityModuleKeyVaultNaming(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "kvtest",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-kv",
 			"tenant_id":           "00000000-0000-0000-0000-000000000000",
 			"admin_group_id":      "00000000-0000-0000-0000-000000000001",
@@ -80,7 +80,7 @@ func TestSecurityModuleManagedIdentities(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":        "idtest",
 			"environment":          "dev",
-			"location":             "brazilsouth",
+			"location":             "centralus",
 			"resource_group_name":  "rg-test-identity",
 			"tenant_id":            "00000000-0000-0000-0000-000000000000",
 			"admin_group_id":       "00000000-0000-0000-0000-000000000001",
@@ -106,7 +106,7 @@ func TestSecurityModuleRBACAssignments(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "rbactest",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-rbac",
 			"tenant_id":           "00000000-0000-0000-0000-000000000000",
 			"admin_group_id":      "00000000-0000-0000-0000-000000000001",
@@ -130,7 +130,7 @@ func TestSecurityModuleKeyVaultAccessPolicies(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "kvaccess",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-kvaccess",
 			"tenant_id":           "00000000-0000-0000-0000-000000000000",
 			"admin_group_id":      "00000000-0000-0000-0000-000000000001",
@@ -162,7 +162,7 @@ func TestSecurityModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "secenv",
 					"environment":         env,
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-sec-" + env,
 					"tenant_id":           "00000000-0000-0000-0000-000000000000",
 					"admin_group_id":      "00000000-0000-0000-0000-000000000001",

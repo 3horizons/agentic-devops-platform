@@ -79,12 +79,12 @@ body:
       label: Azure Region
       description: "Region with code for naming"
       options:
-        - brazilsouth (brs)
-        - brazilsoutheast (brse)
+        - centralus (cus)
         - eastus (eus)
         - eastus2 (eus2)
-        - southcentralus (scus)
         - westus2 (wus2)
+        - southcentralus (scus)
+        - brazilsouth (brs)
         - westeurope (weu)
       default: 0
     validations:

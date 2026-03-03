@@ -19,7 +19,8 @@
 
 customer_name         = "contoso"           # Your company/project name (lowercase)
 environment           = "dev"               # dev | staging | prod
-location              = "brazilsouth"       # Azure region
+location              = "centralus"         # Azure region (centralus or eastus)
+platform_type         = "aks"               # aks | aro
 azure_subscription_id = ""                  # az account show --query id -o tsv
 azure_tenant_id       = ""                  # az account show --query tenantId -o tsv
 admin_group_id        = ""                  # Azure AD group for admins
@@ -56,7 +57,7 @@ ai_foundry_location = "eastus2"    # Best model availability
 # --- CROSS-CUTTING ------------------------------------------------------------
 
 enable_disaster_recovery = false
-dr_location              = "eastus2"
+dr_location              = "eastus"
 
 # --- COST ALERTS (when enable_cost_management = true) -------------------------
 

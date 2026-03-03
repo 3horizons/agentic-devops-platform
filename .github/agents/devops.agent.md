@@ -1,14 +1,8 @@
 ---
 name: devops
 description: Specialist in DevOps operations, CI/CD pipelines, and Kubernetes orchestration.
-tools:
-  - search/codebase
-  - edit/editFiles
-  - execute/runInTerminal
-  - read/problems
-  - read/readFile
-  - search/fileSearch
-  - web/fetch
+tools: vscode, execute, read, agent, edit, search, web, browser, 'azure-mcp/*', com.microsoft/azure/search, 'github/*', todo
+
 user-invocable: true
 handoffs:
   - label: "Security Review"

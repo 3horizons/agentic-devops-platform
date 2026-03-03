@@ -1,5 +1,23 @@
 # MCP Servers Usage Guide
 
+## MCP-First Policy
+
+Azure Copilot + Azure MCP are the **PRIMARY** methods for all Azure operations. Agents MUST prefer MCP tools over direct CLI when available.
+
+### Tool Hierarchy
+
+| Priority | Method | When to Use |
+|----------|--------|-------------|
+| **1. PRIMARY** | Azure Copilot (`ms-azuretools.vscode-azure-github-copilot/*`) + Azure MCP (`azure-mcp/*`, `com.microsoft/azure/*`) | ALWAYS use first for Azure resource operations |
+| **2. SECONDARY** | CLI via terminal (`az`, `terraform`, `kubectl`, `helm`) | ONLY when MCP is unavailable or for automation scripts |
+| **3. VALIDATION** | Scripts (`validate-*.sh`, `terraform validate`) | ALWAYS run after MCP operations as guardrails |
+
+### Rationale
+
+- **MCP tools** provide structured, type-safe operations with built-in auth context
+- **CLI scripts** in `scripts/` serve as **guardrails** (validation, health checks) — not primary operation methods
+- **Validation scripts** ensure correctness after any operation regardless of method used
+
 ## Overview
 
 Model Context Protocol (MCP) servers provide agents with access to external tools and services. This document defines which agents can access which MCP servers and what operations are permitted.

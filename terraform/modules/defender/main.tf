@@ -407,7 +407,7 @@ resource "azapi_resource" "jit_policy" {
 
   type      = "Microsoft.Security/locations/jitNetworkAccessPolicies@2020-01-01"
   name      = "default"
-  parent_id = "/subscriptions/${var.subscription_id}/resourceGroups/rg-${var.customer_name}-${var.environment}-compute/providers/Microsoft.Security/locations/brazilsouth"
+  parent_id = "/subscriptions/${var.subscription_id}/resourceGroups/rg-${var.customer_name}-${var.environment}-compute/providers/Microsoft.Security/locations/${var.location}"
 
   body = jsonencode({
     properties = {

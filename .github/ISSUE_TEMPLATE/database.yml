@@ -64,8 +64,10 @@ body:
     attributes:
       label: Azure Region
       options:
-        - brazilsouth (brs)
+        - centralus (cus)
         - eastus (eus)
+        - eastus2 (eus2)
+        - brazilsouth (brs)
         - westeurope (weu)
       default: 0
     validations:

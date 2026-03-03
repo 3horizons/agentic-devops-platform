@@ -26,7 +26,7 @@ func TestObservabilityModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "testobs",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-obs",
 			"enable_prometheus":   true,
 			"enable_grafana":      true,
@@ -57,7 +57,7 @@ func TestObservabilityModuleLogAnalytics(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "latest",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-la",
 			"log_analytics_config": map[string]interface{}{
 				"sku":               "PerGB2018",
@@ -83,7 +83,7 @@ func TestObservabilityModuleGrafana(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "graftest",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-grafana",
 			"enable_grafana":      true,
 			"grafana_config": map[string]interface{}{
@@ -111,7 +111,7 @@ func TestObservabilityModuleAlerts(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "alerttest",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-alerts",
 			"enable_alerts":       true,
 			"alert_config": map[string]interface{}{
@@ -145,7 +145,7 @@ func TestObservabilityModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "obsenv",
 					"environment":         env,
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-obs-" + env,
 				},
 				NoColor: true,

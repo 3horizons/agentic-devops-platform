@@ -28,8 +28,9 @@ body:
       label: "AI Workloads Region"
       description: "Region for AI Foundry (check model availability)"
       options:
-        - "eastus2 - East US 2 (Full AI support)"
-        - "southcentralus - South Central US"
+        - "eastus2 - East US 2 (Full AI support, recommended)"
+        - "eastus - East US (Good AI support)"
+        - "centralus - Central US"
         - "brazilsouth - Brazil South (Limited models)"
     validations:
       required: true

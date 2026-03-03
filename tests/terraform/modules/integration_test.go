@@ -30,7 +30,7 @@ func TestIntegrationH1Foundation(t *testing.T) {
 			Vars: map[string]interface{}{
 				"customer_name":       "inttest",
 				"environment":         "dev",
-				"location":            "brazilsouth",
+				"location":            "centralus",
 				"resource_group_name": "rg-int-test-net",
 				"address_space":       []string{"10.0.0.0/16"},
 				"tags": map[string]interface{}{
@@ -54,7 +54,7 @@ func TestIntegrationH1Foundation(t *testing.T) {
 			Vars: map[string]interface{}{
 				"customer_name":       "inttest",
 				"environment":         "dev",
-				"location":            "brazilsouth",
+				"location":            "centralus",
 				"resource_group_name": "rg-int-test-aks",
 				"kubernetes_version":  "1.29",
 				"aks_subnet_id":       "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -84,7 +84,7 @@ func TestIntegrationH2Enhancement(t *testing.T) {
 			Vars: map[string]interface{}{
 				"customer_name":       "inttest",
 				"environment":         "dev",
-				"location":            "brazilsouth",
+				"location":            "centralus",
 				"resource_group_name": "rg-int-test-obs",
 				"tags": map[string]interface{}{
 					"Environment": "test",
@@ -107,7 +107,7 @@ func TestIntegrationH2Enhancement(t *testing.T) {
 			Vars: map[string]interface{}{
 				"customer_name":       "inttest",
 				"environment":         "dev",
-				"location":            "brazilsouth",
+				"location":            "centralus",
 				"resource_group_name": "rg-int-test-db",
 				"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 				"tags": map[string]interface{}{
@@ -180,7 +180,7 @@ func TestIntegrationSecurityStack(t *testing.T) {
 			Vars: map[string]interface{}{
 				"customer_name":       "inttest",
 				"environment":         "dev",
-				"location":            "brazilsouth",
+				"location":            "centralus",
 				"resource_group_name": "rg-int-test-sec",
 				"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 				"tenant_id":           "00000000-0000-0000-0000-000000000000",
@@ -259,7 +259,7 @@ func TestIntegrationGitOpsStack(t *testing.T) {
 			Vars: map[string]interface{}{
 				"customer_name":       "inttest",
 				"environment":         "dev",
-				"location":            "brazilsouth",
+				"location":            "centralus",
 				"resource_group_name": "rg-int-test-eso",
 				"aks_cluster_name":    "aks-int-test",
 				"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -299,7 +299,7 @@ func TestIntegrationEnvironmentParity(t *testing.T) {
 						Vars: map[string]interface{}{
 							"customer_name":       "paritytest",
 							"environment":         env,
-							"location":            "brazilsouth",
+							"location":            "centralus",
 							"resource_group_name": "rg-parity-" + env + "-net",
 							"address_space":       []string{"10.0.0.0/16"},
 						},
@@ -311,7 +311,7 @@ func TestIntegrationEnvironmentParity(t *testing.T) {
 						Vars: map[string]interface{}{
 							"customer_name":       "paritytest",
 							"environment":         env,
-							"location":            "brazilsouth",
+							"location":            "centralus",
 							"resource_group_name": "rg-parity-" + env + "-sec",
 							"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 							"tenant_id":           "00000000-0000-0000-0000-000000000000",
@@ -324,7 +324,7 @@ func TestIntegrationEnvironmentParity(t *testing.T) {
 						Vars: map[string]interface{}{
 							"customer_name":       "paritytest",
 							"environment":         env,
-							"location":            "brazilsouth",
+							"location":            "centralus",
 							"resource_group_name": "rg-parity-" + env + "-obs",
 						},
 						NoColor: true,
@@ -350,7 +350,7 @@ func TestIntegrationNamingConsistency(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name": "nametest",
 			"environment":   "dev",
-			"location":      "brazilsouth",
+			"location":      "centralus",
 		},
 		NoColor: true,
 	})
@@ -376,7 +376,7 @@ func TestIntegrationSizingProfiles(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "sizetest",
 					"environment":         "dev",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-size-" + profile,
 					"kubernetes_version":  "1.29",
 					"sizing_profile":      profile,

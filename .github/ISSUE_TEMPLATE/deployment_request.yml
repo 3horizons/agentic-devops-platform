@@ -57,9 +57,10 @@ body:
       label: Azure Region
       description: Primary deployment region
       options:
-        - brazilsouth (LGPD compliant, limited AI)
+        - centralus (Recommended primary region)
+        - eastus (DR region, full AI capabilities)
         - eastus2 (Full AI capabilities)
-        - southcentralus (Full AI, US compliance)
+        - brazilsouth (LGPD compliant, limited AI)
     validations:
       required: true
 

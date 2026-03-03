@@ -9,7 +9,7 @@
 #      az storage account create \
 #        --name tfstate${PROJECT}${ENV} \
 #        --resource-group rg-terraform-state \
-#        --location brazilsouth \
+#        --location centralus \
 #        --sku Standard_LRS \
 #        --encryption-services blob
 #

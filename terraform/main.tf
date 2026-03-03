@@ -128,6 +128,7 @@ locals {
     "three-horizons/customer"        = var.customer_name
     "three-horizons/environment"     = var.environment
     "three-horizons/deployment-mode" = var.deployment_mode
+    "three-horizons/platform-type"   = var.platform_type
     "three-horizons/managed-by"      = "terraform"
     "three-horizons/version"         = "1.0.0"
   })
@@ -164,11 +165,25 @@ locals {
 }
 
 # =============================================================================
+# MODULE: NAMING (CAF-compliant resource names)
+# =============================================================================
+
+module "naming" {
+  source = "./modules/naming"
+
+  project_name  = var.customer_name
+  environment   = var.environment == "staging" ? "stg" : (var.environment == "prod" ? "prd" : var.environment)
+  location      = var.location
+  org_code      = "3h"
+  platform_type = var.platform_type
+}
+
+# =============================================================================
 # RESOURCE GROUP
 # =============================================================================
 
 resource "azurerm_resource_group" "main" {
-  name     = "rg-${local.name_prefix}"
+  name     = module.naming.resource_group
   location = var.location
   tags     = local.common_tags
 }

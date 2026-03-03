@@ -27,7 +27,7 @@ func TestNetworkingModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "testcustomer",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-networking",
 			"vnet_cidr":           "10.0.0.0/16",
 			"dns_zone_name":       "test.example.com",
@@ -89,7 +89,7 @@ func TestNetworkingModuleVNetCIDRValidation(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "test",
 					"environment":         "dev",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test",
 					"vnet_cidr":           tc.vnetCIDR,
 					"dns_zone_name":       "test.example.com",
@@ -119,7 +119,7 @@ func TestNetworkingModuleSubnetConfiguration(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "subnet",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-subnet",
 			"vnet_cidr":           "10.0.0.0/16",
 			"dns_zone_name":       "test.example.com",
@@ -157,7 +157,7 @@ func TestNetworkingModulePrivateDNSZones(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "dns",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-dns",
 			"vnet_cidr":           "10.0.0.0/16",
 			"dns_zone_name":       "test.example.com",
@@ -183,7 +183,7 @@ func TestNetworkingModuleNSGRules(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "nsg",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-nsg",
 			"vnet_cidr":           "10.0.0.0/16",
 			"dns_zone_name":       "test.example.com",
@@ -223,7 +223,7 @@ func TestNetworkingModuleBastionConfiguration(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "bastion",
 					"environment":         "dev",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-bastion",
 					"vnet_cidr":           "10.0.0.0/16",
 					"dns_zone_name":       "test.example.com",
@@ -263,7 +263,7 @@ func TestNetworkingModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "envtest",
 					"environment":         env,
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-" + env,
 					"vnet_cidr":           "10.0.0.0/16",
 					"dns_zone_name":       "test.example.com",

@@ -172,6 +172,21 @@ deployment_patterns:
       - "CDN/Front Door for LATAM latency optimization"
       - "No data residency restrictions"
 
+  us_centric:
+    name: "us-centric (default)"
+    description: "Default pattern — Central US primary, East US DR, East US 2 AI"
+    primary_region: "centralus"
+    ai_region: "eastus2"
+    dr_region: "eastus"
+    architecture:
+      - "Platform infrastructure in Central US"
+      - "AI workloads in East US 2 for best model availability"
+      - "DR in East US for geographic redundancy"
+      - "Private Link for cross-region connectivity"
+    compliance:
+      soc2: "US-based audit trails and access controls"
+      pci_dss: "Network segmentation and encryption"
+
 metadata:
   last_updated: "2024-12"
   issue_template_config:
@@ -181,8 +196,10 @@ metadata:
         label: "Primary Azure Region"
         description: "Select primary region for deployment"
         options:
-          - "brazilsouth - Brazil South (São Paulo) - LGPD Compliant"
+          - "centralus - Central US (Iowa) - Default"
+          - "eastus - East US (Virginia) - DR Region"
           - "eastus2 - East US 2 (Virginia) - Full AI Support"
+          - "brazilsouth - Brazil South (São Paulo) - LGPD Compliant"
           - "southcentralus - South Central US (Texas) - Mexico/Central America"
           - "westus2 - West US 2 (Washington) - US West Coast"
       validations:

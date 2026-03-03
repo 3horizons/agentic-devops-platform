@@ -27,8 +27,9 @@ body:
     attributes:
       label: "ML Region"
       options:
-        - "eastus2 - East US 2"
-        - "southcentralus - South Central US"
+        - "eastus2 - East US 2 (Recommended for AI)"
+        - "eastus - East US"
+        - "centralus - Central US"
         - "brazilsouth - Brazil South"
     validations:
       required: true

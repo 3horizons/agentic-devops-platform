@@ -26,7 +26,7 @@ func TestPurviewModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "testpurv",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-purview",
 			"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 			"private_dns_zone_ids": map[string]interface{}{
@@ -71,7 +71,7 @@ func TestPurviewModuleSizingProfiles(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "sizetest",
 					"environment":         "prod",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-purview-" + profile,
 					"sizing_profile":      profile,
 					"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -103,7 +103,7 @@ func TestPurviewModuleDataSources(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "dstest",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-purview-ds",
 			"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 			"private_dns_zone_ids": map[string]interface{}{
@@ -162,7 +162,7 @@ func TestPurviewModuleLATAMClassifications(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "latamtest",
 					"environment":         "prod",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-purview-latam",
 					"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 					"private_dns_zone_ids": map[string]interface{}{
@@ -194,7 +194,7 @@ func TestPurviewModuleCollectionHierarchy(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "colltest",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-purview-coll",
 			"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 			"private_dns_zone_ids": map[string]interface{}{
@@ -240,7 +240,7 @@ func TestPurviewModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "envtest",
 					"environment":         env,
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-purview-" + env,
 					"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 					"private_dns_zone_ids": map[string]interface{}{

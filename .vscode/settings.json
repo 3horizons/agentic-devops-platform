@@ -1,5 +1,8 @@
 {
     "workbench.browser.enableChatTools": true,
     "chat.agent.thinkingStyle": "collapsedPreview",
-    "ansible.mcpServer.enabled": true
+    "ansible.mcpServer.enabled": true,
+    "ansible.executionEnvironment.volumeMounts": [],
+    "ansible.executionEnvironment.containerEngine": "docker",
+    "ansible.executionEnvironment.enabled": true
 }

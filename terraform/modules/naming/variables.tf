@@ -41,3 +41,14 @@ variable "org_code" {
   type        = string
   default     = ""
 }
+
+variable "platform_type" {
+  description = "Platform type for resource group naming: aks or aro"
+  type        = string
+  default     = "aks"
+
+  validation {
+    condition     = contains(["aks", "aro"], var.platform_type)
+    error_message = "Platform type must be aks or aro."
+  }
+}

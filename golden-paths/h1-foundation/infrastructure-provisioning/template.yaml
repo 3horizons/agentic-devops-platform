@@ -158,13 +158,13 @@ spec:
         azureRegion:
           title: Primary Azure Region
           type: string
-          default: eastus2
+          default: centralus
           enum:
+            - centralus
             - eastus
             - eastus2
             - westus2
             - westus3
-            - centralus
             - northeurope
             - westeurope
             - brazilsouth
@@ -179,6 +179,7 @@ spec:
           title: Secondary Region (DR)
           type: string
           enum:
+            - centralus
             - eastus
             - eastus2
             - westus2

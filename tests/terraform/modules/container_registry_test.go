@@ -26,7 +26,7 @@ func TestContainerRegistryModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":                   "testacr",
 			"environment":                     "dev",
-			"location":                        "brazilsouth",
+			"location":                        "centralus",
 			"resource_group_name":             "rg-test-acr",
 			"sku":                             "Premium",
 			"subnet_id":                       "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -72,7 +72,7 @@ func TestContainerRegistryModuleSKUs(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":                  "skutest",
 					"environment":                    "dev",
-					"location":                       "brazilsouth",
+					"location":                       "centralus",
 					"resource_group_name":            "rg-test-sku-" + tc.name,
 					"sku":                            tc.sku,
 					"subnet_id":                      "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -99,7 +99,7 @@ func TestContainerRegistryModuleNaming(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":                  "nametest",
 			"environment":                    "dev",
-			"location":                       "brazilsouth",
+			"location":                       "centralus",
 			"resource_group_name":            "rg-test-naming",
 			"sku":                            "Premium",
 			"subnet_id":                      "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -125,7 +125,7 @@ func TestContainerRegistryModuleGeoReplication(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":                  "georep",
 			"environment":                    "prod",
-			"location":                       "brazilsouth",
+			"location":                       "centralus",
 			"resource_group_name":            "rg-test-georep",
 			"sku":                            "Premium",
 			"subnet_id":                      "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -152,7 +152,7 @@ func TestContainerRegistryModulePrivateEndpoint(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":                  "petest",
 			"environment":                    "prod",
-			"location":                       "brazilsouth",
+			"location":                       "centralus",
 			"resource_group_name":            "rg-test-pe",
 			"sku":                            "Premium",
 			"subnet_id":                      "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -178,7 +178,7 @@ func TestContainerRegistryModuleRBAC(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":                  "rbactest",
 			"environment":                    "dev",
-			"location":                       "brazilsouth",
+			"location":                       "centralus",
 			"resource_group_name":            "rg-test-rbac",
 			"sku":                            "Premium",
 			"subnet_id":                      "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -221,7 +221,7 @@ func TestContainerRegistryModuleWebhook(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":                  "whtest",
 					"environment":                    "dev",
-					"location":                       "brazilsouth",
+					"location":                       "centralus",
 					"resource_group_name":            "rg-test-wh",
 					"sku":                            "Premium",
 					"subnet_id":                      "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
@@ -261,7 +261,7 @@ func TestContainerRegistryModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":                  "envtest",
 					"environment":                    env,
-					"location":                       "brazilsouth",
+					"location":                       "centralus",
 					"resource_group_name":            "rg-test-acr-" + env,
 					"sku":                            "Premium",
 					"subnet_id":                      "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",

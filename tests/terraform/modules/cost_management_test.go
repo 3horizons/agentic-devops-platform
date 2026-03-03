@@ -26,7 +26,7 @@ func TestCostManagementModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":         "testcost",
 			"environment":           "dev",
-			"location":              "brazilsouth",
+			"location":              "centralus",
 			"resource_group_name":   "rg-test-cost",
 			"monthly_budget":        5000,
 			"alert_email_addresses": []string{"ops@example.com"},
@@ -63,7 +63,7 @@ func TestCostManagementModuleBudgetThresholds(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":         "budgettest",
 					"environment":           "prod",
-					"location":              "brazilsouth",
+					"location":              "centralus",
 					"resource_group_name":   "rg-test-cost-budget",
 					"monthly_budget":        budget,
 					"alert_email_addresses": []string{"ops@example.com", "finance@example.com"},
@@ -86,7 +86,7 @@ func TestCostManagementModuleMultipleAlertRecipients(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "alerttest",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-cost-alerts",
 			"monthly_budget":      10000,
 			"alert_email_addresses": []string{
@@ -122,7 +122,7 @@ func TestCostManagementModuleCostExport(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":         "exporttest",
 					"environment":           "prod",
-					"location":              "brazilsouth",
+					"location":              "centralus",
 					"resource_group_name":   "rg-test-cost-export",
 					"monthly_budget":        10000,
 					"alert_email_addresses": []string{"ops@example.com"},
@@ -160,7 +160,7 @@ func TestCostManagementModuleSubscriptionBudget(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":              "subtest",
 					"environment":                "prod",
-					"location":                   "brazilsouth",
+					"location":                   "centralus",
 					"resource_group_name":        "rg-test-cost-sub",
 					"monthly_budget":             10000,
 					"alert_email_addresses":      []string{"ops@example.com"},
@@ -185,7 +185,7 @@ func TestCostManagementModuleWebhooks(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":         "webhooktest",
 			"environment":           "prod",
-			"location":              "brazilsouth",
+			"location":              "centralus",
 			"resource_group_name":   "rg-test-cost-webhook",
 			"monthly_budget":        10000,
 			"alert_email_addresses": []string{"ops@example.com"},
@@ -226,7 +226,7 @@ func TestCostManagementModuleCustomAlerts(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":              "customtest",
 					"environment":                "prod",
-					"location":                   "brazilsouth",
+					"location":                   "centralus",
 					"resource_group_name":        "rg-test-cost-custom",
 					"monthly_budget":             10000,
 					"alert_email_addresses":      []string{"ops@example.com"},
@@ -257,7 +257,7 @@ func TestCostManagementModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":         "envtest",
 					"environment":           env,
-					"location":              "brazilsouth",
+					"location":              "centralus",
 					"resource_group_name":   "rg-test-cost-" + env,
 					"monthly_budget":        5000,
 					"alert_email_addresses": []string{"ops@example.com"},

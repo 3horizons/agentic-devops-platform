@@ -5,7 +5,7 @@
 # Usage: ./scripts/setup-terraform-backend.sh \
 #          --customer-name contoso \
 #          --environment prod \
-#          --location brazilsouth
+#          --location centralus
 # =============================================================================
 set -euo pipefail
 
@@ -13,7 +13,7 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; BLUE='\033[0;34m'; NC
 
 CUSTOMER_NAME=""
 ENVIRONMENT=""
-LOCATION="brazilsouth"
+LOCATION="centralus"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

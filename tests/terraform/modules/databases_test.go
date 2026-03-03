@@ -26,7 +26,7 @@ func TestDatabasesModuleBasic(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "testdb",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-databases",
 			"subnet_id":           "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.Network/virtualNetworks/vnet-test/subnets/snet-db",
 			"key_vault_id":        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.KeyVault/vaults/kv-test",
@@ -64,7 +64,7 @@ func TestDatabasesModulePostgreSQLConfig(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "psqltest",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-psql",
 			"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 			"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -118,7 +118,7 @@ func TestDatabasesModuleRedisConfig(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "redistest",
 					"environment":         "dev",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-redis",
 					"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 					"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -153,7 +153,7 @@ func TestDatabasesModuleCosmosDB(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "cosmostest",
 			"environment":         "dev",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-cosmos",
 			"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 			"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -188,7 +188,7 @@ func TestDatabasesModulePrivateEndpoints(t *testing.T) {
 		Vars: map[string]interface{}{
 			"customer_name":       "petest",
 			"environment":         "prod",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"resource_group_name": "rg-test-pe",
 			"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 			"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",
@@ -224,7 +224,7 @@ func TestDatabasesModuleEnvironments(t *testing.T) {
 				Vars: map[string]interface{}{
 					"customer_name":       "dbenv",
 					"environment":         env,
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"resource_group_name": "rg-test-db-" + env,
 					"subnet_id":           "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/snet",
 					"key_vault_id":        "/subscriptions/00000000/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv",

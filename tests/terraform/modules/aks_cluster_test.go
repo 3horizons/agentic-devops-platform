@@ -26,7 +26,7 @@ func TestAKSClusterModuleBasic(t *testing.T) {
 		TerraformDir: "../../../terraform/modules/aks-cluster",
 		Vars: map[string]interface{}{
 			"resource_group_name": "rg-test-aks",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"customer_name":       "testaks",
 			"environment":         "dev",
 			"kubernetes_version":  "1.29",
@@ -79,7 +79,7 @@ func TestAKSClusterModuleKubernetesVersions(t *testing.T) {
 				TerraformDir: "../../../terraform/modules/aks-cluster",
 				Vars: map[string]interface{}{
 					"resource_group_name": "rg-test-aks",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"customer_name":       "vertest",
 					"environment":         "dev",
 					"kubernetes_version":  version,
@@ -124,7 +124,7 @@ func TestAKSClusterModuleSKUTiers(t *testing.T) {
 				TerraformDir: "../../../terraform/modules/aks-cluster",
 				Vars: map[string]interface{}{
 					"resource_group_name": "rg-test-aks",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"customer_name":       "skutest",
 					"environment":         "dev",
 					"sku_tier":            tc.skuTier,
@@ -155,7 +155,7 @@ func TestAKSClusterModuleNodePools(t *testing.T) {
 		TerraformDir: "../../../terraform/modules/aks-cluster",
 		Vars: map[string]interface{}{
 			"resource_group_name": "rg-test-aks",
-			"location":            "brazilsouth",
+			"location":            "centralus",
 			"customer_name":       "nptest",
 			"environment":         "dev",
 			"vnet_subnet_id":      "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.Network/virtualNetworks/vnet-test/subnets/snet-aks",
@@ -245,7 +245,7 @@ func TestAKSClusterModuleAddons(t *testing.T) {
 				TerraformDir: "../../../terraform/modules/aks-cluster",
 				Vars: map[string]interface{}{
 					"resource_group_name": "rg-test-aks",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"customer_name":       "addontest",
 					"environment":         "dev",
 					"vnet_subnet_id":      "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.Network/virtualNetworks/vnet-test/subnets/snet-aks",
@@ -287,7 +287,7 @@ func TestAKSClusterModuleWorkloadIdentity(t *testing.T) {
 				TerraformDir: "../../../terraform/modules/aks-cluster",
 				Vars: map[string]interface{}{
 					"resource_group_name": "rg-test-aks",
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"customer_name":       "witest",
 					"environment":         "dev",
 					"vnet_subnet_id":      "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.Network/virtualNetworks/vnet-test/subnets/snet-aks",
@@ -328,7 +328,7 @@ func TestAKSClusterModuleEnvironments(t *testing.T) {
 				TerraformDir: "../../../terraform/modules/aks-cluster",
 				Vars: map[string]interface{}{
 					"resource_group_name": "rg-test-aks-" + env,
-					"location":            "brazilsouth",
+					"location":            "centralus",
 					"customer_name":       "envtest",
 					"environment":         env,
 					"vnet_subnet_id":      "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.Network/virtualNetworks/vnet-test/subnets/snet-aks",
@@ -364,7 +364,7 @@ func TestAKSClusterModuleValidation(t *testing.T) {
 			name: "valid_inputs",
 			vars: map[string]interface{}{
 				"resource_group_name": "rg-test-aks",
-				"location":            "brazilsouth",
+				"location":            "centralus",
 				"customer_name":       "valid",
 				"environment":         "dev",
 				"vnet_subnet_id":      "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.Network/virtualNetworks/vnet-test/subnets/snet-aks",
@@ -380,7 +380,7 @@ func TestAKSClusterModuleValidation(t *testing.T) {
 		{
 			name: "missing_required_var",
 			vars: map[string]interface{}{
-				"location":      "brazilsouth",
+				"location":      "centralus",
 				"customer_name": "test",
 				"environment":   "dev",
 			},
