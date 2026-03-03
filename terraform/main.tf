@@ -136,24 +136,24 @@ locals {
   # Deployment mode configurations
   deployment_configs = {
     express = {
-      aks_node_count    = 3
-      aks_node_size     = "Standard_D4s_v5"
+      aks_node_count    = 2
+      aks_node_size     = "Standard_D4as_v4"
       enable_ha         = false
       enable_monitoring = true
       enable_databases  = true
       enable_ai         = false
     }
     standard = {
-      aks_node_count    = 5
-      aks_node_size     = "Standard_D4s_v5"
-      enable_ha         = true
+      aks_node_count    = 2
+      aks_node_size     = "Standard_D4as_v4"
+      enable_ha         = false
       enable_monitoring = true
       enable_databases  = true
       enable_ai         = true
     }
     enterprise = {
-      aks_node_count    = 10
-      aks_node_size     = "Standard_D8s_v5"
+      aks_node_count    = 5
+      aks_node_size     = "Standard_D4as_v4"
       enable_ha         = true
       enable_monitoring = true
       enable_databases  = true
@@ -312,10 +312,10 @@ module "aks" {
   additional_node_pools = var.deployment_mode == "enterprise" ? {
     "workload" = {
       name                = "workload"
-      node_count          = 5
-      vm_size             = "Standard_D4s_v5"
-      min_count           = 3
-      max_count           = 20
+      node_count          = 3
+      vm_size             = "Standard_D4as_v4"
+      min_count           = 2
+      max_count           = 10
       enable_auto_scaling = true
       max_pods            = 110
       node_labels = {
@@ -415,9 +415,9 @@ module "ai_foundry" {
     sku_name = "S0"
     models = [
       {
-        name          = "o3"
-        model_name    = "o3"
-        model_version = "2025-04-16"
+        name          = "o3-mini"
+        model_name    = "o3-mini"
+        model_version = "2025-01-31"
         capacity      = var.deployment_mode == "enterprise" ? 60 : 30
         rai_policy    = "Microsoft.Default"
       },

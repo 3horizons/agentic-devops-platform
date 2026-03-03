@@ -54,9 +54,9 @@ variable "openai_config" {
     sku_name = "S0"
     models = [
       {
-        name          = "o3"
-        model_name    = "o3"
-        model_version = "2025-04-16"
+        name          = "o3-mini"
+        model_name    = "o3-mini"
+        model_version = "2025-01-31"
         capacity      = 30
         rai_policy    = "Microsoft.Default"
       },
