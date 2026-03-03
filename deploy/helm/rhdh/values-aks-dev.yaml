@@ -214,8 +214,36 @@ upstream:
           - type: url
             target: https://github.com/3horizons/agentic-devops-platform/blob/main/backstage/catalog-info.yaml
 
+      argocd:
+        appLocatorMethods:
+          - type: config
+            instances:
+              - name: local
+                url: https://argocd.3horizons.ai
+
       permission:
-        enabled: false
+        enabled: true
+        rbac:
+          admin:
+            users:
+              - name: user:default/paulanunes85
+            superAdminRole: true
+          policies-csv-file: /opt/app-root/src/rbac-policies.csv
+          pluginsWithPermission:
+            - catalog
+            - scaffolder
+            - permission
+            - kubernetes
+            - bulk-import
+            - notification
+          policyFileReload: true
+
+      dynamicPlugins:
+        frontend:
+          default.main-menu-items:
+            menuItems:
+              default.create:
+                title: Create
 
   postgresql:
     enabled: false

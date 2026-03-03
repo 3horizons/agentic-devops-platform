@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rbac-policies
+  namespace: rhdh
+data:
+  rbac-policies.csv: |
+    p, role:default/admin, catalog-entity, read, allow
+    p, role:default/admin, catalog-entity, update, allow
+    p, role:default/admin, catalog-entity, delete, allow
+    p, role:default/admin, catalog.entity.create, create, allow
+    p, role:default/admin, catalog.location.read, read, allow
+    p, role:default/admin, catalog.location.create, create, allow
+    p, role:default/admin, catalog.location.delete, delete, allow
+    p, role:default/admin, scaffolder-template, read, allow
+    p, role:default/admin, scaffolder-action, use, allow
+    p, role:default/admin, scaffolder.task.create, create, allow
+    p, role:default/admin, scaffolder.task.read, read, allow
+    p, role:default/admin, scaffolder.task.cancel, use, allow
+    p, role:default/admin, scaffolder.template.management, use, allow
+    p, role:default/admin, bulk-import, read, allow
+    p, role:default/admin, bulk-import, create, allow
+    p, role:default/admin, bulk-import, delete, allow
+    p, role:default/admin, policy-entity, read, allow
+    p, role:default/admin, policy-entity, create, allow
+    p, role:default/admin, policy-entity, update, allow
+    p, role:default/admin, policy-entity, delete, allow
+    p, role:default/admin, kubernetes.proxy, use, allow
+    p, role:default/admin, notification.entity, read, allow
+    p, role:default/admin, notification.entity, create, allow
+    p, role:default/admin, notification.entity, update, allow
+    p, role:default/developer, catalog-entity, read, allow
+    p, role:default/developer, catalog.entity.create, create, allow
+    p, role:default/developer, catalog.location.read, read, allow
+    p, role:default/developer, catalog.location.create, create, allow
+    p, role:default/developer, scaffolder-template, read, allow
+    p, role:default/developer, scaffolder-action, use, allow
+    p, role:default/developer, scaffolder.task.create, create, allow
+    p, role:default/developer, scaffolder.task.read, read, allow
+    p, role:default/developer, kubernetes.proxy, use, allow
+    p, role:default/developer, notification.entity, read, allow
+    p, role:default/developer, notification.entity, update, allow
+    g, user:default/paulanunes85, role:default/admin
+    g, group:default/platform-team, role:default/admin
+    g, group:default/platform-engineering, role:default/admin
