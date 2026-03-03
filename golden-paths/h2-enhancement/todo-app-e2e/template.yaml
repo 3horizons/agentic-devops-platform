@@ -131,8 +131,6 @@ spec:
         repoVisibility: ${{ parameters.repoVisibility }}
         description: ${{ parameters.description }}
         defaultBranch: main
-        protectDefaultBranch: true
-        requireCodeOwnerReviews: true
 
     - id: create-environment
       name: Create dev environment
