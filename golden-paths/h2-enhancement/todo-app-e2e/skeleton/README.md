@@ -54,11 +54,13 @@ Azure secrets are inherited from the `3horizons` organization:
 
 No manual secret configuration is needed for these three secrets.
 
-For OIDC login to Azure, each new repository needs a one-time federated credential in app `three-horizons-github-oidc` with subject:
+The template dispatches an org-level bootstrap workflow to create OIDC federated credential automatically.
+
+Expected subject:
 
 `repo:${{ values.repoOwner }}/${{ values.repoName }}:environment:dev`
 
-Example (run by tenant/app admin):
+If bootstrap fails, run manually (tenant/app admin):
 
 ```bash
 az ad app federated-credential create \

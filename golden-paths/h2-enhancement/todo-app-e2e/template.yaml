@@ -141,6 +141,18 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
         name: dev
 
+    - id: bootstrap-oidc
+      name: Bootstrap Azure OIDC for new repository
+      action: github:actions:dispatch
+      input:
+        repoUrl: github.com?owner=3horizons&repo=agentic-devops-platform
+        workflowId: oidc-bootstrap.yml
+        branchOrTagName: main
+        workflowInputs:
+          targetRepoOwner: ${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}
+          targetRepoName: ${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}
+          targetEnvironment: dev
+
     - id: register
       name: Register in catalog
       action: catalog:register
@@ -171,12 +183,14 @@ spec:
           **Azure IaC is ready to use:**
            - Organization secrets `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` inherited automatically
            - Environment `dev` created in the repository
+           - OIDC bootstrap workflow dispatched automatically from `3horizons/agentic-devops-platform`
            - Run workflow `iac-dev.yml` with `apply=true` to provision Azure resources
 
-          **One-time OIDC bootstrap (required per new repo):**
-          create a federated credential with subject `repo:<owner>/<repo>:environment:dev` in app `three-horizons-github-oidc`.
+          **OIDC bootstrap note:**
+          the template dispatches an org-level workflow that creates federated credential subject
+          `repo:<owner>/<repo>:environment:dev` in app `three-horizons-github-oidc`.
 
-          Example:
+          Fallback (manual only if bootstrap workflow fails):
           `az ad app federated-credential create --id <APP_OBJECT_ID> --parameters '{"name":"github-${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}-dev","issuer":"https://token.actions.githubusercontent.com","subject":"repo:${{ parameters.repoUrl | parseRepoUrl | pick('owner') }}/${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}:environment:dev","audiences":["api://AzureADTokenExchange"]}'`
 
            **Identity note:** ensure the selected owner (`User` or `Group`) exists in the Software Catalog.

@@ -1,0 +1,71 @@
+name: oidc-bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      targetRepoOwner:
+        description: "Target repository owner"
+        required: true
+        type: string
+      targetRepoName:
+        description: "Target repository name"
+        required: true
+        type: string
+      targetEnvironment:
+        description: "GitHub Environment name used by workflow"
+        required: true
+        default: dev
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  bootstrap-federated-credential:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Ensure federated credential exists for target repo
+        env:
+          TARGET_OWNER: ${{ inputs.targetRepoOwner }}
+          TARGET_REPO: ${{ inputs.targetRepoName }}
+          TARGET_ENV: ${{ inputs.targetEnvironment }}
+          APP_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        run: |
+          set -euo pipefail
+
+          SUBJECT="repo:${TARGET_OWNER}/${TARGET_REPO}:environment:${TARGET_ENV}"
+          SAFE_NAME="github-${TARGET_OWNER}-${TARGET_REPO}-${TARGET_ENV}-env"
+          SAFE_NAME="$(echo "${SAFE_NAME}" | tr '/_' '--')"
+
+          APP_OBJECT_ID="$(az ad app show --id "${APP_CLIENT_ID}" --query id -o tsv)"
+
+          EXISTING="$(az ad app federated-credential list --id "${APP_OBJECT_ID}" --query "[?subject=='${SUBJECT}'].name | [0]" -o tsv || true)"
+
+          if [[ -n "${EXISTING}" ]]; then
+            echo "Federated credential already exists: ${EXISTING}"
+            echo "Subject: ${SUBJECT}"
+            exit 0
+          fi
+
+          cat > /tmp/federated-credential.json <<JSON
+          {
+            "name": "${SAFE_NAME}",
+            "issuer": "https://token.actions.githubusercontent.com",
+            "subject": "${SUBJECT}",
+            "description": "Auto-bootstrap for ${TARGET_OWNER}/${TARGET_REPO} ${TARGET_ENV}",
+            "audiences": ["api://AzureADTokenExchange"]
+          }
+          JSON
+
+          az ad app federated-credential create --id "${APP_OBJECT_ID}" --parameters /tmp/federated-credential.json 1>/dev/null
+
+          echo "Created federated credential ${SAFE_NAME}"
+          echo "Subject: ${SUBJECT}"
