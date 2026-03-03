@@ -1,0 +1,74 @@
+# =============================================================================
+# RHDH 1.8 — Helm Values for AKS (dev environment)
+# Three Horizons Agentic DevOps Platform
+# =============================================================================
+
+global:
+  host: "rhdh.20.221.80.117.nip.io"
+
+route:
+  enabled: false
+
+upstream:
+  ingress:
+    enabled: true
+    className: nginx
+    host: "rhdh.20.221.80.117.nip.io"
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+
+  backstage:
+    image:
+      pullSecrets:
+        - rhdh-pull-secret
+    podSecurityContext:
+      fsGroup: 3000
+    tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+        effect: NoSchedule
+
+    extraEnvVarsSecrets:
+      - rhdh-secrets
+
+    appConfig:
+      app:
+        title: "Three Horizons"
+        baseUrl: "http://rhdh.20.221.80.117.nip.io"
+
+      backend:
+        baseUrl: "http://rhdh.20.221.80.117.nip.io"
+        listen:
+          port: 7007
+          host: 0.0.0.0
+        cors:
+          origin: "http://rhdh.20.221.80.117.nip.io"
+        database:
+          client: pg
+          connection:
+            host: ${POSTGRES_HOST}
+            port: ${POSTGRES_PORT}
+            user: ${POSTGRES_USER}
+            password: ${POSTGRES_PASSWORD}
+            ssl:
+              require: true
+              rejectUnauthorized: false
+
+      auth:
+        environment: development
+        providers:
+          guest:
+            dangerouslyAllowOutsideDevelopment: true
+
+      catalog:
+        rules:
+          - allow: [Component, System, API, Resource, Location, Template]
+        locations:
+          - type: url
+            target: https://github.com/3horizons/agentic-devops-platform/blob/main/backstage/catalog-info.yaml
+
+  postgresql:
+    enabled: false
+
+  volumePermissions:
+    enabled: true
