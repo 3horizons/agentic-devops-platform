@@ -169,13 +169,11 @@ spec:
           **IaC environment:** ${{ parameters.environment }}
           **Azure region:** ${{ parameters.azureRegion }}
 
-          **To guarantee successful Azure IaC provisioning:**
-           1. Azure OIDC is pre-configured for the `3horizons` organization (App Registration: `three-horizons-github-oidc`).
-           2. Add these repository secrets (Settings → Secrets → Actions):
-             - `AZURE_CLIENT_ID` = `add2c1fb-8b2f-46a7-afae-4c924b746cc6`
-             - `AZURE_TENANT_ID` = `2fdc24aa-9deb-40a8-a662-d7f5ad81f447`
-             - `AZURE_SUBSCRIPTION_ID` = `39dd2bc7-f160-4fa3-bc0f-847cfde46eb8`
-           3. Run workflow `iac-dev.yml` with `apply=true`.
+          **Azure IaC is ready to use:**
+           - Azure OIDC pre-configured (App Registration: `three-horizons-github-oidc`)
+           - Organization secrets `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` inherited automatically
+           - Environment `dev` created in the repository
+           - Run workflow `iac-dev.yml` with `apply=true` to provision Azure resources
 
            **Identity note:** ensure the selected owner (`User` or `Group`) exists in the Software Catalog.
 

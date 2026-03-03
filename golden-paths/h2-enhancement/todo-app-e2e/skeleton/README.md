@@ -39,20 +39,13 @@ terraform plan -var="environment=${{ values.environment }}" -var="location=${{ v
 
 Workflow: `.github/workflows/iac-dev.yml`
 
-Required repository secrets:
+Azure secrets are inherited from the `3horizons` organization:
 
-- `AZURE_CLIENT_ID`
-- `AZURE_TENANT_ID`
-- `AZURE_SUBSCRIPTION_ID`
+- `AZURE_CLIENT_ID` — App Registration for GitHub Actions OIDC
+- `AZURE_TENANT_ID` — Microsoft Entra tenant
+- `AZURE_SUBSCRIPTION_ID` — Target Azure subscription
 
-Required Azure setup (one-time per repository/environment):
-
-1. Create a Microsoft Entra app registration for GitHub Actions.
-2. Add a federated credential for this repository and branch:
-   - Subject: `repo:${{ values.repoOwner }}/${{ values.repoName }}:ref:refs/heads/main`
-3. Grant Azure RBAC to the service principal:
-   - `Contributor` at the target scope (subscription or resource group)
-   - `User Access Administrator` only if the workflow must create role assignments
+No manual secret configuration is needed. The OIDC federated credential is configured for all repos in the org using environment `dev`.
 
 Optional variable:
 
